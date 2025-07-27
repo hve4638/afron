@@ -5,12 +5,12 @@ import { Column } from '@/components/layout';
 import styles from './styles.module.scss';
 
 interface ProviderListViewProps {
-    models: ChatAIModels;
+    modelCategories: ChatAIModelCategory[];
     selected: number;
     onChange: (index: number) => void;
 }
 
-function ProviderListView({ models, selected, onChange }: ProviderListViewProps) {
+function ProviderListView({ modelCategories, selected, onChange }: ProviderListViewProps) {
     return (
         <Column
             className={styles['model-list']}
@@ -21,9 +21,9 @@ function ProviderListView({ models, selected, onChange }: ProviderListViewProps)
             }}
         >
             {
-                models.map((provider, index) => (
+                modelCategories.map((category, index) => (
                     <div
-                        key={`${provider.name}_${index}`}
+                        key={`${category.categoryId}_${index}`}
                         className={
                             classNames(
                                 styles['provider'],
@@ -34,7 +34,7 @@ function ProviderListView({ models, selected, onChange }: ProviderListViewProps)
                         }
                         onClick={() => onChange(index)}
                     >
-                        {provider.name}
+                        {category.categoryName}
                     </div>
                 ))
             }
@@ -43,11 +43,11 @@ function ProviderListView({ models, selected, onChange }: ProviderListViewProps)
                     classNames(
                         styles['provider'],
                         {
-                            [styles['selected']]: selected === models.length,
+                            [styles['selected']]: selected === modelCategories.length,
                         }
                     )
                 }
-                onClick={() => onChange(models.length)}
+                onClick={() => onChange(modelCategories.length)}
             >
                 Custom
             </div>

@@ -96,7 +96,7 @@ function PromptOnlyConfigModal({
                     name='최대 응답 크기'
                     value={data.model.maxTokens}
                     onChange={(value)=>{
-                        data.model.maxTokens = value;
+                        data.model.maxTokens = value ?? 0;
                         data.changed.model = true;
                         refresh();
                     }}
@@ -105,7 +105,7 @@ function PromptOnlyConfigModal({
                     name='온도'
                     value={data.model.temperature}
                     onChange={(value)=>{
-                        data.model.temperature = value;
+                        data.model.temperature = value ?? 0;
                         data.changed.model = true;
                         refresh();
                     }}
@@ -115,7 +115,7 @@ function PromptOnlyConfigModal({
                     name='Top P'
                     value={data.model.topP}
                     onChange={(value)=>{
-                        data.model.topP = value;
+                        data.model.topP = value ?? 0;
                         data.changed.model = true;
                         refresh();
                     }}
@@ -134,7 +134,7 @@ function PromptOnlyConfigModal({
                     name='생각 토큰 크기'
                     value={data.model.thinkingTokens}
                     onChange={(value)=>{
-                        data.model.thinkingTokens = value;
+                        data.model.thinkingTokens = value ?? 0;
                         refresh();
                     }}
                 />

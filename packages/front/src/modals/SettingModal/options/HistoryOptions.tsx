@@ -18,7 +18,7 @@ function HistoryOptions() {
                 name='세션 당 최대 저장 기록 수'
                 width='6em'
                 value={configs.max_history_limit_per_session}
-                onChange={configs.update.max_history_limit_per_session}
+                onChange={(x) => (x != null && configs.update.max_history_limit_per_session(x))}
             />
             <DropdownForm
                 name='최대 저장 일수'
@@ -34,7 +34,7 @@ function HistoryOptions() {
                     ]
                 }
                 value={String(configs.max_history_storage_days)}
-                onChange={(item)=>configs.update.max_history_storage_days(Number(item.key))}
+                onChange={(item) => configs.update.max_history_storage_days(Number(item.key))}
             />
         </Column>
     )

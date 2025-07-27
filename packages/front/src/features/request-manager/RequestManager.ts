@@ -40,7 +40,29 @@ class RequestManager {
         let normalExit = false;
         while (true) {
             const data = await RequestAPI.response(chId);
-            if (data.type === 'result') {
+
+            if (data === null || data.type === 'close') {
+                console.warn('Request closed:', data);
+                const sessionState = useSessionStore.getState();
+
+                if (normalExit) break;
+                await sessionAPI.set('cache.json', {
+                    'state': 'done',
+                });
+                useSignalStore.getState().signal.session_metadata();
+                if (sessionState.deps.last_session_id === sessionAPI.id) {
+                    sessionState.refetch.state();
+                }
+                useSignalStore.getState().signal.session_metadata();
+
+                useToastStore.getState().add(
+                    'Request closed unexpectedly',
+                    null,
+                    'warn'
+                );
+                break;
+            }
+            else if (data.type === 'result') {
                 normalExit = true;
 
                 await sessionAPI.set('cache.json', {
@@ -96,27 +118,6 @@ class RequestManager {
                 if (sessionState.deps.last_session_id === sessionAPI.id) {
                     useSignalStore.getState().signal.refresh_chat();
                 }
-            }
-            else if (data.type === 'close') {
-                console.warn('Request closed:', data);
-                const sessionState = useSessionStore.getState();
-
-                if (normalExit) break;
-                await sessionAPI.set('cache.json', {
-                    'state': 'done',
-                });
-                useSignalStore.getState().signal.session_metadata();
-                if (sessionState.deps.last_session_id === sessionAPI.id) {
-                    sessionState.refetch.state();
-                }
-                useSignalStore.getState().signal.session_metadata();
-
-                useToastStore.getState().add(
-                    'Request closed unexpectedly',
-                    null,
-                    'warn'
-                );
-                break;
             }
         }
     }

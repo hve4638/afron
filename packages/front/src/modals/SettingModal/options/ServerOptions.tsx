@@ -10,16 +10,16 @@ function ServerOptions() {
             <ToggleSwitchForm
                 name='서버 활성화'
                 enabled={enabled}
-                onChange={(value)=>setEnabled(value)}
+                onChange={(value) => setEnabled(value)}
             />
             <NumberForm
                 name='포트'
                 width='4em'
                 value={port}
-                onChange={(value)=>setPort(value)}
+                onChange={(value) => value != null && setPort(value)}
             />
 
-            
+
         </>
     )
 }

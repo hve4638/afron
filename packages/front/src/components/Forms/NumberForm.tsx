@@ -4,19 +4,19 @@ import { NumberInput } from '@/components/Input';
 import classNames from 'classnames';
 
 interface NumberFormProps {
-    name:string;
+    name: string;
 
-    value:number|null|undefined;
-    onChange:(x:number|null)=>void;
-    
-    disabled?:boolean;
-    allowEmpty?:boolean;
-    allowDecimal?:boolean;
-    instantChange?:boolean;
-    
+    value: number | null | undefined;
+    onChange: (x?: number) => void;
+
+    disabled?: boolean;
+    allowEmpty?: boolean;
+    allowDecimal?: boolean;
+    instantChange?: boolean;
+
     className?: string;
     style?: React.CSSProperties;
-    width?:string;
+    width?: string;
     placeholder?: string;
 }
 
@@ -34,7 +34,7 @@ function NumberForm({
     style = {},
     width,
     placeholder = '',
-}:NumberFormProps) {
+}: NumberFormProps) {
     return (
         <Row
             className={classNames({
@@ -50,7 +50,7 @@ function NumberForm({
             >
                 {name}
             </span>
-            <Flex/>
+            <Flex />
             <NumberInput
                 style={{
                     ...style,

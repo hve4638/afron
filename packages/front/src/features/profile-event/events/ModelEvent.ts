@@ -25,59 +25,62 @@ class ModelEvent {
         const caches = useCacheStore.getState();
         const { allModels } = useMemoryStore.getState();
 
-        const newProviders: ChatAIModelProviders[] = [];
-        for (const provider of allModels) {
-            const newProvider: ChatAIModelProviders = {
-                name: provider.name,
-                list: [],
-            };
-            newProviders.push(newProvider);
+        const isModelShow = (model: ChatAIModel) => {
+            if (model.flags.featured) {
+                return true;
+            }
+            // '주 모델만' 활성화 시 featured 모델만 표시
+            else if (caches.setting_models_show_featured) {
+                return false;
+            }
+            // '스냅샷', '실험적', '비권장'이 아니라면 표시 
+            else if (
+                !model.flags.snapshot
+                && !model.flags.deprecated
+            ) {
+                return true;
+            }
+            // '비권장' 우선 확인
+            // '비권장' 태그가 있으면 다른 태그가 있어도 표시하지 않음
+            else if (
+                !caches.setting_models_show_deprecated
+                && model.flags.deprecated
+            ) {
+                return false;
+            }
+            // 옵션 체크
+            else if (
+                (model.flags.snapshot && caches.setting_models_show_snapshot) ||
+                (model.flags.deprecated && caches.setting_models_show_deprecated)
+            ) {
+                return true;
+            }
+        }
 
-            provider.list.forEach((category, index) => {
+        const newProviders: ChatAIModelCategory[] = [];
+        for (const c of allModels) {
+            const { categoryId, categoryName } = c;
+            const newCategory: ChatAIModelCategory = {
+                categoryId,
+                categoryName,
+                groups: [],
+            };
+            newProviders.push(newCategory);
+
+            c.groups.forEach((g, index) => {
                 const newModels: ChatAIModel[] = [];
 
-                category.list.forEach((model) => {
-                    if (model.flags.featured) {
-                        newModels.push(model);
-                        return;
-                    }
-                    // '주 모델만' 활성화 시 featured 모델만 표시
-                    if (caches.setting_models_show_featured) {
-                        return;
-                    }
-                    // '스냅샷', '실험적', '비권장'이 아니라면 표시 
-                    else if (
-                        !model.flags.snapshot &&
-                        !model.flags.experimental &&
-                        !model.flags.deprecated &&
-                        !model.flags.legacy
-                    ) {
-                        newModels.push(model);
-                    }
-                    // '비권장' 우선 확인
-                    // '비권장' 태그가 있으면 다른 태그 조건이 있어도 표시하지 않음
-                    else if (
-                        (!caches.setting_models_show_deprecated) &&
-                        (model.flags.deprecated || model.flags.legacy)
-                    ) {
-                        return;
-                    }
-                    // 옵션 체크
-                    else if (
-                        (model.flags.snapshot && caches.setting_models_show_snapshot) ||
-                        (model.flags.experimental && caches.setting_models_show_experimental) ||
-                        (model.flags.deprecated && caches.setting_models_show_deprecated) ||
-                        (model.flags.legacy && caches.setting_models_show_deprecated)
-                    ) {
+                g.models.forEach((model) => {
+                    if (isModelShow(model)) {
                         newModels.push(model);
                     }
                 });
 
-                const newCategory: ChatAIMoedelCategory = {
-                    name: category.name,
-                    list: newModels,
+                const newGroup: ChatAIModelGroup = {
+                    groupName: g.groupName,
+                    models: newModels,
                 };
-                newProvider.list.push(newCategory);
+                newCategory.groups.push(newGroup);
             });
         }
 

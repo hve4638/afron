@@ -27,12 +27,12 @@ function GeneralOptions() {
     return (
         <Column className={styles['options-gap']}>
             <b style={{ fontSize: '0.975em' }}>기본</b>
-            <Delimiter/>
+            <Delimiter />
             <NumberForm
                 name='폰트 크기'
                 width='4em'
                 value={config.font_size}
-                onChange={config.update.font_size}
+                onChange={(x) => (x != null && config.update.font_size(x))}
             />
             {/* <DropdownForm
                 name='화면 테마'
@@ -60,55 +60,55 @@ function GeneralOptions() {
                     ]
                 }
                 value={config.layout_mode}
-                onChange={(item)=>{
+                onChange={(item) => {
                     config.update.layout_mode(item.key as LayoutModes);
                 }}
-                onItemNotFound={()=>{
+                onItemNotFound={() => {
                     config.update.layout_mode(LayoutModes.HORIZONTAL);
                 }}
             />
 
 
             <b style={{ fontSize: '0.975em', marginTop: '1em' }}>입력창</b>
-            <Delimiter/>
+            <Delimiter />
             <SliderForm
                 name='입력창 여백'
                 min={4}
                 max={24}
                 value={config.textarea_padding}
-                onChange={(value)=>{
-                    const radius = remapDecimal(value, {min: 4, max: 16}, {min: 1, max: 5});
+                onChange={(value) => {
+                    const radius = remapDecimal(value, { min: 4, max: 16 }, { min: 1, max: 5 });
                     config.update.textarea_padding(value);
                 }}
                 marks={{
-                    '4' : '4',
-                    '8' : '8',
-                    '12' : '12',
-                    '16' : '16',
-                    '20' : '20',
-                    '24' : '24',
+                    '4': '4',
+                    '8': '8',
+                    '12': '12',
+                    '16': '16',
+                    '20': '20',
+                    '24': '24',
                 }}
             />
-            <div style={{ height : '0.125em' }}/>
+            <div style={{ height: '0.125em' }} />
             <SliderForm
                 name='입력창 비율'
                 min={20}
                 max={80}
                 value={ioRatio[0]}
-                onChange={(value)=>{
-                    config.update.textarea_io_ratio([value, 100-value]);
+                onChange={(value) => {
+                    config.update.textarea_io_ratio([value, 100 - value]);
                 }}
                 marks={{
-                    '20' : '20%',
-                    '30' : '30%',
-                    '40' : '40%',
-                    '50' : '50%',
-                    '60' : '60%',
-                    '70' : '70%',
-                    '80' : '80%',
+                    '20': '20%',
+                    '30': '30%',
+                    '40': '40%',
+                    '50': '50%',
+                    '60': '60%',
+                    '70': '70%',
+                    '80': '80%',
                 }}
             />
-            <div style={{height: '0.25em'}}/>
+            <div style={{ height: '0.25em' }} />
             {/* <CheckBoxForm
                 name='탭 삭제 시 확인 메시지 표시'
                 checked={config.confirm_on_session_close}

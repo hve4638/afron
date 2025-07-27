@@ -13,7 +13,7 @@ export interface ProfileEventState {
     getSessionMetadataList(): Promise<ProfileSessionMetadata[]>;
 
     // 모델 관련
-    filterModels(): Promise<ChatAIModels>;
+    filterModels(): Promise<ChatAIModelData>;
     isModelStarred(key: string): boolean;
     starModel(modelKey: string): Promise<void>;
     unstarModel(modelKey: string): Promise<void>;

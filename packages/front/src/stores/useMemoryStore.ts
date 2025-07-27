@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 type MemoryStates = {
     profileId: string | null;
-    allModels: ChatAIModels;
+    allModels: ChatAIModelData;
     modelsMap: Record<string, ChatAIModel>;
     customModels: CustomModel[];
     version: string;

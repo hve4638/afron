@@ -10,7 +10,7 @@ export function TextField({ name, promptVar, onChange, value }:FormFieldProps<Pr
     />
 }
 
-export function NumberField({ name, promptVar, onChange, value }:FormFieldProps<PromptVarNumber, number>) {
+export function NumberField({ name, promptVar, onChange, value }:FormFieldProps<PromptVarNumber, number|undefined>) {
     return <NumberForm
         name={name ?? promptVar.display_name}
         value={value ?? promptVar.default_value ?? 0}

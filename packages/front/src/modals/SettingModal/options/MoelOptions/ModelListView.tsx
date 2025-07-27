@@ -11,12 +11,12 @@ import { GIconButton } from '@/components/GoogleFontIcon';
 import ProfileEvent from '@/features/profile-event';
 
 interface ModelListViewProps {
-    provider?: ChatAIModelProviders;
+    modelCategory?: ChatAIModelCategory;
     onClick: (model: ChatAIModel) => Promise<void>;
 }
 
 function ModelListView({
-    provider,
+    modelCategory,
     onClick,
 }: ModelListViewProps) {
     const [categoryUnfold, setCategoryUnfold] = useState<boolean[]>([]);
@@ -24,15 +24,16 @@ function ModelListView({
     return (
         <div className={styles['model-list']}>
             {
-                provider != null &&
-                provider.list.flatMap((category, index) => {
-                    if (category.list == null) return <></>;
-                    if (category.list.length === 0) return <></>;
+                modelCategory != null &&
+                modelCategory.groups.flatMap((g, index) => {
+                    if (g.models == null) return <></>;
+                    if (g.models.length === 0) return <></>;
 
                     return (<>
-                        <CategoryItem
-                            key={category.name + index}
-                            category={category}
+                        <GroupItem
+                            key={g.groupName + index}
+                            group={g}
+
                             onClick={async () => {
                                 setCategoryUnfold((prev) => {
                                     const newUnfold = [...prev];
@@ -43,9 +44,9 @@ function ModelListView({
                         />
                         {
                             categoryUnfold[index] &&
-                            category.list.map((model: ChatAIModel, index) => (
+                            g.models.map((model: ChatAIModel, index) => (
                                 <ModelItem
-                                    key={category.name + model.id + index}
+                                    key={g.groupName + model.metadataId + index}
                                     model={model}
                                     onClick={async (model) => await onClick(model)}
                                 />
@@ -58,22 +59,22 @@ function ModelListView({
     )
 }
 
-interface CategoryItemProps {
-    category: ChatAIMoedelCategory;
-    onClick: (category: ChatAIMoedelCategory) => Promise<void>;
+interface GroupItemProps {
+    group: ChatAIModelGroup;
+    onClick: (category: ChatAIModelGroup) => Promise<void>;
 }
 
-function CategoryItem({ category, onClick }: CategoryItemProps) {
+function GroupItem({ group, onClick }: GroupItemProps) {
     return (
         <Row
             className={
                 classNames(styles['model-category'])
                 // + (modelUnfold[index] ? ' unfold' : '')
             }
-            onClick={async () => await onClick(category)}
+            onClick={async () => await onClick(group)}
             columnAlign={Align.Center}
         >
-            <span>{category.name}</span>
+            <span>{group.groupName}</span>
             <Flex />
         </Row>
     )
@@ -86,9 +87,9 @@ interface ModelItemProps {
 
 function ModelItem({ model, onClick }: ModelItemProps) {
     const [_, refresh] = useSignal();
-    const flags = useMemo(()=>model.flags, [model.flags])
-    const starred = ProfileEvent.model.isStarred(model.id);
-    const showActualName = useConfigStore(state=>state.show_actual_model_name);
+    const flags = useMemo(() => model.flags, [model.flags])
+    const starred = ProfileEvent.model.isStarred(model.modelId);
+    const showActualName = useConfigStore(state => state.show_actual_model_name);
 
     return (
         <Row
@@ -115,7 +116,7 @@ function ModelItem({ model, onClick }: ModelItemProps) {
                 >
                     {
                         showActualName
-                            ? model.name
+                            ? model.modelId
                             : model.displayName
                     }
                 </span>
@@ -124,16 +125,8 @@ function ModelItem({ model, onClick }: ModelItemProps) {
                     <Tag>snapshot</Tag>
                 }
                 {
-                    flags.experimental &&
-                    <Tag>experimental</Tag>
-                }
-                {
                     flags.deprecated &&
                     <Tag>deprecated</Tag>
-                }
-                {
-                    flags.legacy &&
-                    <Tag>legacy</Tag>
                 }
             </Row>
             <Flex />
@@ -141,7 +134,7 @@ function ModelItem({ model, onClick }: ModelItemProps) {
                 className={classNames(styles['star'], { [styles['starred']]: starred })}
                 style={{
                     fontSize: '1.5em',
-                    height : '100%',
+                    height: '100%',
                     aspectRatio: '1 / 1',
                     marginRight: '4px',
                 }}

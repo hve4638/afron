@@ -67,7 +67,9 @@ class RequestAPI {
         let ch = this.#getCh(chId);
         const result = await ch.consume();
 
-        if (result.type == 'close') {
+        /// @TODO: result null인 경우 처리 필요
+        // 채널이 닫힌 경우에 발생하는데, 현재 로직상 null 발생은 없으나 적절한 처리 필요
+        if (!result || result.type === 'close') {
             this.#closeCh(chId);
         }
         return result;

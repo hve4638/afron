@@ -28,17 +28,17 @@ function ModelDropdown() {
     const dropdownItems: DropdownItemList[] = useMemo(() => {
         const nextModels: DropdownItemList[] = [];
 
-        allModels.forEach((provider) => {
+        allModels.forEach((category) => {
             const nextProvider: DropdownItemList = {
-                name: provider.name,
+                name: category.categoryName,
                 list: [],
             };
-            provider.list.forEach((category: ChatAIMoedelCategory) => {
-                category.list.forEach((model: ChatAIModel) => {
-                    if ((!only_starred_models && model.flags.featured) || isModelStarred(model.id)) {
+            category.groups.forEach((group: ChatAIModelGroup) => {
+                group.models.forEach((model: ChatAIModel) => {
+                    if ((!only_starred_models && model.flags.featured) || isModelStarred(model.metadataId)) {
                         nextProvider.list.push({
-                            name: show_actual_model_name ? model.name : model.displayName,
-                            key: model.id,
+                            name: show_actual_model_name ? model.modelId : model.displayName,
+                            key: model.metadataId,
                         });
                     }
                 });

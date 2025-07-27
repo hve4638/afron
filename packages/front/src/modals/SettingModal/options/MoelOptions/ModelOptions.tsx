@@ -14,7 +14,7 @@ function ModelOptions() {
     const configs = useConfigStore();
     const caches = useCacheStore();
     const allModels = useMemoryStore(state => state.allModels);
-    const [models, setModels] = useState<ChatAIModels>([]);
+    const [models, setModels] = useState<ChatAIModelCategory[]>([]);
     const [providerIndex, setProviderIndex] = useState<number>(0);
     const previousOptions = useRef<any>({});
 
@@ -94,7 +94,7 @@ function ModelOptions() {
                 >비권장</ModelCheckBox>
             </Row>
             <ProviderListView
-                models={models}
+                modelCategories={models}
                 selected={providerIndex}
                 onChange={(index) => setProviderIndex(index)}
             />
@@ -114,14 +114,14 @@ function ModelOptions() {
             {
                 !customeModelSelected &&
                 <ModelListView
-                    provider={models[providerIndex]}
+                    modelCategory={models[providerIndex]}
 
                     onClick={async (model) => {
-                        if (ProfileEvent.model.isStarred(model.id)) {
-                            await ProfileEvent.model.unstar(model.id);
+                        if (ProfileEvent.model.isStarred(model.metadataId)) {
+                            await ProfileEvent.model.unstar(model.metadataId);
                         }
                         else {
-                            await ProfileEvent.model.star(model.id);
+                            await ProfileEvent.model.star(model.metadataId);
                         }
                     }}
                 />

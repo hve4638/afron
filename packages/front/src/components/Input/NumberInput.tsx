@@ -4,13 +4,13 @@ import classNames from 'classnames';
 import styles from './styles.module.scss';
 
 interface NumberInputProps {
-    value? : number|null|undefined;
-    onChange: (value:number|null) => void;
+    value?: number | null | undefined;
+    onChange: (value?: number) => void;
 
     allowEmpty?: boolean;
     allowDecimal?: boolean;
     instantChange?: boolean;
-    
+
     className?: string;
     style?: React.CSSProperties;
     placeholder?: string;
@@ -23,26 +23,26 @@ const NumberInput = forwardRef(({
     allowEmpty = false,
     allowDecimal = false,
     instantChange = false,
-    
-    className='',
-    style={},
-    placeholder='',
+
+    className = '',
+    style = {},
+    placeholder = '',
     readOnly = false,
-}:NumberInputProps, ref:React.Ref<HTMLInputElement>) => {
+}: NumberInputProps, ref: React.Ref<HTMLInputElement>) => {
     const [current, setCurrent] = useState<string>(value?.toString() ?? '');
-    
+
     useLayoutEffect(() => {
         setCurrent(value?.toString() ?? '');
     }, [value]);
 
-    const changeValue = (value:string) => {
+    const changeValue = (value: string) => {
         if (instantChange) commitChange(value);
         else setCurrent(value);
     };
 
-    const commitChange = (value:string) => {
+    const commitChange = (value: string) => {
         if (value === '' && allowEmpty) {
-            onChange(null);
+            onChange();
         }
         else if (allowDecimal) {
             const result = parseFloat(value);
@@ -64,10 +64,10 @@ const NumberInput = forwardRef(({
             readOnly={readOnly}
             placeholder={placeholder}
             value={current}
-            onChange={(e)=>changeValue(e.target.value)}
+            onChange={(e) => changeValue(e.target.value)}
 
-            onBlur={()=>commitChange(current)}
-            onKeyDown={(e)=>{
+            onBlur={() => commitChange(current)}
+            onKeyDown={(e) => {
                 if (e.key === 'Enter') commitChange(current);
             }}
         />

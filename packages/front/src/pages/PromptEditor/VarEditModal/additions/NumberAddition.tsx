@@ -25,7 +25,7 @@ function PropmtVarNumberOption({
             name='기본값'
             value={promptVar.default_value ?? -1}
             onChange={(value)=>{
-                promptVar.default_value = isNaN(value) ? 0 : value;
+                promptVar.default_value = isNaN(value ?? 0) ? 0 : value;
                 onRefresh();
             }}
             allowDecimal={promptVar.allow_decimal ?? false}
