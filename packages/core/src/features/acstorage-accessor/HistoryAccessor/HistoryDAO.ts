@@ -1,6 +1,6 @@
 import Database, { Database as DB } from 'better-sqlite3';
 import fs from 'node:fs';
-import { HistoryRow, MessageRow } from './types';
+import { HistoryInsertRow, HistoryRow, MessageRow } from './types';
 import HistoryMigrationManager from './migration';
 
 export type HistorySearchRow = {
@@ -15,9 +15,12 @@ export type HistorySearchRow = {
 
 type HistoryRowInput = {
     chat_type: 'chat' | 'normal';
+
     input_token_count: number | null;
     output_token_count: number | null;
+
     form: string;
+    
     rt_id: string;
     rt_uuid: string;
     model_id: string;
@@ -47,12 +50,14 @@ class HistoryDAO {
     initDB(path: string | null): DB {
         let db: DB;
         try {
-            db = new Database(path ?? ':memory:');
+            const filename = path ?? ':memory:';
+
+            db = new Database(filename);
         }
         catch (e: any) {
             throw new Error(`Failed to open database '${path}' : ${e.message}`);
         }
-        
+
         /**
          * history 테이블
          * id : 고유 키
@@ -145,13 +150,7 @@ class HistoryDAO {
         }
     }
 
-    insertHistory(row: {
-        form: string;
-        rt_id: string;
-        rt_uuid: string;
-        model_id: string;
-        create_at: number;
-    }): number {
+    insertHistory(row: HistoryInsertRow): number {
         const insert = this.#db.prepare(
             `
                 INSERT INTO history(
@@ -233,7 +232,7 @@ class HistoryDAO {
         limit?: number;
         desc?: boolean;
         branchId?: number;
-    }) {
+    }): HistoryRow[] {
         const query = this.#db.prepare(
             `SELECT *
             FROM history
@@ -244,7 +243,7 @@ class HistoryDAO {
         return query.all({ offset, limit }) as HistoryRow[];
     }
 
-    selectMessages(historyId: number | bigint) {
+    selectMessages(historyId: number | bigint): MessageRow[] {
         const query = this.#db.prepare(
             `SELECT *
             FROM messages
@@ -340,7 +339,7 @@ class HistoryDAO {
             query.run({ historyId, origin });
         }
     }
-    
+
     delete(historyId: number) {
         const query = this.#db.prepare(
             'DELETE FROM history WHERE id = $id'

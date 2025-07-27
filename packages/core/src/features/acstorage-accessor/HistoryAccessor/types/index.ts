@@ -1,24 +1,5 @@
-export type HistoryRow = {
-    id: number;
-    chat_type: 'chat' | 'normal';
-
-    branch_id: number;
-
-    input_token_count: number;
-    output_token_count: number;
-
-    form: string;
-
-    raw_response: string;
-    rt_id: string;
-    rt_uuid: string;
-    model_id: string;
-
-    fetch_count: number;
-    create_at: number;
-
-    is_complete: number;
-}
+export type { HistoryInsertRow, HistoryRow, HistoryUpdateRow } from './history-row';
+export type { HistoryMessageInsertRow, HistoryMessageRow } from './message-row';
 
 export type MessageRow = {
     id: number;
@@ -58,13 +39,4 @@ export type HistoryRequired = {
     rt_id: string;
     rt_uuid: string;
     model_id: string;
-};
-
-export type HistoryMessageRow = {
-    type: 'text' | 'image_url' | 'image_base64' | 'file_url' | 'file_base64';
-    text?: string | null;
-    data?: string | null;
-    data_name?: string | null;
-    data_type?: string | null;
-    token_count: number;
 };
