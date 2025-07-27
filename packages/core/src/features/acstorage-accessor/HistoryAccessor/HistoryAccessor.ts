@@ -54,6 +54,7 @@ class HistoryAccessor implements ICustomAccessor {
 
             this.#dao.insertMessage(historyId, {
                 ...m,
+                type: 'text',
                 origin: origin,
                 text: m.text ?? null,
                 data: m.data ?? null,

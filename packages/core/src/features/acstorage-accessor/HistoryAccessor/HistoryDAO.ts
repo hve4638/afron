@@ -1,6 +1,6 @@
 import Database, { Database as DB } from 'better-sqlite3';
 import fs from 'node:fs';
-import { HistoryInsertRow, HistoryRow, MessageRow } from './types';
+import { HistoryInsertRow, HistoryMessageInsertRow, HistoryRow, MessageRow } from './types';
 import HistoryMigrationManager from './migration';
 
 export type HistorySearchRow = {
@@ -198,7 +198,7 @@ class HistoryDAO {
         update.run({ id: historyId });
     }
 
-    insertMessage(historyId: number, row: MessageRowInput) {
+    insertMessage(historyId: number, row: HistoryMessageInsertRow) {
         const insert = this.#db.prepare(`
             INSERT INTO messages (
                 history_id,
