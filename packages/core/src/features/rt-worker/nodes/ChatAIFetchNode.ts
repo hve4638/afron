@@ -1,7 +1,7 @@
 import WorkNode from './WorkNode';
 import { ChatAI, ChatAIError } from '@hve/chatai';
 import type { ChatAIResult, ChatMessages } from '@hve/chatai';
-import ChatAIModels from '@/features/chatai-models';
+import { ChatAIModels } from '@afron/chatai-models';
 import { WorkNodeStop } from './errors';
 import { ProfileAPIKeyControl } from '@/features/profiles/ProfileControl';
 
@@ -99,7 +99,8 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
         // flow모드 구현 시 수정 필요
         const { model } = await rt.getPromptMetadata('default');
 
-        const modelData = ChatAIModels.getModel(modelId);
+        const modelMap = ChatAIModels.getModelMap();
+        const modelData = modelMap[modelId];
         if (modelData) {
             return await this.requestDefinedModel(modelData, model, messages);
         }
@@ -124,11 +125,11 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
             rtEventEmitter, profile
         } = this.nodeData;
 
-        const { name: modelName, providerName, flags } = modelData;
-        const apiName = this.getAPIName(flags);
+        const { metadataId, modelId, config, flags } = modelData;
+        const apiName = this.getAPIName(modelData);
         if (!apiName) {
             rtEventEmitter.emit.error.other([
-                `Fetch Fail : Model '${modelName}' has no provider configured.`
+                `Fetch Fail : Model '${modelId}' has no provider configured.`
             ]);
             throw new WorkNodeStop();
         }
@@ -149,16 +150,17 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                     : 'high'
         );
         const useThinking = (
-            flags.thinking || (flags.thinking_optional && use_thinking)
+            config.thinking === 'enabled'
+            || (config.thinking === 'optional' && use_thinking)
         );
 
-        if (!flags.vertexai) {
+        {
             const apiKey = auth as string;
 
-            if (flags.responses_api) {
+            if (config.endpoint === 'responses') {
                 this.logger.trace('Requesting ResponsesAPI (OpenAI)');
                 return await ChatAI.requestResponses({
-                    model: modelName,
+                    model: modelId,
                     messages: messages,
                     auth: {
                         api_key: apiKey as string,
@@ -170,10 +172,10 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                     top_p,
                 });
             }
-            else if (flags.chat_completions_api) {
+            else if (config.endpoint === 'chat_completions') {
                 this.logger.trace('Requesting ChatCompletionsAPI (OpenAI)');
                 return await ChatAI.requestChatCompletion({
-                    model: modelName,
+                    model: modelId,
                     messages: messages,
                     auth: {
                         api_key: apiKey as string,
@@ -184,10 +186,10 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                     top_p,
                 });
             }
-            else if (flags.generative_language_api) {
+            else if (config.endpoint === 'generative_language') {
                 this.logger.trace('Requesting GenerativeLanguageAPI (Google)');
                 return await ChatAI.requestGenerativeLanguage({
-                    model: modelName,
+                    model: modelId,
                     messages: messages,
                     auth: {
                         api_key: apiKey as string,
@@ -199,10 +201,10 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                     top_p,
                 });
             }
-            else if (flags.anthropic_api) {
+            else if (config.endpoint === 'anthropic') {
                 this.logger.trace('Requesting AnthropicAPI (Anthropic)');
                 return await ChatAI.requestAnthropic({
-                    model: modelName,
+                    model: modelId,
                     messages: messages,
                     auth: {
                         api_key: apiKey as string,
@@ -215,11 +217,11 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                 });
             }
         }
-        else {
+        {
             const vertexAIAuth = auth as VertexAIAuth;
             const location = 'us-east5';
 
-            if (flags.generative_language_api) {
+            if (config.endpoint === 'vertexai_gemini') {
                 this.logger.trace('Requesting Generative Language API with VertexAI');
                 return await ChatAI.requestVertexAI({
                     publisher: 'google',
@@ -227,7 +229,7 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                     location: 'us-central1',
 
                     thinking_tokens: useThinking ? thinking_tokens : undefined,
-                    model: modelName,
+                    model: modelId,
                     messages: messages,
                     auth: vertexAIAuth,
 
@@ -236,7 +238,7 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                     top_p,
                 });
             }
-            else if (flags.anthropic_api) {
+            else if (config.endpoint === 'vertexai_claude') {
                 this.logger.trace('Requesting Anthropic API with VertexAI');
                 return await ChatAI.requestVertexAI({
                     publisher: 'anthropic',
@@ -244,7 +246,7 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
                     location: 'us-east5',
 
                     thinking_tokens: useThinking ? thinking_tokens : undefined,
-                    model: modelName,
+                    model: modelId,
                     messages: messages,
                     auth: vertexAIAuth,
 
@@ -256,7 +258,7 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
         }
 
         rtEventEmitter.emit.error.other(
-            [`Model '${modelName}' has no provider configured.`]
+            [`Model '${modelId}' has no provider configured.`]
         );
         throw new WorkNodeStop();
     }
@@ -342,15 +344,22 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
         }
     }
 
-    private getAPIName(flags: ChatAIModelFlags): 'openai' | 'anthropic' | 'google' | 'vertexai' | null {
-        return (
-            flags.vertexai ? 'vertexai'
-                : flags.chat_completions_api ? 'openai'
-                    : flags.responses_api ? 'openai'
-                        : flags.anthropic_api ? 'anthropic'
-                            : flags.generative_language_api ? 'google'
-                                : null
-        );
+    private getAPIName(model: ChatAIModel): 'openai' | 'anthropic' | 'google' | 'vertexai' | null {
+        switch (model.config?.endpoint) {
+            case 'chat_completions':
+            case 'responses':
+                return 'openai';
+            case 'generative_language':
+                return 'google';
+            case 'anthropic':
+                return 'anthropic';
+            case 'vertexai_gemini':
+                return 'vertexai';
+            case 'vertexai_claude':
+                return 'vertexai';
+            default:
+                return null;
+        }
     }
 
     async getResultDebug({ messages }: { messages: ChatMessages; }) {

@@ -1,7 +1,7 @@
 import * as utils from '@utils';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import ChatAIModels from '@afron/chatai-models'
+import { ChatAIModels } from '@afron/chatai-models'
 
 function general(): IPCInvokerGeneral {
     const throttle = ThrottleAction.getInstance();
@@ -34,7 +34,7 @@ function general(): IPCInvokerGeneral {
             }
         },
         async getChatAIModels() {
-            return [null, ChatAIModels.models];
+            return [null, ChatAIModels.categories()];
         },
 
         async existsLegacyData() {
