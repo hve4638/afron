@@ -12,7 +12,7 @@ declare global {
         openBrowser(url: string): ENoResult;
         getCurrentVersion(): EResult<string>;
         getAvailableVersion(prerelease: boolean): EResult<VersionInfo>;
-        getChatAIModels(): EResult<ChatAIModels>;
+        getChatAIModels(): EResult<ChatAIModelData>;
 
         existsLegacyData(): EResult<boolean>;
         migrateLegacyData(): ENoResult;
