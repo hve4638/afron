@@ -1,5 +1,5 @@
-import ChatAIModels from "./ChatAIModelManager"
+import ModelDeclaration from './ModelDeclaration';
 
-const chatAIModels = new ChatAIModels();
+const modelDeclaration = ModelDeclaration.getInstance();
 
-export default chatAIModels;
+export default modelDeclaration;

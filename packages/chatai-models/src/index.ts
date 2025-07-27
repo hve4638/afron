@@ -1,3 +1,1 @@
-import ChatAIModels from '@/features/chatai-models'
-
-export default ChatAIModels;
+export { default as ChatAIModels } from '@/features/chatai-models'
