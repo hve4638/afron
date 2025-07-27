@@ -7,14 +7,8 @@
     "scripts": {
         "start": "yarn app:start",
         "app:start": "concurrently \"yarn electron:start\" \"yarn front:start\"",
-
         "front:start": "cd packages/front && yarn start",
         "electron:start": "cd packages/electron && wait-on http://localhost:3600 && yarn start",
-
-        "deps": "yarn && yarn electron:deps && yarn front:deps",
-        "electron:deps": "cd electron && yarn && yarn rebuild",
-        "front:deps": "cd front && yarn",
-
         "build": "yarn core:build && yarn electron:build",
         "core:build": "cd packages/core && yarn build",
         "electron:build": "cd packages/electron && yarn build"
@@ -27,7 +21,8 @@
     "dependencies": {},
     "private": true,
     "workspaces": {
-        "packages": ["packages/*"],
-        "nohoist": ["**/ts-jest", "**/ts-jest/**"]
+        "packages": [
+            "packages/*"
+        ]
     }
 }
