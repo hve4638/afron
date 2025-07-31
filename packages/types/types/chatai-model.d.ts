@@ -19,6 +19,15 @@ declare global {
 
         endpoint?: 'chat_completions' | 'responses' | 'generative_language' | 'anthropic' | 'vertexai_gemini' | 'vertexai_claude';
         customEndpoint?: string;
+        
+        supportGeminiSafetyFilter?: boolean;
+        supportThinkingBudget?: boolean;
+        supportThinkingEffort?: boolean;
+        supportThinkingSummary?: boolean;
+
+        advancedSettings?: {
+
+        }
     }
 
     type ChatAIModel = {
