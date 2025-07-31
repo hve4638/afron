@@ -23,6 +23,7 @@ class OutputNode extends WorkNode<PromptBuildNodeInput, PromptBuildNodeOutput, P
         if (typeof output === 'string') {
             data.output.push({
                 type: 'text',
+                origin: 'out',
                 text: output,
                 data: null,
                 token_count: 5,
@@ -34,6 +35,7 @@ class OutputNode extends WorkNode<PromptBuildNodeInput, PromptBuildNodeOutput, P
         else {
             data.output.push({
                 type: 'text',
+                origin: 'out',
                 text: output.response.content.join('\n'),
                 data: null,
                 token_count: output.response.tokens.output,

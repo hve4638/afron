@@ -18,14 +18,15 @@ export type InputNodeOption = {
  */
 class InputNode extends WorkNode<InputNodeInput, InputNodeOutput, InputNodeOption> {
     override name = 'InputNode';
-
+    
     override async process({ }) {
         const { form, data, chat, inputFiles, inputText } = this.nodeData;
-
+        
         for (const f of inputFiles) {
             if (f.type.startsWith('image/')) {
                 data.input.push({
                     type: 'image_base64',
+                    origin: 'in',
                     data: f.data,
                     token_count: 0,
                 });
@@ -33,6 +34,7 @@ class InputNode extends WorkNode<InputNodeInput, InputNodeOutput, InputNodeOptio
             else {
                 data.input.push({
                     type: 'file_base64',
+                    origin: 'in',
                     data: f.data,
                     token_count: 0,
                 });
@@ -40,6 +42,7 @@ class InputNode extends WorkNode<InputNodeInput, InputNodeOutput, InputNodeOptio
         }
         data.input.push({
             type: 'text',
+            origin: 'in',
             text: inputText,
             token_count: 0,
         });

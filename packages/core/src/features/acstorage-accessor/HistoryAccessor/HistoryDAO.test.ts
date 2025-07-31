@@ -50,7 +50,6 @@ describe('HistoryDAO', () => {
     }
 
     it('insert / select history', () => {
-
         const historyId = dao.insertHistory(HistoryInsertRowExample);
         expect(historyId).toBe(1);
 

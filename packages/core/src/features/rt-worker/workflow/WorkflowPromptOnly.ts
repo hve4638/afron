@@ -38,7 +38,7 @@ class RTWorkflowPromptOnly extends RTWorkflow {
         });
 
         if (nodeData.data.input.length > 0) {
-            historyAC.addHistoryMessage(historyId, 'in', nodeData.data.input);
+            historyAC.addHistoryMessage(historyId, nodeData.data.input);
         }
         this.rtEventEmitter.emit.update.history();
 
@@ -48,7 +48,7 @@ class RTWorkflowPromptOnly extends RTWorkflow {
             await outputNode.run({ output: result });
 
             if (nodeData.data.output.length > 0) {
-                historyAC.addHistoryMessage(historyId, 'out', nodeData.data.output);
+                historyAC.addHistoryMessage(historyId, nodeData.data.output);
                 // const session = this.profile.session(nodeData.sessionId);
                 // await session.setOne('cache.json', 'last_history', {} as HistoryMetadata);
                 this.rtEventEmitter.emit.update.history();

@@ -1,5 +1,12 @@
+/**
+ * 
+ */
+
 export type { HistoryInsertRow, HistoryRow, HistoryUpdateRow } from './history-row';
 export type { HistoryMessageInsertRow, HistoryMessageRow } from './message-row';
+export type { HistoryRequired, HistoryAddRequired, HistoryUpdateRequired } from './history-required';
+export type { HistoryMessageRequired, HistoryMessageAddRequired} from './message-required';
+export type { HistoryId } from './alias';
 
 export type MessageRow = {
     id: number;
@@ -13,30 +20,3 @@ export type MessageRow = {
     data_type: string | null;
     token_count: number;
 }
-
-export type HistoryRequired = {
-    chat_type?: 'chat' | 'normal';
-    fetch_count: number;
-    input: {
-        type: 'text' | 'image_url' | 'file';
-        text: string | null;
-        data: string | null;
-        token_count: number;
-    }[];
-    output: {
-        type: 'text';
-        text: string | null;
-        data: null;
-        token_count: number;
-    }[];
-    form: Record<string, unknown>;
-
-    input_token_count: number;
-    output_token_count: number;
-    create_at: number;
-
-    session_id: string;
-    rt_id: string;
-    rt_uuid: string;
-    model_id: string;
-};

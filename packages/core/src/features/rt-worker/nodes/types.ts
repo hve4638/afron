@@ -3,6 +3,17 @@ import { HistoryMessageRow } from '@/features/acstorage-accessor';
 
 import WorkLogger from '../WorkLog';
 import RTEventEmitter from '../RTEventEmitter';
+import { HistoryMessageAddRequired } from '@/features/acstorage-accessor/HistoryAccessor/types';
+
+export type HistoryData = {
+    type: 'text' | 'image_url' | 'image_base64' | 'file_url' | 'file_base64';
+    origin: 'in' | 'out';
+    text?: string | null;
+    data?: string | null;
+    data_name?: string | null;
+    data_type?: string | null;
+    token_count: number;
+};
 
 export type NodeData = {
     rtEventEmitter: RTEventEmitter;
@@ -21,8 +32,8 @@ export type NodeData = {
     create_at: number;
 
     data: {
-        input: HistoryMessageRow[];
-        output: HistoryMessageRow[];
+        input: HistoryMessageAddRequired[];
+        output: HistoryMessageAddRequired[];
         input_token_count: number;
         output_token_count: number;
     };

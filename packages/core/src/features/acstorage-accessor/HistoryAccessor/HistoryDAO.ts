@@ -1,6 +1,6 @@
 import Database, { Database as DB } from 'better-sqlite3';
 import fs from 'node:fs';
-import { HistoryInsertRow, HistoryMessageInsertRow, HistoryRow, MessageRow } from './types';
+import { HistoryId, HistoryInsertRow, HistoryMessageInsertRow, HistoryRow, MessageRow } from './types';
 import HistoryMigrationManager from './migration';
 
 export type HistorySearchRow = {
@@ -20,7 +20,7 @@ type HistoryRowInput = {
     output_token_count: number | null;
 
     form: string;
-    
+
     rt_id: string;
     rt_uuid: string;
     model_id: string;
@@ -174,11 +174,14 @@ class HistoryDAO {
         const { lastInsertRowid } = insert.run(row);
         return lastInsertRowid as number;
     }
-
+    
     updateHistory(historyId: number, row: Partial<HistoryRowInput>) {
         if (Object.keys(row).length === 0) return;
 
-        const sets = Object.keys(row).map(k => `${k} = $${k}`).join(', ');
+        const sets = Object.keys(row)
+            .filter((k) => (row[k] != undefined))
+            .map(k => `${k} = $${k}`)
+            .join(', ');
         const update = this.#db.prepare(
             `UPDATE history
             SET
@@ -340,7 +343,7 @@ class HistoryDAO {
         }
     }
 
-    delete(historyId: number) {
+    delete(historyId: HistoryId) {
         const query = this.#db.prepare(
             'DELETE FROM history WHERE id = $id'
         );

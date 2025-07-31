@@ -1,7 +1,7 @@
 import { ICustomAccessor } from 'ac-storage';
 import HistoryDAO from './HistoryDAO';
 import { type HistorySearchRow } from './HistoryDAO';
-import { HistoryMessageRow, HistoryRequired } from './types';
+import { HistoryAddRequired, HistoryId, HistoryMessageAddRequired, HistoryMessageInsertRow, HistoryMessageRow, HistoryRequired, HistoryRow, HistoryUpdateRequired } from './types';
 
 class HistoryAccessor implements ICustomAccessor {
     #dao: HistoryDAO;
@@ -11,15 +11,12 @@ class HistoryAccessor implements ICustomAccessor {
         this.#dao = new HistoryDAO(target);
     }
 
-    addHistory(historyRequired: {
-        rt_id: string;
-        rt_uuid: string;
-        model_id: string;
-
-        form: Record<string, unknown>;
-
-        create_at: number;
-    }): number {
+    /**
+     * 새로운 history를 추가하고 complete를 0으로 설정
+     * 
+     * @returns historyId
+     */
+    addHistory(historyRequired: HistoryAddRequired): HistoryId {
         const {
             rt_id, rt_uuid, model_id,
             create_at,
@@ -35,27 +32,36 @@ class HistoryAccessor implements ICustomAccessor {
         return historyId;
     }
 
-    updateHistory(historyId: number, historyRequired: Partial<HistoryRequired>) {
+    updateHistory(historyId: HistoryId, required: HistoryUpdateRequired): void {
+        const {
+            input_token_count, output_token_count,
+            rt_id, rt_uuid,
+            model_id,
+            fetch_count,
+            create_at,
+            form,
+        } = required;
+
         this.#dao.updateHistory(historyId, {
-            input_token_count: historyRequired.input_token_count,
-            output_token_count: historyRequired.output_token_count,
-            rt_id: historyRequired.rt_id,
-            rt_uuid: historyRequired.rt_uuid,
-            model_id: historyRequired.model_id,
-            fetch_count: historyRequired.fetch_count,
-            create_at: historyRequired.create_at,
-            form: JSON.stringify(historyRequired.form),
+            input_token_count,
+            output_token_count,
+            rt_id,
+            rt_uuid,
+            model_id,
+            fetch_count,
+            create_at,
+            form: JSON.stringify(form),
         });
     }
 
-    addHistoryMessage(historyId: number, origin: 'in' | 'out', messages: HistoryMessageRow[]) {
+    addHistoryMessage(historyId: number, messages: HistoryMessageAddRequired[]) {
         for (const m of messages) {
             if (!m.text) continue;
 
             this.#dao.insertMessage(historyId, {
                 ...m,
                 type: 'text',
-                origin: origin,
+                origin: m.origin,
                 text: m.text ?? null,
                 data: m.data ?? null,
                 data_name: m.data_name ?? null,
@@ -64,21 +70,22 @@ class HistoryAccessor implements ICustomAccessor {
         }
     }
 
-    completeHistory(historyId: number) {
+    completeHistory(historyId: number): void {
         this.#dao.completeHistory(historyId);
     }
 
-    getHistory(offset = 0, limit = 1000, desc = true) {
+    getHistory(offset = 0, limit = 1000, desc = true): HistoryRow[] {
         const history = this.#dao.selectHistory({ offset, limit, desc });
 
         return history;
     }
 
-    searchHistory(search: HistorySearchRow) {
+    searchHistory(search: HistorySearchRow): HistoryRow[] {
         return this.#dao.searchHistory(search);
     }
 
-    getMessageText(historyId: number): { input?: string, output?: string } {
+    /// @TODO: 이미지 등 파일 대응 필요
+    getMessageText(historyId: HistoryId): { input?: string, output?: string } {
         const messages = this.#dao.selectMessages(historyId);
 
         const inputText: string[] = [];
@@ -99,7 +106,14 @@ class HistoryAccessor implements ICustomAccessor {
         };
     }
 
-    deleteMessage(historyId: number, origin: 'in' | 'out' | 'both' = 'both') {
+    /**
+     * historyId의 메시지 중 특정 origin의 메시지를 모두 삭제
+     * 
+     * 모든 메시지가 삭제되면 history도 삭제됨
+     * @param historyId 
+     * @param origin 
+     */
+    deleteMessage(historyId: HistoryId, origin: 'in' | 'out' | 'both' = 'both'): void {
         let input = false;
         let output = false;
         this.#dao.selectMessageOrigin(historyId)
@@ -125,7 +139,7 @@ class HistoryAccessor implements ICustomAccessor {
         }
     }
 
-    delete(id: number) {
+    delete(id: HistoryId) {
         this.#dao.delete(id);
     }
 
