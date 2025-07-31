@@ -14,6 +14,7 @@ import { safetyFilterThresholdMap, safetyFilterThresholdMapReverse } from './dat
 import ProfileEvent from '@/features/profile-event';
 import useSignal from '@/hooks/useSignal';
 import { CommonOptions, SafetyOptions, ThinkingOptions } from './options';
+import useMemoryStore from '@/stores/useMemoryStore';
 
 type ModelConfigModalProps = {
     modelId: string;
@@ -30,6 +31,13 @@ function ModelConfigModal({
     const [disappear, closed] = useModalDisappear(onClose);
     const configRef = useRef<Partial<ModelConfiguration>>({});
     const [refreshPing, refresh] = useSignal();
+    const modelMap = useMemoryStore(state => state.modelsMap);
+
+    const model: ChatAIModel = useMemo(() => {
+        console.log('#model Infomation', modelMap[modelId]);
+        return modelMap[modelId] ?? {};
+    }, [modelId, modelMap]);
+    
     const modelName = useMemo(() => {
         return ProfileEvent.model.getName(modelId);
     }, [modelId]);
@@ -51,8 +59,7 @@ function ModelConfigModal({
         'Escape': close,
     }, isFocused, []);
 
-    const config = configRef.current ?? {};
-    const safetySettings = config?.safety_settings ?? {};
+    const config = configRef.current;
 
     return (
         <Modal
@@ -84,16 +91,17 @@ function ModelConfigModal({
                 <small className='secondary-color' style={{ paddingLeft: '0.25em' }}>활성화 시 요청 템플릿 내 설정보다 이 옵션을 우선합니다.</small>
                 <div style={{ height: '0.5em' }} />
                 <CommonOptions
+                    model={model}
                     config={config}
                     refresh={refresh}
                 />
-                <div style={{ height: '1em' }} />
                 <ThinkingOptions
+                    model={model}
                     config={config}
                     refresh={refresh}
                 />
-                <div style={{ height: '1em' }} />
                 <SafetyOptions
+                    model={model}
                     config={config}
                     refresh={refresh}
                 />

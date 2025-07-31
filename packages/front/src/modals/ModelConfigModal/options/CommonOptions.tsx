@@ -60,6 +60,7 @@ function CommonOptions({
                 instantChange={true}
                 disabled={disabled}
             />
+            <div style={{ height: '1em' }}/>
         </>
     )
 }

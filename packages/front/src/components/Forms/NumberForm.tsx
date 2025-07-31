@@ -20,6 +20,7 @@ interface NumberFormProps {
     placeholder?: string;
 }
 
+/// @TODO: 간헐적으로 allowEmpty가 활성화되었음에도 0이 자동 채워지는 문제
 function NumberForm({
     name,
     value,

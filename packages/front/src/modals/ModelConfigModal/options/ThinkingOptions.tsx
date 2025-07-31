@@ -4,11 +4,15 @@ import SafetyFilterSlider from './SafetyFilterSlider';
 import { OptionsProps } from './types';
 
 function ThinkingOptions({
+    model,
     config,
     refresh,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_thinking;
-    const safetySettings = config?.safety_settings ?? {};
+
+    if ((model.config.thinking ?? 'disabled') === 'disabled') {
+        return <></>;
+    }
 
     return (
         <>
@@ -23,15 +27,19 @@ function ThinkingOptions({
                 disabled={!config.override_enabled}
             />
             <Delimiter />
-            <CheckBoxForm
-                name='추론 활성화'
-                checked={config.use_thinking ?? false}
-                onChange={(next) => {
-                    config.use_thinking = next ?? undefined;
-                    refresh();
-                }}
-                disabled={disabled}
-            />
+            {
+                model.config.thinking === 'optional'
+                && <CheckBoxForm
+                    name='추론 활성화'
+                    checked={config.use_thinking ?? false}
+                    onChange={(next) => {
+                        config.use_thinking = next ?? undefined;
+                        refresh();
+                    }}
+                    disabled={disabled}
+                />
+            }
+    
             <NumberForm
                 name='추론 토큰 크기'
                 value={config.thinking_tokens}
@@ -42,15 +50,19 @@ function ThinkingOptions({
                 allowDecimal={false}
                 disabled={disabled}
             />
-            <CheckBoxForm
-                name='추론 요약 제공'
-                checked={config.thinking_summary ?? false}
-                onChange={(next) => {
-                    config.thinking_summary = next ?? undefined;
-                    refresh();
-                }}
-                disabled={disabled}
-            />
+            {
+                model.config.supportThinkingSummary 
+                && <CheckBoxForm
+                    name='추론 요약 제공'
+                    checked={config.thinking_summary ?? false}
+                    onChange={(next) => {
+                        config.thinking_summary = next ?? undefined;
+                        refresh();
+                    }}
+                    disabled={disabled}
+                />
+            }
+            <div style={{ height: '1em' }}/>
         </>
     )
 }

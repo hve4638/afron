@@ -3,12 +3,17 @@ import { CheckBoxForm } from '@/components/Forms';
 import SafetyFilterSlider from './SafetyFilterSlider';
 import { OptionsProps } from './types';
 
-function ThinkingOptions({
+function SafetyOptions({
+    model,
     config,
     refresh,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_safety_settings;
     const safetySettings = config?.safety_settings ?? {};
+
+    if (!model.config.supportGeminiSafetyFilter) {
+        return <></>;
+    }
 
     return (
         <>
@@ -78,8 +83,9 @@ function ThinkingOptions({
                 }}
                 disabled={disabled}
             />
+            <div style={{ height: '1em' }}/>
         </>
     )
 }
 
-export default ThinkingOptions
+export default SafetyOptions
