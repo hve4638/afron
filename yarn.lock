@@ -1865,6 +1865,13 @@
   dependencies:
     tree-navigate "^0.3.0"
 
+"@hve/json-accessor@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@hve/json-accessor/-/json-accessor-0.6.0.tgz#26bd6ba3086fe9d7c97c06ca6d214fa70b016c2c"
+  integrity sha512-VSZpbRzlR+1ADZ4y2YAixYcgFS1JQAx351rBA6DQncXY1xnr0WxJbeDcYOEMUDW4vV4ozY8IaPMDlVSAXFMAHw==
+  dependencies:
+    tree-navigate "^0.4.0"
+
 "@hve/mime@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@hve/mime/-/mime-1.0.0.tgz#384fbd160333da8b967400dc2765fbc59b451c30"
@@ -3587,6 +3594,15 @@ ac-storage@^0.12.0:
   integrity sha512-CibPogF4CLbyHg4y+nwL4+AbWvKJXYnKX4cTonAo0u0GMl6DyHzFc58gW2yxdi8fLeSwB+VDoIuZ+viOBB8EVQ==
   dependencies:
     "@hve/json-accessor" "^0.4.0"
+    fast-deep-equal "^3.1.3"
+    tree-navigate "^0.1.1"
+
+ac-storage@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/ac-storage/-/ac-storage-0.14.0.tgz#99f14d3cdb49f6e57b13bb4409479436f3271544"
+  integrity sha512-j3zFYKM7n8kOCszH/qwrN10H/MUelxuodT8TT4usgpIzlL7fc5nRPo2OQASJSUKwqjAhclwSlNlAHOOgNZkyxA==
+  dependencies:
+    "@hve/json-accessor" "^0.6.0"
     fast-deep-equal "^3.1.3"
     tree-navigate "^0.1.1"
 
@@ -9903,6 +9919,11 @@ tree-navigate@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/tree-navigate/-/tree-navigate-0.3.0.tgz#829d26f68c7c4b8c9cbd56704a1fd7cb9f821327"
   integrity sha512-PY35XsGqsYHrQcXyF+ecEUsKW2X4zO8ZQRp4cBjfDsmy5pOs/xQBpe86OmzbJoc+yyI7wmT3CRhO71z2T//+aA==
+
+tree-navigate@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/tree-navigate/-/tree-navigate-0.4.0.tgz#c865755972418ee3d30c0157ddddffa206b28b0b"
+  integrity sha512-grHLkLNceU3f7iET1+bg2AbtoSjn/dl+SpQqt2q3DtTgwllwOSYDYtSmmPhBysJE1CDMm3RniKAwt3pI8lkDMg==
 
 trim-lines@^3.0.0:
   version "3.0.1"
