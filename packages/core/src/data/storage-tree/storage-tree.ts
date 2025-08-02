@@ -1,6 +1,6 @@
 import { JSONType, StorageAccess } from 'ac-storage';
 import REQUEST_TEMPLATE_TREE from './request-template-tree';
-import { MODEL_SETTINGS } from './model-config';
+import { GLOBAL_MODEL_SETTINGS, MODEL_SETTINGS } from './model-config';
 
 const API_KEYS_ELEMENT = {
     secret_id: JSONType.String(),
@@ -120,7 +120,7 @@ export const PROFILE_STORAGE_TREE = {
         'clear_on_submit_chat': JSONType.Bool().default_value(true),
     }),
     'model_config.json': StorageAccess.JSON({
-        '*': MODEL_SETTINGS,
+        '*': GLOBAL_MODEL_SETTINGS,
     }),
     'shortcuts.json': StorageAccess.JSON(),
     'metadata.json': StorageAccess.JSON({

@@ -29,7 +29,7 @@ function ModelConfigModal({
 }: ModelConfigModalProps) {
     const { t } = useTranslation();
     const [disappear, closed] = useModalDisappear(onClose);
-    const configRef = useRef<Partial<ModelConfiguration>>({});
+    const configRef = useRef<Partial<GlobalModelConfiguration>>({});
     const [refreshPing, refresh] = useSignal();
     const modelMap = useMemoryStore(state => state.modelsMap);
 

@@ -39,13 +39,14 @@ function PromptEditor() {
         name: null,
         version: '1.0.0',
         model: {
+            stream: false,
             temperature: 1.0,
-            topP: 1.0,
-            maxTokens: 1024,
-            useThinking: false,
-            thinkingTokens: 1024,
+            top_p: 1.0,
+            max_tokens: 1024,
+            use_thinking: false,
+            thinking_tokens: 1024,
 
-            geminiSafetySettings: {
+            safety_settings: {
                 HARM_CATEGORY_CIVIC_INTEGRITY: 'OFF',
                 HARM_CATEGORY_DANGEROUS_CONTENT: 'OFF',
                 HARM_CATEGORY_HARASSMENT: 'OFF',
@@ -101,13 +102,7 @@ function PromptEditor() {
         }
         if (data.changed.model || data.changed.contents) {
             await rtState.update.promptMetadata(data.promptId, {
-                model: {
-                    temperature: data.model.temperature,
-                    top_p: data.model.topP,
-                    max_tokens: data.model.maxTokens,
-                    use_thinking: data.model.useThinking,
-                    thinking_tokens: data.model.thinkingTokens,
-                },
+                model: data.model,
                 contents: data.contents,
             });
         }
@@ -144,17 +139,19 @@ function PromptEditor() {
 
         editorData.current.name = name;
         if (model) {
+            console.log('[load] model', model);
             /// @TODO : 원래 model은 반드시 valid하게 와야하는데 {}만 오는 문제
-            editorData.current.model = {
-                temperature: model.temperature ?? 1.0,
-                topP: model.top_p ?? 1.0,
-                maxTokens: model.max_tokens ?? 1024,
-                useThinking: model.use_thinking ?? false,
-                thinkingTokens: model.thinking_tokens ?? 1024,
+            editorData.current.model = model;
+            // editorData.current.model = {
+            //     temperature: model.temperature ?? 1.0,
+            //     topP: model.top_p ?? 1.0,
+            //     maxTokens: model.max_tokens ?? 1024,
+            //     useThinking: model.use_thinking ?? false,
+            //     thinkingTokens: model.thinking_tokens ?? 1024,
 
                 
-                geminiSafetySettings: model.gemini_safety_settings ?? editorData.current.model.geminiSafetySettings,
-            };
+            //     geminiSafetySettings: model.safety_settings ?? editorData.current.model.geminiSafetySettings,
+            // };
         }
         editorData.current.contents = contents;
         editorData.current.changed = {};

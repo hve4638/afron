@@ -18,13 +18,16 @@ declare global {
         model: {
             stream: boolean;
             
-            temperature: number;
             top_p: number;
+            temperature: number;
             max_tokens: number;
             use_thinking: boolean;
             thinking_tokens: number;
+            thinking_auto_budget: boolean;
+            thinking_tokens: number;
+            // thinking_summary: boolean;
 
-            gemini_safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
+            safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
         };
     }
 

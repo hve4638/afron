@@ -1,7 +1,7 @@
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
 
 class GlobalModelConfigEvent {
-    static async getGlobalConfig(modelId: string):Promise<ModelConfiguration> {
+    static async getGlobalConfig(modelId: string):Promise<GlobalModelConfiguration> {
         const { api } = useProfileAPIStore.getState();
         const modelIdFiltered = modelId.replaceAll('.', '_');
 
@@ -10,7 +10,7 @@ class GlobalModelConfigEvent {
         return data[modelIdFiltered] ?? {};
     }
 
-    static async setGlobalConfig(modelId: string, data: Partial<ModelConfiguration>) {
+    static async setGlobalConfig(modelId: string, data: Partial<GlobalModelConfiguration>) {
         const { api } = useProfileAPIStore.getState();
         const modelIdFiltered = modelId.replaceAll('.', '_');
 

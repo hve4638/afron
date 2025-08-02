@@ -2,6 +2,18 @@ import './gemini-safety-setting';
 
 declare global {
     type ModelConfiguration = {
+        stream?: boolean;
+        top_p?: number;
+        temperature?: number;
+        max_tokens?: number;
+        use_thinking?: boolean;
+        thinking_auto_budget?: boolean;
+        thinking_tokens?: number;
+        thinking_summary?: boolean;
+        safety_settings?: Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>>;
+    }
+
+    type GlobalModelConfiguration = {
         /**
          * 전역 설정에서 기존 설정을 덮어쓰는지 여부
          * 

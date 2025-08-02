@@ -1,6 +1,6 @@
 export interface OptionsProps {
     model: ChatAIModel;
-    config: Partial<ModelConfiguration>;
+    config: Partial<GlobalModelConfiguration>;
 
     noMarginBottom?: boolean;
     refresh: () => void;

@@ -13,15 +13,7 @@ export type PromptEditorData = {
     changedVariables : PromptVar[];
     removedVariables : string[];
     contents : string;
-    model: {
-        temperature: number;
-        topP: number;
-        maxTokens: number;
-        useThinking: boolean;
-        thinkingTokens: number;
-        
-        geminiSafetySettings: Record<GeminiSafetyFilterName, GeminiSafetyThreshold>;
-    };
+    model: ModelConfiguration;
     
     config : {
         inputType : PromptInputType;
