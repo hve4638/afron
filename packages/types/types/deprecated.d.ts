@@ -17,7 +17,7 @@ type KeyValueInput = [string, any][] | Record<string, any>;
 type IPCInvokeIntrerface = {
     [IPCInvokerName.Echo]: (message:string) => ElectronResult<string>;
     [IPCInvokerName.OpenBrowser]: (url:string) => ElectronNoResult;
-    [IPCInvokerName.GetChatAIModels]: () => ElectronResult<DeprecatedChatAIModels>;
+    [IPCInvokerName.GetChatAIModels]: () => ElectronResult<ChatAIModelData>;
 
     /* 마스터 키 */
     [IPCInvokerName.InitMasterKey]: () => ElectronResult<'normal'|'need-recovery'|'no-data'|'invalid-data'>;

@@ -1,3 +1,5 @@
+import './gemini-safety-setting';
+
 declare global {
     type ModelConfiguration = {
         /**
@@ -19,22 +21,8 @@ declare global {
         thinking_auto_budget?: boolean;
         thinking_tokens?: number;
         thinking_summary?: boolean;
-        safety_settings?: {
-            HARM_CATEGORY_HARASSMENT?: GeminiSafetyThreshold,
-            HARM_CATEGORY_HATE_SPEECH?: GeminiSafetyThreshold,
-            HARM_CATEGORY_SEXUALLY_EXPLICIT?: GeminiSafetyThreshold,
-            HARM_CATEGORY_DANGEROUS_CONTENT?: GeminiSafetyThreshold,
-            HARM_CATEGORY_CIVIC_INTEGRITY?: GeminiSafetyThreshold,
-        }
+        safety_settings?: Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>>;
     }
-
-    type GeminiSafetyThreshold = (
-        'OFF'
-        | 'BLOCK_NONE'
-        | 'BLOCK_ONLY_HIGH'
-        | 'BLOCK_MEDIUM_AND_ABOVE'
-        | 'BLOCK_LOW_AND_ABOVE'
-    );
 }
 
-export {};
+export { };

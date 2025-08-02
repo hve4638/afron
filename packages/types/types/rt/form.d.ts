@@ -16,11 +16,15 @@ declare global {
         variables : string[];
 
         model: {
+            stream: boolean;
+            
             temperature: number;
             top_p: number;
             max_tokens: number;
             use_thinking: boolean;
             thinking_tokens: number;
+
+            gemini_safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
         };
     }
 
