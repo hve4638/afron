@@ -2,10 +2,14 @@ import Delimiter from '@/components/Delimiter';
 import { CheckBoxForm } from '@/components/Forms';
 import SafetyFilterSlider from './SafetyFilterSlider';
 import { OptionsProps } from './types';
+import ModelForm from '@/components/model-ui';
+import { useMemo } from 'react';
 
 function SafetyOptions({
     model,
     config,
+
+    noMarginBottom = false,
     refresh,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_safety_settings;
@@ -28,62 +32,22 @@ function SafetyOptions({
                 disabled={!config.override_enabled}
             />
             <Delimiter />
-            <SafetyFilterSlider
-                // HARASSMENT
-                name='괴롭힘'
-                value={safetySettings.HARM_CATEGORY_HARASSMENT ?? 'OFF'}
+            <ModelForm.SafetyFilter
+                value={safetySettings}
                 onChange={(next) => {
-                    config.safety_settings ??= {};
-                    config.safety_settings.HARM_CATEGORY_HARASSMENT = next as GeminiSafetyThreshold;
+                    config.safety_settings = {
+                        ...safetySettings,
+                        ...next,
+                    };
                     refresh();
                 }}
+                allowEmpty={true}
                 disabled={disabled}
             />
-            <SafetyFilterSlider
-                // HATE_SPEECH
-                name='증오심 표현'
-                value={safetySettings.HARM_CATEGORY_HATE_SPEECH ?? 'OFF'}
-                onChange={(next) => {
-                    config.safety_settings ??= {};
-                    config.safety_settings.HARM_CATEGORY_HATE_SPEECH = next as GeminiSafetyThreshold;
-                    refresh();
-                }}
-                disabled={disabled}
-            />
-            <SafetyFilterSlider
-                // name='SEXUALLY_EXPLICIT'
-                name='음란물'
-                value={safetySettings.HARM_CATEGORY_SEXUALLY_EXPLICIT ?? 'OFF'}
-                onChange={(next) => {
-                    config.safety_settings ??= {};
-                    config.safety_settings.HARM_CATEGORY_SEXUALLY_EXPLICIT = next as GeminiSafetyThreshold;
-                    refresh();
-                }}
-                disabled={disabled}
-            />
-            <SafetyFilterSlider
-                // name='DANGEROUS_CONTENT'
-                name='위험한 콘텐츠'
-                value={safetySettings.HARM_CATEGORY_DANGEROUS_CONTENT ?? 'OFF'}
-                onChange={(next) => {
-                    config.safety_settings ??= {};
-                    config.safety_settings.HARM_CATEGORY_DANGEROUS_CONTENT = next as GeminiSafetyThreshold;
-                    refresh();
-                }}
-                disabled={disabled}
-            />
-            <SafetyFilterSlider
-                // name='CIVIC_INTEGRITY'
-                name='시민의식'
-                value={safetySettings.HARM_CATEGORY_CIVIC_INTEGRITY ?? 'OFF'}
-                onChange={(next) => {
-                    config.safety_settings ??= {};
-                    config.safety_settings.HARM_CATEGORY_CIVIC_INTEGRITY = next as GeminiSafetyThreshold;
-                    refresh();
-                }}
-                disabled={disabled}
-            />
-            <div style={{ height: '1em' }}/>
+            {
+                noMarginBottom == false
+                && <div style={{ height: '1em' }} />
+            }
         </>
     )
 }

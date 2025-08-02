@@ -1,11 +1,13 @@
 import Delimiter from '@/components/Delimiter';
 import { CheckBoxForm, NumberForm } from '@/components/Forms';
-import SafetyFilterSlider from './SafetyFilterSlider';
 import { OptionsProps } from './types';
+import ModelForm from '@/components/model-ui';
 
 function ThinkingOptions({
     model,
     config,
+
+    noMarginBottom = false,
     refresh,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_thinking;
@@ -29,9 +31,8 @@ function ThinkingOptions({
             <Delimiter />
             {
                 model.config.thinking === 'optional'
-                && <CheckBoxForm
-                    name='추론 활성화'
-                    checked={config.use_thinking ?? false}
+                && <ModelForm.ThinkingEnabled
+                    value={config.use_thinking}
                     onChange={(next) => {
                         config.use_thinking = next ?? undefined;
                         refresh();
@@ -39,19 +40,17 @@ function ThinkingOptions({
                     disabled={disabled}
                 />
             }
-    
-            <NumberForm
-                name='추론 토큰 크기'
+            <ModelForm.ThinkingTokens
                 value={config.thinking_tokens}
                 onChange={(next) => {
                     config.thinking_tokens = next ?? undefined;
                     refresh();
                 }}
-                allowDecimal={false}
+                allowEmpty={true}
                 disabled={disabled}
             />
             {
-                model.config.supportThinkingSummary 
+                model.config.supportThinkingSummary
                 && <CheckBoxForm
                     name='추론 요약 제공'
                     checked={config.thinking_summary ?? false}
@@ -62,7 +61,10 @@ function ThinkingOptions({
                     disabled={disabled}
                 />
             }
-            <div style={{ height: '1em' }}/>
+            {
+                noMarginBottom == false
+                && <div style={{ height: '1em' }} />
+            }
         </>
     )
 }

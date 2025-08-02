@@ -2,12 +2,20 @@ import Delimiter from '@/components/Delimiter';
 import { CheckBoxForm, NumberForm } from '@/components/Forms';
 import SafetyFilterSlider from './SafetyFilterSlider';
 import { OptionsProps } from './types';
+import ModelForm from '@/components/model-ui';
 
 function CommonOptions({
     config,
     refresh,
+
+    noMarginBottom = false,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_common;
+
+    const change = (key: 'max_tokens' | 'temperature' | 'top_p', value?: number) => {
+        config[key] = value ?? undefined;
+        refresh();
+    }
 
     return (
         <>
@@ -23,44 +31,31 @@ function CommonOptions({
                 disabled={!config.override_enabled}
             />
             <Delimiter />
-            <NumberForm
-                name='최대 응답 크기'
+            <ModelForm.MaxToken
                 value={config.max_tokens}
-                onChange={(next) => {
-                    config.max_tokens = next ?? undefined;
-                    refresh();
-                }}
+                onChange={(next) => change('max_tokens', next)}
 
-                allowDecimal={false}
                 allowEmpty={true}
-                instantChange={true}
                 disabled={disabled}
             />
-            <NumberForm
-                name='온도'
+            <ModelForm.Temperature
                 value={config.temperature}
-                onChange={(next) => {
-                    config.temperature = next ?? undefined;
-                    refresh();
-                }}
-                allowDecimal={true}
+                onChange={(next) => change('temperature', next)}
+
                 allowEmpty={true}
-                instantChange={true}
                 disabled={disabled}
             />
-            <NumberForm
-                name='Top P'
+            <ModelForm.TopP
                 value={config.top_p}
-                onChange={(next) => {
-                    config.top_p = next ?? undefined;
-                    refresh();
-                }}
-                allowDecimal={true}
+                onChange={(next) => change('top_p', next)}
+
                 allowEmpty={true}
-                instantChange={true}
                 disabled={disabled}
             />
-            <div style={{ height: '1em' }}/>
+            {
+                noMarginBottom == false
+                && <div style={{ height: '1em' }} />
+            }
         </>
     )
 }

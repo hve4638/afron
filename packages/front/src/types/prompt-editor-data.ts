@@ -19,6 +19,8 @@ export type PromptEditorData = {
         maxTokens: number;
         useThinking: boolean;
         thinkingTokens: number;
+        
+        geminiSafetySettings: Record<GeminiSafetyFilterName, GeminiSafetyThreshold>;
     };
     
     config : {

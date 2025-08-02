@@ -44,6 +44,14 @@ function PromptEditor() {
             maxTokens: 1024,
             useThinking: false,
             thinkingTokens: 1024,
+
+            geminiSafetySettings: {
+                HARM_CATEGORY_CIVIC_INTEGRITY: 'OFF',
+                HARM_CATEGORY_DANGEROUS_CONTENT: 'OFF',
+                HARM_CATEGORY_HARASSMENT: 'OFF',
+                HARM_CATEGORY_HATE_SPEECH: 'OFF',
+                HARM_CATEGORY_SEXUALLY_EXPLICIT: 'OFF',
+            },
         },
         variables: [],
         changedVariables: [],
@@ -143,6 +151,9 @@ function PromptEditor() {
                 maxTokens: model.max_tokens ?? 1024,
                 useThinking: model.use_thinking ?? false,
                 thinkingTokens: model.thinking_tokens ?? 1024,
+
+                
+                geminiSafetySettings: model.gemini_safety_settings ?? editorData.current.model.geminiSafetySettings,
             };
         }
         editorData.current.contents = contents;

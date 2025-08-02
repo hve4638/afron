@@ -13,6 +13,7 @@ import { PromptEditorData, PromptInputType } from '@/types';
 import { use } from 'i18next';
 import Delimiter from '@/components/Delimiter';
 import CheckBox from '@/components/CheckBox';
+import ModelForm from '@/components/model-ui';
 
 type PromptOnlyConfigModalProps = {
     data:PromptEditorData;
@@ -45,11 +46,20 @@ function PromptOnlyConfigModal({
     return (
         <Modal
             disappear={disappear}
+            style={{
+                maxHeight: '80%',
+                overflowY: 'auto',
+            }}
+            headerLabel={
+                <ModalHeader onClose={close}>
+                    {'설정'}
+                </ModalHeader>
+            }
         >
-            <ModalHeader onClose={close}>{'설정'}</ModalHeader>
+            
             <Column
                 style={{
-                    padding: '0.5em 0em 0.5em 0.5em',
+                    // padding: '0.5em 0em 0.5em 0.5em',
                     gap: '0.5em',
                 }}
             >
@@ -92,8 +102,7 @@ function PromptOnlyConfigModal({
                 <div style={{height: '0.5em'}}/>
                 <b className='undraggable'>모델</b>
                 <Delimiter/>
-                <NumberForm
-                    name='최대 응답 크기'
+                <ModelForm.MaxToken
                     value={data.model.maxTokens}
                     onChange={(value)=>{
                         data.model.maxTokens = value ?? 0;
@@ -101,27 +110,25 @@ function PromptOnlyConfigModal({
                         refresh();
                     }}
                 />
-                <NumberForm
-                    name='온도'
+                <ModelForm.Temperature
                     value={data.model.temperature}
                     onChange={(value)=>{
                         data.model.temperature = value ?? 0;
                         data.changed.model = true;
                         refresh();
                     }}
-                    allowDecimal={true}
+                    allowEmpty={true}
                 />
-                <NumberForm
-                    name='Top P'
+                <ModelForm.TopP
                     value={data.model.topP}
                     onChange={(value)=>{
                         data.model.topP = value ?? 0;
                         data.changed.model = true;
                         refresh();
                     }}
-                    allowDecimal={true}
+                    allowEmpty={true}
                 />
-                <div style={{ height:'0.5em' }}/>
+                <div style={{ height:'1em' }}/>
                 <CheckBoxForm
                     name='추론 활성화'
                     checked={data.model.useThinking}
@@ -138,6 +145,8 @@ function PromptOnlyConfigModal({
                         refresh();
                     }}
                 />
+                <div style={{ height:'1em' }}/>
+
                 {/* <div style={{ height:'0.5em' }}/>
                 <NumberForm
                     name='이전 대화 컨텍스트 크기'

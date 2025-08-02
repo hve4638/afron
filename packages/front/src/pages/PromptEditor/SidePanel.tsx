@@ -14,7 +14,7 @@ import VarEditModal from './VarEditModal';
 
 import type { PromptEditorData, PromptInputType } from '@/types';
 import { EditableText } from '@/components/EditableText';
-import PromptOnlyConfigModal from './PromptOnlyConfigModal';
+import PromptOnlyConfigModal from './modals/PromptOnlyConfigModal';
 
 type SidePanelProps = {
     data:PromptEditorData;
