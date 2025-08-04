@@ -24,6 +24,10 @@ type RTEventDataUpdate = {
     type: 'update'
     update_types: ('input' | 'output' | 'history')[];
 }
+type RTEventDataSend = {
+    type: 'send_raw_request_preview'
+    preview: object;
+}
 type RTEventDataOutput = {
     type: 'stream_output';
     text: string;
@@ -40,6 +44,7 @@ type RTEventDataOthers = {
 declare global {
     type RTEventDataWithoutId = (
         RTEventDataError
+        | RTEventDataSend
         | RTEventDataUpdate
         | RTEventDataOutput
         | RTEventDataOthers

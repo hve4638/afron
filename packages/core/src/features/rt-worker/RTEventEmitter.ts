@@ -71,11 +71,27 @@ class RTEventEmitter {
                     update_types: ['input'],
                 });
             },
+            output: () => {
+                this.logger.trace(`[RTEventEmitter] update: output (${this.#id})`);
+                this.#send({
+                    type: 'update',
+                    update_types: ['output'],
+                });
+            },
             history: () => {
                 this.logger.trace(`[RTEventEmitter] update: history (${this.#id})`);
                 this.#send({
                     type: 'update',
                     update_types: ['history'],
+                });
+            }
+        },
+        send: {
+            rawRequestPreview: (data: object) => {
+                this.logger.trace(`[RTEventEmitter] send: raw_request_preview (${this.#id})`, JSON.stringify(data));
+                this.#send({
+                    type: 'send_raw_request_preview',
+                    preview: data,
                 });
             }
         },
@@ -87,14 +103,20 @@ class RTEventEmitter {
                     text: text,
                 });
             },
-            stream: (text: string) => {
+            streamThinking: (text: string) => {
+                
+            },
+            thinking: (text: string) => {
+                
+            },
+            streamOutput: (text: string) => {
                 this.logger.trace(`[RTEventEmitter] stream_output (${this.#id})`, text);
                 this.#send({
                     type: 'stream_output',
                     text: '',
                 });
             },
-            clear: () => {
+            clearOutput: () => {
                 this.logger.trace(`[RTEventEmitter] clear_output (${this.#id})`);
 
                 this.#send({
