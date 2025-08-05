@@ -6,7 +6,7 @@ import InputField from '@/components/InputField';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
-import { useConfigStore, useSessionStore, useSignalStore } from '@/stores';
+import { useConfigStore, useSessionStore, useShortcutSignalStore, useSignalStore } from '@/stores';
 
 import SplitSlider from '../SplitSlider';
 
@@ -36,6 +36,7 @@ function SingleIOLayout({
     const configState = useConfigStore();
     const sessionState = useSessionStore();
     const lastSessionId = useSessionStore(state => state.deps.last_session_id);
+
     const sessionHistory = useMemo(() => {
         const historyState = useHistoryStore.getState();
 
@@ -196,12 +197,25 @@ function SingleIOLayout({
                         >
                             <FilesFormLayout
                                 style={{
-                                    // width: '200px',,
                                     height: '100%',
                                 }}
                                 internalPadding='4px 4px'
                             />
                         </Flex>
+                        <GIconButton
+                            // className='floating-button'
+                            className={classNames(styles['send-button'])}
+                            value='visibility'
+                            style={{
+                                cursor: 'pointer',
+                                fontSize: '32px',
+                                width: '40px',
+                                height: '40px',
+                            }}
+                            onClick={() => {
+                                
+                            }}
+                        />
                         <GIconButton
                             // className='floating-button'
                             className={classNames(styles['send-button'])}
@@ -291,14 +305,10 @@ function SingleIOLayout({
                             }}
                             value='content_paste'
                             hoverEffect='square'
-                        />
-                        {/* <GIconButton
-                            style={{
-                                fontSize: '1.15em'
+                            onClick={() => {
+                                useShortcutSignalStore.getState().signal.copy_response();
                             }}
-                            value='edit'
-                            hoverEffect='square'
-                        /> */}
+                        />
                     </Row>
                 </InputField>
                 <SplitSlider
