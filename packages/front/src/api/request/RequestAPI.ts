@@ -12,7 +12,7 @@ import { v7 as uuidv7 } from 'uuid';
 class RequestAPI {
     static instance: RequestAPI | null = null;
     #bindId: number|null = null;
-    #channels = new Map<string, Channel<RequestRTData>>();
+    #channels = new Map<string, Channel<RTEventData>>();
 
     static getInstance() {
         RequestAPI.instance ??= new RequestAPI();
@@ -36,7 +36,7 @@ class RequestAPI {
 
     #openCh(chId:string) {
         if (!this.#channels.get(chId)) {
-            this.#channels.set(chId, new Channel<RequestRTData>());
+            this.#channels.set(chId, new Channel<RTEventData>());
         }
     }
     
@@ -75,7 +75,7 @@ class RequestAPI {
         return result;
     }
     
-    #onRequest(event:any, chId:string, data: RequestRTData) {
+    #onRequest(event:any, chId:string, data: RTEventData) {
         const ch = this.#getCh(chId);
 
         ch.produce(data);
