@@ -22,21 +22,28 @@ abstract class RTWorkflow {
 
     protected async getNodeData(rtInput: RTInput): Promise<NodeData> {
         const historyAC = await this.profile.accessAsHistory(rtInput.sessionId);
-        const chat = historyAC
-            .getHistory(0, 1000, true)
-            .map((row: HistoryRow) => row.id)
-            .reverse()
-            .map((id: number) => historyAC.getMessageText(id))
-            .flatMap(({ input, output }) => {
-                const result: {
-                    role: 'user' | 'assistant',
-                    contents: { type: 'text', value: string }[]
-                }[] = [];
+        let chat;
+        try {
+            chat = historyAC
+                .getHistory(0, 1000, true)
+                .map((row: HistoryRow) => row.id)
+                .reverse()
+                .map((id: number) => historyAC.getMessageText(id))
+                .flatMap(({ input, output }) => {
+                    const result: {
+                        role: 'user' | 'assistant',
+                        contents: { type: 'text', value: string }[]
+                    }[] = [];
 
-                if (input) result.push({ role: 'user', contents: [{ type: 'text', value: input }] });
-                if (output) result.push({ role: 'assistant', contents: [{ type: 'text', value: output }] });
-                return result;
-            });
+                    if (input) result.push({ role: 'user', contents: [{ type: 'text', value: input }] });
+                    if (output) result.push({ role: 'assistant', contents: [{ type: 'text', value: output }] });
+                    return result;
+                });
+        }
+        catch (error) {
+            this.rtEventEmitter.emit.error.other([`${error}`]);
+            throw error;
+        }
 
         return {
             rtEventEmitter: this.rtEventEmitter,

@@ -1,6 +1,6 @@
 export function resolveModelConfiguration(
-    globalConfigs: GlobalModelConfiguration[],
-    configs: ModelConfiguration[],
+    globalConfigs: GlobalModelConfiguration[] = [],
+    configs: ModelConfiguration[] = [],
 ): Required<ModelConfiguration> {
     const result: Required<ModelConfiguration> = {
         stream: false,
