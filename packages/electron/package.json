@@ -20,7 +20,9 @@
     "test": "jest",
     "compile": "tsc",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
