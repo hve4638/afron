@@ -77,7 +77,7 @@ class RTWorker {
 
                 this.#tokens.delete(token);
             });
-
+        
         return token;
     }
 }

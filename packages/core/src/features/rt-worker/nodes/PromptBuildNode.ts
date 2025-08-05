@@ -48,7 +48,7 @@ class PromptBuildNode extends WorkNode<PromptBuildNodeInput, PromptBuildNodeOutp
         }: PromptBuildNodeInput,
     ) {
         const {
-            profile, rtId, logger, rtEventEmitter, chat
+            profile, rtId, rtEventEmitter, chat
         } = this.nodeData;
         const rt = profile.rt(rtId);
         const promptVars = await rt.getPromptVariables(this.option.promptId);

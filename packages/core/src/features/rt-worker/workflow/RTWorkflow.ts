@@ -3,14 +3,11 @@ import { Profile } from '@/features/profiles';
 import { HistoryRequired } from '@/features/acstorage-accessor/HistoryAccessor';
 import { HistoryMessageRow, HistoryRow } from '@/features/acstorage-accessor/HistoryAccessor/types';
 
-import WorkLogger from '../WorkLog';
 import RTEventEmitter from '../RTEventEmitter';
 import { WorkLog } from '../types';
 import { NodeData } from '../nodes/types';
 
 abstract class RTWorkflow {
-    protected workLogger: WorkLogger = new WorkLogger();
-
     constructor(
         protected rtEventEmitter: RTEventEmitter,
         protected profile: Profile,
@@ -47,7 +44,6 @@ abstract class RTWorkflow {
 
         return {
             rtEventEmitter: this.rtEventEmitter,
-            logger: this.workLogger,
             profile: this.profile,
 
             inputText: rtInput.input,

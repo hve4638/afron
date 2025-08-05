@@ -1,7 +1,6 @@
 import { type Profile } from '@/features/profiles';
 import { HistoryMessageRow } from '@/features/acstorage-accessor';
 
-import WorkLogger from '../WorkLog';
 import RTEventEmitter from '../RTEventEmitter';
 import { HistoryMessageAddRequired } from '@/features/acstorage-accessor/HistoryAccessor/types';
 
@@ -17,7 +16,6 @@ export type HistoryData = {
 
 export type NodeData = {
     rtEventEmitter: RTEventEmitter;
-    logger: WorkLogger;
     profile: Profile;
 
     inputText: string;

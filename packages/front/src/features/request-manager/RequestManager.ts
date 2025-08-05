@@ -55,12 +55,6 @@ class RequestManager {
                     sessionState.refetch.state();
                 }
                 useSignalStore.getState().signal.session_metadata();
-
-                useToastStore.getState().add(
-                    'Request closed unexpectedly',
-                    null,
-                    'warn'
-                );
                 break;
             }
             else if (data.type === 'update') {

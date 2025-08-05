@@ -2,8 +2,6 @@ import RTWorkflow from './RTWorkflow';
 
 class WorkflowMirror extends RTWorkflow {
     async process(rtInput: RTInput) {
-        this.workLogger.workBegin();
-
         try {
             this.rtEventEmitter.emit.output.set(rtInput.input);
         }
