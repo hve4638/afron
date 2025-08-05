@@ -9,7 +9,7 @@ class RTWorkflowPromptPreview extends RTWorkflow {
 
         const inputNode = new InputNode(0, nodeData, { inputType: 'normal' });
         const promptBuildNode = new PromptBuildNode(1, nodeData, { promptId: 'default', form: {} });
-        const chatAIFetchNode = new ChatAIFetchNode(2, nodeData, { usePromptSetting: true, promptId: 'default' });
+        const chatAIFetchNode = new ChatAIFetchNode(2, nodeData, { promptId: 'default' });
 
         let input: UserInput;
         try {
