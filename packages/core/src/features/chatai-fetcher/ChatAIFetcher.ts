@@ -1,9 +1,10 @@
 import NoLogger from '@/features/nologger';
 import { LevelLogger } from '@/types';
-import { ChatMessages } from '@hve/chatai';
+import { ChatAIResult, ChatMessages } from '@hve/chatai';
 import { ChatAI } from '@hve/chatai';
 
 import type { ChatAIRequestAPI, RequestModelProps } from './types';
+import { ChatAIFetcherFailed } from './errors';
 
 interface RequestProps {
     model: ChatAIModel;
@@ -13,7 +14,7 @@ interface RequestProps {
 }
 
 interface RequestOptions {
-    previewMode?: boolean,
+    preview?: boolean,
 }
 
 class ChatAIFetcher {
@@ -29,7 +30,7 @@ class ChatAIFetcher {
      * @param promptData 
      * @param requestAPI 
      */
-    request(
+    async request(
         {
             model,
             messages,
@@ -37,13 +38,13 @@ class ChatAIFetcher {
             auth
         }: RequestProps,
         {
-            previewMode = false
+            preview = false
         }: RequestOptions,
-    ) {
+    ): Promise<ChatAIResult> {
         const api: ChatAIRequestAPI = (
-            previewMode
-                ? ChatAI.request
-                : ChatAI.previewRequest
+            preview
+                ? ChatAI.previewRequest
+                : ChatAI.request
         );
 
         const category = this.#getAPICategory(model);
@@ -66,19 +67,18 @@ class ChatAIFetcher {
             });
         }
         else {
-            return {};
+            throw new ChatAIFetcherFailed('Unsupported model API category: ' + category);
         }
     }
-    
+
     async #requestKnownProviderModel({
         model,
         modelConfiguration,
         messages,
         auth,
         api,
-    }: RequestModelProps<string>) {
+    }: RequestModelProps<string>): Promise<ChatAIResult> {
         const { modelId, config } = model;
-
         const {
             temperature,
             top_p,
@@ -131,15 +131,12 @@ class ChatAIFetcher {
             this.logger.trace('Requesting AnthropicAPI (Anthropic)');
             return await api.anthropic({
                 thinking_tokens: useThinking ? thinking_tokens : undefined,
-                
+
                 ...common,
             });
         }
 
-        // rtEventEmitter.emit.error.other(
-        //     [`Model '${modelId}' has no provider configured.`]
-        // );
-        // throw new WorkNodeStop();
+        throw new ChatAIFetcherFailed(`Model '${modelId}' has no provider configured.`);
     }
 
     async #requestVertexAIModel({
@@ -148,7 +145,7 @@ class ChatAIFetcher {
         messages,
         auth,
         api,
-    }: RequestModelProps) {
+    }: RequestModelProps): Promise<ChatAIResult> {
         const { modelId, config } = model;
 
         const {
@@ -158,7 +155,7 @@ class ChatAIFetcher {
             use_thinking,
             thinking_tokens,
         } = modelConfiguration;
-        
+
         const useThinking = (
             config.thinking === 'enabled'
             || (config.thinking === 'optional' && use_thinking)
@@ -200,6 +197,8 @@ class ChatAIFetcher {
                 top_p,
             });
         }
+
+        throw new ChatAIFetcherFailed(`Model '${modelId}' has no provider configured.`);
     }
 
     // private async requestCustomModel(customModel: CustomModel, modelOptions: ModelOptions, messages: ChatMessages) {
