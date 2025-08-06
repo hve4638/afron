@@ -7,7 +7,8 @@ import classNames from 'classnames';
 import { useMemo, useRef, useState } from 'react';
 import Popover from '@/components/Popover';
 import DivButton from '@/components/DivButton';
-import { useProfileAPIStore, useSignalStore } from '@/stores';
+import { useProfileAPIStore } from '@/stores';
+import { emitEvent } from '@/hooks/useEvent';
 
 type SessionMenuPopoverProps = {
     item : ProfileSessionMetadata;
@@ -25,7 +26,6 @@ function SessionMenuPopover(props:SessionMenuPopoverProps) {
     } = props;
     const { api } = useProfileAPIStore();
     const sessionAPI = useMemo(()=>api.session(item.id), [item.id]);
-    const signal = useSignalStore(state=>state.signal);
 
     return (
         <Popover
@@ -66,7 +66,7 @@ function SessionMenuPopover(props:SessionMenuPopoverProps) {
                     <MenuItem icon='lock_open'
                         onClick={async ()=>{
                             await sessionAPI.set('config.json', { delete_lock: false });
-                            signal.session_metadata();
+                            emitEvent('refresh_session_metadata');
                             onClose();
                         }}
                     >삭제 잠금 해제</MenuItem>
@@ -76,7 +76,7 @@ function SessionMenuPopover(props:SessionMenuPopoverProps) {
                     <MenuItem icon='lock'
                         onClick={async ()=>{
                             await sessionAPI.set('config.json', { delete_lock: true });
-                            signal.session_metadata();
+                            emitEvent('refresh_session_metadata');
                             onClose();
                         }}
                     >삭제 잠금</MenuItem>

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Align, Flex, Row } from '@/components/layout';
 
 import { useConfigStore } from '@/stores';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 
 import styles from './styles.module.scss';
 import { GIconButton } from '@/components/GoogleFontIcon';
@@ -86,7 +86,7 @@ interface ModelItemProps {
 }
 
 function ModelItem({ model, onClick }: ModelItemProps) {
-    const [_, refresh] = useSignal();
+    const [_, refresh] = useTrigger();
     const flags = useMemo(() => model.flags, [model.flags])
     const starred = ProfileEvent.model.isStarred(model.modelId);
     const showActualName = useConfigStore(state => state.show_actual_model_name);

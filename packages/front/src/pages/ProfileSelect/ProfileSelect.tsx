@@ -4,7 +4,7 @@ import ProfilesAPI from '@/api/profiles';
 import { ProfileAddButton, ProfileButton, ProfileOptionButton } from '@/pages/ProfileSelect/ProfileButton';
 
 import RedIcon from '@/assets/img/red.png'
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import useMemoryStore from '@/stores/useMemoryStore';
 
 import NewProfileModal from './NewProfileModal';
@@ -20,8 +20,8 @@ import { InfoDialog } from '@/modals/Dialog';
 
 function ProfileSelectPage() {
     const modal = useModal();
-    const [reloadProfilesSignal, reloadProfiles] = useSignal();
-    const [reloadOrphanProfilesSignal, reloadOrphanProfiles] = useSignal();
+    const [reloadProfilesSignal, reloadProfiles] = useTrigger();
+    const [reloadOrphanProfilesSignal, reloadOrphanProfiles] = useTrigger();
     const [editMode, setEditMode] = useState(false);
     const [profiles, setProfiles] = useState<ProfileMetadata[]>([]);
     const [profileIds, setProfileIds] = useState<string[]>([]);

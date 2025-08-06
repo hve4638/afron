@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCacheStore, useSessionStore, useSignalStore } from '@/stores';
+import { useCacheStore, useSessionStore } from '@/stores';
 import { useHistoryStore } from '@/stores/useHistoryStore';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { Align, Column, Flex, Grid, Row } from '@/components/layout';
@@ -12,7 +12,8 @@ import styles from './styles.module.scss';
 import classNames from 'classnames';
 import HistoryItem from './HistoryItem';
 import { HistoryData } from '@/features/session-history';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
+import { emitEvent } from '@/hooks/useEvent';
 
 type NewRTModalProps = {
     isFocused: boolean;
@@ -27,7 +28,7 @@ function HistoryModal({
     const [disappear, close] = useModalDisappear(onClose);
     const historyState = useHistoryStore();
     const updateSessionState = useSessionStore(state=>state.update);
-    const [refreshHistoryPing, refreshHistory] = useSignal();
+    const [refreshHistoryPing, refreshHistory] = useTrigger();
     const {
         last_session_id,
 
@@ -37,8 +38,6 @@ function HistoryModal({
         history_apply_form,
         update : updateCacheState,
     } = useCacheStore();
-    const { signal } = useSignalStore();
-
     const [searchTextInstant, setSearchTextInstant] = useState<string>('');
     const [searchText, setSearchText] = useState<string>('');
 
@@ -142,7 +141,7 @@ function HistoryModal({
                                     }
                                     await Promise.all(promises);
 
-                                    signal.reload_input();
+                                    emitEvent('refresh_input');
                                     close();
                                 }}
                                 onDelete={async ()=>{

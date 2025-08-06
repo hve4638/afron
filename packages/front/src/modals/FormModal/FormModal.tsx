@@ -9,7 +9,7 @@ import { Modal, ModalHeader } from '@/components/Modal';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
 import useHotkey from '@/hooks/useHotkey';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 
 import { ArrayField, CheckBoxField, NumberField, SelectField, StructField, TextField } from './form-fields';
 import { getPromptVarDefaultValue } from './utils';
@@ -27,7 +27,7 @@ function FormModal({
     const [forms, setForms] = useState<PromptVar[]>([]);
     const variables = useRef<Record<string, any>>({});
 
-    const [_, refresh] = useSignal();
+    const [_, refresh] = useTrigger();
 
     useHotkey({
         'Escape': close,

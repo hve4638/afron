@@ -14,13 +14,12 @@ import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import { useModal } from '@/hooks/useModal';
 
-import { useSignalStore } from '@/stores';
-
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import NewRTModal from '@/modals/NewRTModal';
 
 import { LeafNode } from './nodes';
 import ProfileEvent from '@/features/profile-event';
+import { emitEvent } from '@/hooks/useEvent';
 
 type RTEditModalProps = {
     isFocused: boolean;
@@ -33,7 +32,6 @@ function RTEditModal({
 }: RTEditModalProps) {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const signal = useSignalStore(state => state.signal);
     const modal = useModal();
     const [disappear, close] = useModalDisappear(onClose);
     const nextDirIdRef = useRef<number>(0);
@@ -69,7 +67,7 @@ function RTEditModal({
         })
 
         await ProfileEvent.rt.updateTree(next);
-        await signal.refresh_rt_tree();
+        emitEvent('refresh_rt_tree');
     }
 
     const renameNode = async (value: string, newName: string) => {

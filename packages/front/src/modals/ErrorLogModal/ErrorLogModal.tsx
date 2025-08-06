@@ -4,7 +4,7 @@ import { Modal, ModalHeader } from '@/components/Modal';
 
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import { Align, Column, Flex, Grid, Row } from '@/components/layout';
 import ListView from '@/components/ListView/ListView';
 import useErrorLogStore, { LogEntry } from '@/stores/useErrorLogStore';

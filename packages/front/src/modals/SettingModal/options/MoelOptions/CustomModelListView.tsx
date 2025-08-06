@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Align, Flex, Row } from '@/components/layout';
 
 import { useDataStore } from '@/stores';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 
 import styles from './styles.module.scss';
 import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
@@ -47,7 +47,7 @@ interface ModelItemProps {
 
 function CustomModelItem({ model, onClick }: ModelItemProps) {
     const modal = useModal();
-    const [_, refresh] = useSignal();
+    const [_, refresh] = useTrigger();
     const starred = ProfileEvent.model.isStarred(model.id);
 
     return (

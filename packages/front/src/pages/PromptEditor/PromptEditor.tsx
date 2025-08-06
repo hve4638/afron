@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { RTStoreContext, useContextForce } from '@/context';
 import { ModalProvider, useModal } from '@/hooks/useModal';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import type {
     PromptEditorData,
     PromptInputType
@@ -26,7 +26,7 @@ function PromptEditor() {
 
     const rtState = useContextForce(RTStoreContext);
 
-    const [_, refresh] = useSignal();
+    const [_, refresh] = useTrigger();
     const [loaded, setLoaded] = useState(false);
 
     // 저장 후 일시적으로 '저장됨' 표시 및 버튼 비활성화를 위함

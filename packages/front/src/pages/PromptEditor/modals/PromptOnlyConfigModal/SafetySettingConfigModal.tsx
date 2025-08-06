@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Modal, ModalBackground, ModalBox, ModalHeader } from '@/components/Modal';
 import { CheckBoxForm, DropdownForm, NumberForm, StringForm } from '@/components/Forms';
 
-import useSignal from 'hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import styles from './styles.module.scss';
 import { Column, Row } from '@/components/layout';
 import useModalDisappear from '@/hooks/useModalDisappear';
@@ -34,7 +34,7 @@ function SafetySettingConfigModal({
 }: SafetySettingConfigModalProps) {
     const { t } = useTranslation();
     const [disappear, close] = useModalDisappear(onClose);
-    const [_, refreshSignal] = useSignal();
+    const [_, refreshSignal] = useTrigger();
 
     const refresh = () => {
         data.changed.config = true;

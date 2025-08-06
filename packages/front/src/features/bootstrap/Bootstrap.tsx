@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import useBootStore from './useBootStore';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import { BeginPhase, BootCompletePhase, LoadGlobalDataPhase, MasterKeyInitializePhase, MigrationPhase } from './phase';
 
 const BOOT: React.ReactNode[] = [

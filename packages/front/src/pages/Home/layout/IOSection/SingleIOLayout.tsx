@@ -6,7 +6,7 @@ import InputField from '@/components/InputField';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
-import { useConfigStore, useSessionStore, useShortcutSignalStore, useSignalStore } from '@/stores';
+import { useConfigStore, useSessionStore, useShortcutSignalStore } from '@/stores';
 
 import SplitSlider from '../SplitSlider';
 
@@ -18,6 +18,7 @@ import FilesFormLayout from './FilesUpload/FileList';
 import { readFileAsDataURI } from '@/utils/file';
 import { FileDropper } from './FilesUpload';
 import ProfileEvent from '@/features/profile-event';
+import { useEvent } from '@/hooks/useEvent';
 
 type SingleIOLayoutProps = {
     inputText: string;
@@ -27,6 +28,7 @@ type SingleIOLayoutProps = {
     tokenCount?: number;
 }
 
+/// @TODO: 너무 복잡해서 코드 정리한 후 기능 부분은 .hook.ts로 분리하기
 function SingleIOLayout({
     inputText,
     onChangeInputText,
@@ -51,7 +53,7 @@ function SingleIOLayout({
     const [draggingFile, setDraggingFile] = useState(false);
     const outputModelName = useMemo(() => {
         if (last === null) return '';
-        
+
         return ProfileEvent.model.getName(last.modelId);
     }, [last?.modelId]);
 
@@ -113,26 +115,16 @@ function SingleIOLayout({
         return `${m[0]}px ${m[1]}px ${m[2]}px ${m[3]}px`;
     }, [configState.layout_mode, textareaPadding]);
 
+    useEvent('refresh_chat', async () => {
+        if (!sessionHistory) return;
 
-    useEffect(() => {
-        const unsubscribes = [
-            useSignalStore.subscribe(
-                (state) => state.refresh_chat,
-                async () => {
-                    if (!sessionHistory) return;
-
-                    const prev = await sessionHistory.select(0, 1, true);
-                    if (prev.length === 0) {
-                        setLast(null);
-                    }
-                    else {
-                        setLast(prev[0]);
-                    }
-                }
-            )
-        ]
-
-        return () => unsubscribes.forEach(unsub => unsub());
+        const prev = await sessionHistory.select(0, 1, true);
+        if (prev.length === 0) {
+            setLast(null);
+        }
+        else {
+            setLast(prev[0]);
+        }
     }, [lastSessionId]);
 
     return (
@@ -213,7 +205,7 @@ function SingleIOLayout({
                                 height: '40px',
                             }}
                             onClick={() => {
-                                
+
                             }}
                         />
                         <GIconButton

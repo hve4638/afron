@@ -4,16 +4,7 @@ import i18next from 'i18next';
 
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
-import useDataStore from '@/stores/useDataStore';
 import useSessionStore from '@/stores/useSessionStore';
-import useSignalStore from '@/stores/useSignalStore';
-import { useHistoryStore } from '@/stores/useHistoryStore';
-import useMemoryStore from '@/stores/useMemoryStore';
-
-import SessionHistory from '@/features/session-history';
-
-import { ProfileSessionMetadata } from '@/types';
-
 import { PromptVarWithLastValue, ProviderName } from '../types';
 
 class CurrentSessionFormEvent {

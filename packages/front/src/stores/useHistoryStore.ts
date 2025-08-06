@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import SessionHistory from '@/features/session-history';
 import useProfileAPIStore from './useProfileAPIStore';
 import useSessionStore from './useSessionStore';
-import useSignalStore from './useSignalStore';
+import { emitEvent } from '@/hooks/useEvent';
 
 type HistoryStates = {
     container : Record<string, SessionHistory>;
@@ -33,7 +33,7 @@ export const useHistoryStore = create<HistoryStates>((set, get)=>({
 
             await api.session(last_session_id).history.deleteMessage(historyId, origin);
             history.evictCache(historyId);
-            useSignalStore.getState().signal.refresh_chat_without_scroll();
+            emitEvent('refresh_chat_without_scroll');
         }
     },
     get: (sessionId:string) => {

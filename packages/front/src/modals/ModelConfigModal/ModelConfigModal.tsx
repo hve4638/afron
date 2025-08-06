@@ -12,7 +12,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { safetyFilterThresholdMap, safetyFilterThresholdMapReverse } from './data';
 import ProfileEvent from '@/features/profile-event';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import { CommonOptions, SafetyOptions, ThinkingOptions } from './options';
 import useMemoryStore from '@/stores/useMemoryStore';
 
@@ -30,7 +30,7 @@ function ModelConfigModal({
     const { t } = useTranslation();
     const [disappear, closed] = useModalDisappear(onClose);
     const configRef = useRef<Partial<GlobalModelConfiguration>>({});
-    const [refreshPing, refresh] = useSignal();
+    const [refreshPing, refresh] = useTrigger();
     const modelMap = useMemoryStore(state => state.modelsMap);
 
     const model: ChatAIModel = useMemo(() => {

@@ -1,16 +1,18 @@
+import { ModalProvider } from '@/hooks/useModal';
+import { Grid } from '@/components/layout';
+import ToastRenderer from '@/components/ToastAnchor/ToastRenderer';
+
 import {
     Header,
     IOSection,
     SessionTabBar
 } from './layout';
-import ShortcutHandler from 'pages/ShortcutHandler';
-import { ModalProvider } from 'hooks/useModal';
-import ErrorToastSection from './ErrorToastSection';
-import ToastAnchor from '@/components/ToastAnchor';
-import { Grid } from '@/components/layout';
-import ToastRenderer from '@/components/ToastAnchor/ToastRenderer';
+import { useFontSizeChanger, useShortcutEmitter } from './hooks';
 
 function HomePage() {
+    useShortcutEmitter();
+    useFontSizeChanger();
+
     return (
         <ModalProvider>
             <Grid
@@ -31,7 +33,6 @@ function HomePage() {
                 top='40px'
                 right='0'
             />
-            <ShortcutHandler />
         </ModalProvider>
     );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import ProfilesAPI from '@/api/profiles';
 import { useGlobalConfigStore, useProfileAPIStore } from '@/stores';
 

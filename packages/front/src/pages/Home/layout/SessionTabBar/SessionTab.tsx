@@ -9,8 +9,9 @@ import Popover from '@/components/Popover';
 import DivButton from '@/components/DivButton';
 import SessionMenuPopover from './SessionMenuPopover';
 import SessionName from './SessionName';
-import { useProfileAPIStore, useSignalStore } from '@/stores';
+import { useProfileAPIStore } from '@/stores';
 import ColorMenuPopover from './ColorMenuPopover';
+import { emitEvent } from '@/hooks/useEvent';
 
 interface TabCoreProps {
     item : ProfileSessionMetadata;
@@ -29,7 +30,6 @@ function SessionTab({
 }:TabCoreProps) {
     const { api } = useProfileAPIStore();
     const sessionAPI = useMemo(()=>api.session(item.id), [item.id]);
-    const signal = useSignalStore(state=>state.signal);
 
     const [showMenu, setShowMenu] = useState(false);
     const [showColorMenu, setShowColorMenu] = useState(false);
@@ -80,7 +80,7 @@ function SessionTab({
                 onEnableRename={()=>setRenameMode(true)}
                 onChange={async (value)=>{
                     await sessionAPI.set('config.json', { name: value });
-                    await signal.session_metadata();
+                    emitEvent('refresh_session_metadata');
                     setRenameMode(false);
                 }}
                 onCancelRename={()=>setRenameMode(false)}

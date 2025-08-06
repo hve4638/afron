@@ -10,11 +10,10 @@ import { useModal } from '@/hooks/useModal';
 import RTEditModal from '@/modals/RTEditModal';
 import SettingModal from '@/modals/SettingModal';
 
-import { useSignalStore } from '@/stores';
-
 import styles from './styles.module.scss';
 import LocalAPI from '@/api/local';
 import useMemoryStore from '@/stores/useMemoryStore';
+import { emitEvent } from '@/hooks/useEvent';
 
 type AvatarPopoverProps = {
     onClose: () => void;
@@ -24,7 +23,6 @@ function AvatarPopover({
     onClose,
 }:AvatarPopoverProps) {
     const modal = useModal();
-    const signal = useSignalStore(state=>state.signal);
     const { availableVersion } = useMemoryStore();
 
     const clickEditRTButton = () => {
@@ -38,7 +36,7 @@ function AvatarPopover({
     }
 
     const clickChangeProfileButton = () => {
-        signal.change_profile();
+        emitEvent('change_profile');
     }
     
     return (

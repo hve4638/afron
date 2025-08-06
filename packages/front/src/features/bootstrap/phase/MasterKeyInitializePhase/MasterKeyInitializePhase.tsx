@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import LocalAPI from 'api/local';
 import SetupRecoveryKeyModal from './SetupRecoveryKeyModal';
-import useSignal from 'hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import RecoveryModal from './RecoveryModal';
 import useBootStore from '../../useBootStore';
 
 function MasterKeyInitializePhase() {
-    const [refreshSignal, sendRefreshSignal] = useSignal();
+    const [refreshSignal, sendRefreshSignal] = useTrigger();
     const [resetMode, setResetMode] = useState(false);
     const [recoveryMode, setRecoveryMode] = useState(false);
     const [forceReset, setForceReset] = useState(false);

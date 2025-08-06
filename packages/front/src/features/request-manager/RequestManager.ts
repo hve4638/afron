@@ -1,8 +1,8 @@
 import RequestAPI from "@/api/request";
 import ProfilesAPI, { SessionAPI } from "@/api/profiles";
-import { useSessionStore, useSignalStore } from "@/stores";
-import useErrorLogStore from "@/stores/useErrorLogStore";
+import { useSessionStore } from "@/stores";
 import useToastStore from "@/stores/useToastStore";
+import { emitEvent } from "@/hooks/useEvent";
 
 class RequestManager {
     static instance: RequestManager | null = null;
@@ -34,7 +34,7 @@ class RequestManager {
             if (sessionState.deps.last_session_id === sessionAPI.id) {
                 sessionState.refetch.state();
             }
-            useSignalStore.getState().signal.session_metadata();
+            emitEvent('refresh_session_metadata');
         }
 
         let normalExit = false;
@@ -50,11 +50,11 @@ class RequestManager {
                 await sessionAPI.set('cache.json', {
                     'state': 'done',
                 });
-                useSignalStore.getState().signal.session_metadata();
+                emitEvent('refresh_session_metadata');
                 if (sessionState.deps.last_session_id === sessionAPI.id) {
                     sessionState.refetch.state();
                 }
-                useSignalStore.getState().signal.session_metadata();
+                emitEvent('refresh_session_metadata');
                 break;
             }
             else if (data.type === 'update') {
@@ -64,7 +64,7 @@ class RequestManager {
                         if (sessionState.deps.last_session_id === sessionAPI.id) {
                             await sessionState.refetch.input();
                             await sessionState.actions.refetchInputFiles();
-                            await useSignalStore.getState().signal.reload_input();
+                            emitEvent('refresh_input');
                         }
                     }
                     else if (typeName === 'output') {
@@ -73,12 +73,13 @@ class RequestManager {
                             sessionState.refetch.output();
                             sessionState.refetch.state();
                         }
-                        useSignalStore.getState().signal.session_metadata();
+                        emitEvent('refresh_session_metadata');
+                        
                     }
                     else if (typeName === 'history') {
                         const sessionState = useSessionStore.getState();
                         if (sessionState.deps.last_session_id === sessionAPI.id) {
-                            useSignalStore.getState().signal.refresh_chat();
+                            emitEvent('refresh_chat');
                         }
                     }
                     else {
@@ -94,7 +95,7 @@ class RequestManager {
                         if (sessionState.deps.last_session_id === sessionAPI.id) {
                             sessionState.refetch.state();
                         }
-                        useSignalStore.getState().signal.session_metadata();
+                        emitEvent('refresh_session_metadata');
                         break;
                     case 'request_failed':
                         useToastStore.getState().add(
@@ -172,7 +173,7 @@ class RequestManager {
                     sessionState.refetch.output();
                     sessionState.refetch.state();
                 }
-                useSignalStore.getState().signal.session_metadata();
+                emitEvent('refresh_session_metadata');
             }
             else if (data.type === 'stream_output') {
                 

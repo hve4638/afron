@@ -1,18 +1,22 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { useCacheStore, useDataStore, useSignalStore } from '@/stores';
+import { useEffect, useMemo, useState } from 'react';
+import { useCacheStore, useDataStore } from '@/stores';
 import { ProfileSessionMetadata } from '@/types';
 import TabBar from '@/components/TabBar';
 import { TabRequired } from '@/components/TabBar/types';
 import SessionTab from './SessionTab';
 import { useTranslation } from 'react-i18next';
 import ProfileEvent from '@/features/profile-event';
+import useTrigger from '@/hooks/useTrigger';
+import { useEvent } from '@/hooks/useEvent';
 
 function SessionTabBar() {
     const { t } = useTranslation();
     const updateCacheState = useCacheStore(state => state.update);
     const sessions = useDataStore(state => state.sessions);
-    const refreshSignal = useSignalStore(state => state.session_metadata);
     const last_session_id = useCacheStore(state => state.last_session_id);
+    const [rerenderCount, rerender] = useTrigger();
+
+    useEvent('refresh_session_metadata', ()=>rerender(), [rerender]);
 
     const [sessionMetadataList, setSessionMetadataList] = useState<ProfileSessionMetadata[]>([]);
     const tabItems = useMemo(() => sessionMetadataList.map((metadata) => ({ ...metadata, key: metadata.id })), [sessionMetadataList]);
@@ -44,7 +48,7 @@ function SessionTabBar() {
                 });
                 setSessionMetadataList(list);
             });
-    }, [sessions, refreshSignal]);
+    }, [sessions, rerenderCount]);
 
     return (
         <TabBar<ProfileSessionMetadata & TabRequired, TabRequired>

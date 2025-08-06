@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { useInView } from 'react-intersection-observer';
 
 import useLazyThrottle from '@/hooks/useLazyThrottle';
-import useSignal from '@/hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 
 import InputField from '@/components/InputField';
 import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
 import { Align, Column, Flex, Grid, Row } from '@/components/layout';
 
-import { useConfigStore, useSessionStore, useShortcutSignalStore, useSignalStore } from '@/stores';
+import { useConfigStore, useSessionStore } from '@/stores';
 
 import SplitSlider from '../SplitSlider';
 
@@ -23,6 +23,7 @@ import { checksum } from '@/utils/debug';
 import useCache from '@/hooks/useCache';
 import FilesFormLayout from './FilesUpload/FileList';
 import { FileDropper } from './FilesUpload';
+import { useEvent } from '@/hooks/useEvent';
 
 // const InfiniteLoader = RawInfiniteLoader as unknown as React.ComponentType<any>;
 
@@ -41,7 +42,7 @@ function ChatIOLayout({
     color,
     tokenCount = 0,
 }: ChatIOLayoutProps) {
-    const [_, refresh] = useSignal();
+    const [_, refresh] = useTrigger();
     const { font_size } = useConfigStore();
     const lastSessionId = useSessionStore(state => state.deps.last_session_id);
     const sessionHistory = useMemo(() => {
@@ -86,31 +87,18 @@ function ChatIOLayout({
         )
     }, [lastSessionId, scrollAnchorRef.current]);
 
-    useEffect(() => {
-        const unsubscribes = [
-            useSignalStore.subscribe(
-                (state) => state.refresh_chat,
-                async () => {
-                    if (!sessionHistory) return;
+    useEvent('refresh_chat', async () => {
+        if (!sessionHistory) return;
 
-                    await loadHistory();
-                    window.setTimeout(
-                        () => scrollAnchorRef.current?.scrollIntoView(),
-                        1
-                    )
-                }
-            ),
-            useSignalStore.subscribe(
-                (state) => state.refresh_chat_without_scroll,
-                async () => {
-                    if (!sessionHistory) return;
+        await loadHistory();
+        window.setTimeout(
+            () => scrollAnchorRef.current?.scrollIntoView(), 1
+        );
+    }, [lastSessionId, sessionHistory]);
+    useEvent('refresh_chat_without_scroll', async () => {
+        if (!sessionHistory) return;
 
-                    await loadHistory();
-                }
-            )
-        ]
-
-        return () => unsubscribes.forEach(unsub => unsub());
+        await loadHistory();
     }, [lastSessionId, sessionHistory]);
 
     const loadHistory = async () => {
@@ -261,7 +249,7 @@ function ChatInput({
                     >
                         token: {tokenCount}
                     </span>
-                    <Flex style={{ height: '100%',}}>
+                    <Flex style={{ height: '100%', }}>
                         <FilesFormLayout
                             style={{
                                 height: '100%',

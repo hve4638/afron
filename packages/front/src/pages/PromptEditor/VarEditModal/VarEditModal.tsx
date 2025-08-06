@@ -6,7 +6,7 @@ import { DropdownForm, StringForm } from 'components/Forms';
 import {
     Additions,
 } from './additions';
-import useSignal from 'hooks/useSignal';
+import useTrigger from '@/hooks/useTrigger';
 import { dropdownItem, initPromptVar } from './utils';
 import styles from './styles.module.scss';
 import { Row } from 'components/layout';
@@ -51,7 +51,7 @@ function VarEditModal({
 }:VarEditModalProps) {
     const { t } = useTranslation();
     const [disappear, close] = useModalDisappear(onClose);
-    const [refreshSignal, refresh] = useSignal();
+    const [refreshSignal, refresh] = useTrigger();
     const defaultValueCaches = useRef<{
         text?: string,
         number?: number,

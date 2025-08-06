@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import LocalAPI from '@/api/local';
 import RequestAPI from '@/api/request';
 
-import { subscribeStates, useSignalStore } from '@/stores';
+import { subscribeStates } from '@/stores';
 import useMemoryStore from '@/stores/useMemoryStore';
+import { useEvent } from '@/hooks/useEvent';
 
 function useInitialize() {
     useEffect(() => {
@@ -29,14 +30,9 @@ function useInitialize() {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, []);
-    
-    useEffect(() => {
-        return useSignalStore.subscribe(
-            (state) => state.change_profile,
-            (state) => {
-                useMemoryStore.setState({ profileId: null });
-            }
-        )
+
+    useEvent('change_profile', () => {
+        useMemoryStore.setState({ profileId: null });
     }, []);
 }
 

@@ -3,8 +3,9 @@ import { Align, Center, Column, Grid, } from '@/components/layout';
 import { ProfileSessionMetadata } from '@/types';
 import classNames from 'classnames';
 import Popover from '@/components/Popover';
-import { useProfileAPIStore, useSessionStore, useSignalStore } from '@/stores';
+import { useProfileAPIStore, useSessionStore } from '@/stores';
 import styles from './styles.module.scss';
+import { emitEvent } from '@/hooks/useEvent';
 
 const SessionColors = [
     'red',
@@ -28,7 +29,6 @@ function ColorMenuPopover(props:SessionMenuPopoverProps) {
         onClose=()=>{},
     } = props;
     const { api } = useProfileAPIStore();
-    const signal = useSignalStore(state=>state.signal);
     const refetchSessionState = useSessionStore(state=>state.refetch);
 
     return (
@@ -81,7 +81,7 @@ function ColorMenuPopover(props:SessionMenuPopoverProps) {
                                 onClick={async ()=>{
                                     const sessionAPI = api.getSessionAPI(item.id);
                                     await sessionAPI.set('config.json', { color });
-                                    signal.session_metadata();
+                                    emitEvent('refresh_session_metadata');
                                     refetchSessionState.color();
                                 }}
                             />
