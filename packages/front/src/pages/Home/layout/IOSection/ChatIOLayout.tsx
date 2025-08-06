@@ -1,25 +1,18 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { useInView } from 'react-intersection-observer';
 
-import useLazyThrottle from '@/hooks/useLazyThrottle';
 import useTrigger from '@/hooks/useTrigger';
 
-import InputField from '@/components/InputField';
-import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Column, Flex, Grid, Row } from '@/components/layout';
 
 import { useConfigStore, useSessionStore } from '@/stores';
-
-import SplitSlider from '../SplitSlider';
 
 import styles from './styles.module.scss';
 import ChatDiv from './ChatDiv';
 import { useHistoryStore } from '@/stores/useHistoryStore';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import { HistoryData } from '@/features/session-history';
-import useMemoRef from '@/hooks/useMemoRef';
-import { checksum } from '@/utils/debug';
 import useCache from '@/hooks/useCache';
 import FilesFormLayout from './FilesUpload/FileList';
 import { FileDropper } from './FilesUpload';

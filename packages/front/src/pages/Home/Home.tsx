@@ -32,7 +32,7 @@ function HomePage() {
             <ToastRenderer
                 top='40px'
                 right='0'
-            />
+            />  
         </ModalProvider>
     );
 }

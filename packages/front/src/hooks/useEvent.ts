@@ -11,7 +11,6 @@ import { subscribeWithSelector } from 'zustand/middleware'
  * 필요시 이곳에 이벤트 추가
  */
 type Events = {
-    /* 단축키 이벤트 */
     font_size_up: number;
     font_size_down: number;
     send_request: number;
@@ -30,6 +29,9 @@ type Events = {
     change_tab7: number;
     change_tab8: number;
     change_tab9: number;
+
+    /* 이벤트 처리 이후 */
+    after_copy_response: number; // 응답 복사 이후
 
     /* 제어 관련 */
     refresh_input: number; // 입력 새로고침, backend에서 변경 후 refetch 필요시

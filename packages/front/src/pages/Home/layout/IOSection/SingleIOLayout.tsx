@@ -18,7 +18,8 @@ import FilesFormLayout from './FilesUpload/FileList';
 import { readFileAsDataURI } from '@/utils/file';
 import { FileDropper } from './FilesUpload';
 import ProfileEvent from '@/features/profile-event';
-import { useEvent } from '@/hooks/useEvent';
+import { emitEvent, useEvent } from '@/hooks/useEvent';
+import CopyButton from './ui/CopyButton';
 
 type SingleIOLayoutProps = {
     inputText: string;
@@ -291,16 +292,7 @@ function SingleIOLayout({
                                 sessionState.update.markdown(!sessionState.markdown);
                             }}
                         />
-                        <GIconButton
-                            style={{
-                                fontSize: '1.15em'
-                            }}
-                            value='content_paste'
-                            hoverEffect='square'
-                            onClick={() => {
-                                useShortcutSignalStore.getState().signal.copy_response();
-                            }}
-                        />
+                        <CopyButton/>
                     </Row>
                 </InputField>
                 <SplitSlider
