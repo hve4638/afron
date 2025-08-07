@@ -7,11 +7,13 @@ import {
     IOSection,
     SessionTabBar
 } from './layout';
-import { useFontSizeChanger, useShortcutEmitter } from './hooks';
+import { useEventHandler, useFontSizeChanger, useShortcutEmitter } from './hooks';
+import ModalHandler from './ModalHandler';
 
 function HomePage() {
     useShortcutEmitter();
     useFontSizeChanger();
+    useEventHandler();
 
     return (
         <ModalProvider>
@@ -32,7 +34,8 @@ function HomePage() {
             <ToastRenderer
                 top='40px'
                 right='0'
-            />  
+            />
+            <ModalHandler />
         </ModalProvider>
     );
 }

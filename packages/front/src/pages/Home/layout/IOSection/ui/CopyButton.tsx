@@ -17,7 +17,6 @@ function CopyButton() {
         }}
         value={
             copySuccessed ? 'check' : 'content_copy'
-            // 'content_paste'
         }
         hoverEffect='square'
         onClick={() => {

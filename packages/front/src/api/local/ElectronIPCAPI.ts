@@ -434,8 +434,11 @@ class ElectronIPCAPI implements IIPCAPI {
     } as const;
     request = {
         async requestRT(token:string, profileId:string, sessionId:string) {
-            console.log('[RequestRT]', token, profileId, sessionId);
             const [err] = await window.electron.request.requestRT(token, profileId, sessionId);
+            if (err) throw new IPCError(err.message);
+        },
+        async previewPrompt(token:string, profileId:string, sessionId:string) {
+            const [err] = await window.electron.request.previewPrompt(token, profileId, sessionId);
             if (err) throw new IPCError(err.message);
         },
         async abort(token:string) {

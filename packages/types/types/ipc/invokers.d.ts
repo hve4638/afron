@@ -142,6 +142,7 @@ declare global {
 
     type IPCInvokerRequest = {
         requestRT(token: string, profileId: string, sessionId: string): ENoResult;
+        previewPrompt(token: string, profileId: string, sessionId: string): ENoResult;
         abort(token: string): ENoResult;
     };
 }

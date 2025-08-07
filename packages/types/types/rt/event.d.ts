@@ -26,7 +26,7 @@ type RTEventDataUpdate = {
 }
 type RTEventDataSend = {
     type: 'send_raw_request_preview'
-    preview: object;
+    preview: RTEventPreviewData;
 }
 type RTEventDataOutput = {
     type: 'stream_output';
@@ -41,7 +41,15 @@ type RTEventDataOthers = {
     type: 'close';
 }
 
+
+
 declare global {
+    type RTEventPreviewData = {
+        url: string;
+        headers: object;
+        data: object;
+    };
+
     type RTEventDataWithoutId = (
         RTEventDataError
         | RTEventDataSend
@@ -49,7 +57,7 @@ declare global {
         | RTEventDataOutput
         | RTEventDataOthers
     );
-    
+
     type RTEventData = {
         id: string;
     } & RTEventDataWithoutId;

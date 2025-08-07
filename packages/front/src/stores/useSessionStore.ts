@@ -51,9 +51,6 @@ type SessionFields = SessionCacheFields & SessionConfigFields;
 
 interface SessionState extends SessionFields, SessionManagedFields {
     actions: {
-        request(): Promise<void>;
-        abortRequest(): Promise<void>;
-
         addInputFile(filename: string, base64Data: string): Promise<void>;
         updateInputFiles(fileHashes: InputFileHash[]): Promise<void>;
         refetchInputFiles(): Promise<void>;
@@ -89,29 +86,6 @@ export const useSessionStore = create<SessionState>((set, get) => {
         ...defaultManaged,
 
         actions: {
-            request: async () => {
-                const {
-                    api,
-                } = get().deps;
-                const { last_session_id } = useCacheStore.getState();
-                if (api.isMock()) {
-                    console.warn('API is not initialized. Request is ignored.');
-                    return;
-                }
-                if (!last_session_id) return;
-
-                const { reset: resetChannel } = useChannelStore.getState();
-
-                const readyCh = resetChannel.request_ready();
-                
-                emitEvent('request');
-                await readyCh.consume();
-
-                RequestManager.request(api.id, last_session_id);
-            },
-            abortRequest: async () => {
-
-            },
 
             addInputFile: async (filename: string, base64Data: string) => {
                 const { deps, input_files, cached_thumbnails } = get();

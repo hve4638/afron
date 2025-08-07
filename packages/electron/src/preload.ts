@@ -123,6 +123,7 @@ const ipcInvokerPath = {
     },
     request: {
         requestRT: 0,
+        previewPrompt: 0,
         abort: 0,
     },
 } satisfies IPCInvokerPath;

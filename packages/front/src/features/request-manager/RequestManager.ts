@@ -27,6 +27,15 @@ class RequestManager {
             })
     }
 
+    async preview(profileId: string, sessionId: string) {
+        const sessionAPI = ProfilesAPI.profile(profileId).session(sessionId);
+
+        RequestAPI.preview(profileId, sessionId)
+            .then((chId) => {
+                this.handleResponse(chId, sessionAPI);
+            })
+    }
+
     private async handleResponse(chId: string, sessionAPI: SessionAPI) {
         {
             sessionAPI.set('cache.json', { 'state': 'loading' })
@@ -40,7 +49,7 @@ class RequestManager {
         let normalExit = false;
         while (true) {
             const data = await RequestAPI.response(chId);
-            console.log('Received data:', data);
+            // console.info('$ Received data:', data);
 
             if (data === null || data.type === 'close') {
                 console.warn('Request closed:', data);
@@ -56,6 +65,9 @@ class RequestManager {
                 }
                 emitEvent('refresh_session_metadata');
                 break;
+            }
+            else if (data.type === 'send_raw_request_preview') {
+                emitEvent('show_rt_preview', data.preview);
             }
             else if (data.type === 'update') {
                 for (const typeName of data.update_types) {

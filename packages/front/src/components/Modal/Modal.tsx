@@ -50,8 +50,8 @@ function Modal({
                     <ModalBox
                         className={className}
                         style={{
-                            ...style,
                             maxHeight: '100%',
+                            ...style,
                         }}
                         disappear={disappear}
                     >

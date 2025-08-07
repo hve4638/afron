@@ -20,6 +20,8 @@ import { FileDropper } from './FilesUpload';
 import ProfileEvent from '@/features/profile-event';
 import { emitEvent, useEvent } from '@/hooks/useEvent';
 import CopyButton from './ui/CopyButton';
+import PreviewButton from './ui/PreviewButton';
+import RequestButton from './ui/RequestButton';
 
 type SingleIOLayoutProps = {
     inputText: string;
@@ -195,42 +197,8 @@ function SingleIOLayout({
                                 internalPadding='4px 4px'
                             />
                         </Flex>
-                        <GIconButton
-                            // className='floating-button'
-                            className={classNames(styles['send-button'])}
-                            value='visibility'
-                            style={{
-                                cursor: 'pointer',
-                                fontSize: '32px',
-                                width: '40px',
-                                height: '40px',
-                            }}
-                            onClick={() => {
-
-                            }}
-                        />
-                        <GIconButton
-                            // className='floating-button'
-                            className={classNames(styles['send-button'])}
-                            value={sessionState.state === 'idle' ? 'send' : 'stop'}
-                            style={{
-                                cursor: 'pointer',
-                                fontSize: '32px',
-                                width: '40px',
-                                height: '40px',
-                                // position: 'absolute',
-                                // right: '10px',
-                                // bottom: '10px',
-                            }}
-                            onClick={() => {
-                                if (sessionState.state === 'idle') {
-                                    sessionState.actions.request();
-                                }
-                                else {
-                                    // sessionState.actions.abortRequest();
-                                }
-                            }}
-                        />
+                        <PreviewButton/>
+                        <RequestButton/>
                     </Row>
                     {
                         draggingFile &&

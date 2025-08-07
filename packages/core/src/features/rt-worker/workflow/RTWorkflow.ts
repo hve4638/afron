@@ -4,7 +4,6 @@ import { HistoryRequired } from '@/features/acstorage-accessor/HistoryAccessor';
 import { HistoryMessageRow, HistoryRow } from '@/features/acstorage-accessor/HistoryAccessor/types';
 
 import RTEventEmitter from '../RTEventEmitter';
-import { WorkLog } from '../types';
 import { NodeData } from '../nodes/types';
 
 abstract class RTWorkflow {
@@ -15,7 +14,7 @@ abstract class RTWorkflow {
 
     }
 
-    abstract process(input: RTInput, workLog: WorkLog[]): Promise<any>;
+    abstract process(input: RTInput): Promise<any>;
 
     protected async getNodeData(rtInput: RTInput): Promise<NodeData> {
         const historyAC = await this.profile.accessAsHistory(rtInput.sessionId);
