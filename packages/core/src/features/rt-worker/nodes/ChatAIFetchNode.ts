@@ -22,21 +22,10 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
         { messages }: ChatAIFetchNodeInput,
     ): Promise<ChatAIFetchNodeOutput> {
         const { rtEventEmitter } = this.nodeData;
-        
+
         try {
             const result = await this.#request({ messages });
-
-            if (!result.response.ok) {
-                this.logger.error(
-                    `ChatAI Fetch Error: ${result.response.http_status} - ${result.response.http_status_text}`,
-                    result.response.raw
-                );
-                rtEventEmitter.emit.error.httpError(
-                    result.response.http_status,
-                    [JSON.stringify(result.response.raw, null, 2)]
-                );
-                throw new WorkNodeStop();
-            }
+            this.checkResponseOK(result);
 
             this.logger.debug(
                 `ChatAIFetchNode Result:`,
@@ -158,6 +147,22 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
             modelConfiguration,
             auth,
         }, {});
+    }
+
+    protected async checkResponseOK(chatAIResult: ChatAIResult): Promise<void> {
+        const { rtEventEmitter} = this.nodeData;
+
+        if (!chatAIResult.response.ok) {
+            this.logger.error(
+                `ChatAI Fetch Error: ${chatAIResult.response.http_status} - ${chatAIResult.response.http_status_text}`,
+                chatAIResult.response.raw
+            );
+            rtEventEmitter.emit.error.httpError(
+                chatAIResult.response.http_status,
+                [JSON.stringify(chatAIResult.response.raw, null, 2)]
+            );
+            throw new WorkNodeStop();
+        }
     }
 
     #getAPIName(model: ChatAIModel): 'openai' | 'anthropic' | 'google' | 'vertexai' | null {

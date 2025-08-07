@@ -87,7 +87,7 @@ class RTEventEmitter {
             }
         },
         send: {
-            rawRequestPreview: (data: object) => {
+            rawRequestPreview: (data: RTEventPreviewData) => {
                 this.logger.trace(`[RTEventEmitter] send: raw_request_preview (${this.#id})`, JSON.stringify(data));
                 this.#send({
                     type: 'send_raw_request_preview',

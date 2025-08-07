@@ -22,6 +22,9 @@ interface ConfigFields {
     show_actual_model_name: boolean;
     clear_on_submit_normal: boolean;
     clear_on_submit_chat: boolean;
+
+    preview_prettify_header: boolean;
+    preview_prettify_body: boolean;
 }
 
 const defaultConfig:ConfigFields = {
@@ -42,6 +45,9 @@ const defaultConfig:ConfigFields = {
     
     clear_on_submit_normal: false,
     clear_on_submit_chat: true,
+
+    preview_prettify_header: true,
+    preview_prettify_body: true,
 };
 
 interface ConfigState extends ConfigFields {

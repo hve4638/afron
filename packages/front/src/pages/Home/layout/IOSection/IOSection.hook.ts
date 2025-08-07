@@ -62,35 +62,22 @@ function useIOSection() {
         refresh();
     }, [sessionState.deps.last_session_id, reloadInputSignal]);
 
-    useEvent('request', async () => {
-        const { instance } = useChannelStore.getState();
-
+    // 요청 시 입력값을 즉시 업데이트
+    useEvent('request_ready', async (chan) => {
         await sessionState.update.input(inputTextRef.current);
-        await instance.request_ready.produce(1);
+        chan.produce(0); // 완료 신호
     }, []);
-    useEvent('send_request', () => {
-        const { state } = useSessionStore.getState();
+    // @TODO: 제거
+    // useEvent('send_request', () => {
+    //     const { state } = useSessionStore.getState();
 
-        if (state === 'idle' || state === 'done') {
-            sessionState.actions.request();
-        }
-        else {
-            console.warn('request is ignored, because current state is', state);
-        }
-    }, []);
-    useEvent('copy_response', () => {
-        const output = useSessionStore.getState().output;
-        if (output) {
-            try {
-                console.log('copying response to clipboard', output);
-                navigator.clipboard.writeText(output);
-                emitEvent('after_copy_response');
-            }
-            catch (error) {
-                console.error('Failed to copy response:', error);
-            }
-        }
-    }, []);
+    //     if (state === 'idle' || state === 'done') {
+    //         sessionState.actions.request();
+    //     }
+    //     else {
+    //         console.warn('request is ignored, because current state is', state);
+    //     }
+    // }, []);
 
     return {
         inputLayoutType,

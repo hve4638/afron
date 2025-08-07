@@ -6,7 +6,15 @@ function handler(): IPCInvokerRequest {
             const profile = await runtime.profiles.getProfile(profileId);
 
             runtime.logger.info(`RT request (token=${token}, sessionId=${sessionId})`);
-            await runtime.rtWorker.request(token, { profile, sessionId });
+            await runtime.rtWorker.request(token, { profile, sessionId }, { preview: false });
+
+            return [null] as const;
+        },
+        async previewPrompt(token: string, profileId: string, sessionId: string) {
+            const profile = await runtime.profiles.getProfile(profileId);
+
+            runtime.logger.info(`RT preview (token=${token}, sessionId=${sessionId})`);
+            await runtime.rtWorker.request(token, { profile, sessionId }, { preview: true });
 
             return [null] as const;
         },
@@ -15,7 +23,7 @@ function handler(): IPCInvokerRequest {
 
             throw new Error('Not implemented');
             return [null] as const;
-        }
+        },
     }
 }
 

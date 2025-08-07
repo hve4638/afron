@@ -70,7 +70,7 @@ function useShortcut(shortcut: Shortcut, eventName: EventNames) {
     };
 
     useEffect(
-        () => addHandler(shortcut, () => emitEvent(eventName)),
+        () => addHandler(shortcut, () => emitEvent(eventName, undefined)),
         [shortcut]
     );
 }

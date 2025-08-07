@@ -63,6 +63,15 @@ class RequestAPI {
         return chId;
     }
 
+    async preview(profileId:string, sessionId:string):Promise<string> {
+        const chId = uuidv7();
+        this.#openCh(chId);
+
+        await LocalAPI.request.previewPrompt(chId, profileId, sessionId);
+
+        return chId;
+    }
+
     async response(chId:string) {
         let ch = this.#getCh(chId);
         const result = await ch.consume();

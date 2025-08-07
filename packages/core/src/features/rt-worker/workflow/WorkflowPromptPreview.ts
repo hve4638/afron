@@ -1,7 +1,7 @@
-import { InputNode, OutputNode, PromptBuildNode, StringifyChatMLNode, ChatAIFetchNode } from '../nodes';
+import { InputNode, PromptBuildNode, ChatAIPreviewNode } from '../nodes';
+import { UserInput } from '../nodes/types';
 import { WorkNodeStop } from '../nodes/errors';
 import RTWorkflow from './RTWorkflow';
-import { UserInput } from '../nodes/types';
 
 class RTWorkflowPromptPreview extends RTWorkflow {
     async process(rtInput: RTInput): Promise<any> {
@@ -9,7 +9,7 @@ class RTWorkflowPromptPreview extends RTWorkflow {
 
         const inputNode = new InputNode(0, nodeData, { inputType: 'normal' });
         const promptBuildNode = new PromptBuildNode(1, nodeData, { promptId: 'default', form: {} });
-        const chatAIFetchNode = new ChatAIFetchNode(2, nodeData, { promptId: 'default' });
+        const chatAIPreviewNode = new ChatAIPreviewNode(2, nodeData, { promptId: 'default' });
 
         let input: UserInput;
         try {
@@ -24,11 +24,16 @@ class RTWorkflowPromptPreview extends RTWorkflow {
             }
             return;
         }
-        
 
         try {
             const { messages } = await promptBuildNode.run({ input });
-            const { result } = await chatAIFetchNode.run({ messages });
+            const { result } = await chatAIPreviewNode.run({ messages });
+
+            nodeData.rtEventEmitter.emit.send.rawRequestPreview({
+                url: result.request.url,
+                headers: result.request.headers ?? {},
+                data: result.request.data,
+            });
         }
         catch (error) {
             if (error instanceof WorkNodeStop) {
@@ -36,7 +41,7 @@ class RTWorkflowPromptPreview extends RTWorkflow {
             }
         }
         finally {
-
+            
         }
     }
 }

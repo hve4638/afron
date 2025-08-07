@@ -4,10 +4,17 @@ import type { LevelLogger } from '@/types';
 import { WorkflowPromptOnly } from './workflow';
 import RTEventEmitter, { RTEventListener } from './RTEventEmitter';
 import NoLogger from '../nologger';
+import RTWorkflow from './workflow/RTWorkflow';
+import WorkflowPromptPreview from './workflow/WorkflowPromptPreview';
 
 type WorkRequired = {
     profile: Profile;
     sessionId: string;
+}
+
+type WorkOptions = {
+    /** 전송 전 데이터 미리 보기 모드, 단일 프롬프트 모드에서만 작동 */
+    preview?: boolean;
 }
 
 class RTWorker {
@@ -25,21 +32,22 @@ class RTWorker {
         this.#handlers.push(handler);
     }
 
-    async request(token: string, { profile, sessionId }: WorkRequired): Promise<string> {
+    async request(token: string, { profile, sessionId }: WorkRequired, { preview = false }: WorkOptions): Promise<string> {
+        // 토큰 중복 여부 검사
+        // 토큰은 동기화 문제 때문에 frontend에서 받아오므로 항상 검증 필요
         if (this.#tokens.has(token)) {
             this.logger.error(`RTWork failed: duplicate token`, token);
 
             throw new Error(`Duplicate token: ${token}`);
         }
-        const configAC = await profile.accessAsJSON('config.json');
-        const { clear_on_submit_normal, clear_on_submit_chat } = configAC.get('clear_on_submit_normal', 'clear_on_submit_chat');
+        this.#tokens.add(token);
+        this.logger.trace(`RT request started (${token})`)
 
+        // RTWorkflow 필요 데이터 생성
         const session = profile.session(sessionId);
         const { rt_id, model_id } = await session.get('config.json', ['rt_id', 'model_id']);
         const { input, upload_files } = await session.get('cache.json', ['input', 'upload_files']);
         const form = await session.getOne('data.json', `forms.${rt_id}`);
-        const { input_type } = await profile.rt(rt_id).getMetadata();
-
         const rtInput: RTInput = {
             rtId: rt_id,
             modelId: model_id,
@@ -50,11 +58,14 @@ class RTWorker {
             chat: [],
         }
 
-        this.logger.trace(`RT request started (${token})`)
+        // emitter 핸들러 등록
         const emitter = new RTEventEmitter(token, this.logger);
         emitter.on(this.#handlers[0]);
-        const process = new WorkflowPromptOnly(emitter, profile);
 
+        // 옵션에 따라 입력 필드 비우기
+        const configAC = await profile.accessAsJSON('config.json');
+        const { clear_on_submit_normal, clear_on_submit_chat } = configAC.get('clear_on_submit_normal', 'clear_on_submit_chat');
+        const { input_type } = await profile.rt(rt_id).getMetadata();
         if (
             (input_type === 'normal' && clear_on_submit_normal)
             || (input_type === 'chat' && clear_on_submit_chat)
@@ -63,7 +74,13 @@ class RTWorker {
             emitter.emit.update.input();
         }
 
-        this.#tokens.add(token);
+        let process: RTWorkflow;
+        if (preview) {
+            process = new WorkflowPromptPreview(emitter, profile);
+        }
+        else {
+            process = new WorkflowPromptOnly(emitter, profile);
+        }
         process.process(rtInput)
             .then(() => {
                 this.logger.info(`RT request completed (${token})`);
@@ -77,7 +94,7 @@ class RTWorker {
 
                 this.#tokens.delete(token);
             });
-        
+
         return token;
     }
 }

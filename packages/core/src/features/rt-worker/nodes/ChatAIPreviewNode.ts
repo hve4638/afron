@@ -24,6 +24,10 @@ class ChatAIPreviewNode extends ChatAIFetchNode {
             auth,
         }, { preview: true });
     }
+    
+    override async checkResponseOK(chatAIResult: ChatAIResult): Promise<void> {
+        // nothing to do
+    }
 }
 
 export default ChatAIPreviewNode;
