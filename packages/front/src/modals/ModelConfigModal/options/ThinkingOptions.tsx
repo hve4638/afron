@@ -6,15 +6,9 @@ import ModelForm from '@/components/model-ui';
 function ThinkingOptions({
     model,
     config,
-
-    noMarginBottom = false,
     refresh,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_thinking;
-
-    if ((model.config.thinking ?? 'disabled') === 'disabled') {
-        return <></>;
-    }
 
     return (
         <>
@@ -60,10 +54,6 @@ function ThinkingOptions({
                     }}
                     disabled={disabled}
                 />
-            }
-            {
-                noMarginBottom == false
-                && <div style={{ height: '1em' }} />
             }
         </>
     )

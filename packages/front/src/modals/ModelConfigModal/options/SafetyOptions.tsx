@@ -9,7 +9,6 @@ function SafetyOptions({
     model,
     config,
 
-    noMarginBottom = false,
     refresh,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_safety_settings;
@@ -44,10 +43,6 @@ function SafetyOptions({
                 allowEmpty={true}
                 disabled={disabled}
             />
-            {
-                noMarginBottom == false
-                && <div style={{ height: '1em' }} />
-            }
         </>
     )
 }

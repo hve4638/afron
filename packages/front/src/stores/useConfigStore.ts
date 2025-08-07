@@ -23,6 +23,9 @@ interface ConfigFields {
     clear_on_submit_normal: boolean;
     clear_on_submit_chat: boolean;
 
+    enabled_prompt_preview: boolean;
+    enabled_global_model_configuration: boolean;
+
     preview_prettify_header: boolean;
     preview_prettify_body: boolean;
 }
@@ -45,6 +48,9 @@ const defaultConfig:ConfigFields = {
     
     clear_on_submit_normal: false,
     clear_on_submit_chat: true,
+
+    enabled_prompt_preview: false,
+    enabled_global_model_configuration: false,
 
     preview_prettify_header: true,
     preview_prettify_body: true,

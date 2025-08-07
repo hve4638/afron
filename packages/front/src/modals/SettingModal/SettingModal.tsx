@@ -14,16 +14,18 @@ import useHotkey from 'hooks/useHotkey';
 import useModalDisappear from 'hooks/useModalDisappear';
 import { Column, Flex } from '@/components/layout';
 import useMemoryStore from '@/stores/useMemoryStore';
+import AdvancedOptions from './options/AdvancedOptions';
 
 const SETTING_CATEGORY = {
     GENERAL: '일반',
-    API: 'API',
+    API: 'API 키',
     MODELS: '모델',
     SHORTCUT: '단축키',
     SESSION: '세션',
     HISTORY: '기록',
     SERVER: '서버 (베타)',
     DATA: '데이터',
+    ADVANCED: '고급',
 }
 type SETTING_CATEGORY = typeof SETTING_CATEGORY[keyof typeof SETTING_CATEGORY];
 
@@ -45,6 +47,7 @@ function SettingModal({
         // SETTING_CATEGORY.HISTORY,
         // SETTING_CATEGORY.SERVER,
         // SETTING_CATEGORY.DATA,
+        SETTING_CATEGORY.ADVANCED,
     ]
     const [disappear, close] = useModalDisappear(onClose);
     const [currentCategory, setCurrentCategory] = useState<SETTING_CATEGORY>(SETTING_CATEGORY.GENERAL);
@@ -147,6 +150,10 @@ function SettingModal({
                     {
                         currentCategory === SETTING_CATEGORY.DATA &&
                         <DataOptions />
+                    }
+                    {
+                        currentCategory === SETTING_CATEGORY.ADVANCED &&
+                        <AdvancedOptions />
                     }
                 </div>
             </div>

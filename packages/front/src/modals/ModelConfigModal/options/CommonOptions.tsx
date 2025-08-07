@@ -7,8 +7,6 @@ import ModelForm from '@/components/model-ui';
 function CommonOptions({
     config,
     refresh,
-
-    noMarginBottom = false,
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_common;
 
@@ -52,10 +50,6 @@ function CommonOptions({
                 allowEmpty={true}
                 disabled={disabled}
             />
-            {
-                noMarginBottom == false
-                && <div style={{ height: '1em' }} />
-            }
         </>
     )
 }

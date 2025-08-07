@@ -37,7 +37,7 @@ function ModelConfigModal({
         console.log('#model Infomation', modelMap[modelId]);
         return modelMap[modelId] ?? {};
     }, [modelId, modelMap]);
-    
+
     const modelName = useMemo(() => {
         return ProfileEvent.model.getName(modelId);
     }, [modelId]);
@@ -66,7 +66,7 @@ function ModelConfigModal({
             disappear={disappear}
             style={{
                 maxHeight: '80%',
-                // overflowY: 'auto',
+                overflowY: 'auto',
             }}
             headerLabel={
                 <ModalHeader
@@ -95,17 +95,28 @@ function ModelConfigModal({
                     config={config}
                     refresh={refresh}
                 />
-                <ThinkingOptions
-                    model={model}
-                    config={config}
-                    refresh={refresh}
-                />
-                <SafetyOptions
-                    model={model}
-                    config={config}
-                    refresh={refresh}
-                />
-
+                {
+                    (model.config.thinking ?? 'disabled') === 'disabled' &&
+                    <>
+                        <div style={{ height: '1em' }} />
+                        <ThinkingOptions
+                            model={model}
+                            config={config}
+                            refresh={refresh}
+                        />
+                    </>
+                }
+                {
+                    model.config.supportGeminiSafetyFilter &&
+                    <>
+                        <div style={{ height: '1em' }} />
+                        <SafetyOptions
+                            model={model}
+                            config={config}
+                            refresh={refresh}
+                        />
+                    </>
+                }
             </Column>
         </Modal>
     )

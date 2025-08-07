@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { emitEvent } from '@/hooks/useEvent';
 
-import styles from './styles.module.scss';
+import styles from './ui.module.scss';
 
 function PreviewButton() {
     return (

@@ -71,7 +71,7 @@ function SafetyFilterForm({
                 }}
                 disabled={disabled}
             />
-            <div style={{ height: '1em' }} />
+            <div style={{ height: '0.25em' }} />
         </>
     )
 }

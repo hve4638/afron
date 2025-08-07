@@ -119,6 +119,9 @@ export const PROFILE_STORAGE_TREE = {
         'clear_on_submit_normal': JSONType.Bool().default_value(false),
         'clear_on_submit_chat': JSONType.Bool().default_value(true),
 
+        'enabled_prompt_preview': JSONType.Bool().default_value(false),
+        'enabled_global_model_configuration': JSONType.Bool().default_value(false),
+
         'preview_prettify_header': JSONType.Bool().default_value(true),
         'preview_prettify_body': JSONType.Bool().default_value(true),
     }),

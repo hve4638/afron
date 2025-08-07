@@ -77,6 +77,7 @@ function RequestPreviewModal({
             <Well
                 style={{
                     overflowY: 'auto',
+                    overflowX: 'auto',
                 }}
             >
                 <small
@@ -93,7 +94,12 @@ function RequestPreviewModal({
                 onClickJSONPrettify={setBodyPrettify}
             />
             <div style={{ height: '0.15em' }} />
-            <Well>
+            <Well
+                style={{
+                    overflowY: 'auto',
+                    overflowX: 'auto',
+                }}
+            >
                 <small style={{
                     whiteSpace: bodyPrettify ? 'pre' : 'pre-line',
                 }}>{jsonToComponent(previewText.body)}</small>

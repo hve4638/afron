@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {  useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 
@@ -6,7 +6,7 @@ import InputField from '@/components/InputField';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
-import { useConfigStore, useSessionStore, useShortcutSignalStore } from '@/stores';
+import { useConfigStore, useSessionStore } from '@/stores';
 
 import SplitSlider from '../SplitSlider';
 
@@ -15,13 +15,13 @@ import { HistoryData } from '@/features/session-history';
 import styles from './styles.module.scss';
 import { remapDecimal } from '@/utils/math';
 import FilesFormLayout from './FilesUpload/FileList';
-import { readFileAsDataURI } from '@/utils/file';
 import { FileDropper } from './FilesUpload';
 import ProfileEvent from '@/features/profile-event';
 import { emitEvent, useEvent } from '@/hooks/useEvent';
 import CopyButton from './ui/CopyButton';
 import PreviewButton from './ui/PreviewButton';
 import RequestButton from './ui/RequestButton';
+import AttachFileButton from './ui/AttachFileButton';
 
 type SingleIOLayoutProps = {
     inputText: string;
@@ -182,6 +182,7 @@ function SingleIOLayout({
                         }}
                         columnAlign={Align.End}
                     >
+                        <AttachFileButton />
                         <small
                             className={classNames(styles['token-count'], 'secondary-color', 'undraggable')}
                         >token: {tokenCount}</small>
@@ -197,8 +198,11 @@ function SingleIOLayout({
                                 internalPadding='4px 4px'
                             />
                         </Flex>
-                        <PreviewButton/>
-                        <RequestButton/>
+                        {
+                            configState.enabled_prompt_preview &&
+                            <PreviewButton />
+                        }
+                        <RequestButton />
                     </Row>
                     {
                         draggingFile &&
@@ -260,7 +264,7 @@ function SingleIOLayout({
                                 sessionState.update.markdown(!sessionState.markdown);
                             }}
                         />
-                        <CopyButton/>
+                        <CopyButton />
                     </Row>
                 </InputField>
                 <SplitSlider
