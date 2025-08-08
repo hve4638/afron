@@ -12,6 +12,14 @@ function initProvider(builder: CategoryBuilder) {
     const completionsAPI:ChatAIConfig = { endpoint: 'chat_completions' };
     const resAPI:ChatAIConfig = { endpoint: 'responses' };
 
+    builder.group('GPT-5', { endpoint: 'chat_completions', thinking: 'enabled'})
+        .model('gpt-5', 'GPT-5', {}, { latest, featured })
+        .model('gpt-5-2025-08-07', 'GPT-5 (2025-08-07)', {}, { snapshot })
+        .model('gpt-5 mini', 'GPT-5 mini', {}, { latest, featured })
+        .model('gpt-5-mini-2025-08-07', 'GPT-5 mini (2025-08-07)', {}, { snapshot })
+        .model('gpt-5', 'GPT-5 nano', {}, { latest, featured })
+        .model('gpt-5-nano-2025-08-07', 'GPT-5 nano (2025-08-07)', {}, { snapshot })
+
     builder.group('ChatGPT-4o', completionsAPI, {})
         .model('chatgpt-4o-latest', 'ChatGPT 4o', {}, { latest, featured })
 

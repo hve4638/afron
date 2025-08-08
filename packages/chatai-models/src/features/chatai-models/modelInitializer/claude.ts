@@ -12,6 +12,9 @@ const {
 function initProvider(builder: CategoryBuilder) {
     const claudeAPI: ChatAIConfig = { endpoint: 'anthropic' };
 
+    builder.group('Claude 4.1', { endpoint: 'anthropic', thinking: 'optional' }, {})
+        .model('claude-opus-4-1-20250805', 'Claude Opus 4.1', {}, { latest, featured })
+
     builder.group('Claude 4', { endpoint: 'anthropic', thinking: 'optional' }, {})
         .model('claude-opus-4-0', 'Claude Opus 4', {}, { latest, featured })
         .model('claude-opus-4-20250514', 'Claude Opus 4 (2025-05-14)', {}, { snapshot })
