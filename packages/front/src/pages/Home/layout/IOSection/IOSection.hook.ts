@@ -6,8 +6,11 @@ import useTrigger from '@/hooks/useTrigger';
 
 import { useSessionStore, useChannelStore, useProfileAPIStore } from '@/stores';
 import { emitEvent, useEvent } from '@/hooks/useEvent';
+import useFileUploadHandler from './hooks/useFileUploadHandler';
 
 function useIOSection() {
+    useFileUploadHandler();
+
     const sessionState = useSessionStore();
     const color = useSessionStore(state => state.color);
     const { api } = useProfileAPIStore();

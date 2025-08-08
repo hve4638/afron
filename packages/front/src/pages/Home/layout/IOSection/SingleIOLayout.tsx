@@ -1,4 +1,4 @@
-import {  useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 
@@ -17,7 +17,7 @@ import { remapDecimal } from '@/utils/math';
 import FilesFormLayout from './FilesUpload/FileList';
 import { FileDropper } from './FilesUpload';
 import ProfileEvent from '@/features/profile-event';
-import { emitEvent, useEvent } from '@/hooks/useEvent';
+import { useEvent } from '@/hooks/useEvent';
 import CopyButton from './ui/CopyButton';
 import PreviewButton from './ui/PreviewButton';
 import RequestButton from './ui/RequestButton';
@@ -170,6 +170,17 @@ function SingleIOLayout({
                         e.stopPropagation();
                     }}
                 >
+                    <small
+                        className={classNames(styles['token-count'], 'secondary-color', 'undraggable')}
+                        style={{
+                            position: 'absolute',
+                            left: '0',
+                            bottom: '0',
+                            height: 'calc(70px + 1em)',
+                            padding: '10px',
+                            pointerEvents: 'none',
+                        }}
+                    >token: {tokenCount}</small>
                     <Row
                         style={{
                             position: 'absolute',
@@ -183,9 +194,6 @@ function SingleIOLayout({
                         columnAlign={Align.End}
                     >
                         <AttachFileButton />
-                        <small
-                            className={classNames(styles['token-count'], 'secondary-color', 'undraggable')}
-                        >token: {tokenCount}</small>
                         <Flex
                             style={{
                                 height: '100%',

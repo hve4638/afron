@@ -1,8 +1,10 @@
 import classNames from 'classnames';
+import Latch from '@/lib/Latch';
+
+import { emitEvent } from '@/hooks/useEvent';
+import type { CommonProps } from '@/types';
+
 import styles from './styles.module.scss';
-import { readFileAsDataURI } from '@/utils/file';
-import { useSessionStore } from '@/stores';
-import { CommonProps } from '@/types';
 
 interface FileDropperProps extends CommonProps {
     onDragEnd?: () => void;
@@ -11,7 +13,7 @@ interface FileDropperProps extends CommonProps {
 function FileDropper({
     className = '',
     style = {},
-    onDragEnd = () => {}
+    onDragEnd = () => { }
 }: FileDropperProps) {
     return <div
         className={classNames(styles['drag-over-form'], 'undraggable', className)}
@@ -29,12 +31,15 @@ function FileDropper({
             e.stopPropagation();
 
             const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                for (const file of files) {
-                    const data = await readFileAsDataURI(file);
+            if (!files || files.length === 0) return;
 
-                    await useSessionStore.getState().actions.addInputFile(file.name, data);
-                }
+            for (const file of files) {
+                const latch = new Latch();
+                emitEvent('input_file_upload', {
+                    file: file,
+                    latch
+                });
+                await latch.wait();
             }
         }}
     />

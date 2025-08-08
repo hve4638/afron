@@ -1,6 +1,7 @@
 /**
  * 이벤트 구독 및 발행 훅
  */
+import Latch from '@/lib/Latch';
 import Channel from '@hve/channel';
 import { useEffect } from 'react';
 import { create } from 'zustand'
@@ -48,6 +49,7 @@ type Events = {
 
     /* UI 이벤트 */
     change_profile: ping;
+    input_file_upload: { file: File, latch: Latch };
 
     /* RequestManager에서 호출됨 */
     show_rt_preview: RTEventPreviewData;
@@ -88,7 +90,7 @@ export function useEvent<T extends EventNames>(
 ) {
     useEffect(() => {
         if (!enabled) return;
-        
+
         const unsub = useEventStore.subscribe(
             (data) => data[key],
             (value) => callback(value?.current),
