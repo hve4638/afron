@@ -1,3 +1,5 @@
+import { isTextData } from '@/lib/istext';
+import { isImageMIME, isTextMIME } from '@/utils/mime-check';
 import { IACSubStorage } from 'ac-storage';
 import { createHash } from 'crypto';
 import sharp from 'sharp';
@@ -83,34 +85,45 @@ class ProfileSession {
         }
 
         const byteSize = Buffer.from(data, 'base64').length;
-        // "data:image/png;base64" 형식 파싱
+        // "data:image/png;base64" 형식에서 mime 타입 추출
         const mimeType = prefix.substring('data:'.length).split(';')[0];
 
-        const imageTypes: string[] = ['image/webp', 'image/png', 'image/jpeg'];
-        const otherTypes: string[] = ['application/pdf', 'text/plain'];
+        const allowBinaryMIME: string[] = ['application/pdf'];
+
 
         let isImageType = false;
         let dataType: UploadableFileType;
-        if (imageTypes.includes(mimeType)) {
+        // @TODO: 텍스트 형식 파일 업로드 지원?
+        // 대부분은 PDF만 지원하고 .txt 를 포함한 일반 파일업로드를 지원하지 않음
+        // 프롬프트에 넣게 하는 식으로 해야할 듯
+        // if (isTextMIME(mimeType)) {
+        //     dataType = mimeType as UploadableFileType;
+        // }
+        // else
+        if (isImageMIME(mimeType)) {
             dataType = mimeType as UploadableFileType;
             isImageType = true;
         }
-        else if (otherTypes.includes(mimeType)) {
+        else if (allowBinaryMIME.includes(mimeType)) {
             dataType = mimeType as UploadableFileType;
         }
+        // else if (mimeType === 'application/octet-stream'
+        //     && isTextData(data)
+        // ) {
+        //     dataType = 'text/plain';
+        // }
         else {
-            throw new Error(`Unsupported file type for ${filename}`);
+            throw new Error(`Unsupported file type for ${filename} (${mimeType})`);
         }
 
         if (byteSize >= 20 * 1024 * 1024) { // 20MB
-            throw new Error(`File size exceeds limit for ${filename}`);
+            throw new Error(`File size exceeds limit for ${filename} (${mimeType})`);
         }
 
         let thumbnail: string | null = null;
         if (isImageType) {
+            // 썸내일 생성
             const image = Buffer.from(data, 'base64');
-
-
             const thumbnailBuffer = await sharp(image)
                 .resize({
                     width: 256,
@@ -120,7 +133,7 @@ class ProfileSession {
                 })
                 .png()
                 .toBuffer();
-            
+
             const base64 = thumbnailBuffer.toString('base64');
             thumbnail = `data:image/png;base64,${base64}`;
         }

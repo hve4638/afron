@@ -12,7 +12,7 @@ function handler(): IPCInvokerRequest {
         },
         async previewPrompt(token: string, profileId: string, sessionId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
-
+            
             runtime.logger.info(`RT preview (token=${token}, sessionId=${sessionId})`);
             await runtime.rtWorker.request(token, { profile, sessionId }, { preview: true });
 
