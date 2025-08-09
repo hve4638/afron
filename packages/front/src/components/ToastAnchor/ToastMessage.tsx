@@ -4,22 +4,20 @@ import classNames from 'classnames';
 import { Align, Column, Row } from '@/components/layout';
 import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
 import useModalDisappear from '@/hooks/useModalDisappear';
+import { Toast } from '@/types/toast';
 
-
-import styles from './styles.module.scss';
+import styles from './toast.module.scss';
 
 interface ToastMessageProps {
-    title: string;
-    description: string|null;
-    type: 'error' | 'info' | 'success' | 'warn';
+    value: Toast;
     onClick: () => void;
     onDispose: () => void;
 }
 
-export function ToastMessage({ title, description, type, onClick, onDispose }: ToastMessageProps) {
+export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
     const [disappear, close] = useModalDisappear(onDispose);
     const icon = useMemo(()=>{
-        switch (type) {
+        switch (value.type) {
             case 'error':
                 return 'error';
             case 'info':
@@ -29,15 +27,15 @@ export function ToastMessage({ title, description, type, onClick, onDispose }: T
             case 'success':
                 return 'check_circle';
         }
-    }, [type])
+    }, [value.type])
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            close();
-        }, 3000);
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         close();
+    //     }, 3000);
 
-        return () => clearTimeout(timer);
-    }, []);
+    //     return () => clearTimeout(timer);
+    // }, []);
 
     return (
         <Row
@@ -46,9 +44,9 @@ export function ToastMessage({ title, description, type, onClick, onDispose }: T
                 'undraggable',
                 {
                     disappear: disappear,
-                    [styles['error-toast']] : type === 'error',
-                    [styles['info-toast']] : type === 'info',
-                    [styles['warning-toast']] : type === 'warn',
+                    [styles['error-toast']] : value.type === 'error',
+                    [styles['info-toast']] : value.type === 'info',
+                    [styles['warn-toast']] : value.type === 'warn',
                 },
             )}
             columnAlign={Align.Center}
@@ -60,8 +58,8 @@ export function ToastMessage({ title, description, type, onClick, onDispose }: T
         >
             <GIcon style={{ fontSize: '1.5em' }} value={icon} />
             <Column>
-                <span style={{ width: '100%' }}>{title}</span>
-                <small className={styles['description']}>{description}</small>
+                <span style={{ width: '100%' }}>{value.title}</span>
+                <small className={styles['description']}>{value.description}</small>
             </Column>
 
             <GIconButton

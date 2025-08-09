@@ -1,8 +1,9 @@
 import RequestAPI from "@/api/request";
 import ProfilesAPI, { SessionAPI } from "@/api/profiles";
 import { useSessionStore } from "@/stores";
-import useToastStore from "@/stores/useToastStore";
 import { emitEvent } from "@/hooks/useEvent";
+import useErrorLogStore from "@/stores/useErrorLogStore";
+import { getHttpStatusMessage } from "@/utils/status_code";
 
 class RequestManager {
     static instance: RequestManager | null = null;
@@ -46,7 +47,8 @@ class RequestManager {
             emitEvent('refresh_session_metadata');
         }
 
-        let normalExit = false;
+        const { add: addErrorLog } = useErrorLogStore.getState();
+
         while (true) {
             const data = await RequestAPI.response(chId);
             // console.info('$ Received data:', data);
@@ -55,10 +57,10 @@ class RequestManager {
                 console.warn('Request closed:', data);
                 const sessionState = useSessionStore.getState();
 
-                if (normalExit) break;
                 await sessionAPI.set('cache.json', {
                     'state': 'done',
                 });
+                return;
                 emitEvent('refresh_session_metadata');
                 if (sessionState.deps.last_session_id === sessionAPI.id) {
                     sessionState.refetch.state();
@@ -86,7 +88,7 @@ class RequestManager {
                             sessionState.refetch.state();
                         }
                         emitEvent('refresh_session_metadata');
-                        
+
                     }
                     else if (typeName === 'history') {
                         const sessionState = useSessionStore.getState();
@@ -100,6 +102,7 @@ class RequestManager {
                 }
             }
             else if (data.type === 'error') {
+                console.warn('[Error]', data);
                 switch (data.reason_id) {
                     case 'no_result':
                         console.warn('No result received from request:', data);
@@ -108,70 +111,168 @@ class RequestManager {
                             sessionState.refetch.state();
                         }
                         emitEvent('refresh_session_metadata');
+
+                        addErrorLog({
+                            message: '요청 결과가 없습니다',
+                            detail: data.detail,
+                            occurredAt: {
+                                type: 'session',
+                                sessionId: sessionAPI.id,
+                            },
+                        });
                         break;
                     case 'request_failed':
-                        useToastStore.getState().add(
-                            '요청이 실패했습니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
+                        {
+                            const errorId = addErrorLog({
+                                message: `요청 실패`,
+                                detail: data.detail,
+                                occurredAt: {
+                                    type: 'session',
+                                    sessionId: sessionAPI.id,
+                                },
+                            });
+                            emitEvent('show_toast_message', {
+                                clickAction: {
+                                    action: 'open_error_log',
+                                    error_id: errorId,
+                                },
+                                title: '요청이 실패했습니다',
+                                description: data.detail[0],
+                                type: 'error',
+                            });
+                            break;
+                        }
                     case 'aborted':
-                        useToastStore.getState().add(
-                            '요청이 중단되었습니다',
-                            data.detail[0],
-                            'info'
-                        );
+                        emitEvent('show_toast_message', {
+                            title: '요청을 중단했습니다',
+                            description: '',
+                            type: 'info',
+                            clickAction: {
+                                action: 'none',
+                            },
+                        });
+                        // no error log
                         break;
                     case 'fetch_failed':
-                        useToastStore.getState().add(
-                            '요청이 실패했습니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
+                        {
+                            const errorId = addErrorLog({
+                                message: `요청 실패: fetch failed`,
+                                detail: data.detail,
+                                occurredAt: {
+                                    type: 'session',
+                                    sessionId: sessionAPI.id,
+                                },
+                            });
+                            emitEvent('show_toast_message', {
+                                title: '요청이 실패했습니다',
+                                description: '',
+                                type: 'error',
+                                clickAction: {
+                                    action: 'open_error_log',
+                                    error_id: errorId,
+                                }
+                            });
+                            break;
+                        }
                     case 'http_error':
-                        useToastStore.getState().add(
-                            '요청이 실패했습니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
+                        {
+                            const code = data.http_status;;
+                            const message = getHttpStatusMessage(code);
+
+                            const errorId = addErrorLog({
+                                message: `요청 실패: ${code} ${message}`,
+                                detail: data.detail,
+                                occurredAt: {
+                                    type: 'session',
+                                    sessionId: sessionAPI.id,
+                                },
+                            });
+                            emitEvent('show_toast_message', {
+                                title: '요청이 실패했습니다',
+                                description: `${code} ${message}`,
+                                type: 'error',
+                                clickAction: {
+                                    action: 'open_error_log',
+                                    error_id: errorId,
+                                }
+                            });
+                            break;
+                        }
                     case 'invalid_model':
-                        useToastStore.getState().add(
-                            '유효하지 않은 모델입니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
+                        {
+                            const errorId = addErrorLog({
+                                message: `유효하지 않은 모델`,
+                                detail: data.detail,
+                                occurredAt: {
+                                    type: 'session',
+                                    sessionId: sessionAPI.id,
+                                },
+                            });
+                            emitEvent('show_toast_message', {
+                                title: '유효하지 않은 모델입니다',
+                                description: data.detail[0],
+                                type: 'error',
+                                clickAction: {
+                                    action: 'open_error_log',
+                                    error_id: errorId,
+                                }
+                            });
+                            break;
+                        }
                     case 'other':
-                        useToastStore.getState().add(
-                            '오류가 발생했습니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
+                        {
+                            emitEvent('show_toast_message', {
+                                title: '오류가 발생했습니다',
+                                description: data.detail[0],
+                                type: 'error',
+                                clickAction: {
+                                    action: 'none',
+                                }
+                            });
+                            break;
+                        }
                     case 'prompt_build_failed':
-                        useToastStore.getState().add(
-                            '프롬프트 빌드에 실패했습니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
+                        {
+                            const errorId = addErrorLog({
+                                message: `프롬프트 빌드 실패`,
+                                detail: data.detail,
+                                occurredAt: {
+                                    type: 'session',
+                                    sessionId: sessionAPI.id,
+                                },
+                            });
+                            emitEvent('show_toast_message', {
+                                title: '프롬프트 빌드에 실패했습니다',
+                                description: data.detail[0],
+                                type: 'error',
+                                clickAction: {
+                                    action: 'open_error_log',
+                                    error_id: errorId,
+                                }
+                            });
+                            break;
+                        }
                     case 'prompt_execute_failed':
-                        useToastStore.getState().add(
-                            '프롬프트 실행에 실패했습니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
-                    case 'response_failed_with_http_error':
-                        useToastStore.getState().add(
-                            '응답에 실패했습니다',
-                            data.detail[0],
-                            'error'
-                        );
-                        break;
+                        {
+                            const errorId = addErrorLog({
+                                message: `프롬프트 평가 실패`,
+                                detail: data.detail,
+                                occurredAt: {
+                                    type: 'session',
+                                    sessionId: sessionAPI.id,
+                                },
+                            });
+                            emitEvent('show_toast_message', {
+                                title: '프롬프트 평가에 실패했습니다',
+                                description: data.detail[0],
+                                type: 'error',
+                                clickAction: {
+                                    action: 'open_error_log',
+                                    error_id: errorId,
+                                }
+                            });
+                            break;
+                        }
                 }
             }
             else if (data.type === 'set_output') {
@@ -188,7 +289,7 @@ class RequestManager {
                 emitEvent('refresh_session_metadata');
             }
             else if (data.type === 'stream_output') {
-                
+
             }
             else {
                 console.warn('Unknown data type received:', data);

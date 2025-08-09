@@ -1,7 +1,11 @@
+:global(.theme-dark) {
+    --toast-error-bgcolor: rgba(183, 0, 0, 0.536);
+    --toast-warn-bgcolor: rgba(183, 128, 0, 0.536);
+    --toast-info-bgcolor: rgba(0, 73, 183, 0.536);
+}
+
 .toast-anchor {
     position: contents;
-    // width: 100%;
-    // min-height: 100%;
 }
 
 .toast-message {
@@ -39,14 +43,14 @@
     }
 
     &.error-toast {
-        background-color: rgba(183, 0, 0, 0.536);
+        background-color: var(--toast-error-bgcolor);
     }
 
-    &.warning-toast {
-        background-color: rgba(183, 128, 0, 0.536);
+    &.warn-toast {
+        background-color: var(--toast-warn-bgcolor);
     }
 
     &.info-toast {
-        background-color: rgba(0, 73, 183, 0.536);
+        background-color: var(--toast-info-bgcolor);
     }
 }

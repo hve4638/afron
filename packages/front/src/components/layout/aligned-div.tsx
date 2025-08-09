@@ -25,35 +25,36 @@ export interface AlignedDivProps extends CommonProps, MouseActionProps<HTMLDivEl
     draggable?: boolean;
 }
 
-export function Column({
-    className = '',
-    style = {},
-    children,
-    rowAlign = Align.Start,
-    columnAlign = Align.Start,
-    reverse = false,
-    onClick,
-}: AlignedDivProps) {
-    return (
-        <div
-            className={className}
-            style={{
-                display: 'flex',
-                flexDirection: reverse ? 'column-reverse' : 'column',
-                justifyContent: columnAlign,
-                alignItems: rowAlign,
-                ...style,
-            }}
-            onClick={onClick}
-        >
-            {children}
-        </div>
-    )
-}
+export const Column = forwardRef<HTMLDivElement, AlignedDivProps>(
+    (
+        props: AlignedDivProps,
+        ref
+    ) => {
+        return (
+            <div
+                ref={ref}
+                className={props.className}
+                style={{
+                    display: 'flex',
+                    flexDirection: props.reverse ? 'column-reverse' : 'column',
+                    justifyContent: props.columnAlign,
+                    alignItems: props.rowAlign,
+                    ...props.style,
+                }}
+                onClick={props.onClick}
+            >
+                {props.children}
+            </div>
+        )
+    }
+);
 
 
 export const Row = forwardRef(
-    (props: AlignedDivProps, ref: React.LegacyRef<HTMLDivElement>) => {
+    (
+        props: AlignedDivProps,
+        ref: React.LegacyRef<HTMLDivElement>
+    ) => {
         const {
             className = '',
             style = {},

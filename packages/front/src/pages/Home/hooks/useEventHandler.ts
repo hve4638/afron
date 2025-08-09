@@ -50,7 +50,6 @@ function useEventHandler() {
             }
         }
     }, []);
-
 }
 
 export default useEventHandler;

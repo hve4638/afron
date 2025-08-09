@@ -10,7 +10,6 @@ type RTEventDataError = {
             | 'prompt_build_failed'
             | 'prompt_execute_failed'
             | 'fetch_failed'
-            | 'response_failed_with_http_error'
             | 'request_failed'
             | 'invalid_model'
             | 'aborted'

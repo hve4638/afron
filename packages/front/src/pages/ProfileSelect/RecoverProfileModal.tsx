@@ -46,6 +46,7 @@ function RecoverProfileModal({
             <small style={{ paddingLeft: '0.5em', }}>예기치 못한 오류로 문제가 생긴 프로필을 복구합니다</small>
             <div style={{ height: '0.25em' }} />
             <ListView
+                className='undraggable'
                 style={{
                     padding: '0 0.5em',
                 }}

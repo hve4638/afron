@@ -1,12 +1,13 @@
 import { GIconButton } from '@/components/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
-import ErrorLogModal from '@/modals/ErrorLogModal';
+
+import { emitEvent } from '@/hooks/useEvent';
+
 import useErrorLogStore from '@/stores/useErrorLogStore';
 
 import styles from './styles.module.scss';
 
+
 function ErrorLogButton() {
-    const modal = useModal();
     const { log, hasUnread } = useErrorLogStore();
 
     if (log.length === 0) {
@@ -23,7 +24,7 @@ function ErrorLogButton() {
                 }}
                 hoverEffect='circle'
                 onClick={() => {
-                    modal.open(ErrorLogModal, {})
+                    emitEvent('open_error_log', null);
                 }}
             >
                 {

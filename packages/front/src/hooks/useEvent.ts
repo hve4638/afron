@@ -2,6 +2,8 @@
  * 이벤트 구독 및 발행 훅
  */
 import Latch from '@/lib/Latch';
+import { LogEntry } from '@/stores/useErrorLogStore';
+import { Toast } from '@/types/toast';
 import Channel from '@hve/channel';
 import { useEffect } from 'react';
 import { create } from 'zustand'
@@ -53,9 +55,14 @@ type Events = {
 
     /* RequestManager에서 호출됨 */
     show_rt_preview: RTEventPreviewData;
+    logging_error: LogEntry;
+    show_toast_message: Toast;
 
     /* Chaining */
     request_ready: Channel<unknown>;
+
+    /* modal */
+    open_error_log: string | null;
 }
 
 export type EventNames = keyof Events;
