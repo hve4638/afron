@@ -92,26 +92,26 @@ class ProfileSession {
 
 
         let isImageType = false;
-        let dataType: UploadableFileType;
-        // @TODO: 텍스트 형식 파일 업로드 지원?
-        // 대부분은 PDF만 지원하고 .txt 를 포함한 일반 파일업로드를 지원하지 않음
-        // 프롬프트에 넣게 하는 식으로 해야할 듯
-        // if (isTextMIME(mimeType)) {
-        //     dataType = mimeType as UploadableFileType;
-        // }
-        // else
-        if (isImageMIME(mimeType)) {
+        let dataType: UploadableFileType
+        if (isTextMIME(mimeType)) {
+            dataType = mimeType as UploadableFileType;
+            // dataType = 'text/plain';
+        }
+        else if (isImageMIME(mimeType)) {
             dataType = mimeType as UploadableFileType;
             isImageType = true;
         }
         else if (allowBinaryMIME.includes(mimeType)) {
             dataType = mimeType as UploadableFileType;
         }
-        // else if (mimeType === 'application/octet-stream'
-        //     && isTextData(data)
-        // ) {
-        //     dataType = 'text/plain';
-        // }
+        else if (mimeType === 'application/octet-stream') {
+            if (isTextData(data)) {
+                dataType = 'text/plain';
+            }
+            else {
+                throw new Error(`Unsupported file type for ${filename} (${mimeType}, binary)`);
+            }
+        }
         else {
             throw new Error(`Unsupported file type for ${filename} (${mimeType})`);
         }
