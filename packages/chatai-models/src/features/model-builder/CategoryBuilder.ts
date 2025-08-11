@@ -1,3 +1,4 @@
+import { DEFAULT_CHATAI_CONFIG } from './data';
 import GroupBuilder from './GroupBuilder';
 
 class CategoryBuilder {
@@ -10,11 +11,14 @@ class CategoryBuilder {
         this.#name = categoryName;
         this.#groups = [];
     }
-
+    
     group(groupName: string, baseModelConfig: Partial<ChatAIConfig> = {}, baseModelFlags: ChatAIFlags = {}): GroupBuilder {
         const group = new GroupBuilder(groupName, {
             categoryId: this.#id,
-            baseModelConfig,
+            baseModelConfig: {
+                ...DEFAULT_CHATAI_CONFIG,
+                ...baseModelConfig
+            },
             baseModelFlags
         });
 

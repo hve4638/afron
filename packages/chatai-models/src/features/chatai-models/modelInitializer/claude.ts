@@ -10,7 +10,7 @@ const {
 
 
 function initProvider(builder: CategoryBuilder) {
-    const claudeAPI: ChatAIConfig = { endpoint: 'anthropic' };
+    const claudeAPI: Partial<ChatAIConfig> = { endpoint: 'anthropic' };
 
     builder.group('Claude 4.1', { endpoint: 'anthropic', thinking: 'optional' }, {})
         .model('claude-opus-4-1-20250805', 'Claude Opus 4.1', {}, { latest, featured })
@@ -20,7 +20,7 @@ function initProvider(builder: CategoryBuilder) {
         .model('claude-opus-4-20250514', 'Claude Opus 4 (2025-05-14)', {}, { snapshot })
         .model('claude-sonnet-4-0', 'Claude Sonnet 4', {}, { latest, featured })
         .model('claude-sonnet-4-20250514', 'Claude Sonnet 4 (2025-05-14)', {}, { snapshot });
-
+    
     builder.group('Claude 3.7', { endpoint: 'anthropic', thinking: 'optional' }, {})
         .model('claude-3-7-sonnet-latest', 'Claude Sonnet 3.7', {}, { latest, featured })
         .model('claude-3-7-sonnet-20250219', 'Claude Sonnet 3.7 (2025-02-19)', {}, { snapshot });

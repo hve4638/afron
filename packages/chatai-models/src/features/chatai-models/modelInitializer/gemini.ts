@@ -9,7 +9,7 @@ const {
 } = flags;
 
 function initProvider(builder: CategoryBuilder) {
-    const genAPI:ChatAIConfig = {
+    const genAPI:Partial<ChatAIConfig> = {
         endpoint: 'generative_language',
         supportGeminiSafetyFilter: true,
         supportThinkingBudget: true,
@@ -18,7 +18,7 @@ function initProvider(builder: CategoryBuilder) {
     builder.group('Gemini 2.5', genAPI, {})
         .model('gemini-2.5-pro', 'Gemini 2.5 Pro', { thinking: 'enabled',  }, { latest, featured })
         .model('gemini-2.5-pro-preview-06-05', 'Gemini 2.5 Pro Preview (06-05)', {}, { deprecated })
-        .model('gemini-2.5-flash', 'Gemini 2.5 Flash', { thinking: 'optional' }, { latest, featured })
+        .model('gemini-2.5-flash', 'Gemini 2.5 Flash', { thinking: 'optional', thinkingDisableStrategy: 'set_to_zero' }, { latest, featured })
         .model('gemini-2.5-flash-preview-05-20', 'Gemini 2.5 Flash Preview (05-20)', {}, { deprecated});
     
     builder.group('Gemini 2.0', genAPI, {})

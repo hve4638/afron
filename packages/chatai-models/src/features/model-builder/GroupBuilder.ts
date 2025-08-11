@@ -1,13 +1,13 @@
 interface GroupBuilderOptions {
     categoryId: string;
-    baseModelConfig: Partial<ChatAIConfig>;
+    baseModelConfig: ChatAIConfig;
     baseModelFlags: ChatAIFlags;
 }
 
 class GroupBuilder {
     #name: string;
     #categoryId: string;
-    #baseModelConfig: Partial<ChatAIConfig>;
+    #baseModelConfig: ChatAIConfig;
     #baseModelFlags: ChatAIFlags;
     #models: ChatAIModel[];
 
@@ -22,7 +22,7 @@ class GroupBuilder {
     model(
         id: string,
         name: string,
-        config: ChatAIConfig,
+        config: Partial<ChatAIConfig>,
         flags: ChatAIFlags,
     ) {
         const model: ChatAIModel = {
