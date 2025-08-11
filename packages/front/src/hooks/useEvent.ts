@@ -97,7 +97,7 @@ export function useEvent<T extends EventNames>(
 ) {
     useEffect(() => {
         if (!enabled) return;
-
+        
         const unsub = useEventStore.subscribe(
             (data) => data[key],
             (value) => callback(value?.current),

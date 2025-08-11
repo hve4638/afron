@@ -9,7 +9,6 @@ import Button from '@/components/Button';
 
 import { useModal } from '@/hooks/useModal';
 import useHotkey from '@/hooks/useHotkey';
-import MetadataEditModal from './MetadataEditModal';
 import VarEditModal from './VarEditModal';
 
 import type { PromptEditorData, PromptInputType } from '@/types';

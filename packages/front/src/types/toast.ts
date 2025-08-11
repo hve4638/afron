@@ -6,10 +6,16 @@ export type Toast = {
 }
 
 export type ToastClickAction = {
+    action: 'none';
+} | {
     action: 'open_error_log';
     error_id: string | null;
 } | {
-    action: 'none';
+    action: 'open_info';
+    item: Array<{
+        name?: string;
+        value: string;
+    }>;
 }
 
 type ToastMessageType = 'error' | 'info' | 'success' | 'warn';

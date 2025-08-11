@@ -79,8 +79,12 @@ class ProfileAPI {
         getAll : async () => await LocalAPI.profile.getCustomModels(this.#profileId),
         set : async (model:CustomModel) => await LocalAPI.profile.setCustomModel(this.#profileId, model),
         remove: async (customId:string) => await LocalAPI.profile.removeCustomModel(this.#profileId, customId),
-    }
-    
+    } as const;
+    globalModelConfig = {
+        get: async (modelId: string) => await LocalAPI.profile.getGlobalModelConfig(this.#profileId, modelId),
+        set: async (modelId: string, config: Record<string, any>) => await LocalAPI.profile.setGlobalModelConfig(this.#profileId, modelId, config),
+    } as const;
+
     session(sessionId:string):SessionAPI {
         if (!(sessionId in this.#sessionAPIs)) {
             this.#sessionAPIs[sessionId] = new SessionAPI(this.#profileId, sessionId);
@@ -93,7 +97,6 @@ class ProfileAPI {
         }
         return this.#rtAPIs[rtId] as RTAPI;
     }
-
 
     /** @deprecated use `session` instead */
     getSessionAPI(sessionId:string):SessionAPI {
@@ -111,7 +114,6 @@ class ProfileAPI {
         }
         return this.#rtAPIs[rtId] as RTAPI;
     }
-
 }
 
 

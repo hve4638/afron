@@ -8,6 +8,7 @@ import { Z_INDEX_TOAST } from '@/data/z';
 import { ToastMessage } from './ToastMessage';
 import useToastRenderer from './ToastRenderer.hook';
 import { emitEvent } from '@/hooks/useEvent';
+import InfoModal from '@/modals/InfoModal/InfoModal';
 
 interface ToastRendererProps {
     top?: string;
@@ -48,6 +49,12 @@ function ToastRenderer({
                         onClick={() => {
                             if (toast.clickAction.action === 'open_error_log') {
                                 emitEvent('open_error_log', toast.clickAction.error_id);
+                            }
+                            else if (toast.clickAction.action === 'open_info') {
+                                modal.open(InfoModal, {
+                                    item: toast.clickAction.item,
+                                });
+                                
                             }
                         }}
                         onDispose={() => removeToast(toast.id)}

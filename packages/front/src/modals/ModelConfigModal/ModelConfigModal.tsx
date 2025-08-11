@@ -1,16 +1,11 @@
-import Button from '@/components/Button';
-import Delimiter from '@/components/Delimiter';
-import Dropdown from '@/components/Dropdown';
-import { CheckBoxForm, NumberForm } from '@/components/Forms';
-import SliderForm from '@/components/Forms/SliderForm';
+import { CheckBoxForm } from '@/components/Forms';
 import { Column, Flex, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
-import { useCacheStore } from '@/stores';
+import { useProfileAPIStore } from '@/stores';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { safetyFilterThresholdMap, safetyFilterThresholdMapReverse } from './data';
 import ProfileEvent from '@/features/profile-event';
 import useTrigger from '@/hooks/useTrigger';
 import { CommonOptions, SafetyOptions, ThinkingOptions } from './options';
@@ -27,11 +22,11 @@ function ModelConfigModal({
     isFocused,
     onClose = () => { },
 }: ModelConfigModalProps) {
-    const { t } = useTranslation();
     const [disappear, closed] = useModalDisappear(onClose);
     const configRef = useRef<Partial<GlobalModelConfiguration>>({});
     const [refreshPing, refresh] = useTrigger();
     const modelMap = useMemoryStore(state => state.modelsMap);
+    const { api } = useProfileAPIStore();
 
     const model: ChatAIModel = useMemo(() => {
         console.log('#model Infomation', modelMap[modelId]);
@@ -43,14 +38,15 @@ function ModelConfigModal({
     }, [modelId]);
 
     const close = () => {
-        ProfileEvent.model.setGlobalConfig(modelId, configRef.current);
+        api.globalModelConfig.set(modelId, configRef.current);
+        
         closed();
     }
 
     useEffect(() => {
-        ProfileEvent.model.getGlobalConfig(modelId)
-            .then((data) => {
-                configRef.current = data;
+        api.globalModelConfig.get(modelId)
+            .then((config) => {
+                configRef.current = config;
                 refresh();
             });
     }, [modelId]);
@@ -96,7 +92,7 @@ function ModelConfigModal({
                     refresh={refresh}
                 />
                 {
-                    (model.config.thinking ?? 'disabled') === 'disabled' &&
+                    (model.config.thinking ?? 'disabled') !== 'disabled' &&
                     <>
                         <div style={{ height: '1em' }} />
                         <ThinkingOptions

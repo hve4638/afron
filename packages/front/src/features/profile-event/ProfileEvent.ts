@@ -39,8 +39,8 @@ class ProfileEvent {
         setCustom: (model: CustomModelCreate) => ModelEvent.setCustomModel(model),
         removeCustom: (customId: string) => ModelEvent.removeCustomModel(customId),
 
-        getGlobalConfig: (modelId: string) => GlobalModelConfigEvent.getGlobalConfig(modelId),
-        setGlobalConfig: (modelId: string, config: Record<string, any>) => GlobalModelConfigEvent.setGlobalConfig(modelId, config),
+        // getGlobalConfig: (modelId: string) => GlobalModelConfigEvent.getGlobalConfig(modelId),
+        // setGlobalConfig: (modelId: string, config: Record<string, any>) => GlobalModelConfigEvent.setGlobalConfig(modelId, config),
     }
     static readonly auth = {
         add: (provider: ProviderName, apiKey: string, memo: string = '') => AuthEvent.addAuth(provider, apiKey, memo),

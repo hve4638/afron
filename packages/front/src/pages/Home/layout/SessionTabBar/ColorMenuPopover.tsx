@@ -79,7 +79,7 @@ function ColorMenuPopover(props:SessionMenuPopoverProps) {
                                 key={index}
                                 color={color}
                                 onClick={async ()=>{
-                                    const sessionAPI = api.getSessionAPI(item.id);
+                                    const sessionAPI = api.session(item.id);
                                     await sessionAPI.set('config.json', { color });
                                     emitEvent('refresh_session_metadata');
                                     refetchSessionState.color();

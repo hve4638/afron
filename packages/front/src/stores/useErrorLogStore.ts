@@ -40,7 +40,7 @@ interface ErrorLogState {
 
     last: LogEntry | undefined;
     log: LogEntry[];
-    add: (entry:  Omit<LogEntry, 'id'>) => string;
+    add: (entry:  LogData) => string;
 }
 
 const useErrorLogStore = create<ErrorLogState, [['zustand/subscribeWithSelector', never]]>(
