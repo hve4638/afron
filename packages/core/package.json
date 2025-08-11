@@ -15,7 +15,7 @@
   "dependencies": {
     "@afron/types": "1.0.0",
     "@hve/channel": "^1.0.1",
-    "@hve/chatai": "^0.13.0",
+    "@hve/chatai": "^0.14.1",
     "@hve/mime": "^1.0.0",
     "@hve/prompt-template": "^0.2.0",
     "ac-storage": "^0.14.0",

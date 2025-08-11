@@ -50,7 +50,7 @@ class RTEventEmitter {
     }
 
     #sendForce(eventData: RTEventDataWithoutId) {
-        const fullEventData:RTEventData = {
+        const fullEventData: RTEventData = {
             id: this.#id,
             ...eventData,
         };
@@ -93,6 +93,16 @@ class RTEventEmitter {
                     type: 'send_raw_request_preview',
                     preview: data,
                 });
+            },
+
+            info: (title: string, description: string, item: { name?: string; value: string; }[]) => {
+                this.logger.trace(`[RTEventEmitter] send: info (${this.#id})`, JSON.stringify(item));
+                this.#send({
+                    type: 'send_info',
+                    title,
+                    description,
+                    item: item,
+                });
             }
         },
         output: {
@@ -104,10 +114,10 @@ class RTEventEmitter {
                 });
             },
             streamThinking: (text: string) => {
-                
+
             },
             thinking: (text: string) => {
-                
+
             },
             streamOutput: (text: string) => {
                 this.logger.trace(`[RTEventEmitter] stream_output (${this.#id})`, text);
@@ -139,7 +149,7 @@ class RTEventEmitter {
             },
             promptEvaluateFailed: (detail: string[] = []) => { },
             fetchFailed: (detail: string[] = []) => { },
-            httpError: (http_status:number, detail: string[] = []) => {
+            httpError: (http_status: number, detail: string[] = []) => {
                 this.logger.trace(`[RTEventEmitter] error: http_error (${this.#id})`);
 
                 this.#send({

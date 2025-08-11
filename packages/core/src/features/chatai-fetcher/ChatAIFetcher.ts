@@ -5,6 +5,7 @@ import { ChatAI } from '@hve/chatai';
 
 import type { ChatAIRequestAPI, RequestModelProps } from './types';
 import { ChatAIFetcherFailed } from './errors';
+import FormBuilder from './form-builder';
 
 interface RequestProps {
     model: ChatAIModel;
@@ -79,60 +80,48 @@ class ChatAIFetcher {
         api,
     }: RequestModelProps<string>): Promise<ChatAIResult> {
         const { modelId, config } = model;
-        const {
-            temperature,
-            top_p,
-            max_tokens,
-            use_thinking,
-            thinking_tokens,
-        } = modelConfiguration;
-
-        const common = {
-            model: modelId,
-            messages,
+        
+        const formBuilder = new FormBuilder({
+            modelId: modelId,
+            modelInfo: config,
+            modelConfig: modelConfiguration,
+            messages: messages,
+        });
+        const baseForm = {
             auth: {
                 api_key: auth,
             },
-
-            max_tokens,
-            temperature,
-            top_p,
         }
-
-        const openAIThinkingEffort = this.#convertThinkingTokenToEffort(thinking_tokens);
-        const useThinking = (
-            config.thinking === 'enabled'
-            || (config.thinking === 'optional' && use_thinking)
-        );
 
         if (config.endpoint === 'responses') {
             this.logger.trace('Requesting ResponsesAPI (OpenAI)');
+            
             return await api.responses({
-                thinking_effort: openAIThinkingEffort,
-
-                ...common,
+                ...baseForm,
+                ...formBuilder.responses() as any,
             });
         }
         else if (config.endpoint === 'chat_completions') {
             this.logger.trace('Requesting ChatCompletionsAPI (OpenAI)');
+
             return await api.chatCompletion({
-                ...common,
+                ...baseForm,
+                ...formBuilder.chatCompletion(),
             });
         }
         else if (config.endpoint === 'generative_language') {
             this.logger.trace('Requesting GenerativeLanguageAPI (Google)');
-            return await api.generativeLanguage({
-                thinking_tokens: useThinking ? thinking_tokens : undefined,
 
-                ...common,
+            return await api.generativeLanguage({
+                ...baseForm,
+                ...formBuilder.generativeLanguage(),
             });
         }
         else if (config.endpoint === 'anthropic') {
             this.logger.trace('Requesting AnthropicAPI (Anthropic)');
             return await api.anthropic({
-                thinking_tokens: useThinking ? thinking_tokens : undefined,
-
-                ...common,
+                ...baseForm,
+                ...formBuilder.anthropic(),
             });
         }
 
@@ -147,54 +136,39 @@ class ChatAIFetcher {
         api,
     }: RequestModelProps): Promise<ChatAIResult> {
         const { modelId, config } = model;
-
-        const {
-            temperature,
-            top_p,
-            max_tokens,
-            use_thinking,
-            thinking_tokens,
-        } = modelConfiguration;
-
-        const useThinking = (
-            config.thinking === 'enabled'
-            || (config.thinking === 'optional' && use_thinking)
-        );
-        const vertexAIAuth = auth as VertexAIAuth;
-        const location = 'us-east5';
+        
+        const formBuilder = new FormBuilder({
+            modelId: modelId,
+            modelInfo: config,
+            modelConfig: modelConfiguration,
+            messages: messages,
+        });
+        const baseForm = {
+            auth: auth as VertexAIAuth,
+        }
 
         if (config.endpoint === 'vertexai_gemini') {
             this.logger.trace('Requesting Generative Language API with VertexAI');
+
             return await api.requestVertexAI({
                 publisher: 'google',
                 type: 'generative_language',
                 location: 'us-central1',
 
-                thinking_tokens: useThinking ? thinking_tokens : undefined,
-                model: modelId,
-                messages: messages,
-                auth: vertexAIAuth,
-
-                max_tokens,
-                temperature,
-                top_p,
+                ...baseForm,
+                ...formBuilder.vertexAI(),
             });
         }
         else if (config.endpoint === 'vertexai_claude') {
             this.logger.trace('Requesting Anthropic API with VertexAI');
+
             return await api.requestVertexAI({
                 publisher: 'anthropic',
                 type: 'anthropic',
                 location: 'us-east5',
 
-                thinking_tokens: useThinking ? thinking_tokens : undefined,
-                model: modelId,
-                messages: messages,
-                auth: vertexAIAuth,
-
-                max_tokens,
-                temperature,
-                top_p,
+                ...baseForm,
+                ...formBuilder.vertexAI(),
             });
         }
 

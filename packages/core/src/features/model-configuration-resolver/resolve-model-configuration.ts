@@ -1,6 +1,6 @@
 export function resolveModelConfiguration(
-    globalConfigs: GlobalModelConfiguration[] = [],
-    configs: ModelConfiguration[] = [],
+    globalConfigs: Optional<GlobalModelConfiguration>[] = [],
+    configs: Optional<ModelConfiguration>[] = [],
 ): Required<ModelConfiguration> {
     const result: Required<ModelConfiguration> = {
         stream: false,
@@ -12,6 +12,7 @@ export function resolveModelConfiguration(
         use_thinking: false,
         thinking_auto_budget: false,
         thinking_tokens: 1000,
+        thinking_effort: 'medium',
         thinking_summary: false,
 
         safety_settings: {
@@ -24,6 +25,8 @@ export function resolveModelConfiguration(
     }
 
     for (const config of configs) {
+        if (config == null) continue;
+
         const nextSS = {
             ...result.safety_settings,
             ...config.safety_settings,
@@ -34,6 +37,8 @@ export function resolveModelConfiguration(
     }
 
     for (const config of globalConfigs) {
+        if (config == null) continue;
+
         if (!config.override_enabled) continue;
         if (config.override_common) {
             result.stream = config.stream ?? result.stream;
@@ -46,6 +51,7 @@ export function resolveModelConfiguration(
             result.thinking_auto_budget = config.thinking_auto_budget ?? result.thinking_auto_budget;
             result.thinking_tokens = config.thinking_tokens ?? result.thinking_tokens;
             result.thinking_summary = config.thinking_summary ?? result.thinking_summary;
+            result.thinking_effort = config.thinking_effort ?? result.thinking_effort;
         }
         if (config.override_safety_settings) {
             result.safety_settings = {

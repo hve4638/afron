@@ -31,7 +31,7 @@ class RTWorkflowPromptOnly extends RTWorkflow {
         const historyId = historyAC.addHistory({
             form: nodeData.form,
             create_at: nodeData.create_at,
-
+            
             rt_id: nodeData.rtId,
             rt_uuid: 'unkwown',
             model_id: nodeData.modelId,

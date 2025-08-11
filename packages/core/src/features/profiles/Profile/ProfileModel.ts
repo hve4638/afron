@@ -15,6 +15,9 @@ class ProfileModel {
     async #accessAsData() {
         return await this.#storage.accessAsJSON('cache.json');
     }
+    async #accessAsModelConfig() {
+        return await this.#storage.accessAsJSON('model_config.json');
+    }
 
     async getCustomModels(): Promise<CustomModel[]> {
         const dataAC = await this.#accessAsData();
@@ -31,7 +34,7 @@ class ProfileModel {
      */
     async setCustomModel(model: CustomModel): Promise<string> {
         const dataAC = await this.#accessAsData();
-        const customModels:CustomModel[] = dataAC.getOne('custom_models') ?? [];
+        const customModels: CustomModel[] = dataAC.getOne('custom_models') ?? [];
 
         if (!model.id) {
             model.id = uuidv7().trim();
@@ -53,12 +56,27 @@ class ProfileModel {
 
     async removeCustomModel(customId: string): Promise<void> {
         const dataAC = await this.#accessAsData();
-        const customModels:CustomModel[] = dataAC.getOne('custom_models') ?? [];
-        
+        const customModels: CustomModel[] = dataAC.getOne('custom_models') ?? [];
+
         const index = customModels.findIndex(m => m.id === customId);
         customModels.splice(index, 1);
 
         dataAC.setOne('custom_models', customModels);
+    }
+
+    /** 모델 전역 설정 지정 */
+    async getGlobalModelConfig(modelId: string) {
+        const modelConfigAC = await this.#accessAsModelConfig();
+        const modelIdFiltered = modelId.replaceAll('.', '_');
+
+        return modelConfigAC.getOne(modelIdFiltered);
+    }
+    /** 모델 전역 설정 저장 */
+    async setGlobalModelConfig(modelId: string, config: GlobalModelConfiguration) {
+        const modelConfigAC = await this.#accessAsModelConfig();
+        const modelIdFiltered = modelId.replaceAll('.', '_');
+
+        return modelConfigAC.setOne(modelIdFiltered, config);
     }
 }
 

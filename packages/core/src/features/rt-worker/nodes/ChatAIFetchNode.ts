@@ -25,6 +25,10 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
 
         try {
             const result = await this.#request({ messages });
+            
+            rtEventEmitter.emit.send.info('fetch response', 'click to view', [
+                { name: 'Response', value: JSON.stringify(result, null, 2) },
+            ]);
             this.checkResponseOK(result);
 
             this.logger.debug(
@@ -104,8 +108,13 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
         } = this.nodeData;
 
         const rt = profile.rt(rtId);
+
+        // const modelConfigAC = await profile.accessAsJSON('model_config.json');
+        // const globalConfig = modelConfigAC.getOne(modelId);
+        const globalConfig = await profile.model.getGlobalModelConfig(modelId);
+        
         const { model } = await rt.getPromptMetadata(this.option.promptId ?? 'default');
-        const modelConfiguration = resolveModelConfiguration([], [model]);
+        const modelConfiguration = resolveModelConfiguration([globalConfig], [model]);
 
         const modelMap = ChatAIModels.getModelMap();
         const modelData = modelMap[modelId];
