@@ -1,7 +1,7 @@
 import '../rt/rt';
 import '../rt/form';
 import './args';
-import '../chatai-model';
+import '../chatai/chatai-model';
 import './data';
 import './declared';
 import './result';
@@ -46,6 +46,9 @@ declare global {
         getCustomModels(profileId: string): EResult<CustomModel[]>;
         setCustomModel(profileId: string, model: CustomModel): EResult<string>;
         removeCustomModel(profileId: string, customId: string): ENoResult;
+
+        getGlobalModelConfig(profileId: string, modelId: string): EResult<GlobalModelConfiguration>;
+        setGlobalModelConfig(profileId: string, modelId: string, config: GlobalModelConfiguration): ENoResult;
     }
 
     type IPCInvokerProfileStorage = {

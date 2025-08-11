@@ -1,15 +1,19 @@
-import './gemini-safety-setting';
+import './chatai';
 
 declare global {
     type ModelConfiguration = {
         stream?: boolean;
-        top_p?: number;
+
         temperature?: number;
+        top_p?: number;
         max_tokens?: number;
+
         use_thinking?: boolean;
         thinking_auto_budget?: boolean;
         thinking_tokens?: number;
+        thinking_effort?: SupportedThinkingEfforts;
         thinking_summary?: boolean;
+
         safety_settings?: Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>>;
     }
 
@@ -24,17 +28,7 @@ declare global {
         override_common?: boolean;
         override_thinking?: boolean;
         override_safety_settings?: boolean;
-
-        stream?: boolean;
-        top_p?: number;
-        temperature?: number;
-        max_tokens?: number;
-        use_thinking?: boolean;
-        thinking_auto_budget?: boolean;
-        thinking_tokens?: number;
-        thinking_summary?: boolean;
-        safety_settings?: Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>>;
-    }
+    } & ModelConfiguration;
 }
 
 export { };

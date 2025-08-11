@@ -24,8 +24,17 @@ type RTEventDataUpdate = {
     update_types: ('input' | 'output' | 'history')[];
 }
 type RTEventDataSend = {
-    type: 'send_raw_request_preview'
+    type: 'send_raw_request_preview';
     preview: RTEventPreviewData;
+} | {
+    type: 'send_info';
+
+    title: string;
+    description: string;
+    item: Array<{
+        name?: string;
+        value: string;
+    }>;
 }
 type RTEventDataOutput = {
     type: 'stream_output';
