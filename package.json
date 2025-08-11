@@ -9,6 +9,10 @@
         "app:start": "concurrently \"yarn electron:start\" \"yarn front:start\"",
         "front:start": "cd packages/front && yarn start",
         "electron:start": "cd packages/electron && wait-on http://localhost:3600 && yarn start",
+
+        "build": "yarn chatai:build && yarn core:build",
+        "core:build": "cd packages/core && yarn build",
+        "chatai:build": "cd packages/chatai-models && yarn build",
         
         "rebuild": "npx electron-rebuild -f -w better-sqlite3",
         "uninstall": "powershell -ExecutionPolicy Bypass -File ./remove-install.ps1"

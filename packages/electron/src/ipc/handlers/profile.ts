@@ -1,6 +1,6 @@
 import runtime from '@/runtime';
 
-function handler():IPCInvokerProfile {
+function handler(): IPCInvokerProfile {
     return {
         async getCustomModels(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
@@ -15,10 +15,23 @@ function handler():IPCInvokerProfile {
             return [null, customId];
 
         },
-        async removeCustomModel(profileId: string, customId: string) {  
+        async removeCustomModel(profileId: string, customId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             await profile.model.removeCustomModel(customId);
 
+            return [null];
+        },
+
+        async getGlobalModelConfig(profileId: string, modelId: string) {
+            const profile = await runtime.profiles.getProfile(profileId);
+            const config = await profile.model.getGlobalModelConfig(modelId);
+
+            return [null, config];
+        },
+        async setGlobalModelConfig(profileId: string, modelId: string, config: GlobalModelConfiguration) {
+            const profile = await runtime.profiles.getProfile(profileId);
+            await profile.model.setGlobalModelConfig(modelId, config);
+            
             return [null];
         }
     }

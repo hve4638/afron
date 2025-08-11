@@ -9,13 +9,14 @@ type IPCInvokerPath = {
 };
 
 // 런타임 시점 참조를 위한 객체
+// 타입에 묶여있어 IPC API 수정후 preload 반영을 까먹으면 빌드에 실패하도록 하기 위함
 const ipcInvokerPath = {
     general: {
         echo: 0,
         openBrowser: 0,
         getCurrentVersion: 0,
         getAvailableVersion: 0,
-        
+
         getChatAIModels: 0,
 
         existsLegacyData: 0,
@@ -44,6 +45,9 @@ const ipcInvokerPath = {
         getCustomModels: 0,
         setCustomModel: 0,
         removeCustomModel: 0,
+
+        getGlobalModelConfig: 0,
+        setGlobalModelConfig: 0,
     },
     profileStorage: {
         get: 0,
@@ -128,6 +132,7 @@ const ipcInvokerPath = {
     },
 } satisfies IPCInvokerPath;
 
+// 위 ipcInvokerPath를 기반으로 프론트에 expose할 ipc 객체 생성
 const ipcInvokers: IPCInvokerInterface = Object.fromEntries(
     Object.entries(ipcInvokerPath).map(
         ([key1, category]) => [
@@ -145,6 +150,7 @@ const ipcInvokers: IPCInvokerInterface = Object.fromEntries(
 ) as IPCInvokerInterface;
 
 // listener 인터페이스
+// @TODO: 나중엔 이것도 의존성을 강하게 부여해서 강건성 높여야함
 let bindId = 0;
 const bindedListener = new Map<number, any>();
 const ipcListeners: IPCListenerInterface = {
