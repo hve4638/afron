@@ -65,21 +65,21 @@ class RTEventEmitter {
     readonly emit = {
         update: {
             input: () => {
-                this.logger.trace(`[RTEventEmitter] update: input (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] update: input (${this.#id})`);
                 this.#send({
                     type: 'update',
                     update_types: ['input'],
                 });
             },
             output: () => {
-                this.logger.trace(`[RTEventEmitter] update: output (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] update: output (${this.#id})`);
                 this.#send({
                     type: 'update',
                     update_types: ['output'],
                 });
             },
             history: () => {
-                this.logger.trace(`[RTEventEmitter] update: history (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] update: history (${this.#id})`);
                 this.#send({
                     type: 'update',
                     update_types: ['history'],
@@ -88,7 +88,7 @@ class RTEventEmitter {
         },
         send: {
             rawRequestPreview: (data: RTEventPreviewData) => {
-                this.logger.trace(`[RTEventEmitter] send: raw_request_preview (${this.#id})`, JSON.stringify(data));
+                this.logger.debug(`[RTEventEmitter] send: raw_request_preview (${this.#id})`, JSON.stringify(data));
                 this.#send({
                     type: 'send_raw_request_preview',
                     preview: data,
@@ -96,7 +96,7 @@ class RTEventEmitter {
             },
 
             info: (title: string, description: string, item: { name?: string; value: string; }[]) => {
-                this.logger.trace(`[RTEventEmitter] send: info (${this.#id})`, JSON.stringify(item));
+                this.logger.debug(`[RTEventEmitter] send: info (${this.#id})`, JSON.stringify(item));
                 this.#send({
                     type: 'send_info',
                     title,
@@ -107,7 +107,7 @@ class RTEventEmitter {
         },
         output: {
             set: (text: string) => {
-                this.logger.trace(`[RTEventEmitter] set_output (${this.#id})`, text);
+                this.logger.debug(`[RTEventEmitter] set_output (${this.#id})`, text);
                 this.#send({
                     type: 'set_output',
                     text: text,
@@ -120,14 +120,14 @@ class RTEventEmitter {
 
             },
             streamOutput: (text: string) => {
-                this.logger.trace(`[RTEventEmitter] stream_output (${this.#id})`, text);
+                this.logger.debug(`[RTEventEmitter] stream_output (${this.#id})`, text);
                 this.#send({
                     type: 'stream_output',
                     text: '',
                 });
             },
             clearOutput: () => {
-                this.logger.trace(`[RTEventEmitter] clear_output (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] clear_output (${this.#id})`);
 
                 this.#send({
                     type: 'clear_output',
@@ -136,7 +136,7 @@ class RTEventEmitter {
         },
         error: {
             noResult: (detail: string[] = []) => {
-                this.logger.trace(`[RTEventEmitter] error: no_result (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] error: no_result (${this.#id})`);
 
                 this.#send({
                     type: 'error',
@@ -150,7 +150,7 @@ class RTEventEmitter {
             promptEvaluateFailed: (detail: string[] = []) => { },
             fetchFailed: (detail: string[] = []) => { },
             httpError: (http_status: number, detail: string[] = []) => {
-                this.logger.trace(`[RTEventEmitter] error: http_error (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] error: http_error (${this.#id})`);
 
                 this.#send({
                     type: 'error',
@@ -162,7 +162,7 @@ class RTEventEmitter {
             requestFailed: (detail: string[] = []) => { },
             aborted: (detail: string[] = []) => { },
             invalidModel: (detail: string[] = []) => {
-                console.trace(`[RTEventEmitter] error: invalid_model (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] error: invalid_model (${this.#id})`);
                 this.#sendForce({
                     type: 'error',
                     reason_id: 'invalid_model',
@@ -170,7 +170,7 @@ class RTEventEmitter {
                 });
             },
             other: (detail: string[] = []) => {
-                console.trace(`RTSender.error.other (${this.#id})`);
+                this.logger.debug(`RTSender.error.other (${this.#id})`);
                 this.#sendForce({
                     type: 'error',
                     reason_id: 'other',
@@ -180,7 +180,7 @@ class RTEventEmitter {
         },
         directive: {
             close: () => {
-                console.trace(`RTSender.sendClose (${this.#id})`);
+                this.logger.debug(`RTSender.sendClose (${this.#id})`);
                 this.#sendForce({
                     type: 'close',
                 });

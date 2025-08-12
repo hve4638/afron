@@ -57,7 +57,7 @@ class AfronLogger implements LevelLogger {
                     switch (entry.level) {
                         case LogLevel.TRACE:
                         case LogLevel.DEBUG:
-                            console.log(text);
+                            console.trace(text);
                             break;
                         case LogLevel.INFO:
                             console.info(text);
