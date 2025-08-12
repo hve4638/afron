@@ -11,6 +11,13 @@
       "require": "./dist/bundle.cjs"
     }
   },
+  
+  "scripts": {
+    "build": "rollup -c",
+    "test": "vitest run",
+    "electron-rebuild": "./node_modules/.bin/electron-rebuild",
+    "coverage": "jest --coverage"
+  },
   "license": "MIT",
   "dependencies": {
     "@afron/types": "1.0.0",
@@ -53,10 +60,5 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "vitest": "^3.2.4"
-  },
-  "scripts": {
-    "build": "rollup -c",
-    "test": "vitest run",
-    "coverage": "jest --coverage"
   }
 }

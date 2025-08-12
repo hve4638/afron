@@ -23,6 +23,7 @@ coverage/
 .npmrc
 .tsbuildinfo*
 .rollup.cache
+.report
 
 # 임시 파일
 front-old/

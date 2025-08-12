@@ -14,7 +14,7 @@
         "core:build": "cd packages/core && yarn build",
         "chatai:build": "cd packages/chatai-models && yarn build",
         
-        "rebuild": "npx electron-rebuild -f -w better-sqlite3",
+        "postinstall": "cd packages/core && yarn electron-rebuild",
         "uninstall": "powershell -ExecutionPolicy Bypass -File ./remove-install.ps1"
     },
     "devDependencies": {

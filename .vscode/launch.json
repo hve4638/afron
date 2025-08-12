@@ -2,14 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Electron",
-            "program": "${workspaceFolder}/packages/electron/dist/main.js",
+            "name": "Debug Electron Main (New)",
+            "type": "node",
             "request": "launch",
-            "runtimeExecutable": "electron",
+            "cwd": "${workspaceFolder}/packages/electron",
+            "runtimeExecutable": "${workspaceFolder}/packages/electron/node_modules/.bin/electron",
+            "program": "${workspaceFolder}/packages/electron/dist/main.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "node",
             "env": {
                 // "ELECTRON_DEV" : "TRUE",
                 // "ELECTRON_IN_MEMORY" : "TRUE",
@@ -18,8 +19,25 @@
                 // "ELECTRON_DEFAULT_RT" : "TRUE",
                 // "ELECTRON_SHOW_DEVTOOL" : "TRUE",
             },
-            "preLaunchTask": "electron:build",
-            "cwd": "${workspaceFolder}/packages/electron"
+            "console": "integratedTerminal"
         },
+        {
+            "name": "Start Frontend (New)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "yarn start",
+            "cwd": "${workspaceFolder}/packages/front"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug App (Build -> Front + Electron)",
+            "configurations": [
+                "Start Frontend (New)",
+                "Debug Electron Main (New)"
+            ],
+            "preLaunchTask": "build:all",
+            "stopAll": true
+        }
     ]
 }
