@@ -2,39 +2,52 @@ import React, { ReactNode } from 'react';
 import { Column, Flex, Grid, Row } from 'components/layout';
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import classNames from 'classnames';
-import ModalBackground from './ModalBackground';
+import ModalBackground, { ModalBackgroundProps } from './ModalBackground';
 import ModalBox from './ModalBox';
 import FocusLock from 'react-focus-lock';
+import { CommonProps } from '@/types';
+import useHotkey from '@/hooks/useHotkey';
 
-interface ModalProps {
-    disappear?: boolean,
-    className?: string,
-    style?: React.CSSProperties,
+
+interface ModalProps extends CommonProps {
+    children?: React.ReactNode,
 
     headerLabel?: ReactNode,
+    disappear?: boolean,
 
-    backgroundClassName?: string,
-    backgroundStyle?: React.CSSProperties,
-    children?: React.ReactNode,
-    onClose?: () => void,
+    onEscapeAction?: () => void;
+    focused?: boolean;
 
-    enableRoundedBackground?: boolean
+    /** @deprecated use backgroundProps.enableRoundedBackground instead. */
+    enableRoundedBackground?: boolean;
+
+    backgroundProps?: Partial<Omit<ModalBackgroundProps, 'children'>>;
 }
 
 function Modal({
-    children,
-    disappear = false,
-
-    headerLabel,
-
     className = '',
     style = {},
+    children,
 
-    backgroundClassName = '',
-    backgroundStyle = {},
+    headerLabel,
+    disappear = false,
 
-    enableRoundedBackground = false,
+    onEscapeAction,
+    focused = true,
+
+    backgroundProps = {},
 }: ModalProps) {
+    useHotkey({
+        'Escape': (e) => {
+            if (onEscapeAction) {
+                onEscapeAction();
+                return true;
+            }
+        }
+    }, focused && (onEscapeAction != null), [focused, onEscapeAction]);
+
+    const hasHeader = !!headerLabel;
+
     return (
         <>
             <FocusLock
@@ -42,72 +55,41 @@ function Modal({
                 returnFocus={false}
             >
                 <ModalBackground
-                    className={backgroundClassName}
-                    style={backgroundStyle}
                     disappear={disappear}
-                    enableRoundedBackground={enableRoundedBackground}
+                    // enableRoundedBackground={enableRoundedBackground}
+                    {...backgroundProps}
                 >
                     <ModalBox
                         className={className}
                         style={{
-                            maxHeight: '100%',
+                            minHeight: '0',
+                            maxHeight: '90%',
+                            // overflowY: 'auto',
+
+                            display: 'grid',
+                            gridTemplateRows: hasHeader ? 'auto 1fr' : '1fr',
                             ...style,
+
                         }}
                         disappear={disappear}
                     >
-                        {
-                            headerLabel != null &&
-                            <Grid
-                                rows='auto 1fr'
-                                columns='1fr'
-                                style={{
-                                    height: '100%',
-                                }}
-                            >
-                                {headerLabel}
-                                <div
-                                    style={{
-                                        display: 'block',
-                                        padding: '0.25em 0.25em 0.25em 0.15em',
+                        {headerLabel}
+                        <div
+                            style={{
+                                display: 'block',
+                                padding: '0.25em 0.25em 0.25em 0.15em',
 
-                                        height: '100%',
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                    }}
-                                >
-                                    {
-                                        children != null &&
-                                        children
-                                    }
-                                </div>
-                            </Grid>
-                        }
-                        {
-                            headerLabel == null &&
-                            <Grid
-                                rows='1fr'
-                                columns='1fr'
-                                style={{
-                                    height: '100%',
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        display: 'block',
-                                        padding: '0.25em 0.25em 0.25em 0.15em',
-
-                                        height: '100%',
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                    }}
-                                >
-                                    {
-                                        children != null &&
-                                        children
-                                    }
-                                </div>
-                            </Grid>
-                        }
+                                // height: '100px',
+                                // maxHeight: '90%',
+                                overflowX: 'hidden',
+                                overflowY: 'auto',
+                            }}
+                        >
+                            {
+                                children != null &&
+                                children
+                            }
+                        </div>
                     </ModalBox>
                 </ModalBackground>
             </FocusLock>

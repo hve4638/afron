@@ -9,28 +9,28 @@ import { Shortcut } from 'types/shortcut';
 import { getKeyType, isKeyCodeChar, KEY_TYPE, mapKeyCode } from 'utils/keycode-map';
 import { shortcutToText } from 'utils/shortcut';
 
-const hasSpecialKey = (shortcut:Shortcut) => {
+const hasSpecialKey = (shortcut: Shortcut) => {
     return shortcut.ctrl || shortcut.shift || shortcut.alt || shortcut.win;
 }
 
 type ShortcutModalProps = {
-    initValue?:Shortcut;
-    name:string;
-    onChange?:(shortcut:Shortcut)=>void;
-    onClose?:()=>void;
+    initValue?: Shortcut;
+    name: string;
+    onChange?: (shortcut: Shortcut) => void;
+    onClose?: () => void;
 }
 
 function ShortcutModal({
     initValue = {},
     name,
-    onChange = () => {},
-    onClose = () => {},
-}:ShortcutModalProps) {
+    onChange = () => { },
+    onClose = () => { },
+}: ShortcutModalProps) {
     const [disappear, setDisappear] = useState(true);
     const [focus, setFocus] = useState(false);
     const [shortcut, setShortcut] = useState<Shortcut>(initValue);
-    const shortcutText = useMemo(()=>shortcutToText(shortcut), [shortcut]);
-    const validShortcut = useMemo(()=>{
+    const shortcutText = useMemo(() => shortcutToText(shortcut), [shortcut]);
+    const validShortcut = useMemo(() => {
         if (shortcut.click) return true;
         if (shortcut.wheel) return hasSpecialKey(shortcut);
         if (shortcut.key) {
@@ -71,7 +71,7 @@ function ShortcutModal({
         return false;
     }, [shortcut]);
 
-    const handleKeyDown = (e:React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -84,48 +84,48 @@ function ShortcutModal({
         if (e.key === 'Meta') return;
         if (e.key === 'Alt') return;
 
-        const newShortcut:Shortcut = {
-            key : e.code,
-            ctrl : e.ctrlKey,
-            shift : e.shiftKey,
-            alt : e.altKey,
-            win : e.metaKey,
+        const newShortcut: Shortcut = {
+            key: e.code,
+            ctrl: e.ctrlKey,
+            shift: e.shiftKey,
+            alt: e.altKey,
+            win: e.metaKey,
         }
         setShortcut(newShortcut);
     }
-    const handleWheel = (e:WheelEvent) => {
+    const handleWheel = (e: WheelEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
         if (e.deltaY === 0) return;
-        const newShortcut:Shortcut = {
-            wheel : Math.sign(e.deltaY) as (1|-1),
-            ctrl : e.ctrlKey,
-            shift : e.shiftKey,
-            alt : e.altKey,
-            win : e.metaKey,
+        const newShortcut: Shortcut = {
+            wheel: Math.sign(e.deltaY) as (1 | -1),
+            ctrl: e.ctrlKey,
+            shift: e.shiftKey,
+            alt: e.altKey,
+            win: e.metaKey,
         }
         setShortcut(newShortcut);
     }
-    const handleMouseDown = (e:MouseEvent) => {
+    const handleMouseDown = (e: MouseEvent) => {
         if (e.button >= 3) {
             e.preventDefault();
             e.stopPropagation();
             console.log(e.button);
 
-            const newShortcut:Shortcut = {
-                click : e.button as (3|4),
-                ctrl : e.ctrlKey,
-                shift : e.shiftKey,
-                alt : e.altKey,
-                win : e.metaKey,
+            const newShortcut: Shortcut = {
+                click: e.button as (3 | 4),
+                ctrl: e.ctrlKey,
+                shift: e.shiftKey,
+                alt: e.altKey,
+                win: e.metaKey,
             }
             setShortcut(newShortcut);
         }
     }
 
     useHotkey({
-        'Escape' : ()=>{
+        'Escape': () => {
             onClose();
             return true;
         }
@@ -135,7 +135,7 @@ function ShortcutModal({
         setDisappear(false);
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (!focus) return;
         addEventListener('wheel', handleWheel);
         addEventListener('mousedown', handleMouseDown);
@@ -149,19 +149,22 @@ function ShortcutModal({
     const close = () => {
         setDisappear(true);
 
-        setTimeout(()=>onClose(), MODAL_DISAPPEAR_DURATION);
+        setTimeout(() => onClose(), MODAL_DISAPPEAR_DURATION);
     }
 
     return (
         <Modal
             disappear={disappear}
             className='shortcut-modal'
-            backgroundStyle={{
-                borderRadius: '5px',
-            }}
             style={{
                 width: '60%',
                 minHeight: '230px',
+            }}
+            
+            backgroundProps={{
+                style: {
+                    borderRadius: '5px',
+                }
             }}
         >
             <Grid
@@ -196,11 +199,11 @@ function ShortcutModal({
                             minWidth: '8em',
                         }}
                         value={shortcutText}
-                        onChange={(e)=>{ /* nothing to do */ }}
-                        
+                        onChange={(e) => { /* nothing to do */ }}
+
                         onKeyDown={handleKeyDown}
-                        onFocus={()=>setFocus(true)}
-                        onBlur={()=>setFocus(false)}
+                        onFocus={() => setFocus(true)}
+                        onBlur={() => setFocus(false)}
                     />
                     {
                         !validShortcut &&
@@ -215,7 +218,7 @@ function ShortcutModal({
                             일반 키는 Ctrl, Shift 등 특수키와 조합해야 합니다.
                         </div>
                     }
-                    <Flex/>
+                    <Flex />
                     <Row
                         rowAlign={Align.End}
                         style={{
@@ -225,27 +228,27 @@ function ShortcutModal({
                     >
                         <Button
                             className={
-                                classNames('green', {disabled:!validShortcut})
+                                classNames('green', { disabled: !validShortcut })
                             }
                             style={{
                                 width: '96px',
                                 height: '100%',
                             }}
-                            onClick={()=>{
+                            onClick={() => {
                                 if (!validShortcut) return;
 
                                 onChange(shortcut);
                                 close();
                             }}
                         >확인</Button>
-                        <div style={{width:'8px'}}/>
+                        <div style={{ width: '8px' }} />
                         <Button
                             className='transparent'
                             style={{
                                 width: '96px',
                                 height: '100%',
                             }}
-                            onClick={()=>close()}
+                            onClick={() => close()}
                         >취소</Button>
                     </Row>
                 </Column>

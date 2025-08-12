@@ -1,8 +1,13 @@
 import React from 'react';
-import styles from './style.module.scss';
-import { Flex, Row } from 'components/layout';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import classNames from 'classnames';
+
+import styles from './style.module.scss';
+import { CommonProps } from '@/types';
+
+interface ModalDivProps extends CommonProps {
+    children?: React.ReactNode;
+    disappear?: boolean,
+}
 
 function ModalBox({
     children,
@@ -10,14 +15,7 @@ function ModalBox({
     style={},
 
     disappear=false,
-}: {
-    children?: React.ReactNode,
-    className?: string,
-    style?: React.CSSProperties,
-
-    disappear?: boolean,
-}) {
-    
+}: ModalDivProps) {
     return (
         <div
             className={

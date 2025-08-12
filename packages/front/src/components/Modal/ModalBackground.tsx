@@ -1,25 +1,24 @@
 import React from 'react';
 import styles from './style.module.scss';
 import classNames from 'classnames';
+import { CommonProps } from '@/types';
+
+export interface ModalBackgroundProps extends CommonProps {
+    children?: React.ReactNode;
+
+    disappear?: boolean;
+    enableRoundedBackground?: boolean;
+}
 
 function ModalBackground({
+    className = '',
+    style = {},
     children,
 
-    className='',
-    style={},
-
-    disappear=false,
+    disappear = false,
     enableRoundedBackground = false,
-}: {
-    children?: React.ReactNode,
-    
-    className?: string,
-    style?: React.CSSProperties,
+}: ModalBackgroundProps) {
 
-    disappear?: boolean,
-    enableRoundedBackground?: boolean
-}) {
-    
     return (
         <div className={
             classNames(
