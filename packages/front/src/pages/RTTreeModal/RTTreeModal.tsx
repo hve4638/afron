@@ -224,6 +224,11 @@ function RTTreeModal({
             style={{
                 maxHeight: '80%',
             }}
+            // headerLabel={
+            //     <ModalHeader onClose={close}>
+            //         설정
+            //     </ModalHeader>
+            // }
         >
             <Grid
                 columns='1fr'

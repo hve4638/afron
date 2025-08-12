@@ -18,12 +18,14 @@ import ListView from '@/components/ListView/ListView';
 import { GIconButton } from '@/components/GoogleFontIcon';
 
 interface RecoverProfileModalProps {
+    isFocused: boolean;
     orphanIds: string[];
     onRecovery: () => Promise<void>;
     onClose: () => void;
 }
 
 function RecoverProfileModal({
+    isFocused,
     orphanIds,
     onRecovery,
     onClose,
@@ -41,9 +43,14 @@ function RecoverProfileModal({
     return (
         <Modal
             disappear={disappear}
+
+            onEscapeAction={close}
+            focused={isFocused}
+            headerLabel={
+                <ModalHeader onClose={close}>프로필 복구</ModalHeader>
+            }
         >
-            <ModalHeader onClose={close}>프로필 복구</ModalHeader>
-            <small style={{ paddingLeft: '0.5em', }}>예기치 못한 오류로 문제가 생긴 프로필을 복구합니다</small>
+            <small>예기치 못한 오류로 문제가 생긴 프로필을 복구합니다</small>
             <div style={{ height: '0.25em' }} />
             <ListView
                 className='undraggable'

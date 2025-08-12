@@ -1,10 +1,5 @@
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
-import classNames from 'classnames';
-import Button from 'components/Button';
-import { Modal, ModalHeader } from 'components/Modal';
-import { Align, Center, Column, Flex, Grid, Row } from 'components/layout';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Shortcut } from 'types/shortcut';
 import { getKeyType, isKeyCodeChar, KEY_TYPE, mapKeyCode } from 'utils/keycode-map';
@@ -21,7 +16,7 @@ type ShortcutModalProps = {
     onClose?: () => void;
 }
 
-function ShortcutModal({
+function useShortcutModal({
     initValue = {},
     name,
     onChange = () => { },
@@ -142,116 +137,6 @@ function ShortcutModal({
             removeEventListener('mousedown', handleMouseDown);
         }
     }, [focus]);
-
-    return (
-        <Modal
-            disappear={disappear}
-            className='shortcut-modal'
-            style={{
-                width: '60%',
-                minHeight: '230px',
-            }}
-
-            onEscapeAction={close}
-            focused={true}
-
-            backgroundProps={{
-                style: {
-                    borderRadius: '5px',
-                }
-            }}
-            headerLabel={
-                <ModalHeader className='noflex' onClose={close}>단축키 설정</ModalHeader>
-            }
-        >
-            <Grid
-                columns='1fr'
-                rows='1fr'
-                style={{
-                    paddingTop: '16px',
-                    height: '100%',
-                    // minHeight: '220px',
-                }}
-            >
-                {/* <span className='shortcut-description undraggable'> </span> */}
-                <Column
-                    columnAlign={Align.Center}
-                    rowAlign={Align.Center}
-                    style={{
-                        height: '100%',
-                    }}
-                >
-                    <div
-                        className='undraggable'
-                        style={{
-                            fontSize: '0.95em',
-                            marginBottom: '8px',
-                        }}
-                    >{name}</div>
-                    <input
-                        type='text'
-                        className='shortcut-input undraggable center clickable'
-                        style={{
-                            width: 'auto',
-                            minWidth: '8em',
-                        }}
-                        value={shortcutText}
-                        onChange={(e) => { /* nothing to do */ }}
-
-                        onKeyDown={handleKeyDown}
-                        onFocus={() => setFocus(true)}
-                        onBlur={() => setFocus(false)}
-                    />
-                    {
-                        !validShortcut &&
-                        <div
-                            className='undraggable'
-                            style={{
-                                fontSize: '0.6em',
-                                marginTop: '6px',
-                                color: 'gray',
-                            }}
-                        >
-                            일반 키는 Ctrl, Shift 등 특수키와 조합해야 합니다.
-                        </div>
-                    }
-                    <Flex />
-                    <Row
-                        rowAlign={Align.End}
-                        style={{
-                            width: '100%',
-                            height: '32px',
-                        }}
-                    >
-                        <Button
-                            className={
-                                classNames('green', { disabled: !validShortcut })
-                            }
-                            style={{
-                                width: '96px',
-                                height: '100%',
-                            }}
-                            onClick={() => {
-                                if (!validShortcut) return;
-
-                                onChange(shortcut);
-                                close();
-                            }}
-                        >확인</Button>
-                        <div style={{ width: '8px' }} />
-                        <Button
-                            className='transparent'
-                            style={{
-                                width: '96px',
-                                height: '100%',
-                            }}
-                            onClick={() => close()}
-                        >취소</Button>
-                    </Row>
-                </Column>
-            </Grid>
-        </Modal>
-    )
 }
 
-export default ShortcutModal;
+export default useShortcutModal;

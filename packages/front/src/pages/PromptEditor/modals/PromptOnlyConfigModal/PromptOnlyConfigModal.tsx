@@ -61,7 +61,6 @@ function PromptOnlyConfigModal({
             disappear={disappear}
             style={{
                 maxHeight: '80%',
-                overflowY: 'auto',
             }}
             headerLabel={
                 <ModalHeader onClose={close}>

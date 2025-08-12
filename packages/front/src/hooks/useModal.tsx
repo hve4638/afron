@@ -46,8 +46,8 @@ export function ModalProvider({children}: {children:React.ReactNode}) {
         }}>
             {children}
             {
-                modals.map(({component : Modal, key, props}, index)=>(
-                    <Modal
+                modals.map(({component : ModalComponent, key, props}, index)=>(
+                    <ModalComponent
                         key={key}
                         {...props}
                         isFocused={index === modals.length - 1}

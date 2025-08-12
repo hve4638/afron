@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { MODAL_DISAPPEAR_DURATION } from 'data';
-import { Modal, ModalBackground, ModalHeader } from 'components/Modal';
+import { Modal, ModalHeader } from 'components/Modal';
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
 import Button from 'components/Button';

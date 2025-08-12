@@ -7,13 +7,12 @@ import { TextInput } from 'components/Input';
 import classNames from 'classnames';
 
 import styles from './styles.module.scss';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
 import useModalDisappear from 'hooks/useModalDisappear';
 
 function NewProfileModal({
     onSubmit,
     onClose,
-}:{
+}: {
     onSubmit: (metadata) => void
     onClose: () => void
 }) {
@@ -21,34 +20,24 @@ function NewProfileModal({
     const [disappear, close] = useModalDisappear(onClose);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        inputRef.current?.focus();
-
-        const keyDownHandler = (e)=>{
-            if (e.key === 'Escape') {
-                close();
-            }
-        }
-
-        window.addEventListener('keydown', keyDownHandler);
-        return () => {
-            window.removeEventListener('keydown', keyDownHandler);
-        }
-    }, []);
-
     return (
         <Modal
             disappear={disappear}
+
+            onEscapeAction={close}
+            focused={true}
+
+            headerLabel={
+                <ModalHeader onClose={close}>프로필 추가</ModalHeader>
+            }
         >
-            <ModalHeader onClose={close}>프로필 추가</ModalHeader>
-            <div style={{ height : '16px' }}/>
             <Row
                 rowAlign={Align.Center}
                 style={{
-                    width : '100%',
-                    paddingLeft : '16px',
-                    paddingRight : '16px',
-                    boxSizing : 'border-box',
+                    width: '100%',
+                    paddingLeft: '16px',
+                    paddingRight: '16px',
+                    boxSizing: 'border-box',
                     marginBottom: '8px'
                 }}
             >
@@ -85,11 +74,11 @@ function NewProfileModal({
                     />
                 </Flex>
             </Row>
-            <div style={{ height : '16px' }}/>
+            <div style={{ height: '16px' }} />
             <Row
                 rowAlign={Align.End}
                 style={{
-                    width : '100%',
+                    width: '100%',
                     height: '32px',
                     gap: '12px',
                 }}
@@ -97,12 +86,12 @@ function NewProfileModal({
                 <Button
                     className='green'
                     style={{
-                        width : '128px',
-                        height : '100%'
+                        width: '128px',
+                        height: '100%'
                     }}
                     onClick={() => {
                         if (name === '') return;
-                        
+
                         const metadata = {
                             name: name,
                             color: 'lightgray'
@@ -115,8 +104,8 @@ function NewProfileModal({
                 <Button
                     className='transparent'
                     style={{
-                        width : '128px',
-                        height : '100%'
+                        width: '128px',
+                        height: '100%'
                     }}
                     onClick={() => close()}
                 >취소</Button>
