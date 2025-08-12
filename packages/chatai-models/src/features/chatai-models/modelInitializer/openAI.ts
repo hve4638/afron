@@ -34,13 +34,11 @@ function initProvider(builder: CategoryBuilder) {
         .model('gpt-5-2025-08-07', 'GPT-5 (2025-08-07)', {}, { snapshot })
         .model('gpt-5-mini', 'GPT-5 mini', {}, { latest, featured })
         .model('gpt-5-mini-2025-08-07', 'GPT-5 mini (2025-08-07)', {}, { snapshot })
-        .model('gpt-5', 'GPT-5 nano', {}, { latest, featured })
+        .model('gpt-5-nano', 'GPT-5 nano', {}, { latest, featured })
         .model('gpt-5-nano-2025-08-07', 'GPT-5 nano (2025-08-07)', {}, { snapshot })
-
-    builder.group('ChatGPT-4o', completionsAPI, {})
-        .model('chatgpt-4o-latest', 'ChatGPT 4o', {}, { latest, featured })
-
+    
     builder.group('GPT-4o', completionsAPI, {})
+        .model('chatgpt-4o-latest', 'ChatGPT 4o', {}, { latest, featured })
         .model('gpt-4o', 'GPT 4o', {}, { latest, featured })
         .model('gpt-4o-2024-11-20', 'GPT 4o (2024-11-20)', {}, { snapshot })
         .model('gpt-4o-2024-08-06', 'GPT 4o (2024-08-06)', {}, { snapshot })
@@ -55,7 +53,6 @@ function initProvider(builder: CategoryBuilder) {
         .model('gpt-4.1-mini-2025-04-14', 'GPT 4.1 mini (2025-04-14)', {}, { snapshot })
         .model('gpt-4.1-nano', 'GPT 4.1 nano', {}, { latest })
         .model('gpt-4.1-nano-2025-04-14', 'GPT 4.1 nano (2025-04-14)', {}, { snapshot });
-
 
     const supportedThinkingEfforts: SupportedThinkingEfforts[] = ['minimal', 'low', 'medium', 'high'];
     builder.group('o4', {
