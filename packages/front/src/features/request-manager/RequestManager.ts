@@ -271,6 +271,27 @@ class RequestManager {
                             });
                             break;
                         }
+                    case 'env_error':
+                        {
+                            const errorId = addErrorLog({
+                                message: data.title,
+                                detail: data.detail,
+                                occurredAt: {
+                                    type: 'session',
+                                    sessionId: sessionAPI.id,
+                                },
+                            });
+                            emitEvent('show_toast_message', {
+                                title: '환경 오류가 발생했습니다',
+                                description: data.title,
+                                type: 'fatal',
+                                clickAction: {
+                                    action: 'open_error_log',
+                                    error_id: errorId,
+                                }
+                            });
+                            break;
+                        }
                 }
             }
             else if (data.type === 'set_output') {
@@ -287,7 +308,7 @@ class RequestManager {
                 emitEvent('refresh_session_metadata');
             }
             else if (data.type === 'stream_output') {
-                
+
             }
             else if (data.type === 'send_info') {
                 emitEvent('show_toast_message', {

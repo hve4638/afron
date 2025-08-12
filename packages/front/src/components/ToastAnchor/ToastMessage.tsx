@@ -18,6 +18,8 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
     const [disappear, close] = useModalDisappear(onDispose);
     const icon = useMemo(()=>{
         switch (value.type) {
+            case 'fatal':
+                return 'logo_dev';
             case 'error':
                 return 'error';
             case 'info':
@@ -44,6 +46,7 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
                 'undraggable',
                 {
                     disappear: disappear,
+                    [styles['fatal-toast']] : value.type === 'fatal',
                     [styles['error-toast']] : value.type === 'error',
                     [styles['info-toast']] : value.type === 'info',
                     [styles['warn-toast']] : value.type === 'warn',

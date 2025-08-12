@@ -17,6 +17,9 @@ type RTEventDataError = {
         } | {
             reason_id: 'http_error'
             http_status: number;
+        } | {
+            reason_id: 'env_error';
+            title: string;
         }
     )
 type RTEventDataUpdate = {

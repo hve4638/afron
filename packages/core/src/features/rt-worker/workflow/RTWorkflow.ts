@@ -1,7 +1,7 @@
 import { getEncoding, encodingForModel } from 'js-tiktoken';
 import { Profile } from '@/features/profiles';
-import { HistoryRequired } from '@/features/acstorage-accessor/HistoryAccessor';
-import { HistoryMessageRow, HistoryRow } from '@/features/acstorage-accessor/HistoryAccessor/types';
+import HistoryAccessor, { HistoryRequired } from '@/features/acstorage-accessor/HistoryAccessor';
+import { HistoryRow } from '@/features/acstorage-accessor/HistoryAccessor/types';
 
 import RTEventEmitter from '../RTEventEmitter';
 import { NodeData } from '../nodes/types';
@@ -11,13 +11,21 @@ abstract class RTWorkflow {
         protected rtEventEmitter: RTEventEmitter,
         protected profile: Profile,
     ) {
-
+        
     }
 
     abstract process(input: RTInput): Promise<any>;
 
     protected async getNodeData(rtInput: RTInput): Promise<NodeData> {
-        const historyAC = await this.profile.accessAsHistory(rtInput.sessionId);
+        let historyAC: HistoryAccessor;
+        try {
+            historyAC = await this.profile.accessAsHistory(rtInput.sessionId);
+        }
+        catch (error) {
+            this.rtEventEmitter.emit.error.envError('better_sqlite3 version unmatched', [`${error}`]);
+            throw error;
+        }
+
         let chat;
         try {
             chat = historyAC

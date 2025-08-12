@@ -1,6 +1,6 @@
 export type Toast = {
     title: string;
-    description: string|null;
+    description: string | null;
     type: ToastMessageType;
     clickAction: ToastClickAction;
 }
@@ -18,4 +18,4 @@ export type ToastClickAction = {
     }>;
 }
 
-type ToastMessageType = 'error' | 'info' | 'success' | 'warn';
+type ToastMessageType = 'fatal' | 'error' | 'info' | 'success' | 'warn';
