@@ -17,6 +17,7 @@
         }
     }
 }
+
 .output-info-button {
     background-color: rgba(10, 10, 10, 0.0);
     padding: 0em 0.4em;
@@ -37,12 +38,6 @@
     &:focus {
         outline: none;
     }
-}
-
-.token-count {
-    font-size: 0.8rem;
-    // background-color: rgba(47, 47, 47, 0.7);
-    border-radius: 12px;
 }
 
 .chat-container {

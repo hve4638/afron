@@ -22,6 +22,7 @@ import CopyButton from './ui/CopyButton';
 import PreviewButton from './ui/PreviewButton';
 import RequestButton from './ui/RequestButton';
 import AttachFileButton from './ui/AttachFileButton';
+import { TokenCount } from './ui';
 
 type SingleIOLayoutProps = {
     inputText: string;
@@ -170,17 +171,10 @@ function SingleIOLayout({
                         e.stopPropagation();
                     }}
                 >
-                    <small
-                        className={classNames(styles['token-count'], 'secondary-color', 'undraggable')}
-                        style={{
-                            position: 'absolute',
-                            left: '0',
-                            bottom: '0',
-                            height: 'calc(70px + 1em)',
-                            padding: '10px',
-                            pointerEvents: 'none',
-                        }}
-                    >token: {tokenCount}</small>
+                    {
+                        configState.show_token_count &&
+                        <TokenCount />
+                    }
                     <Row
                         style={{
                             position: 'absolute',
@@ -207,7 +201,7 @@ function SingleIOLayout({
                             />
                         </Flex>
                         {
-                            configState.enabled_prompt_preview &&
+                            configState.prompt_preview_enabled &&
                             <PreviewButton />
                         }
                         <RequestButton />

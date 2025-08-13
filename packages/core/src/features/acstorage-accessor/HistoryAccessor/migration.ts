@@ -36,7 +36,7 @@ class HistoryMigrationManager {
             }
         }
         else {
-            console.log('No migration needed for messages table.');
+            // no migration
         }
     }
 

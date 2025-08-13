@@ -97,7 +97,7 @@ export function useEvent<T extends EventNames>(
 ) {
     useEffect(() => {
         if (!enabled) return;
-        
+
         const unsub = useEventStore.subscribe(
             (data) => data[key],
             (value) => callback(value?.current),
@@ -119,4 +119,8 @@ export function emitEvent<T extends EventNames>(
         ...prev,
         [key]: { current: values[0] },
     }));
+}
+
+export function useEventState<T extends EventNames>(key: T) {
+    return useEventStore((state) => state[key]);
 }

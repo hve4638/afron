@@ -1,11 +1,16 @@
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { useModal } from '@/hooks/useModal';
 import ModelConfigModal from '@/modals/ModelConfigModal';
-import { useSessionStore } from '@/stores';
+import { useConfigStore, useSessionStore } from '@/stores';
 
 function ModelConfigButton() {
     const modal = useModal();
     const modelId = useSessionStore(state => state.model_id);
+    const globalModelConfigEnabled = useConfigStore(state => state.global_model_config_enabled);
+
+    if (!globalModelConfigEnabled) {
+        return null;
+    }
 
     return (
         <GIconButton

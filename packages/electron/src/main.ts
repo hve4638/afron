@@ -1,6 +1,6 @@
 import { app } from 'electron';
 
-import {} from '@afron/core';
+// import {} from '@afron/core';
 import ElectronApp from '@/features/elctron-app';
 import { showMessage } from '@/utils';
 import initialize from '@/initialize';

@@ -17,6 +17,7 @@ import useCache from '@/hooks/useCache';
 import FilesFormLayout from './FilesUpload/FileList';
 import { FileDropper } from './FilesUpload';
 import { useEvent } from '@/hooks/useEvent';
+import RequestButton from './ui/RequestButton';
 
 // const InfiniteLoader = RawInfiniteLoader as unknown as React.ComponentType<any>;
 
@@ -251,15 +252,7 @@ function ChatInput({
                             internalPadding='4px 4px'
                         />
                     </Flex>
-                    <GIconButton
-                        className={classNames(styles['send-button'])}
-                        value='send'
-                        onClick={(e) => {
-                            sessionState.actions.request();
-
-                            e.stopPropagation();
-                        }}
-                    />
+                    <RequestButton />
                 </Row>
                 {
                     draggingFile &&
