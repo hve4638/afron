@@ -1,5 +1,16 @@
 {
     "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Debug App (Build -> Front + Electron)",
+            "configurations": [
+                "Start Frontend (New)",
+                "Debug Electron Main (New)"
+            ],
+            "preLaunchTask": "build:all",
+            "stopAll": true
+        }
+    ],
     "configurations": [
         {
             "name": "Debug Electron Main (New)",
@@ -27,17 +38,6 @@
             "request": "launch",
             "command": "yarn start",
             "cwd": "${workspaceFolder}/packages/front"
-        }
-    ],
-    "compounds": [
-        {
-            "name": "Debug App (Build -> Front + Electron)",
-            "configurations": [
-                "Start Frontend (New)",
-                "Debug Electron Main (New)"
-            ],
-            "preLaunchTask": "build:all",
-            "stopAll": true
         }
     ]
 }
