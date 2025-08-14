@@ -44,7 +44,6 @@ export function HeaderLineWithJSON({
 }: HeaderLineWithJSONProps) {
     return (
         <Row
-            // rowAlign={Align.SpaceBetween}
             columnAlign={Align.Center}
             style={{
                 marginBottom: '0.15em',

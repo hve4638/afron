@@ -23,6 +23,7 @@ import PreviewButton from './ui/PreviewButton';
 import RequestButton from './ui/RequestButton';
 import AttachFileButton from './ui/AttachFileButton';
 import { TokenCount } from './ui';
+import MarkdownButton from './ui/MarkdownButton';
 
 type SingleIOLayoutProps = {
     inputText: string;
@@ -259,19 +260,10 @@ function SingleIOLayout({
                             gap: '0.25rem',
                         }}
                     >
-                        <GIconButton
-                            className={
-                                classNames(
-                                    { [styles['markdown-enabled']]: sessionState.markdown },
-                                )
-                            }
-                            style={{
-                                fontSize: '1.15em',
-                            }}
-                            value='markdown'
-                            hoverEffect='square'
-                            onClick={() => {
-                                sessionState.update.markdown(!sessionState.markdown);
+                        <MarkdownButton
+                            value={sessionState.markdown}
+                            onChange={(next)=>{
+                                sessionState.update.markdown(next);
                             }}
                         />
                         <CopyButton />

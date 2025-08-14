@@ -80,7 +80,6 @@ function AvatarPopover({
                     />
                     <span>요청 템플릿 수정</span>
                 </DivButton>
-                <hr/>
                 {
                     availableVersion != null &&
                     <DivButton

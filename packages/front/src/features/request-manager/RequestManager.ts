@@ -311,15 +311,16 @@ class RequestManager {
 
             }
             else if (data.type === 'send_info') {
-                emitEvent('show_toast_message', {
-                    title: data.title,
-                    description: data.description,
-                    type: 'info',
-                    clickAction: {
-                        action: 'open_info',
-                        item: data.item,
-                    }
-                });
+
+                // emitEvent('show_toast_message', {
+                //     title: data.title,
+                //     description: data.description,
+                //     type: 'info',
+                //     clickAction: {
+                //         action: 'open_info',
+                //         item: data.item,
+                //     }
+                // });
             }
             else {
                 console.warn('Unknown data type received:', data);

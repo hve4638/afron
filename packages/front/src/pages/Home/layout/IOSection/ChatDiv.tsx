@@ -11,10 +11,10 @@ import { Align, Flex, Row } from '@/components/layout';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import MarkdownArea from '@/components/MarkdownArea';
 
-import { useModal } from '@/hooks/useModal';
-
-import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { CommonProps } from '@/types';
+import MarkdownButton from './ui/MarkdownButton';
+import DeleteButton from './ui/DeleteButton';
+import ChatCopyButton from './ui/ChatCopyButton';
 
 
 interface ChatDivProps extends CommonProps {
@@ -33,7 +33,8 @@ function ChatDiv({
     const divRef = useRef<HTMLDivElement>(null);
     const sideClass = side === 'input' ? styles['input-side'] : styles['output-side'];
     const markdown = useSessionStore(state => state.markdown);
-    
+    const updateSession = useSessionStore(state => state.update);
+
     const markdownEnabled = useMemo(() => {
         return side === 'output' && markdown;
     }, [side, markdown]);
@@ -79,7 +80,7 @@ function ChatDiv({
                 side === 'input' &&
                 <Row style={{ gap: '0.25em', fontSize: '1.15em' }}>
                     <Flex />
-                    <CopyButton text={value} />
+                    <ChatCopyButton text={value} />
                     <DeleteButton data={data} origin='in' />
                 </Row>
             }
@@ -94,69 +95,17 @@ function ChatDiv({
                         className={classNames(styles['output-info-button'], 'secondary-color', 'undraggable')}
                         style={{ cursor: 'pointer' }}
                     >{ProfileEvent.model.getName(data.modelId)}</small>
-                    <MarkdownButton />
-                    <CopyButton text={value} />
+                    <MarkdownButton
+                        value={markdown}
+                        onChange={(next) => {
+                            updateSession.markdown(next);
+                        }}
+                    />
+                    <ChatCopyButton text={value} />
                     <DeleteButton data={data} origin='out' />
                 </Row>
             }
         </div>
-    )
-}
-
-function MarkdownButton() {
-    const sessionState = useSessionStore();
-
-    return (
-        <GIconButton
-            className={
-                classNames(
-                    { [styles['markdown-enabled']]: sessionState.markdown },
-                )
-            }
-            style={{
-                fontSize: '1.15em',
-            }}
-            value='markdown'
-            hoverEffect='square'
-            onClick={() => {
-                sessionState.update.markdown(!sessionState.markdown);
-            }}
-        />
-    )
-}
-function CopyButton({ text }: { text: string }) {
-    return (
-        <GIconButton
-            value='content_paste'
-            hoverEffect='square'
-            onClick={(e) => {
-                e.stopPropagation();
-
-                navigator.clipboard.writeText(text);
-            }}
-        />
-    )
-}
-
-function DeleteButton({ data, origin }: { data: HistoryData, origin: 'in' | 'out' }) {
-    const modal = useModal();
-    const historyState = useHistoryStore();
-    return (
-        <GIconButton
-            value='delete'
-            hoverEffect='square'
-            onClick={(e) => {
-                e.stopPropagation();
-
-                modal.open(DeleteConfirmDialog, {
-                    onDelete: async () => {
-                        await historyState.actions.deleteMessage(data.id, origin);
-
-                        return true;
-                    }
-                });
-            }}
-        />
     )
 }
 

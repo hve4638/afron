@@ -8,7 +8,6 @@ import { Align, Column, Flex, Grid, Row } from '@/components/layout';
 
 import { useConfigStore, useSessionStore } from '@/stores';
 
-import styles from './styles.module.scss';
 import ChatDiv from './ChatDiv';
 import { useHistoryStore } from '@/stores/useHistoryStore';
 import InfiniteScroll from '@/components/InfiniteScroll';
@@ -20,6 +19,7 @@ import { useEvent } from '@/hooks/useEvent';
 import RequestButton from './ui/RequestButton';
 import { TokenCount } from './ui';
 
+import styles from './styles.module.scss';
 // const InfiniteLoader = RawInfiniteLoader as unknown as React.ComponentType<any>;
 
 type ChatIOLayoutProps = {
@@ -239,7 +239,7 @@ function ChatInput({
                     {
                         showtokenCount &&
                         <TokenCount
-                            className={classNames(styles['token-count'], 'undraggable')}
+                            className={classNames('undraggable')}
                             style={{
                                 paddingLeft: '0.25em',
                             }}

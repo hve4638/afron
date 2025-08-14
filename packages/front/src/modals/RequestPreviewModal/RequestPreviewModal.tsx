@@ -44,7 +44,7 @@ function RequestPreviewModal({
     return (
         <Modal
             disappear={disappear}
-            onClose={close}
+            // onClose={close}
             style={{
                 maxHeight: '95%',
                 overflowY: 'auto',

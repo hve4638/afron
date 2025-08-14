@@ -86,12 +86,6 @@
             }
         }
 
-        .token-count {
-            font-size: 0.5em;
-
-            color: var(--subtext-color);
-        }
-
         .send-button {
             background-color: rgb(28, 28, 28, 0.75);
             border-radius: 8px;
@@ -105,10 +99,4 @@
             }
         }
     }
-}
-
-.markdown-enabled {
-    color: rgb(134, 184, 255);
-
-    // color: rgb(134, 184, 255);
 }
