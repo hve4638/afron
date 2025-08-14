@@ -29,9 +29,9 @@ class ProfileEvent {
         rename: (rtId: string, name: string) => RTEvent.renameRT(rtId, name),
     }
     static readonly model = {
-        star: (modelId: string) => ModelEvent.starModel(modelId),
-        unstar: (modelId: string) => ModelEvent.unstarModel(modelId),
-        isStarred: (modelId: string) => ModelEvent.isModelStarred(modelId),
+        star: (modelMetadataId: string) => ModelEvent.starModel(modelMetadataId),
+        unstar: (modelMetadataId: string) => ModelEvent.unstarModel(modelMetadataId),
+        isStarred: (modelMetadataId: string) => ModelEvent.isModelStarred(modelMetadataId),
 
         filter: () => ModelEvent.filterModels(),
         getName: (modelId: string) => ModelEvent.getModelName(modelId),

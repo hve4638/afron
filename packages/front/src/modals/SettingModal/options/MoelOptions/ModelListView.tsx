@@ -88,7 +88,7 @@ interface ModelItemProps {
 function ModelItem({ model, onClick }: ModelItemProps) {
     const [_, refresh] = useTrigger();
     const flags = useMemo(() => model.flags, [model.flags])
-    const starred = ProfileEvent.model.isStarred(model.modelId);
+    const starred = ProfileEvent.model.isStarred(model.metadataId);
     const showActualName = useConfigStore(state => state.show_actual_model_name);
 
     return (

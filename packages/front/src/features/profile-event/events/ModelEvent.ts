@@ -7,9 +7,9 @@ import { ProfileSessionMetadata } from '@/types';
 import useMemoryStore from '@/stores/useMemoryStore';
 
 class ModelEvent {
-    static isModelStarred(key) {
+    static isModelStarred(modelMetadataId: string) {
         const { starred_models } = useDataStore.getState();
-        return starred_models.includes(key);
+        return starred_models.includes(modelMetadataId);
     }
     static async starModel(modelKey: string) {
         const { starred_models, update: updateData } = useDataStore.getState();
