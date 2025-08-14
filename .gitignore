@@ -24,6 +24,8 @@ coverage/
 .tsbuildinfo*
 .rollup.cache
 .report
+GEMINI.md
+CLUADE.md
 
 # 임시 파일
 front-old/
