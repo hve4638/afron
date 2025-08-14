@@ -40,6 +40,7 @@ export const PROFILE_STORAGE_TREE = {
             'cache.json': StorageAccess.JSON({
                 'input': JSONType.String(),
                 'output': JSONType.String(),
+                'input_token_count': JSONType.Number().default_value(0),
 
                 'last_history': JSONType.Struct().nullable(),
                 'state': JSONType.String(),

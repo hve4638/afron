@@ -18,6 +18,7 @@ import FilesFormLayout from './FilesUpload/FileList';
 import { FileDropper } from './FilesUpload';
 import { useEvent } from '@/hooks/useEvent';
 import RequestButton from './ui/RequestButton';
+import { TokenCount } from './ui';
 
 // const InfiniteLoader = RawInfiniteLoader as unknown as React.ComponentType<any>;
 
@@ -193,7 +194,7 @@ function ChatInput({
     onChange = () => { },
     tokenCount = 0,
 }: ChatInputProps) {
-    const sessionState = useSessionStore();
+    const showtokenCount = useConfigStore(state=>state.show_token_count);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { font_size } = useConfigStore();
     const [draggingFile, setDraggingFile] = useState(false);
@@ -235,14 +236,15 @@ function ChatInput({
                     }}
                     columnAlign={Align.End}
                 >
-                    <span
-                        className={classNames(styles['token-count'], 'undraggable')}
-                        style={{
-                            paddingLeft: '0.25em',
-                        }}
-                    >
-                        token: {tokenCount}
-                    </span>
+                    {
+                        showtokenCount &&
+                        <TokenCount
+                            className={classNames(styles['token-count'], 'undraggable')}
+                            style={{
+                                paddingLeft: '0.25em',
+                            }}
+                        />
+                    }
                     <Flex style={{ height: '100%', }}>
                         <FilesFormLayout
                             style={{

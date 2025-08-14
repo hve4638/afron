@@ -1,20 +1,30 @@
-// import { useSessionStore } from '@/stores';
 import classNames from 'classnames';
 import styles from './ui.module.scss';
 import { useState } from 'react';
+import { CommonProps } from '@/types';
+import { useCacheStore, useSessionStore } from '@/stores';
 
-function TokenCount() {
-    const [tokenCount, setTokenCount] = useState(0);
+interface TokenCountProps extends CommonProps {
+
+}
+
+function TokenCount({
+    className = '',
+    style = {},
+}: TokenCountProps) {
+    const tokenCount = useSessionStore(state=>state.input_token_count);
 
     return (
         <small
-            className={classNames(styles['token-count'], 'secondary-color', 'undraggable')}
+            className={
+                classNames(
+                    styles['token-count'],
+                    'secondary-color',
+                    'undraggable',
+                    className,
+                )}
             style={{
-                position: 'absolute',
-                left: '0',
-                bottom: '0',
-                height: 'calc(70px + 1em)',
-                padding: '10px',
+                ...style,
                 pointerEvents: 'none',
             }}
         >token: {tokenCount}</small>

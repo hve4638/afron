@@ -12,6 +12,7 @@ interface SessionCacheFields {
     input: string;
     output: string;
     last_history: HistoryData | null;
+    input_token_count: number;
 
     state: 'loading' | 'idle' | 'error' | 'done';
     markdown: boolean;
@@ -32,6 +33,8 @@ interface SessionManagedFields {
 const defaultCache: SessionCacheFields = {
     input: '',
     output: '',
+    input_token_count: 0,
+
     last_history: null,
     state: 'idle',
     markdown: true,

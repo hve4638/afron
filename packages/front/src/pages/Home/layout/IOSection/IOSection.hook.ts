@@ -7,10 +7,9 @@ import useTrigger from '@/hooks/useTrigger';
 import { useSessionStore, useProfileAPIStore } from '@/stores';
 import { emitEvent, useEvent, useEventState } from '@/hooks/useEvent';
 import useFileUploadHandler from './hooks/useFileUploadHandler';
+import useTokenCounter from './hooks/useTokenCounter';
 
 function useIOSection() {
-    useFileUploadHandler();
-
     const sessionState = useSessionStore();
     const color = useSessionStore(state => state.color);
     const { api } = useProfileAPIStore();
@@ -20,6 +19,9 @@ function useIOSection() {
     const inputTextRef = useRef('');
     const [_, refresh] = useTrigger();
     
+    useFileUploadHandler();
+    useTokenCounter({ inputRef: inputTextRef });
+    
     const refreshInputState = useEventState('refresh_input');
 
     // @TODO : 도중 세션 변경시 마지막 변경이 반영되지 않는 문제
@@ -27,20 +29,16 @@ function useIOSection() {
     const updateInputTextThrottle = useLazyThrottle(() => {
         sessionState.update.input(inputTextRef.current);
     }, 100);
-
-    const tokenizer = useMemo(() => {
-        return encodingForModel('chatgpt-4o-latest');
-    }, []);
     
     const updateInputText = (text: string) => {
         inputTextRef.current = text;
-        setTokenCount(tokenizer.encode(text).length);
+        emitEvent('update_input_token_count');
         updateInputTextThrottle();
         refresh();
     }
 
     useEffect(() => {
-        setTokenCount(tokenizer.encode(inputTextRef.current).length);
+        emitEvent('update_input_token_count');
         updateInputTextThrottle();
         refresh();
     }, [sessionState.deps.last_session_id]);

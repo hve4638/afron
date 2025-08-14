@@ -173,7 +173,15 @@ function SingleIOLayout({
                 >
                     {
                         configState.show_token_count &&
-                        <TokenCount />
+                        <TokenCount
+                            style={{
+                                position: 'absolute',
+                                left: '0',
+                                bottom: '0',
+                                height: 'calc(70px + 1em)',
+                                padding: '10px',
+                            }}
+                        />
                     }
                     <Row
                         style={{

@@ -45,6 +45,9 @@ type Events = {
     refresh_chat: ping; // 채팅 새로고침
     refresh_chat_without_scroll: ping;
 
+    /*  */
+    update_input_token_count: ping;
+
     /* 리랜더링 관련 */
     refresh_session_metadata: ping; // 세션 탭 메타데이터 새로고침
     refresh_rt_tree: ping;
