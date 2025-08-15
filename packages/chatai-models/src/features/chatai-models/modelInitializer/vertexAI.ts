@@ -19,12 +19,17 @@ function initProvider(builder: CategoryBuilder) {
         .model('claude-3-opus@20240229', 'claude-3-opus@20240229', {}, { snapshot })
         .model('claude-3-sonnet@20240229', 'claude-3-sonnet@20240229', {}, { snapshot })
         .model('claude-3-haiku@20240307', 'claude-3-haiku@20240307', {}, { snapshot });
-    
-    builder.group('Gemini', { endpoint: 'vertexai_gemini' }, {})
-        .model('gemini-2.5-pro-preview-05-06', 'gemini-2.5-pro-preview-05-06', { thinking: 'enabled' }, { latest, featured })
-        .model('gemini-2.5-pro-preview-03-25', 'gemini-2.5-pro-preview-03-25', { thinking: 'enabled' }, { latest })
-        .model('gemini-2.5-flash-preview-05-20', 'gemini-2.5-flash-preview-05-20', { thinking: 'optional' }, { latest, featured })
-        .model('gemini-2.5-flash-preview-04-17', 'gemini-2.5-flash-preview-04-17', { thinking: 'optional' }, { latest });
+
+    builder.group('Gemini 2.5', { endpoint: 'vertexai_gemini', supportGeminiSafetyFilter: true, thinkingDisableStrategy: 'set_to_zero' }, {})
+        .model('gemini-2.5-pro', 'gemini-2.5-pro', { thinking: 'enabled' }, { latest, featured })
+        .model('gemini-2.5-pro-preview-06-05', 'gemini-2.5-pro-preview-06-05', { thinking: 'enabled' }, { snapshot })
+        .model('gemini-2.5-pro-preview-05-06', 'gemini-2.5-pro-preview-05-06', { thinking: 'enabled' }, { snapshot })
+        .model('gemini-2.5-pro-preview-03-25', 'gemini-2.5-pro-preview-03-25', { thinking: 'enabled' }, { snapshot })
+        .model('gemini-2.5-flash', 'gemini-2.5-flash', { thinking: 'optional' }, { latest, featured })
+        .model('gemini-2.5-flash-preview-05-20', 'gemini-2.5-flash-preview-05-20', { thinking: 'optional' }, { snapshot })
+        .model('gemini-2.5-flash-preview-04-17', 'gemini-2.5-flash-preview-04-17', { thinking: 'optional' }, { snapshot })
+        .model('gemini-2.5-flash-lite', 'gemini-2.5-flash-lite', { thinking: 'optional' }, { latest, featured })
+        .model('gemini-2.5-flash-lite-preview-06-17', 'gemini-2.5-flash-lite-preview-06-17', { thinking: 'optional' }, { snapshot })
 }
 
 export default initProvider;

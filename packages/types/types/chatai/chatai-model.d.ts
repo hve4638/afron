@@ -33,12 +33,17 @@ declare global {
         supportedVerbosity: readonly SupportedVerbosity[]; // gpt-5 추론모델 적용, 기본값: ['low', 'medium', 'high']
         thinkingDisableStrategy: 'omit' | 'set_to_zero'; // gemini 계열 적용, 기본값 'omit'
 
+        vertexAILocation?: string;
+
+        excludeParameter?: ExcludeParamter[];
+
         advancedSettings?: {
-            customHeaders?: Record<string, unknown>;
-            customParams?: Record<string, unknown>;
+            extraHeaders?: Record<string, string>;
             chatCompletionUseMaxTokens?: boolean; // ChatCompletions에서 max_completion_tokens 대신 max_tokens 사용 여부
         }
     }
+
+    type ExcludeParamter = 'temperature' | 'max_tokens' | 'top_p';
 
     type ChatAIModel = {
         metadataId: string;

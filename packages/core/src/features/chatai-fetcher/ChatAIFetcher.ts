@@ -3,12 +3,20 @@ import { LevelLogger } from '@/types';
 import { ChatAIResult, ChatMessages } from '@hve/chatai';
 import { ChatAI } from '@hve/chatai';
 
-import type { ChatAIRequestAPI, RequestModelProps } from './types';
+import type { ChatAIRequestAPI, RequestCustomModelProps, RequestModelProps } from './types';
 import { ChatAIFetcherFailed } from './errors';
 import FormBuilder from './form-builder';
+import { resolveCustomModelInfo } from '../model-metadata-resolver';
 
 interface RequestProps {
     model: ChatAIModel;
+    modelConfiguration: Required<ModelConfiguration>;
+    messages: ChatMessages;
+    auth: unknown;
+}
+
+interface CustomRequestProps {
+    model: CustomModel;
     modelConfiguration: Required<ModelConfiguration>;
     messages: ChatMessages;
     auth: unknown;
@@ -80,7 +88,7 @@ class ChatAIFetcher {
         api,
     }: RequestModelProps<string>): Promise<ChatAIResult> {
         const { modelId, config } = model;
-        
+
         const formBuilder = new FormBuilder({
             modelId: modelId,
             modelInfo: config,
@@ -95,7 +103,7 @@ class ChatAIFetcher {
 
         if (config.endpoint === 'responses') {
             this.logger.trace('Requesting ResponsesAPI (OpenAI)');
-            
+
             return await api.responses({
                 ...baseForm,
                 ...formBuilder.responses() as any,
@@ -136,7 +144,7 @@ class ChatAIFetcher {
         api,
     }: RequestModelProps): Promise<ChatAIResult> {
         const { modelId, config } = model;
-        
+
         const formBuilder = new FormBuilder({
             modelId: modelId,
             modelInfo: config,
@@ -153,7 +161,6 @@ class ChatAIFetcher {
             return await api.requestVertexAI({
                 publisher: 'google',
                 type: 'generative_language',
-                location: 'us-central1',
 
                 ...baseForm,
                 ...formBuilder.vertexAI(),
@@ -165,7 +172,6 @@ class ChatAIFetcher {
             return await api.requestVertexAI({
                 publisher: 'anthropic',
                 type: 'anthropic',
-                location: 'us-east5',
 
                 ...baseForm,
                 ...formBuilder.vertexAI(),
@@ -175,86 +181,77 @@ class ChatAIFetcher {
         throw new ChatAIFetcherFailed(`Model '${modelId}' has no provider configured.`);
     }
 
-    // private async requestCustomModel(customModel: CustomModel, modelOptions: ModelOptions, messages: ChatMessages) {
-    //     const {
-    //         profile,
-    //     } = this.nodeData;
+    async requestCustom(
+        {
+            model,
+            messages,
+            modelConfiguration,
+            auth
+        }: CustomRequestProps,
+        {
+            preview = false
+        }: RequestOptions,
+    ): Promise<ChatAIResult> {
+        const api: ChatAIRequestAPI = (
+            preview
+                ? ChatAI.previewRequest
+                : ChatAI.request
+        );
 
-    //     const profileAPIKeyControl = new ProfileAPIKeyControl(profile);
-    //     const auth = await profileAPIKeyControl.getAuth(customModel.secret_key ?? '');
-    //     const apiKey = auth as string;
+        return this.#requestCustomModel({
+            model,
+            modelConfiguration: modelConfiguration,
+            messages,
+            auth: auth as string,
+            api,
+        });
+    }
 
-    //     const {
-    //         temperature,
-    //         top_p,
-    //         max_tokens,
-    //         thinking_tokens = 1024,
-    //         use_thinking = false,
-    //     } = modelOptions;
+    async #requestCustomModel({
+        model,
+        modelConfiguration,
+        messages,
+        auth,
+        api,
+    }: RequestCustomModelProps) {
+        const { model: modelId, url } = model;
 
-    //     const openAIThinkingEffort = (
-    //         thinking_tokens <= 1024 ? 'low'
-    //             : thinking_tokens <= 8192 ? 'medium'
-    //                 : 'high'
-    //     );
-    //     const useThinking = (
-    //         customModel.thinking// || (flags.thinking_optional && use_thinking)
-    //     );
+        const modelInfo = resolveCustomModelInfo(model);
 
-    //     switch (customModel.api_format) {
-    //         case 'chat_completions':
-    //             return await ChatAI.requestChatCompletion({
-    //                 url: customModel.url,
+        const formBuilder = new FormBuilder({
+            modelId: modelId,
+            modelInfo: modelInfo,
+            modelConfig: modelConfiguration,
+            messages: messages,
+        });
+        const baseForm = {
+            auth: {
+                api_key: auth as string,
+            },
+        }
 
-    //                 model: customModel.model,
-    //                 messages: messages,
-    //                 auth: {
-    //                     api_key: apiKey as string,
-    //                 },
-
-    //                 max_tokens,
-    //                 temperature,
-    //                 top_p,
-    //             });
-    //             break;
-    //         case 'generative_language':
-    //             return await ChatAI.requestGenerativeLanguage({
-    //                 url: customModel.url,
-
-    //                 model: customModel.model,
-    //                 messages: messages,
-    //                 auth: {
-    //                     api_key: apiKey as string,
-    //                 },
-
-    //                 max_tokens,
-    //                 temperature,
-    //                 top_p,
-    //             });
-    //             break;
-    //         case 'anthropic_claude':
-    //             return await ChatAI.requestAnthropic({
-    //                 url: customModel.url,
-
-    //                 model: customModel.model,
-    //                 messages: messages,
-    //                 auth: {
-    //                     api_key: apiKey as string,
-    //                 },
-
-    //                 max_tokens,
-    //                 temperature,
-    //                 top_p,
-    //             });
-    //         default:
-    //             const { rtEventEmitter } = this.nodeData;
-    //             rtEventEmitter.emit.error.other(
-    //                 [`Fetch Fail : Custom model '${customModel.name}' has unsupported API format '${customModel.api_format}'.`]
-    //             );
-    //             throw new WorkNodeStop();
-    //             break;
-    //     }
-    // }
+        switch (model.api_format) {
+            case 'chat_completions':
+                return await api.chatCompletion({
+                    ...baseForm,
+                    ...formBuilder.chatCompletion(),
+                });
+                break;
+            case 'generative_language':
+                return await api.generativeLanguage({
+                    ...baseForm,
+                    ...formBuilder.generativeLanguage(),
+                });
+                break;
+            case 'anthropic_claude':
+                return await api.anthropic({
+                    ...baseForm,
+                    ...formBuilder.generativeLanguage(),
+                });
+            default:
+                throw new ChatAIFetcherFailed(`Custom model '${model.name}' has unsupported API format '${model.api_format}'.`);
+        }
+    }
 
     #getAPICategory(model: ChatAIModel): 'known_provider' | 'vertexai' | 'unknown' {
         switch (model.config?.endpoint) {
@@ -270,15 +267,6 @@ class ChatAIFetcher {
             default:
                 return 'unknown';
         }
-    }
-
-    /** 추론 최대 토큰 수를 ChatCompletion의 effort로 변환 */
-    #convertThinkingTokenToEffort(thinkingTokens: number) {
-        return (
-            thinkingTokens <= 1024 ? 'low'
-                : thinkingTokens <= 8192 ? 'medium'
-                    : 'high'
-        );
     }
 }
 

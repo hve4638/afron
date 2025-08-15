@@ -10,6 +10,8 @@ export const DEFAULT_CHATAI_CONFIG = {
     supportThinkingSummary: false,
     supportVerbosity: false,
 
+    vertexAILocation: 'global',
+
     supportedThinkingEfforts: ['low', 'medium', 'high'] as readonly SupportedThinkingEfforts[],
     supportedVerbosity: ['low', 'medium', 'high'] as readonly SupportedVerbosity[],
     thinkingDisableStrategy: 'omit',

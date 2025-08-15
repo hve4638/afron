@@ -26,19 +26,32 @@ class BaseFormBuilder {
     }
 
     protected getBase() {
-        const {
+        let {
             temperature,
             top_p,
             max_tokens,
+
         } = this.modelConfig;
+        const {
+            customEndpoint,
+            excludeParameter = [],
+            advancedSettings,
+        } = this.modelInfo;
+        const excludeMaxTokens =  excludeParameter.includes('max_tokens');
+        const excludeTemperature = excludeParameter.includes('temperature');
+        const excludeTopP = excludeParameter.includes('top_p');
+
+        
 
         return {
             model: this.modelId,
             messages: this.messages,
 
-            max_tokens,
-            temperature,
-            top_p,
+            max_tokens: excludeMaxTokens ? undefined : max_tokens,
+            temperature: excludeTemperature ? undefined : temperature,
+            top_p: excludeTopP ? undefined : top_p,
+            url: customEndpoint,
+            headers: advancedSettings?.extraHeaders,
         };
     }
 

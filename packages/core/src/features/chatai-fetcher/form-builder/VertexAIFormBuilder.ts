@@ -11,6 +11,7 @@ class VertexAIFormBuilder extends BaseFormBuilder {
 
         return {
             ...base,
+            location: this.modelInfo.vertexAILocation ?? 'global',
 
             thinking_tokens: (
                 this.isThinkingEnabled()

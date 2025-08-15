@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ChatAIFetcher from './ChatAIFetcher';
-import { resolveModelConfiguration } from '../model-configuration-resolver';
+import { resolveModelConfiguration } from '../model-metadata-resolver';
 import { ChatAIModels } from '@afron/chatai-models';
 
 describe('ChatAIFetcher', () => {

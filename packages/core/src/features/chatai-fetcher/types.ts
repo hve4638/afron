@@ -10,3 +10,10 @@ export type RequestModelProps<TAuth = unknown> = {
     auth: TAuth;
     api: ChatAIRequestAPI;
 }
+export type RequestCustomModelProps<TAuth = unknown> = {
+    model: CustomModel;
+    modelConfiguration: Required<ModelConfiguration>;
+    messages: ChatMessages;
+    auth: TAuth;
+    api: ChatAIRequestAPI;
+}
