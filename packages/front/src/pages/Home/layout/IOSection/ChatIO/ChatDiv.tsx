@@ -38,7 +38,7 @@ function ChatDiv({
     const markdownEnabled = useMemo(() => {
         return side === 'output' && markdown;
     }, [side, markdown]);
-
+    
     return (
         <div
             className={classNames(sideClass, className)}

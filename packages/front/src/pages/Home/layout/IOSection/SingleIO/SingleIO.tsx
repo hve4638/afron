@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import InputField from '@/components/InputField';
+import InputField from './InputField';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
@@ -25,9 +25,9 @@ import {
     CopyButton,
 } from '../ui';
 
-import styles from './SingleIO.module.scss';
-import { Z_INDEX } from '@/data/z';
 import { CommonProps } from '@/types';
+
+import styles from './SingleIO.module.scss';
 
 interface SingleIOLayoutProps extends CommonProps {
     inputText: string;

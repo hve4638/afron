@@ -1,6 +1,5 @@
 @use './theme.scss';
 
-
 .output-info-button {
     background-color: rgba(10, 10, 10, 0.0);
     padding: 0em 0.4em;
@@ -33,12 +32,14 @@
         @include chat;
 
         background-color: var(--chat-input-side);
+        box-shadow: 0px 2px 4px 0px #0000001a;
     }
 
     .output-side {
         @include chat;
 
         background-color: var(--chat-output-side);
+        box-shadow: 0px 2px 4px 0px #0000001a;
     }
 }
 
@@ -49,6 +50,7 @@
     box-sizing: border-box;
 
     .chat-input {
+        box-shadow: 0px 4px 12px 0px #0000001a, inset 0px 0px 1px 0px #fff3;
         display: block;
         position: relative;
         width: 100%;
@@ -78,7 +80,6 @@
 
             &:hover {
                 background-color: rgba(92, 92, 92, 0.75);
-                // background-color: rgb(28, 28, 28, 1);
             }
         }
     }

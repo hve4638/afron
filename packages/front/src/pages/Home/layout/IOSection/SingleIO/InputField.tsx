@@ -1,6 +1,10 @@
 import React from 'react';
-import MarkdownArea from '../MarkdownArea';
+import classNames from 'classnames';
+
+import MarkdownArea from '@/components/MarkdownArea';
 import { CommonProps, DragActionProps } from '@/types';
+
+import styles from './InputField.module.scss';
 
 interface InputFieldProps extends CommonProps, DragActionProps<HTMLDivElement> {
     text: string;
@@ -18,8 +22,8 @@ function InputField({
     text,
     tabIndex,
     onChange,
-    readonly=false,
-    markdown=false,
+    readonly = false,
+    markdown = false,
 
     onDragStart,
     onDragOver,
@@ -32,7 +36,12 @@ function InputField({
     return (
         <div
             ref={containerRef}
-            className={`input-field-container ${className}`}
+            className={
+                classNames(
+                    styles['input-field-container'],
+                    `${className}`
+                )
+            }
             style={{
                 display: 'block',
                 position: 'relative',
@@ -50,7 +59,12 @@ function InputField({
                 !markdown &&
                 <textarea
                     readOnly={readonly}
-                    className='input-field fill fontstyle scrollbar'
+                    className={
+                        classNames(
+                            styles['input-field'],
+                            'fill fontstyle scrollbar'
+                        )
+                    }
                     style={{
                         resize: 'none',
                         width: '100%',
