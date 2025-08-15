@@ -49,7 +49,7 @@ export const PROFILE_STORAGE_TREE = {
                     'filename': JSONType.String(),
                     'data': JSONType.String(),
                     'size': JSONType.Number(),
-                    'type': JSONType.Union('image/webp', 'image/png', 'image/jpeg', 'application/pdf', 'text/plain'),
+                    'type': JSONType.Union(JSONType.String(), 'image/webp', 'image/png', 'image/jpeg', 'application/pdf', 'text/plain'),
                     'thumbnail': JSONType.String().nullable(),
                     'hash_sha256': JSONType.String(),
                 }).nullable().strict(),

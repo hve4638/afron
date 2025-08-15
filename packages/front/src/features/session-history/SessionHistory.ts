@@ -102,7 +102,6 @@ class SessionHistory {
         const { api } = useProfileAPIStore.getState();
         const sessionAPI = api.session(this.sessionId);
         const newMetadata = await sessionAPI.history.get(offset, limit, desc);
-        console.log('select>')
 
         this.cacheHistoryMetadata(newMetadata);
         return this.loadHistory(newMetadata);

@@ -13,6 +13,8 @@ interface InputFieldProps extends CommonProps, DragActionProps<HTMLDivElement> {
     tabIndex?: number;
     readonly?: boolean;
     markdown?: boolean;
+
+    onPaste?: React.ClipboardEventHandler<HTMLTextAreaElement>;
 }
 
 function InputField({
@@ -30,6 +32,8 @@ function InputField({
     onDragEnter,
     onDragLeave,
     onDrop,
+
+    onPaste = () => { },
 }: InputFieldProps) {
     const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -79,6 +83,7 @@ function InputField({
                     value={text}
                     onChange={(e) => onChange(e.target.value)}
                     tabIndex={tabIndex}
+                    onPaste={onPaste}
                 />
             }
             {

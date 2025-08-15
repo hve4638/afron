@@ -15,7 +15,7 @@ import { remapDecimal } from '@/utils/math';
 import FilesFormLayout from '../FilesUpload/FileList';
 import { FileDropper } from '../FilesUpload';
 import ProfileEvent from '@/features/profile-event';
-import { useEvent } from '@/hooks/useEvent';
+import { emitEvent, useEvent } from '@/hooks/useEvent';
 import {
     TokenCount,
     MarkdownButton,
@@ -28,6 +28,8 @@ import {
 import { CommonProps } from '@/types';
 
 import styles from './SingleIO.module.scss';
+import { readImageFromClipboard } from '@/utils/clipboard';
+import Latch from '@/lib/Latch';
 
 interface SingleIOLayoutProps extends CommonProps {
     inputText: string;
@@ -162,7 +164,6 @@ function SingleIO({
                     className={
                         classNames(
                             'flex',
-                            // styles['shadow-short'],
                         )
                     }
                     style={{
@@ -174,12 +175,23 @@ function SingleIO({
                     text={inputText}
                     onChange={(text: string) => onChangeInputText(text)}
                     onDragEnter={(e) => {
+                        console.log(e);
                         setDraggingFile(true);
                     }}
 
                     onDragOver={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                    }}
+                    onPaste={(e) => {
+                        const data = readImageFromClipboard(e);
+                        if (!data.isImage) return;
+
+                        emitEvent('input_file_upload', {
+                            file: data.file,
+                            latch: new Latch(),
+                        });
+                        e.preventDefault();
                     }}
                 >
                     {

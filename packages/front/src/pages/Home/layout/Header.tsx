@@ -9,7 +9,6 @@ import ModelDropdown from './ModelDropdown';
 import { Z_INDEX } from '@/data/z';
 
 function Header() {
-    const modal = useModal();
     const color = useSessionStore(state => state.color);
     const colorStyle = `palette-${color}`;
 

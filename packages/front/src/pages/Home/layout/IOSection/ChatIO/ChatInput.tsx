@@ -8,9 +8,12 @@ import { useConfigStore, useSessionStore } from '@/stores';
 import FilesFormLayout from '../FilesUpload/FileList';
 import { FileDropper } from '../FilesUpload';
 
-import { TokenCount, RequestButton, PreviewButton } from '../ui';
+import { TokenCount, RequestButton, PreviewButton, AttachFileButton } from '../ui';
 
 import styles from './ChatIO.module.scss';
+import { readImageFromClipboard } from '@/utils/clipboard';
+import Latch from '@/lib/Latch';
+import { emitEvent } from '@/hooks/useEvent';
 
 type ChatInputProps = {
     value?: string;
@@ -43,7 +46,9 @@ function ChatInput({
                 rows='1fr 1.75em'
                 columns='1fr'
                 onDragEnter={(e) => {
-                    setDraggingFile(true);
+                    if (e.dataTransfer?.types?.[0] === 'Files') {
+                        setDraggingFile(true);
+                    }
                 }}
 
                 onDragOver={(e) => {
@@ -58,26 +63,33 @@ function ChatInput({
                     }}
                     spellCheck='false'
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
                     tabIndex={0}
+                    onChange={(e) => onChange(e.target.value)}
+                    onPaste={(e) => {
+                        const data = readImageFromClipboard(e);
+                        if (!data.isImage) return;
+
+                        emitEvent('input_file_upload', {
+                            file: data.file,
+                            latch: new Latch(),
+                        });
+                        e.preventDefault();
+                    }}
                 ></textarea>
                 <Row
                     style={{
+                        position: 'relative',
                         fontSize: '1.75em',
                         gap: '0.25em',
+                        // height: '40px',
                     }}
                     columnAlign={Align.End}
                 >
-                    {
-                        showtokenCount &&
-                        <TokenCount
-                            className={classNames('undraggable')}
-                            style={{
-                                paddingLeft: '0.25em',
-                            }}
-                        />
-                    }
-                    <Flex style={{ height: '100%', }}>
+                    <AttachFileButton />
+                    <Flex style={{
+                        // height: '100%',
+                        height: '40px',
+                    }}>
                         <FilesFormLayout
                             style={{
                                 height: '100%',
@@ -91,6 +103,19 @@ function ChatInput({
                         <PreviewButton />
                     }
                     <RequestButton />
+                    {
+                        showtokenCount &&
+                        <TokenCount
+                            className={classNames('undraggable')}
+                            style={{
+                                position: 'absolute',
+                                left: '0',
+                                bottom: 'calc(100% + 1em + 6px)',
+                                height: '1em',
+                                padding: '0 0.2em',
+                            }}
+                        />
+                    }
                 </Row>
                 {
                     draggingFile &&

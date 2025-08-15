@@ -73,9 +73,7 @@ function ChatIO({
                     minHeight: '0',
                 }}
                 loadMore={() => {
-                    console.group('emit: load_more_history');
                     emit('load_more_history');
-                    console.groupEnd()
                 }}
                 hasMore={hasMore}
             >
