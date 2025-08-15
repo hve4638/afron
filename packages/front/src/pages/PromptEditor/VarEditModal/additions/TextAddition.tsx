@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { CheckBoxForm, StringForm, StringLongForm } from '@/components/Forms';
-import InputField from '@/components/InputField';
 import { TextAreaInput } from '@/components/Input';
 
 type PropmtVarTextOptionProps = {

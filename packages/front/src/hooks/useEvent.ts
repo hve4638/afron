@@ -2,6 +2,7 @@
  * 이벤트 구독 및 발행 훅
  */
 import Latch from '@/lib/Latch';
+import { createBus } from '@/lib/zustbus';
 import { LogEntry } from '@/stores/useErrorLogStore';
 import { Toast } from '@/types/toast';
 import Channel from '@hve/channel';

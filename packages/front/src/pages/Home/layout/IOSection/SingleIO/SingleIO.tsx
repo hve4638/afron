@@ -1,44 +1,48 @@
 import { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
-
 import InputField from '@/components/InputField';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
 import { useConfigStore, useSessionStore } from '@/stores';
 
-import SplitSlider from '../SplitSlider';
+import SplitSlider from '../../SplitSlider';
 
 import { useHistoryStore } from '@/stores/useHistoryStore';
 import { HistoryData } from '@/features/session-history';
-import styles from './styles.module.scss';
 import { remapDecimal } from '@/utils/math';
-import FilesFormLayout from './FilesUpload/FileList';
-import { FileDropper } from './FilesUpload';
+import FilesFormLayout from '../FilesUpload/FileList';
+import { FileDropper } from '../FilesUpload';
 import ProfileEvent from '@/features/profile-event';
 import { useEvent } from '@/hooks/useEvent';
-import CopyButton from './ui/CopyButton';
-import PreviewButton from './ui/PreviewButton';
-import RequestButton from './ui/RequestButton';
-import AttachFileButton from './ui/AttachFileButton';
-import { TokenCount } from './ui';
-import MarkdownButton from './ui/MarkdownButton';
+import {
+    TokenCount,
+    MarkdownButton,
+    AttachFileButton,
+    RequestButton,
+    PreviewButton,
+    CopyButton,
+} from '../ui';
 
-type SingleIOLayoutProps = {
+import styles from './SingleIO.module.scss';
+import { Z_INDEX } from '@/data/z';
+import { CommonProps } from '@/types';
+
+interface SingleIOLayoutProps extends CommonProps {
     inputText: string;
     onChangeInputText: (text: string) => void;
 
     color: string;
-    tokenCount?: number;
 }
 
 /// @TODO: 너무 복잡해서 코드 정리한 후 기능 부분은 .hook.ts로 분리하기
-function SingleIOLayout({
+function SingleIO({
+    className = '',
+    style = {},
     inputText,
     onChangeInputText,
     color,
-    tokenCount = 0,
 }: SingleIOLayoutProps) {
     const configState = useConfigStore();
     const sessionState = useSessionStore();
@@ -138,7 +142,7 @@ function SingleIOLayout({
                 ref={textareaSectionRef}
                 className={
                     classNames(
-                        styles['main-section'],
+                        className,
                         'row',
                         'flex',
                         'body',
@@ -149,12 +153,18 @@ function SingleIOLayout({
                 style={{
                     overflow: 'hidden',
                     fontSize: `${configState.font_size}px`,
+                    ...style,
                 }}
                 rows={gridWH.rows}
                 columns={gridWH.columns}
             >
                 <InputField
-                    className='flex'
+                    className={
+                        classNames(
+                            'flex',
+                            styles['shadow-short'],
+                        )
+                    }
                     style={{
                         zIndex: 0,
                         margin: inputMargin,
@@ -225,7 +235,12 @@ function SingleIOLayout({
                     }
                 </InputField>
                 <InputField
-                    className='flex'
+                    className={
+                        classNames(
+                            'flex',
+                            styles['shadow-short'],
+                        )
+                    }
                     style={{
                         zIndex: 0,
                         margin: outputMargin,
@@ -262,7 +277,7 @@ function SingleIOLayout({
                     >
                         <MarkdownButton
                             value={sessionState.markdown}
-                            onChange={(next)=>{
+                            onChange={(next) => {
                                 sessionState.update.markdown(next);
                             }}
                         />
@@ -277,4 +292,4 @@ function SingleIOLayout({
     )
 }
 
-export default SingleIOLayout;
+export default SingleIO;

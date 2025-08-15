@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
-import styles from './styles.module.scss';
 
 import { useSessionStore, useHistoryStore } from '@/stores';
 
@@ -12,10 +11,11 @@ import { GIconButton } from '@/components/GoogleFontIcon';
 import MarkdownArea from '@/components/MarkdownArea';
 
 import { CommonProps } from '@/types';
-import MarkdownButton from './ui/MarkdownButton';
-import DeleteButton from './ui/DeleteButton';
-import ChatCopyButton from './ui/ChatCopyButton';
+import MarkdownButton from '../ui/MarkdownButton';
+import DeleteButton from '../ui/DeleteButton';
+import ChatCopyButton from '../ui/ChatCopyButton';
 
+import styles from './ChatIO.module.scss';
 
 interface ChatDivProps extends CommonProps {
     side: 'input' | 'output';

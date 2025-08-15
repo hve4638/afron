@@ -1,22 +1,5 @@
 @use './theme.scss';
 
-.main-section {
-    z-index: 3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-
-    .send-button {
-        background-color: rgb(28, 28, 28, 0.75);
-        border-radius: 8px;
-        aspect-ratio: 1;
-        font-size: 0.85em;
-        padding: 4px;
-
-        &:hover {
-            background-color: rgba(92, 92, 92, 0.75);
-            // background-color: rgb(28, 28, 28, 1);
-        }
-    }
-}
 
 .output-info-button {
     background-color: rgba(10, 10, 10, 0.0);
