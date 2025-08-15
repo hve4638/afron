@@ -7,6 +7,7 @@ import {
     GoogleIcon,
     AnthropicIcon,
     GoogleVertexAIIcon,
+    GeminiIcon,
 } from 'components/Icons'
 import { useConfigStore, useDataStore, useSessionStore } from '@/stores';
 import useMemoryStore from '@/stores/useMemoryStore';
@@ -97,8 +98,8 @@ function ModelDropdown() {
 
 function renderIcon(providerName?: string) {
     switch (providerName) {
-        case 'Google':
-            return <GoogleIcon style={{ marginRight: '8px' }} />
+        case 'Gemini':
+            return <GeminiIcon style={{ marginRight: '8px' }} />
         case 'Anthropic':
             return <AnthropicIcon style={{ marginRight: '8px' }} />
         case 'OpenAI':
