@@ -8,7 +8,7 @@ function ModelConfigButton() {
     const modelId = useSessionStore(state => state.model_id);
     const globalModelConfigEnabled = useConfigStore(state => state.global_model_config_enabled);
 
-    if (!globalModelConfigEnabled) {
+    if (!globalModelConfigEnabled || modelId.startsWith('custom:')) {
         return null;
     }
 
