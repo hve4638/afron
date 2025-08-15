@@ -22,6 +22,22 @@
     }
 }
 
+.chat-list {
+    /* Fade top/bottom using mask (works in modern browsers; WebKit prefix for Safari/Chrome) */
+    -webkit-mask-image: linear-gradient(to bottom,
+            transparent 0%,
+            black 4px,
+            black calc(100% - 4px),
+            transparent 100%);
+    mask-image: linear-gradient(to bottom,
+            transparent 0%,
+            black 4px,
+            black calc(100% - 4px),
+            transparent 100%);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
 .chat-container {
     width: 100%;
     height: 100%;

@@ -66,10 +66,12 @@ function ChatIO({
             columns='1fr'
         >
             <InfiniteScroll
+                className={classNames(styles['chat-list'])}
                 style={{
                     width: '100%',
                     height: '100%',
                     minHeight: '0',
+                    padding: '4px 0',
                 }}
                 loadMore={() => {
                     console.group('emit: load_more_history');
