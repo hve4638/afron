@@ -36,7 +36,9 @@ function ChatInput({
             }}
         >
             <Grid
-                className={classNames(styles['chat-input'])}
+                className={
+                    classNames(styles['chat-input'])
+                }
                 rows='1fr 1.75em'
                 columns='1fr'
                 onDragEnter={(e) => {

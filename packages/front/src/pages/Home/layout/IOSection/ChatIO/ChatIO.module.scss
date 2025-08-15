@@ -23,25 +23,18 @@
 }
 
 .chat-list {
-    /* Fade top/bottom using mask (works in modern browsers; WebKit prefix for Safari/Chrome) */
-    -webkit-mask-image: linear-gradient(to bottom,
-            transparent 0%,
-            black 4px,
-            black calc(100% - 4px),
-            transparent 100%);
     mask-image: linear-gradient(to bottom,
             transparent 0%,
-            black 4px,
-            black calc(100% - 4px),
+            black 6px,
+            black calc(100% - 6px),
             transparent 100%);
-    -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
 }
 
 .chat-container {
     width: 100%;
     height: 100%;
-    padding: 0 0.75em;
+    padding: 6px 0.75em;
     overflow: hidden;
 
     .input-side {
@@ -66,13 +59,13 @@
     box-sizing: border-box;
 
     .chat-input {
-        box-shadow: 0px 4px 12px 0px #0000001a, inset 0px 0px 1px 0px #fff3;
+        box-shadow: 0px 4px 12px 0px #0000001a,
+            inset 0px 0px 2px 0px var(--inputfield-border-color);
         display: block;
         position: relative;
         width: 100%;
         border-radius: 20px;
         padding: 12px 0.75em;
-        border: 1px solid var(--inputfield-border-color);
         background-color: var(--inputfield-background-color);
 
         textarea {
