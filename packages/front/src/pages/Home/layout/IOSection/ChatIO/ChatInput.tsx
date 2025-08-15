@@ -8,7 +8,7 @@ import { useConfigStore, useSessionStore } from '@/stores';
 import FilesFormLayout from '../FilesUpload/FileList';
 import { FileDropper } from '../FilesUpload';
 
-import { TokenCount, RequestButton } from '../ui';
+import { TokenCount, RequestButton, PreviewButton } from '../ui';
 
 import styles from './ChatIO.module.scss';
 
@@ -23,7 +23,8 @@ function ChatInput({
     value = '',
     onChange = () => { },
 }: ChatInputProps) {
-    const showtokenCount = useConfigStore(state=>state.show_token_count);
+    const showtokenCount = useConfigStore(state => state.show_token_count);
+    const promptPreviewEnabled = useConfigStore(state => state.prompt_preview_enabled);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { font_size } = useConfigStore();
     const [draggingFile, setDraggingFile] = useState(false);
@@ -85,6 +86,10 @@ function ChatInput({
                             internalPadding='4px 4px'
                         />
                     </Flex>
+                    {
+                        promptPreviewEnabled &&
+                        <PreviewButton />
+                    }
                     <RequestButton />
                 </Row>
                 {

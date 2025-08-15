@@ -21,7 +21,7 @@ function TemperatureForm({
             value={value}
             onChange={onChange}
 
-            allowDecimal={false}
+            allowDecimal={true}
             instantChange={true}
 
             allowEmpty={allowEmpty}
