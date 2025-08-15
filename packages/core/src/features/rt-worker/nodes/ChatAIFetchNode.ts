@@ -5,7 +5,7 @@ import { ChatAIModels } from '@afron/chatai-models';
 import { WorkNodeStop } from './errors';
 import { ProfileAPIKeyControl } from '@/features/profiles/ProfileControl';
 import ChatAIFetcher, { ChatAIFetcherFailed } from '@/features/chatai-fetcher';
-import { resolveModelConfiguration } from '@/features/model-configuration-resolver';
+import { resolveModelConfiguration } from '@/features/model-metadata-resolver';
 
 type ChatAIFetchNodeInput = {
     messages: ChatMessages;
@@ -25,7 +25,7 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
 
         try {
             const result = await this.#request({ messages });
-            
+
             rtEventEmitter.emit.send.info('fetch response', 'click to view', [
                 { name: 'Response', value: JSON.stringify(result, null, 2) },
             ]);
@@ -72,16 +72,27 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
             modelId, rtEventEmitter, profile, rtId,
         } = this.nodeData;
         const {
+            useCustomModel,
             model, modelConfiguration, auth,
         } = await this.preprocess();
 
         try {
-            return this.fetch({
-                model,
-                messages,
-                modelConfiguration,
-                auth,
-            });
+            if (useCustomModel) {
+                return this.fetchCustom({
+                    model,
+                    messages,
+                    modelConfiguration,
+                    auth,
+                });
+            }
+            else {
+                return this.fetch({
+                    model,
+                    messages,
+                    modelConfiguration,
+                    auth,
+                });
+            }
         }
         catch (e) {
             if (e instanceof ChatAIFetcherFailed) {
@@ -99,42 +110,102 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
     }
 
     protected async preprocess(): Promise<{
+        useCustomModel: true;
+        model: CustomModel;
+        modelConfiguration: Required<ModelConfiguration>;
+        auth: unknown;
+    } | {
+        useCustomModel: false;
         model: ChatAIModel;
         modelConfiguration: Required<ModelConfiguration>;
         auth: unknown;
     }> {
         const {
             modelId, profile, rtId,
+            rtEventEmitter,
         } = this.nodeData;
 
         const rt = profile.rt(rtId);
 
-        // const modelConfigAC = await profile.accessAsJSON('model_config.json');
-        // const globalConfig = modelConfigAC.getOne(modelId);
         const globalConfig = await profile.model.getGlobalModelConfig(modelId);
-        
+
         const { model } = await rt.getPromptMetadata(this.option.promptId ?? 'default');
         const modelConfiguration = resolveModelConfiguration([globalConfig], [model]);
 
-        const modelMap = ChatAIModels.getModelMap();
-        const modelData = modelMap[modelId];
+        if (modelId.startsWith('custom:')) {
+            const result = await this.#getCustomModelAndAuth(modelId);
 
-        const apiName = this.#getAPIName(modelData);
+            if (!result) {
+                rtEventEmitter.emit.error.other([`ChatAIFetchNode: Model '${modelId}' not found.`]);
+                this.logger.error(`ChatAIFetchNode: Model '${modelId}' not found.`);
+                throw new WorkNodeStop();
+            }
 
-        let auth: unknown;
-        if (apiName) {
-            const profileAPIKeyControl = new ProfileAPIKeyControl(profile);
-            auth = await profileAPIKeyControl.nextAPIKey(apiName);
+            return {
+                useCustomModel: true,
+                model: result.model,
+                auth: result.auth,
+                modelConfiguration,
+            }
         }
         else {
-            auth = null;
+            const result = await this.#getModelAndAuth(modelId);
+
+            if (!result) {
+                rtEventEmitter.emit.error.other([`ChatAIFetchNode: Model '${modelId}' not found.`]);
+                this.logger.error(`ChatAIFetchNode: Model '${modelId}' not found.`);
+                throw new WorkNodeStop();
+            }
+            if (!result) {
+                rtEventEmitter.emit.error.other([`ChatAIFetchNode: Model '${modelId}' not found.`]);
+                this.logger.error(`ChatAIFetchNode: Model '${modelId}' not found.`);
+                throw new WorkNodeStop();
+            }
+
+            return {
+                useCustomModel: false,
+                model: result.model,
+                auth: result.auth,
+                modelConfiguration,
+            }
+        }
+    }
+
+    async #getModelAndAuth(modelId: string): Promise<{ model: ChatAIModel; auth: unknown; } | null> {
+        const { profile } = this.nodeData;
+        const profileAPIKeyControl = new ProfileAPIKeyControl(profile);
+
+        const modelMap = ChatAIModels.getModelMap();
+        const model = modelMap[modelId];
+
+        if (model != undefined) {
+            const apiName = this.#getAPIName(model);
+
+            if (apiName) {
+                const auth = await profileAPIKeyControl.nextAPIKey(apiName);
+                return { model, auth };
+            }
         }
 
-        return {
-            model: modelData,
-            modelConfiguration,
-            auth,
+        return null;
+    }
+
+    async #getCustomModelAndAuth(customModelId: string): Promise<{ model: CustomModel; auth: unknown; } | null> {
+        const { profile } = this.nodeData;
+
+        const dataAC = await profile.accessAsJSON('data.json');
+        const models: CustomModel[] = dataAC.getOne('custom_models');
+        const model = models.find(m => m.id === customModelId);
+        
+        if (model == null) return null;
+        let auth: unknown = null;
+
+        const authControl = new ProfileAPIKeyControl(profile);
+        if (model.secret_key) {
+            auth = await authControl.getAuth(model.secret_key);
         }
+
+        return { model, auth }
     }
 
     protected async fetch({
@@ -158,8 +229,29 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
         }, {});
     }
 
+    protected async fetchCustom({
+        model,
+        messages,
+        modelConfiguration,
+        auth,
+    }: {
+        model: CustomModel,
+        messages: ChatMessages,
+        modelConfiguration: Required<ModelConfiguration>,
+        auth: unknown,
+    }): Promise<ChatAIResult> {
+        const fetcher = new ChatAIFetcher(this.logger);
+
+        return fetcher.requestCustom({
+            model: model,
+            messages: messages,
+            modelConfiguration,
+            auth,
+        }, {});
+    }
+
     protected async checkResponseOK(chatAIResult: ChatAIResult): Promise<void> {
-        const { rtEventEmitter} = this.nodeData;
+        const { rtEventEmitter } = this.nodeData;
 
         if (!chatAIResult.response.ok) {
             this.logger.error(

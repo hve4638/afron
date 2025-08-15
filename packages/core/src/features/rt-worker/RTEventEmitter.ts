@@ -148,7 +148,14 @@ class RTEventEmitter {
 
             },
             promptEvaluateFailed: (detail: string[] = []) => { },
-            fetchFailed: (detail: string[] = []) => { },
+            fetchFailed: (detail: string[] = []) => {
+                this.logger.debug(`[RTEventEmitter] error: fetch_failed (${this.#id})`);
+                this.#send({
+                    type: 'error',
+                    reason_id: 'fetch_failed',
+                    detail: detail,
+                });
+            },
             httpError: (http_status: number, detail: string[] = []) => {
                 this.logger.debug(`[RTEventEmitter] error: http_error (${this.#id})`);
 
