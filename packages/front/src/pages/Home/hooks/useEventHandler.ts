@@ -40,8 +40,6 @@ function useEventHandler() {
         const { output } = useSessionStore.getState();
         if (output) {
             try {
-                console.log('copying response to clipboard', output);
-
                 navigator.clipboard.writeText(output);
                 emitEvent('after_copy_response');
             }

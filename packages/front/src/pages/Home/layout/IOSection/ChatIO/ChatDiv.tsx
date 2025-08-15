@@ -15,7 +15,7 @@ import MarkdownButton from '../ui/MarkdownButton';
 import DeleteButton from '../ui/DeleteButton';
 import ChatCopyButton from '../ui/ChatCopyButton';
 
-import styles from './ChatIO.module.scss';
+import styles from './ChatDiv.module.scss';
 
 interface ChatDivProps extends CommonProps {
     side: 'input' | 'output';
@@ -34,14 +34,23 @@ function ChatDiv({
     const sideClass = side === 'input' ? styles['input-side'] : styles['output-side'];
     const markdown = useSessionStore(state => state.markdown);
     const updateSession = useSessionStore(state => state.update);
+    const color = useSessionStore(state => state.color);
 
     const markdownEnabled = useMemo(() => {
         return side === 'output' && markdown;
     }, [side, markdown]);
-    
+
     return (
         <div
-            className={classNames(sideClass, className)}
+            className={
+                classNames(
+                    sideClass,
+                    {
+                        [styles['default-color']]: color === 'default',
+                    },
+                    className
+                )
+            }
             style={style}
             ref={divRef}
             tabIndex={-1}
@@ -92,7 +101,13 @@ function ChatDiv({
                 >
                     <Flex />
                     <small
-                        className={classNames(styles['output-info-button'], 'secondary-color', 'undraggable')}
+                        className={
+                            classNames(
+                                styles['output-info-button'],
+                                'secondary-color',
+                                'undraggable'
+                            )
+                        }
                         style={{ cursor: 'pointer' }}
                     >{ProfileEvent.model.getName(data.modelId)}</small>
                     <MarkdownButton
