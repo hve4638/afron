@@ -6,6 +6,7 @@ import { useSessionStore } from '@/stores';
 import { AvatarButton, ErrorLogButton, FormButton, HistoryButton, ModelConfigButton } from './header-button';
 import RTDropdown from './RTDropdown';
 import ModelDropdown from './ModelDropdown';
+import { Z_INDEX } from '@/data/z';
 
 function Header() {
     const modal = useModal();
@@ -20,6 +21,7 @@ function Header() {
                 padding: '8px 8px 0px 8px',
                 height: '40px',
                 fontSize: '16px',
+                zIndex: Z_INDEX.HEADER_LAYOUT,
             }}
         >
             <Grid

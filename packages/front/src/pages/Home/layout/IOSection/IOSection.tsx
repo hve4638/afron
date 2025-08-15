@@ -20,7 +20,6 @@ function IOSection() {
     if (inputLayoutType === 'chat') {
         return (
             <ChatIO
-                className={classNames(styles['shadow'])}
                 style={{
                     zIndex: Z_INDEX.INPUT_LAYOUT,
                 }}
@@ -35,7 +34,6 @@ function IOSection() {
     else {
         return (
             <SingleIO
-                className={classNames(styles['shadow'])}
                 style={{
                     zIndex: Z_INDEX.INPUT_LAYOUT,
                 }}

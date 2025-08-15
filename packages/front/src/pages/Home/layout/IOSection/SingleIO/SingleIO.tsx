@@ -162,7 +162,7 @@ function SingleIO({
                     className={
                         classNames(
                             'flex',
-                            styles['shadow-short'],
+                            // styles['shadow-short'],
                         )
                     }
                     style={{
@@ -238,7 +238,7 @@ function SingleIO({
                     className={
                         classNames(
                             'flex',
-                            styles['shadow-short'],
+                            // styles['shadow-short'],
                         )
                     }
                     style={{
