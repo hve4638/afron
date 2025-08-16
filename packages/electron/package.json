@@ -5,7 +5,7 @@
   "description": "ChatAI Frontend",
   "repository": "https://github.com/hve4638/ai-front.git",
   "author": "Hve",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "main": "dist/main.js",
   "scripts": {
     "start": "yarn build && electron-forge start",

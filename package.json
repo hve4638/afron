@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "repository": "https://github.com/hve4638/ai-front.git",
     "author": "Hve <hve4638@gmail.com>",
-    "license": "MIT",
+    "license": "GPL-3.0-only",
     "scripts": {
         "start": "yarn app:start",
         "app:start": "concurrently \"yarn electron:start\" \"yarn front:start\"",
