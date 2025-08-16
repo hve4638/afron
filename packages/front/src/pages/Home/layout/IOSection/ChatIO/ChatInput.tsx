@@ -43,7 +43,7 @@ function ChatInput({
                 className={
                     classNames(styles['chat-input'])
                 }
-                rows='1fr 1.75em'
+                rows='1fr 40px'
                 columns='1fr'
                 onDragEnter={(e) => {
                     if (e.dataTransfer?.types?.[0] === 'Files') {
@@ -81,14 +81,13 @@ function ChatInput({
                         position: 'relative',
                         fontSize: '1.75em',
                         gap: '0.25em',
-                        // height: '40px',
+                        height: '100%',
                     }}
                     columnAlign={Align.End}
                 >
-                    <AttachFileButton />
+                    <AttachFileButton/>
                     <Flex style={{
-                        // height: '100%',
-                        height: '40px',
+                        height: '100%',
                     }}>
                         <FilesFormLayout
                             style={{
@@ -110,7 +109,7 @@ function ChatInput({
                             style={{
                                 position: 'absolute',
                                 left: '0',
-                                bottom: 'calc(100% + 1em + 6px)',
+                                bottom: 'calc(100% + 8px)',
                                 height: '1em',
                                 padding: '0 0.2em',
                             }}
