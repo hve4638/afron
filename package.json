@@ -10,12 +10,20 @@
         "front:start": "cd packages/front && yarn start",
         "electron:start": "cd packages/electron && wait-on http://localhost:3600 && yarn start",
 
-        "build": "yarn chatai:build && yarn core:build",
+        "build": "yarn chatai:build && yarn core:build && yarn front:build && yarn electron:build",
         "core:build": "cd packages/core && yarn build",
         "chatai:build": "cd packages/chatai-models && yarn build",
-        
+        "front:build": "cd packages/front && yarn build",
+        "electron:build": "cd packages/electron && yarn build",
+
+        "dist": "yarn build && yarn electron:load_static && yarn electron:dist",
+        "electron:load_static": "cd packages/electron && powershell -ExecutionPolicy Bypass -File ./import-static.ps1",
+        "electron:dist": "cd packages/electron && yarn dist:win",
+
+        "clean": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-dist.ps1",
+
         "postinstall": "cd packages/core && yarn electron-rebuild",
-        "uninstall": "powershell -ExecutionPolicy Bypass -File ./remove-install.ps1"
+        "uninstall": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-install.ps1"
     },
     "devDependencies": {
         "concurrently": "^9.0.1",

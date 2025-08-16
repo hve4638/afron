@@ -1,3 +1,7 @@
+if ((Split-Path -Leaf (Get-Location)) -eq "scripts") {
+    cd ..
+}
+
 Get-Desktop 0 | Switch-Desktop
 code ".\"
 Start-Sleep -Seconds 3

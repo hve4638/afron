@@ -65,7 +65,9 @@ function ErrorToastSection() {
                         description={description}
 
                         onClick={() => {
-                            modal.open(ErrorLogModal, {});
+                            modal.open(ErrorLogModal, {
+                                errorId: null,
+                            });
                         }}
                         onDispose={() => removeToast(id)}
                     />
