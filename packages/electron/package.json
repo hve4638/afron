@@ -9,6 +9,7 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "yarn build && electron-forge start",
+    
     "start:fast": "electron-forge start",
     "start:dev": "yarn build && cross-env ELECTRON_DEV=TRUE electron .",
     "start:dev:mem": "yarn build && cross-env ELECTRON_DEV=TRUE ELECTRON_IN_MEMORY=TRUE electron .",
