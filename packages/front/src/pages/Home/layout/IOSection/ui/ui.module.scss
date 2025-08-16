@@ -1,0 +1,19 @@
+.input-section-button {
+    background-color: rgb(28, 28, 28, 0.75);
+    border-radius: 8px;
+    aspect-ratio: 1;
+    font-size: 0.85em;
+    padding: 4px;
+
+    &:hover {
+        background-color: rgba(92, 92, 92, 0.75);
+    }
+}
+
+
+.token-count {
+    font-size: 0.75rem;
+    // background-color: rgba(47, 47, 47, 0.7);
+    border-radius: 12px;
+    color: var(--subtext-color);
+}

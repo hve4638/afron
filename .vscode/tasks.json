@@ -1,0 +1,56 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "chatai_models:build",
+            "type": "shell",
+            "command": "yarn build",
+            "options": {
+                "cwd": "${workspaceFolder}/packages/chatai-models"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "core:build",
+            "type": "shell",
+            "command": "yarn build",
+            "options": {
+                "cwd": "${workspaceFolder}/packages/core"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "electron:build",
+            "type": "shell",
+            "command": "yarn build",
+            "options": {
+                "cwd": "${workspaceFolder}/packages/electron"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "front:start",
+            "type": "shell",
+            "command": "yarn start",
+            "options": {
+                "cwd": "${workspaceFolder}/packages/front"
+            },
+            "problemMatcher": []
+        },
+        {
+            // 기본 빌드 작업: Ctrl+Shift+B 로 실행
+            "label": "build:all",
+            "dependsOn": [
+                "chatai_models:build",
+                "core:build",
+                "electron:build"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
