@@ -1,5 +1,5 @@
-import Dropdown from '@/components/Dropdown';
-import type { DropdownItem, DropdownItemList } from '@/components/Dropdown';
+import DropdownOld from '@/components/DropdownOld';
+import type { DropdownItem, DropdownItemList } from '@/components/DropdownOld';
 import { Align, Flex, Row } from '@/components/layout';
 
 interface DropdownFormProps {
@@ -32,7 +32,7 @@ function DropdownForm({
             {name}
         </span>
         <Flex/>
-        <Dropdown
+        <DropdownOld
             items={items}
             value={value}
             onChange={onChange}

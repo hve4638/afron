@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import LocalAPI from 'api/local';
-import Dropdown, { DropdownItem, DropdownItemList } from 'components/Dropdown';
+import DropdownOld, { DropdownItem, DropdownItemList } from '@/components/DropdownOld';
 import {
     OpenAIIcon,
     GoogleIcon,
@@ -76,7 +76,7 @@ function ModelDropdown() {
     ])
 
     return (
-        <Dropdown
+        <DropdownOld
             style={{
                 minWidth: '48px',
             }}

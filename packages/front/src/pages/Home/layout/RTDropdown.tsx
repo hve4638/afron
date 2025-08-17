@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
 import { useProfileAPIStore, useSessionStore } from '@/stores';
-import Dropdown, { DropdownItem, DropdownItemList } from '@/components/Dropdown';
+import DropdownOld, { DropdownItem, DropdownItemList } from '@/components/DropdownOld';
 import { GoogleFontIcon } from '@/components/GoogleFontIcon';
 
 import { useModal } from '@/hooks/useModal';
@@ -76,7 +76,7 @@ function RTDropdown() {
                     <span>새 요청 템플릿</span>
                 </DivButton>
             </>
-            : <Dropdown
+            : <DropdownOld
                 style={{
                     minWidth: '48px',
                 }}
