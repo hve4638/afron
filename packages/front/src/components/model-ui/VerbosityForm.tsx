@@ -1,6 +1,8 @@
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
 
 interface VerbosityFormProps {
+    model: ChatAIModel;
+
     value: SupportedVerbosity | undefined;
     onChange: (value: SupportedVerbosity) => void;
 
@@ -8,11 +10,15 @@ interface VerbosityFormProps {
 }
 
 function VerbosityForm({
+    model,
+
     value,
     onChange,
 
     disabled = false,
 }: VerbosityFormProps) {
+    const v = model.config.supportedVerbosity;
+
     return (
         <DropdownForm<SupportedVerbosity>
             label='Verbosity'
@@ -22,10 +28,9 @@ function VerbosityForm({
                 if (value != null) onChange(value);
             }}
         >
-            <Dropdown.Item name='minimal' value='minimal' />
-            <Dropdown.Item name='low' value='low' />
-            <Dropdown.Item name='medium' value='medium' />
-            <Dropdown.Item name='high' value='high' />
+            {v.includes('low') && <Dropdown.Item name='low' value='low' />}
+            {v.includes('medium') && <Dropdown.Item name='medium' value='medium' />}
+            {v.includes('high') && <Dropdown.Item name='high' value='high' />}
         </DropdownForm>
     )
 }

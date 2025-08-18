@@ -14,6 +14,7 @@ export function resolveModelConfiguration(
         thinking_tokens: 1000,
         thinking_effort: 'medium',
         thinking_summary: false,
+        verbosity: 'low',
 
         safety_settings: {
             HARM_CATEGORY_CIVIC_INTEGRITY: 'OFF',
@@ -58,6 +59,9 @@ export function resolveModelConfiguration(
                 ...result.safety_settings,
                 ...config.safety_settings,
             };
+        }
+        if (config.override_gpt5) {
+            result.verbosity = config.verbosity ?? result.verbosity;
         }
     }
 

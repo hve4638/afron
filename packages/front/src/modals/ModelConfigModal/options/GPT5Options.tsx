@@ -11,6 +11,8 @@ function GPT5Options({
 }: OptionsProps) {
     const disabled = !config.override_enabled || !config.override_gpt5;
 
+    console.log(model);
+
     return (
         <>
             <CheckBoxForm
@@ -28,6 +30,8 @@ function GPT5Options({
             {
                 model.config.supportVerbosity &&
                 <ModelForm.Verbosity
+                    model={model}
+
                     value={config.verbosity}
                     onChange={(next) => {
                         config.verbosity = next;
