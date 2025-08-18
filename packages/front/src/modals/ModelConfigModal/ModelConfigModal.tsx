@@ -56,7 +56,7 @@ function ModelConfigModal({
     }, isFocused, []);
 
     const config = configRef.current;
-    const thinkingEnabled = (model.config.thinking ?? 'disabled') !== 'disabled';
+    const thinkingEnabled = (model.config.thinking ?? 'disabled') !== 'disabled';5
     const safetyEnabled = (model.config.supportGeminiSafetyFilter);
     const gpt5Enabled = (model.config.supportVerbosity === true);
 
@@ -95,7 +95,7 @@ function ModelConfigModal({
                     refresh={refresh}
                 />
                 {
-                    thinkingEnabled &&
+                    gpt5Enabled &&
                     <>
                         <div style={{ height: '1em' }} />
                         <GPT5Options
@@ -106,7 +106,7 @@ function ModelConfigModal({
                     </>
                 }
                 {
-                    gpt5Enabled && 
+                    thinkingEnabled && 
                     <>
                         <div style={{ height: '1em' }} />
                         <ThinkingOptions

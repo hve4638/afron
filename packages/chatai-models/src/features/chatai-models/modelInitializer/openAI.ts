@@ -28,8 +28,8 @@ function initProvider(builder: CategoryBuilder) {
         supportedVerbosity: ['low', 'medium', 'high'],
     }, {})
         .model('gpt-5-chat-latest', 'GPT-5 Chat', {
-            supportThinkingEffort: undefined,
-            supportVerbosity: undefined,
+            thinking: 'disabled',
+            supportVerbosity: false,
         }, { latest, featured })
         .model('gpt-5', 'GPT-5', { excludeParameter: gpt5ExcludeParameter }, { latest, featured })
         .model('gpt-5-2025-08-07', 'GPT-5 (2025-08-07)', { excludeParameter: gpt5ExcludeParameter }, { snapshot })
@@ -55,19 +55,19 @@ function initProvider(builder: CategoryBuilder) {
         .model('gpt-4.1-nano', 'GPT 4.1 nano', {}, { latest })
         .model('gpt-4.1-nano-2025-04-14', 'GPT 4.1 nano (2025-04-14)', {}, { snapshot });
 
-    const supportedThinkingEfforts: SupportedThinkingEfforts[] = ['minimal', 'low', 'medium', 'high'];
     builder.group('o4', {
         endpoint: 'responses',
         thinking: 'enabled',
         supportThinkingEffort,
-        supportedThinkingEfforts
+        supportedThinkingEfforts: ['low', 'medium', 'high'],
     }, {})
         .model('o4-mini', 'o4 mini', {}, { latest, featured })
         .model('o4-mini-2025-04-16', 'o4 mini (2025-04-16)', {}, { snapshot });
 
     builder.group('o3', {
         thinking: 'enabled',
-        supportedThinkingEfforts
+        supportThinkingEffort,
+        supportedThinkingEfforts: ['low', 'medium', 'high'],
     }, {})
         .model('o3', 'o3', completionsAPI, { latest, featured })
         .model('o3-2025-04-16', 'o3 (2025-04-16)', completionsAPI, { snapshot })
@@ -76,7 +76,8 @@ function initProvider(builder: CategoryBuilder) {
 
     builder.group('o1', {
         thinking: 'enabled',
-        supportedThinkingEfforts
+        supportThinkingEffort,
+        supportedThinkingEfforts: ['low', 'medium', 'high'],
     }, {})
         .model('o1', 'o1', resAPI, { latest, featured })
         .model('o1-2024-12-17', 'o1 (2024-12-17)', resAPI, { snapshot })

@@ -136,14 +136,18 @@ function PromptOnlyConfigModal({
                     value={data.model.thinking_tokens}
                     onChange={(checked) => changeModelConfig('thinking_tokens', checked ?? 0)}
                 />
+                <ModelForm.ReasoningEffort
+                    value={data.model.thinking_effort}
+                    onChange={(next) => changeModelConfig('thinking_effort', next)}
+                />
+                <div style={{ height: '1em' }} />
+                <ModelForm.Verbosity
+                    value={data.model.verbosity}
+                    onChange={(next) => changeModelConfig('verbosity', next)}
+                />
+
                 <div style={{ height: '1em' }} />
 
-                {/* <b className='undraggable'>안전 필터 (Gemini)</b>
-                <Delimiter /> */}
-                {/* <ModelForm.SafetyFilter
-                    value={data.model.safety_settings!}
-                    onChange={(next) => changeModelConfig('safety_settings', { ...data.model.safety_settings, ...next })}
-                /> */}
                 <ButtonForm
                     name='Gemini 안전 필터'
                     text='설정 열기'

@@ -49,8 +49,8 @@ function ThinkingOptions({
             {
                 model.config.supportThinkingEffort
                 && <ModelForm.ReasoningEffort
-                    model={model}
-                    
+                    candidates={model.config.supportedThinkingEfforts}
+
                     value={config.thinking_effort}
                     onChange={(next) => {
                         config.thinking_effort = next;
