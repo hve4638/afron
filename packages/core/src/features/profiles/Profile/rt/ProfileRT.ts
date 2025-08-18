@@ -318,7 +318,7 @@ class ProfileRT implements IProfileRT {
         let formId:string;
         do {
             formId = uuidv7();
-        } while (formAC.getOne(formId) != undefined);
+        } while (formAC.existsOne(formId));
         promptVar.id = formId;
 
         const form = PromptVarParser.toRTForm(promptVar);
