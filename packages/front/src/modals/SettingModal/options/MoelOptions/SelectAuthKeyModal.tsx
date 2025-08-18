@@ -1,4 +1,4 @@
-import { ButtonForm, DropdownForm, StringForm, StringLongForm } from '@/components/Forms';
+import { ButtonForm, DropdownOldForm, StringForm, StringLongForm } from '@/components/forms';
 import { Column } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';

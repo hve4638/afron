@@ -1,53 +1,86 @@
-import DropdownOld from '@/components/DropdownOld';
-import type { DropdownItem, DropdownItemList } from '@/components/DropdownOld';
+import Dropdown from '@/components/ui/Dropdown';
 import { Align, Flex, Row } from '@/components/layout';
+import { ReactNodeProps } from '@/types';
+import type {
+    ItemProps,
+    DropdownProps
+} from '@/components/ui/Dropdown/types';
+import classNames from 'classnames';
 
-interface DropdownFormProps {
-    name:string;
-    items:(DropdownItem|DropdownItemList)[];
-    value:string;
-    onChange:(x:DropdownItem)=>void;
-    onItemNotFound?:()=>void;
+interface DropdownFormProps<T> extends ReactNodeProps.Common {
+    children: React.ReactNode;
+
+    value: T;
+    onChange?: (item: T) => void;
+    onItemNotFound?: (item: T | null) => void;
+
+    label: React.ReactNode;
+
+    dropdownProps?: DropdownPassthroughProps<T>
 }
 
-function DropdownForm({
-    name,
-    items,
+interface DropdownPassthroughProps<T> extends ReactNodeProps.Common {
+    listProps?: ReactNodeProps.Common;
+    itemProps?: ItemProps<T>;
+}
+
+function DropdownForm<T,>({
+    className = '',
+    style = {},
+
+    label,
+
     value,
     onChange,
-    onItemNotFound = ()=>{},
-}:DropdownFormProps) {
-  return (
-    <Row
-        style={{
-            width: '100%',
-            height: '1.4em',
-            lineHeight: '1',
-        }}
-        columnAlign={Align.Center}
-    >
-        <span
-            className='noflex undraggable'
-        >
-            {name}
-        </span>
-        <Flex/>
-        <DropdownOld
-            items={items}
-            value={value}
-            onChange={onChange}
-            onItemNotFound={onItemNotFound}
+    onItemNotFound = () => { },
+    children,
+
+    dropdownProps = {},
+}: DropdownFormProps<T>) {
+    return (
+        <Row
+            className={className}
             style={{
-                minWidth: '5em',
-                height: '100%',
-                fontSize: '0.8em',
+                width: '100%',
+                height: '1.4em',
+                lineHeight: '1',
+                ...style
             }}
-            listStyle={{
-                fontSize: '0.8em',
-            }}
-        />
-    </Row>
-  );
+            columnAlign={Align.Center}
+        >
+            <span
+                className={classNames('noflex undraggable')}
+            >
+                {label}
+            </span>
+            <Flex />
+            <Dropdown
+                className={classNames(dropdownProps.className ?? '')}
+                style={{
+                    minWidth: '5em',
+                    height: '100%',
+                    fontSize: '0.8em',
+                    ...(dropdownProps.style ?? {}),
+                }}
+                listProps={{
+                    ...(dropdownProps.listProps ?? {}),
+                }}
+                itemProps={{
+                    style: {
+                        fontSize: '0.8em',
+                        ...(dropdownProps.itemProps?.style ?? {}),
+                    },
+                }}
+
+                value={value}
+                onChange={onChange}
+                onItemNotFound={onItemNotFound}
+            >
+                {children}
+            </Dropdown>
+        </Row>
+    );
 }
 
+export { default as Dropdown } from '@/components/ui/Dropdown';
 export default DropdownForm;

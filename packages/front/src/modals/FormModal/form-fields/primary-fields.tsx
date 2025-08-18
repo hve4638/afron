@@ -1,4 +1,4 @@
-import { CheckBoxForm, DropdownForm, NumberForm, StringForm } from '@/components/Forms'
+import { CheckBoxForm, DropdownOldForm, NumberForm, StringForm } from '@/components/forms'
 import FormFieldProps from './types'
 
 export function TextField({ name, promptVar, onChange, value }:FormFieldProps<PromptVarText, string>) {
@@ -28,7 +28,7 @@ export function CheckBoxField({ name, promptVar, onChange, value }:FormFieldProp
 }
 
 export function SelectField({ name, promptVar, onChange, value }:FormFieldProps<PromptVarSelect, string>) {
-    return <DropdownForm
+    return <DropdownOldForm
         name={name ?? promptVar.display_name}
         value={value ?? promptVar.default_value}
         items={promptVar.options.map((item) => ({ name: item.name, key: item.value }))}

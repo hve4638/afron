@@ -1,4 +1,4 @@
-import { CheckBoxForm } from '@/components/Forms';
+import { CheckBoxForm } from '@/components/forms';
 import { Column, Flex, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
 import useHotkey from '@/hooks/useHotkey';
@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileEvent from '@/features/profile-event';
 import useTrigger from '@/hooks/useTrigger';
-import { CommonOptions, SafetyOptions, ThinkingOptions } from './options';
+import { CommonOptions, GPT5Options, SafetyOptions, ThinkingOptions } from './options';
 import useMemoryStore from '@/stores/useMemoryStore';
 
 type ModelConfigModalProps = {
@@ -29,7 +29,7 @@ function ModelConfigModal({
     const { api } = useProfileAPIStore();
 
     const model: ChatAIModel = useMemo(() => {
-        console.log('#model Infomation', modelMap[modelId]);
+        // console.log('#model Infomation', modelMap[modelId]);
         return modelMap[modelId] ?? {};
     }, [modelId, modelMap]);
 
@@ -56,6 +56,9 @@ function ModelConfigModal({
     }, isFocused, []);
 
     const config = configRef.current;
+    const thinkingEnabled = (model.config.thinking ?? 'disabled') !== 'disabled';
+    const safetyEnabled = (model.config.supportGeminiSafetyFilter);
+    const gpt5Enabled = (model.config.supportVerbosity === true);
 
     return (
         <Modal
@@ -92,7 +95,18 @@ function ModelConfigModal({
                     refresh={refresh}
                 />
                 {
-                    (model.config.thinking ?? 'disabled') !== 'disabled' &&
+                    thinkingEnabled &&
+                    <>
+                        <div style={{ height: '1em' }} />
+                        <GPT5Options
+                            model={model}
+                            config={config}
+                            refresh={refresh}
+                        />
+                    </>
+                }
+                {
+                    gpt5Enabled && 
                     <>
                         <div style={{ height: '1em' }} />
                         <ThinkingOptions
@@ -103,7 +117,7 @@ function ModelConfigModal({
                     </>
                 }
                 {
-                    model.config.supportGeminiSafetyFilter &&
+                    safetyEnabled &&
                     <>
                         <div style={{ height: '1em' }} />
                         <SafetyOptions

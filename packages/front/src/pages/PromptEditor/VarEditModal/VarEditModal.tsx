@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { Modal, ModalBackground, ModalBox, ModalHeader } from 'components/Modal';
-import { DropdownForm, StringForm } from 'components/Forms';
+import { DropdownOldForm, StringForm } from '@/components/forms';
 
 import {
     Additions,
@@ -112,7 +112,7 @@ function VarEditModal({
                 disappear={disappear}
             >
                 <ModalHeader onClose={close}>{t('form_editor.title')}</ModalHeader>
-                <DropdownForm
+                <DropdownOldForm
                     name={t('form_editor.type_label')}
                     value={target.type}
                     items={VAR_DROPDOWN_ITEMS}
@@ -205,7 +205,7 @@ function VarEditModal({
                                 refresh();
                             }}
                         >필드 편집</ModalHeader>
-                        <DropdownForm
+                        <DropdownOldForm
                             name='타입'
                             value={fieldRef.current.type}
                             items={FIELD_DROPDOWN_ITEMS}

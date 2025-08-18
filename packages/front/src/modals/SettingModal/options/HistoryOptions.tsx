@@ -1,5 +1,5 @@
 import { useConfigStore } from '@/stores';
-import { CheckBoxForm, DropdownForm, NumberForm } from '@/components/Forms';
+import { CheckBoxForm, DropdownOldForm, NumberForm } from '@/components/forms';
 import { Column } from '@/components/layout';
 
 import styles from '../styles.module.scss';
@@ -20,7 +20,7 @@ function HistoryOptions() {
                 value={configs.max_history_limit_per_session}
                 onChange={(x) => (x != null && configs.update.max_history_limit_per_session(x))}
             />
-            <DropdownForm
+            <DropdownOldForm
                 name='최대 저장 일수'
                 items={
                     [

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import styles from '../../styles.module.scss'
-import { DropdownForm } from 'components/Forms';
+import { DropdownOldForm } from '@/components/forms';
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import { dropdownItem } from '../utils';
 import { useEffect, useRef } from 'react';
@@ -49,7 +49,7 @@ function ArrayAddition({
     return (
     <>
         <hr/>
-        <DropdownForm
+        <DropdownOldForm
             name='원소 타입'
             items={VAR_DROPDOWN_ITEMS}
             value={promptVar.element?.type}

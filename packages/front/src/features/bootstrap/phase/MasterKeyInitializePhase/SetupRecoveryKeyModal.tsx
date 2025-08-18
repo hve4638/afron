@@ -5,7 +5,7 @@ import ReactLoading from 'react-loading';
 import { Align, Flex, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
 import Button from '@/components/Button';
-import { StringForm } from '@/components/Forms';
+import { StringForm } from '@/components/forms';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
 

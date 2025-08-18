@@ -1,7 +1,7 @@
 import './styles.scss';
 import ToggleSwitchForm from './ToggleSwitchForm';
 import NumberForm from './NumberForm';
-import DropdownForm from './DropdownForm';
+import DropdownOldForm from './DropdownOldForm';
 import StringForm from './StringForm';
 import StringLongForm from './StringLongForm';
 import ButtonForm from './ButtonForm';
@@ -11,7 +11,7 @@ import CheckBoxForm from './CheckBoxForm';
 export {
     ToggleSwitchForm,
     NumberForm,
-    DropdownForm,
+    DropdownOldForm,
     StringForm,
     StringLongForm,
     ButtonForm,

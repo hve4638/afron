@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { useTranslation } from 'react-i18next';
 import { Modal, ModalBackground, ModalBox, ModalHeader } from '@/components/Modal';
-import { CheckBoxForm, DropdownForm, NumberForm, StringForm } from '@/components/Forms';
+import { CheckBoxForm, DropdownOldForm, NumberForm, StringForm } from '@/components/forms';
 
 import useTrigger from '@/hooks/useTrigger';
 import styles from './styles.module.scss';

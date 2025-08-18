@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react';
 import { LayoutModes, ThemeModes } from '@/types/profile';
 import { useConfigStore } from '@/stores';
 
-import SliderForm from '@/components/Forms/SliderForm';
+import SliderForm from '@/components/forms/SliderForm';
 import { Column } from '@/components/layout';
-import { CheckBoxForm, DropdownForm, NumberForm } from '@/components/Forms';
+import { CheckBoxForm, DropdownOldForm, NumberForm } from '@/components/forms';
 
 import { remapDecimal } from '@/utils/math';
 import styles from '../styles.module.scss';
@@ -34,7 +34,7 @@ function GeneralOptions() {
                 value={config.font_size}
                 onChange={(x) => (x != null && config.update.font_size(x))}
             />
-            {/* <DropdownForm
+            {/* <DropdownOldForm
                 name='화면 테마'
                 items={
                     [
@@ -51,7 +51,7 @@ function GeneralOptions() {
                     config.update.theme_mode(ThemeModes.SYSTEM_DEFAULT);
                 }}
             /> */}
-            <DropdownForm
+            <DropdownOldForm
                 name='레이아웃 설정'
                 items={
                     [

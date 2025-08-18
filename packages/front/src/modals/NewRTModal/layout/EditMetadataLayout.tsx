@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
-import { StringLongForm } from '@/components/Forms';
+import { StringLongForm } from '@/components/forms';
 import { Align, Column, Grid, Row } from '@/components/layout';
 import POTemplateList from './POTemplateList';
 import ProfileEvent from '@/features/profile-event';

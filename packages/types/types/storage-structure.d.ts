@@ -13,6 +13,7 @@ declare global {
         thinking_tokens?: number;
         thinking_effort?: SupportedThinkingEfforts;
         thinking_summary?: boolean;
+        verbosity?: SupportedVerbosity;
 
         safety_settings?: Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>>;
     }
@@ -28,6 +29,7 @@ declare global {
         override_common?: boolean;
         override_thinking?: boolean;
         override_safety_settings?: boolean;
+        override_gpt5?: boolean;
     } & ModelConfiguration;
 }
 

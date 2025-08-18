@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { DropdownForm } from 'components/Forms';
+import { DropdownOldForm } from '@/components/forms';
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import { TextInput } from 'components/Input';
 import { Align, Flex, Grid, Row } from 'components/layout';
@@ -64,7 +64,7 @@ function PropmtVarSelectOption({
     return (
     <>
         <hr/>
-        <DropdownForm
+        <DropdownOldForm
             name={t('form_editor.default_value_label')}
             items={options}
             value={promptVar.default_value ?? ''}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ButtonForm from 'components/Forms/ButtonForm';
+import ButtonForm from '@/components/forms/ButtonForm';
 
 function DataOptions() {
     return (

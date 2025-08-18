@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { useTranslation } from 'react-i18next';
 import { Modal, ModalBackground, ModalBox, ModalHeader } from '@/components/Modal';
-import { ButtonForm, CheckBoxForm, DropdownForm, NumberForm, StringForm } from '@/components/Forms';
+import { ButtonForm, CheckBoxForm, DropdownOldForm, NumberForm, StringForm } from '@/components/forms';
 
 import useTrigger from '@/hooks/useTrigger';
 import styles from './styles.module.scss';
@@ -96,7 +96,7 @@ function PromptOnlyConfigModal({
                 <div style={{ height: '0.5em' }} />
                 <b className='undraggable'>입력</b>
                 <Delimiter />
-                <DropdownForm
+                <DropdownOldForm
                     name='입력 레이아웃'
                     value={data.config.inputType}
                     onChange={(item) => {

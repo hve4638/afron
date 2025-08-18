@@ -1,5 +1,5 @@
 import DivButton from '@/components/DivButton';
-import { ButtonForm, CheckBoxForm, DropdownForm, StringForm, StringLongForm } from '@/components/Forms';
+import { ButtonForm, CheckBoxForm, DropdownOldForm, StringForm, StringLongForm } from '@/components/forms';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
 import { useModal } from '@/hooks/useModal';
@@ -99,7 +99,7 @@ function EditCustomModelModal({
                 instantChange={true}
             />
             <div style={{ height: '0.75em' }} />
-            <DropdownForm
+            <DropdownOldForm
                 name='요청 형식'
                 value={requestFormat}
                 onChange={(value) => setRequestFormat(value.key as 'chat_completions')}
