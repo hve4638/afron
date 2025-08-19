@@ -34,6 +34,9 @@ function RTDropdown() {
                 }}
                 value={rtId}
                 itemProps={{
+                    style:{
+                        fontSize: '0.9em',
+                    },
                     renderItem: ({ name, value }) => {
                         if (value === CREATE_NEW_PROMPT) {
                             return <>
