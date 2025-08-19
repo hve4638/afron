@@ -52,6 +52,9 @@ function ArrayAddition({
                 }}
                 onItemNotFound={(first) => {
                     if (first != null) {
+                        if (!promptVar.element) {
+                            promptVar.element = {} as any;
+                        }
                         promptVar.element.type = first;
                         onRefresh();
                     }
