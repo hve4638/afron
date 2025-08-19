@@ -32,7 +32,7 @@ function FormModal({
     useHotkey({
         'Escape': close,
     }, isFocused, []);
-    
+
     useEffect(() => {
         ProfileEvent.currentSession.getForms()
             .then((forms) => {
@@ -65,70 +65,72 @@ function FormModal({
                 maxHeight: '80%',
                 overflowY: 'auto',
             }}
-        >
-            <ModalHeader onClose={close}>변수</ModalHeader>
-            <Column
-                style={{ gap : '0.5em', }}
-            >
-            {
-                forms.map((form, index) => {
-                    const formId = form.id!;
-                    const value = variables.current[formId];
-                    const change = (next) => {
-                        variables.current[formId] = next;
-                        refresh();
-                    }
-
-                    if (form.type === 'text') {
-                        return <TextField
-                            key={formId}
-                            promptVar={form}
-                            value={value}
-                            onChange={change}
-                        />
-                    }
-                    else if (form.type === 'number') {
-                        return <NumberField
-                            key={formId}
-                            promptVar={form}
-                            value={value}
-                            onChange={change}
-                        />
-                    }
-                    else if (form.type === 'checkbox') {
-                        return <CheckBoxField
-                            key={formId}
-                            promptVar={form}
-                            value={value}
-                            onChange={change}
-                        />
-                    }
-                    else if (form.type === 'select') {
-                        return <SelectField
-                            key={formId}
-                            promptVar={form}
-                            value={value}
-                            onChange={change}
-                        />
-                    }
-                    else if (form.type === 'struct') {
-                        return <StructField
-                            key={formId}
-                            promptVar={form}
-                            value={value}
-                            onChange={change}
-                        />
-                    }
-                    else if (form.type === 'array') {
-                        return <ArrayField
-                            key={formId}
-                            promptVar={form}
-                            value={value}
-                            onChange={change}
-                        />
-                    }
-                })
+            headerLabel={
+                <ModalHeader onClose={close}>변수</ModalHeader>
             }
+        >
+            <Column
+                style={{ gap: '0.5em', }}
+            >
+                {
+                    forms.map((form, index) => {
+                        const formId = form.id!;
+                        const value = variables.current[formId];
+                        const change = (next) => {
+                            variables.current[formId] = next;
+                            refresh();
+                        }
+
+                        if (form.type === 'text') {
+                            return <TextField
+                                key={formId}
+                                promptVar={form}
+                                value={value}
+                                onChange={change}
+                            />
+                        }
+                        else if (form.type === 'number') {
+                            return <NumberField
+                                key={formId}
+                                promptVar={form}
+                                value={value}
+                                onChange={change}
+                            />
+                        }
+                        else if (form.type === 'checkbox') {
+                            return <CheckBoxField
+                                key={formId}
+                                promptVar={form}
+                                value={value}
+                                onChange={change}
+                            />
+                        }
+                        else if (form.type === 'select') {
+                            return <SelectField
+                                key={formId}
+                                promptVar={form}
+                                value={value}
+                                onChange={change}
+                            />
+                        }
+                        else if (form.type === 'struct') {
+                            return <StructField
+                                key={formId}
+                                promptVar={form}
+                                value={value}
+                                onChange={change}
+                            />
+                        }
+                        else if (form.type === 'array') {
+                            return <ArrayField
+                                key={formId}
+                                promptVar={form}
+                                value={value}
+                                onChange={change}
+                            />
+                        }
+                    })
+                }
             </Column>
         </Modal>
     );

@@ -11,6 +11,8 @@ export interface AlignedDivProps extends CommonProps, MouseActionProps<HTMLDivEl
     columnAlign?: Align;
     reverse?: boolean;
 
+    tabIndex?: number;
+
     onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     onRClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     onDoubleClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -42,6 +44,7 @@ export const Column = forwardRef<HTMLDivElement, AlignedDivProps>(
                     ...props.style,
                 }}
                 onClick={props.onClick}
+                tabIndex={props.tabIndex}
             >
                 {props.children}
             </div>
@@ -74,6 +77,7 @@ export const Row = forwardRef(
                     alignItems: columnAlign,
                     ...style,
                 }}
+                tabIndex={props.tabIndex}
                 onClick={props.onClick}
                 onMouseEnter={props.onMouseEnter}
                 onMouseLeave={props.onMouseLeave}

@@ -30,6 +30,7 @@ export const GLOBAL_MODEL_SETTINGS = {
     'override_common': JSONType.Bool().nullable().default_value(false),
     'override_thinking': JSONType.Bool().nullable().default_value(false),
     'override_safety_settings': JSONType.Bool().nullable().default_value(false),
+    'override_gpt5': JSONType.Bool().nullable().default_value(false),
 
     ...MODEL_SETTINGS,
 }

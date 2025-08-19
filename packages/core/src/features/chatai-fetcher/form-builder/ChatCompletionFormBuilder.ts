@@ -8,17 +8,26 @@ class ChatCompletionFormBuilder extends BaseFormBuilder {
 
     override build() {
         const form = this.getBase();
-        
+
         return {
             ...form,
-            thinking_tokens: (
+            thinking_effort: (
                 this.isThinkingEnabled()
-                    ? this.modelConfig.thinking_tokens
+                    ? this.modelConfig.thinking_effort
                     : undefined
             ),
-
-            safety_settings: this.modelConfig.safety_settings,
+            verbosity: (
+                this.isVerbosity()
+                    ? this.modelConfig.verbosity
+                    : undefined
+            )
         }
+    }
+
+    protected isVerbosity() {
+        return (
+            this.modelInfo.supportVerbosity
+        );
     }
 }
 

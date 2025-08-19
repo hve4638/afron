@@ -1,4 +1,4 @@
-import { CheckBoxForm, NumberForm } from '@/components/Forms';
+import { CheckBoxForm, NumberForm } from '@/components/forms';
 import { useEffect } from 'react';
 
 type PropmtVarNumberOptionProps = {

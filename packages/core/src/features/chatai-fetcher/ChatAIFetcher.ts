@@ -55,7 +55,7 @@ class ChatAIFetcher {
                 ? ChatAI.previewRequest
                 : ChatAI.request
         );
-
+        
         const category = this.#getAPICategory(model);
         if (category === 'known_provider') {
             return this.#requestKnownProviderModel({

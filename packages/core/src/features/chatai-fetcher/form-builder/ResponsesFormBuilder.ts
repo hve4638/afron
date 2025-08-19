@@ -12,8 +12,23 @@ class ResponsesFormBuilder extends BaseFormBuilder {
 
         return {
             ...form,
-            thinking_effort,
+            thinking_effort: (
+                this.isThinkingEnabled()
+                    ? this.modelConfig.thinking_effort
+                    : undefined
+            ),
+            verbosity: (
+                this.isVerbosity()
+                    ? this.modelConfig.verbosity
+                    : undefined
+            )
         }
+    }
+
+    protected isVerbosity() {
+        return (
+            this.modelInfo.supportVerbosity
+        );
     }
 }
 

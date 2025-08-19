@@ -1,5 +1,5 @@
-export function dropdownItem(name:string, key:string) {
-    return { name, key };
+export function dropdownItem(name:string, value:string) {
+    return { name, value };
 }
 
 export function initPromptVar(promptVar:PromptVar|undefined|null) {

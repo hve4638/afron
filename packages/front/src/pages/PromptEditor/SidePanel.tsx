@@ -2,9 +2,8 @@ import classNames from 'classnames';
 import { useTranslation } from "react-i18next";
 import styles from './styles.module.scss';
 
-import { Align, Column, Flex, Grid, Row } from "@/components/layout";
+import { Align, Column, Flex, Row } from "@/components/layout";
 import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
-import { CheckBoxForm, DropdownForm } from '@/components/Forms';
 import Button from '@/components/Button';
 
 import { useModal } from '@/hooks/useModal';
@@ -137,7 +136,7 @@ function SidePanel({
                 marginBottom: '4px'
             }}
         >{'프롬프트'}</h2> */}
-        {/* <DropdownForm
+        {/* <DropdownOldForm
             name='요청 형태'
             value={data.inputType}
             items={[

@@ -7,7 +7,7 @@ import { TextInput } from 'components/Input';
 import classNames from 'classnames';
 
 import useModalDisappear from 'hooks/useModalDisappear';
-import { ButtonForm } from '@/components/Forms';
+import { ButtonForm } from '@/components/forms';
 import { ProfileNameLayout } from './layout';
 import { useModal } from '@/hooks/useModal';
 import { ConfirmDialog, DeleteConfirmDialog } from '@/modals/Dialog';

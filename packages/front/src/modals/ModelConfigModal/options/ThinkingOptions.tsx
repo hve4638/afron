@@ -1,5 +1,5 @@
 import Delimiter from '@/components/Delimiter';
-import { CheckBoxForm, NumberForm } from '@/components/Forms';
+import { CheckBoxForm, NumberForm } from '@/components/forms';
 import { OptionsProps } from './types';
 import ModelForm from '@/components/model-ui';
 
@@ -34,15 +34,33 @@ function ThinkingOptions({
                     disabled={disabled}
                 />
             }
-            <ModelForm.ThinkingTokens
-                value={config.thinking_tokens}
-                onChange={(next) => {
-                    config.thinking_tokens = next ?? undefined;
-                    refresh();
-                }}
-                allowEmpty={true}
-                disabled={disabled}
-            />
+            {
+                model.config.supportThinkingBudget
+                && <ModelForm.ThinkingTokens
+                    value={config.thinking_tokens}
+                    onChange={(next) => {
+                        config.thinking_tokens = next ?? undefined;
+                        refresh();
+                    }}
+                    allowEmpty={true}
+                    disabled={disabled}
+                />
+            }
+            {
+                model.config.supportThinkingEffort
+                && <ModelForm.ReasoningEffort
+                    candidates={model.config.supportedThinkingEfforts}
+
+                    value={config.thinking_effort}
+                    onChange={(next) => {
+                        config.thinking_effort = next;
+                        refresh();
+                    }}
+
+                    allowEmpty={true}
+                    disabled={disabled}
+                />
+            }
             {
                 model.config.supportThinkingSummary
                 && <CheckBoxForm

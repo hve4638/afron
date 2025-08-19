@@ -1,21 +1,15 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import FocusLock from 'react-focus-lock';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalBackground, ModalBox, ModalHeader } from '@/components/Modal';
-import { CheckBoxForm, DropdownForm, NumberForm, StringForm } from '@/components/Forms';
 
-import useTrigger from '@/hooks/useTrigger';
-import styles from './styles.module.scss';
-import { Column, Row } from '@/components/layout';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import useHotkey from '@/hooks/useHotkey';
-import { PromptEditorData, PromptInputType } from '@/types';
-import { use } from 'i18next';
-import Delimiter from '@/components/Delimiter';
-import CheckBox from '@/components/CheckBox';
-import ModelForm from '@/components/model-ui';
-import { useModal } from '@/hooks/useModal';
+import useTrigger from '@/hooks/useTrigger';
+
+import { Modal, ModalHeader } from '@/components/Modal';
 import Subdescription from '@/components/ui/Description';
+import { Column, Row } from '@/components/layout';
+import ModelForm from '@/components/model-ui';
+
+import { PromptEditorData } from '@/types';
 
 type SafetySettingConfigModalProps = {
     data: PromptEditorData;

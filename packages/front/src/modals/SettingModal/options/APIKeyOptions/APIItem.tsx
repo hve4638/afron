@@ -1,4 +1,3 @@
-import Dropdown from '@/components/Dropdown';
 import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Row } from '@/components/layout';
 import ProfileEvent from '@/features/profile-event';
@@ -51,19 +50,6 @@ function APIItem({ item, onDelete, onChangeType }: APIItemProps) {
                 <small>({item.memo})</small>
             }
             <Flex />
-            {/* <Dropdown
-                style={{
-                    // fontSize: '0.8em',
-                }}
-                items={[{name:'주', key:'primary'}, {name:'보조', key:'secondary'}]}
-                value={item.type}
-                onChange={(value)=>{
-                    onChangeType(value.key as 'primary'|'secondary');
-                }}
-                onItemNotFound={()=>{
-                    onChangeType('primary');
-                }}
-            /> */}
             <GIconButton
                 className='undraggable clickable'
                 style={{
