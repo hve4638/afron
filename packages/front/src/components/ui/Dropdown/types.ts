@@ -10,16 +10,35 @@ export interface DropdownProps<T> extends CommonProps {
     value: T;
     onChange?: (item: T) => void;
     onItemNotFound?: (firstItem: T | null) => void;
+
+    renderSelectedItem?: (props: SelectedItemRenderProps<T>) => React.ReactNode;
 }
 
 export interface ItemProps<T> extends CommonProps {
-    render?: (props: ItemRenderProps<T>) => React.ReactNode;
+    renderItem?: (props: ItemRenderProps<T>) => React.ReactNode;
+    renderGroup?: (props: GroupRenderProps<T>) => React.ReactNode;
+}
+
+export interface SelectedItemRenderProps<T> {
+    name: string;
+    value: T;
+    
+    parents: Array<DropdownItemList<T>>;
 }
 
 export interface ItemRenderProps<T> {
     name: string;
     value: T;
+    
+    parents: Array<DropdownItemList<T>>;
     selected: boolean;
+}
+
+export interface GroupRenderProps<T> {
+    name: string;
+    
+    parents: Array<DropdownItemList<T>>;
+    focused: boolean;
 }
 
 export type DropdownItem<T> = {

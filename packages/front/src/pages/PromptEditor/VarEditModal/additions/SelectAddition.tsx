@@ -1,28 +1,27 @@
-import classNames from 'classnames';
-import { DropdownOldForm } from '@/components/forms';
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import { TextInput } from 'components/Input';
 import { Align, Flex, Grid, Row } from 'components/layout';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
 
 type PropmtVarSelectOptionProps = {
-    promptVar:PromptVarSelect;
-    onRefresh:()=>void;
+    promptVar: PromptVarSelect;
+    onRefresh: () => void;
 }
 
 function PropmtVarSelectOption({
     promptVar,
     onRefresh
-}:PropmtVarSelectOptionProps) {
+}: PropmtVarSelectOptionProps) {
     const { t } = useTranslation();
-    
-    const options = (promptVar.options ?? []).map((option)=>({
-        name: option.name,
-        key: option.value
-    }));
 
-    useLayoutEffect(()=>{
+    // const options = (promptVar.options ?? []).map((option) => ({
+    //     name: option.name,
+    //     key: option.value
+    // }));
+
+    useLayoutEffect(() => {
         if (!promptVar.options) {
             promptVar.options = [];
             addOption();
@@ -30,7 +29,7 @@ function PropmtVarSelectOption({
     }, [promptVar]);
 
     const addOption = () => {
-        const makeAlphabetIndex = (num:number) => {
+        const makeAlphabetIndex = (num: number) => {
             const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
             if (num < 0) return '';
@@ -49,99 +48,106 @@ function PropmtVarSelectOption({
 
         const name = `선택 ${num}`;
         let baseValue = `select-${num}`;
-        let value:string;
+        let value: string;
         let index = -1;
 
         do {
             value = baseValue + makeAlphabetIndex(index);
             index++;
-        } while (promptVar.options.find((item)=>item.value === value) != undefined);
+        } while (promptVar.options.find((item) => item.value === value) != undefined);
 
         promptVar.options.push({ name, value });
         onRefresh();
     }
 
     return (
-    <>
-        <hr/>
-        <DropdownOldForm
-            name={t('form_editor.default_value_label')}
-            items={options}
-            value={promptVar.default_value ?? ''}
-            onChange={(item)=>{
-                promptVar.default_value = item.key;
-                onRefresh();
-            }}
-            onItemNotFound={()=>{
-                if (options.length > 0) {
-                    promptVar.default_value = options[0].key;
+        <>
+            <hr />
+            <DropdownForm
+                label={t('form_editor.default_value_label')}
+                value={promptVar.default_value ?? ''}
+                onChange={(next) => {
+                    promptVar.default_value = next;
                     onRefresh();
+                }}
+                onItemNotFound={(first) => {
+                    if (first != null) {
+                        promptVar.default_value = first;
+                        onRefresh();
+                    }
+                }}
+            >
+                {
+                    (promptVar.options ?? []).map((option, i) => (
+                        <Dropdown.Item
+                            name={option.name} value={option.value} key={i}
+                        />
+                    ))
                 }
-            }}
-        />
-        <hr/>
-        <Row
-            className='undraggable'
-            rowAlign={Align.SpaceBetween}
-            style={{
-                width: '100%',
-                height: '32px',
-            }}
-        >
-            <div>{t('form_editor.select_config.option_label')}</div>
-            <GoogleFontIcon
-                enableHoverEffect={true}
-                value='add'
+            </DropdownForm>
+            <hr />
+            <Row
+                className='undraggable'
+                rowAlign={Align.SpaceBetween}
                 style={{
-                    width: '32px',
+                    width: '100%',
                     height: '32px',
-                    cursor: 'pointer',
-                    fontSize: '24px'
                 }}
-                onClick={()=>{
-                    addOption();
-                }}
-            />
-        </Row>
-        <div
-            style={{
-                display: 'block',
-                overflowY: 'auto',
-            }}
-        >
-        {
-            promptVar.options != null &&
-            promptVar.options.map((option, index)=>(
-                <SelectOption
-                    key={index}
-                    option={option}
-                    onRefresh={()=>onRefresh()}
-                    onChangeName={(name)=>{
-                        option.name = name;
-                        onRefresh();
+            >
+                <div>{t('form_editor.select_config.option_label')}</div>
+                <GoogleFontIcon
+                    enableHoverEffect={true}
+                    value='add'
+                    style={{
+                        width: '32px',
+                        height: '32px',
+                        cursor: 'pointer',
+                        fontSize: '24px'
                     }}
-                    onChangeValue={(value)=>{
-                        const filtered = (promptVar.options ?? []).filter((item)=>item.value === value);
-                        if (
-                            filtered.length === 0
-                            || (filtered.length === 1 && filtered[0] === option)
-                        ) {
-                            option.value = value;
-                            onRefresh();
-                        }
-                    }}  
-                    onDelete={(option)=>{
-                        const prev = promptVar.options ?? [];
-                        const next = prev.filter((item)=>item !== option)
-
-                        promptVar.options = next;
-                        onRefresh();
+                    onClick={() => {
+                        addOption();
                     }}
                 />
-            ))
-        }
-        </div>
-    </>
+            </Row>
+            <div
+                style={{
+                    display: 'block',
+                    overflowY: 'auto',
+                }}
+            >
+                {
+                    promptVar.options != null &&
+                    promptVar.options.map((option, index) => (
+                        <SelectOption
+                            key={index}
+                            option={option}
+                            onRefresh={() => onRefresh()}
+                            onChangeName={(name) => {
+                                option.name = name;
+                                onRefresh();
+                            }}
+                            onChangeValue={(value) => {
+                                const filtered = (promptVar.options ?? []).filter((item) => item.value === value);
+                                if (
+                                    filtered.length === 0
+                                    || (filtered.length === 1 && filtered[0] === option)
+                                ) {
+                                    option.value = value;
+                                    onRefresh();
+                                }
+                            }}
+                            onDelete={(option) => {
+                                const prev = promptVar.options ?? [];
+                                const next = prev.filter((item) => item !== option)
+
+                                promptVar.options = next;
+                                onRefresh();
+                            }}
+                        />
+                    ))
+                }
+            </div>
+        </>
     );
 }
 
@@ -149,11 +155,11 @@ function PropmtVarSelectOption({
 type PromptVarSelectOption = { name: string; value: string; };
 
 type SelectOptionProps = {
-    option:PromptVarSelectOption;
-    onChangeName:(name:string)=>void;
-    onChangeValue:(value:string)=>void;
-    onRefresh:()=>void;
-    onDelete:(option:PromptVarSelectOption)=>void;
+    option: PromptVarSelectOption;
+    onChangeName: (name: string) => void;
+    onChangeValue: (value: string) => void;
+    onRefresh: () => void;
+    onDelete: (option: PromptVarSelectOption) => void;
 }
 
 function SelectOption({
@@ -162,7 +168,7 @@ function SelectOption({
     onChangeValue,
     onRefresh,
     onDelete,
-}:SelectOptionProps) {
+}: SelectOptionProps) {
     return (
         <Grid
             columns='16px 3em 128px 2.5em 128px 4px 32px'
@@ -173,7 +179,7 @@ function SelectOption({
                 fontSize: '16px',
             }}
         >
-            <span/>
+            <span />
             <span className='center undraggable'>이름</span>
             <TextInput
                 value={option.name}
@@ -196,7 +202,7 @@ function SelectOption({
                     margin: 'auto'
                 }}
             />
-            <div/>
+            <div />
             <GoogleFontIcon
                 enableHoverEffect={true}
                 value='delete'
@@ -206,7 +212,7 @@ function SelectOption({
                     cursor: 'pointer',
                     fontSize: '18px'
                 }}
-                onClick={()=>{
+                onClick={() => {
                     onDelete(option);
                 }}
             />

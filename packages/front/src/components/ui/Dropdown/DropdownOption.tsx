@@ -1,61 +1,70 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import type { DropdownItem, DropdownItemList } from './types';
+import type { DropdownItem, DropdownItemList, GroupRenderProps, ItemRenderProps } from './types';
 
 import styles from './Dropdown.module.scss';
+import { GIcon } from '@/components/GoogleFontIcon';
+import { Align, Row } from '@/components/layout';
 
-interface DropdownItemProps {
-    className?:string;
+interface DropdownItemProps<T> {
+    className?: string;
     style?: React.CSSProperties;
-    item:DropdownItem|DropdownItemList
+    item: DropdownItem<T> | DropdownItemList<T>
+    parents?: Array<DropdownItemList<T>>;
 
     onClick?: () => void;
     onHover?: () => void;
     onHoverLeave?: () => void;
-    onFocus?: (rect:DOMRect|undefined) => void;
+    onFocus?: (rect: DOMRect | undefined) => void;
 
-    renderItem?: (item: DropdownItem|DropdownItemList) => React.ReactNode;
+    renderItem?: (props: ItemRenderProps<T>) => React.ReactNode;
+    renderGroup?: (props: GroupRenderProps<T>) => React.ReactNode;
 }
 
-function DropdownOption({
-    className='',
-    style={},
+function DropdownOption<T>({
+    className = '',
+    style = {},
     item,
-    onFocus = (rect)=>{},
-    onClick = ()=>{},
-    renderItem = (item)=>item.name,
-}:DropdownItemProps) { 
-    const optionRef:React.LegacyRef<HTMLDivElement> = useRef(null);
-    const [hover, setHover] = useState(false);
-    const name = useMemo(()=>renderItem(item), [item]);
+    parents = [],
+    onFocus = (rect) => { },
+    onClick = () => { },
 
-    useEffect(()=>{
-        let to:number;
+    renderItem = (item) => item.name,
+    renderGroup = (item) => item.name,
+}: DropdownItemProps<T>) {
+    const optionRef: React.LegacyRef<HTMLDivElement> = useRef(null);
+    const [hover, setHover] = useState(false);
+
+    useEffect(() => {
+        let to: number;
         if (hover) {
-            to = window.setTimeout(()=>{
+            to = window.setTimeout(() => {
                 const rect = optionRef.current?.getBoundingClientRect();
-                
+
                 onFocus(rect);
             }, 45);
         }
 
-        return ()=>{
+        return () => {
             window.clearTimeout(to);
         }
     }, [hover]);
 
     return (
-        <div
-            ref = {optionRef}
+        <Row
+            ref={optionRef}
             className={
                 classNames(
                     styles['dropdown-item'],
+                    { [styles['dropdown-array']]: 'list' in item },
                     className,
-                    { [styles['dropdown-array']] : 'list' in item },
                 )
             }
-            tabIndex={0}        
-            style={style}
+            style={{
+                ...style,
+                height: '1em'
+            }}
+            tabIndex={0}
             onMouseEnter={(e) => {
                 setHover(true);
             }}
@@ -63,11 +72,27 @@ function DropdownOption({
                 setHover(false);
             }}
             onClick={(e) => {
-                onClick();
+                if (!('list' in item)) {
+                    onClick();
+                }
             }}
+            columnAlign={Align.Center}
         >
-            {name}
-        </div>
+            {
+                item.isLeaf
+                    ? renderItem({
+                        name: item.name,
+                        value: item.value,
+                        parents: parents,
+                        selected: false,
+                    })
+                    : renderGroup({
+                        name: item.name,
+                        parents: parents,
+                        focused: false,
+                    })
+            }
+        </Row>
     )
 }
 

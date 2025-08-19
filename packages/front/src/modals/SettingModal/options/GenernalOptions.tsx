@@ -5,7 +5,7 @@ import { useConfigStore } from '@/stores';
 
 import SliderForm from '@/components/forms/SliderForm';
 import { Column } from '@/components/layout';
-import { CheckBoxForm, DropdownOldForm, NumberForm } from '@/components/forms';
+import { CheckBoxForm, DropdownForm, NumberForm } from '@/components/forms';
 
 import { remapDecimal } from '@/utils/math';
 import styles from '../styles.module.scss';
@@ -34,40 +34,19 @@ function GeneralOptions() {
                 value={config.font_size}
                 onChange={(x) => (x != null && config.update.font_size(x))}
             />
-            {/* <DropdownOldForm
-                name='화면 테마'
-                items={
-                    [
-                        { name: '시스템 설정', key: ThemeModes.SYSTEM_DEFAULT },
-                        { name: '밝은 테마', key: ThemeModes.LIGHT },
-                        { name: '어두운 테마', key: ThemeModes.DARK },
-                    ]
-                }
-                value={config.theme_mode}
-                onChange={(item)=>{
-                    config.update.theme_mode(item.key as ThemeModes);
-                }}
-                onItemNotFound={()=>{
-                    config.update.theme_mode(ThemeModes.SYSTEM_DEFAULT);
-                }}
-            /> */}
-            <DropdownOldForm
-                name='레이아웃 설정'
-                items={
-                    [
-                        { name: '가로', key: LayoutModes.HORIZONTAL },
-                        { name: '세로', key: LayoutModes.VERTICAL },
-                    ]
-                }
+            <DropdownForm
+                label='레이아웃 설정'
                 value={config.layout_mode}
-                onChange={(item) => {
-                    config.update.layout_mode(item.key as LayoutModes);
+                onChange={(next) => {
+                    config.update.layout_mode(next);
                 }}
                 onItemNotFound={() => {
                     config.update.layout_mode(LayoutModes.HORIZONTAL);
                 }}
-            />
-
+            >
+                <DropdownForm.Item name='가로' value={LayoutModes.HORIZONTAL} />
+                <DropdownForm.Item name='세로' value={LayoutModes.VERTICAL} />
+            </DropdownForm>
 
             <b style={{ fontSize: '0.975em', marginTop: '1em' }}>입력창</b>
             <Delimiter />

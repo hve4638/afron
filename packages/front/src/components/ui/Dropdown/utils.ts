@@ -2,7 +2,10 @@ import React from 'react';
 import { DropdownItem, DropdownItemList } from "./types";
 
 const getItemType = (node: React.ReactNode) => {
-    if (
+    if (Array.isArray(node)) {
+        return 'array';
+    }
+    else if (
         !React.isValidElement(node)
         || !('name' in node.props)
     ) {
@@ -19,7 +22,10 @@ const getItemType = (node: React.ReactNode) => {
 }
 export const convertDropdownItem = <T,>(item: React.ReactNode, i: number) => {
     const itemType = getItemType(item);
-    if (itemType === 'item') {
+    if (itemType === 'array') {
+        return (item as Array<React.ReactNode>).map((item, i) => convertDropdownItem(item, i)) as Array<DropdownItemList<T>>;
+    }
+    else if (itemType === 'item') {
         const { name, value } = (item as any).props;
         return {
             isLeaf: true,

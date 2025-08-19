@@ -1,8 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import FocusLock from 'react-focus-lock';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalBackground, ModalBox, ModalHeader } from '@/components/Modal';
-import { ButtonForm, CheckBoxForm, DropdownOldForm, NumberForm, StringForm } from '@/components/forms';
+import { Modal, ModalHeader } from '@/components/Modal';
+import { ButtonForm, StringForm } from '@/components/forms';
 
 import useTrigger from '@/hooks/useTrigger';
 import styles from './styles.module.scss';
@@ -17,6 +15,7 @@ import ModelForm from '@/components/model-ui';
 import { useModal } from '@/hooks/useModal';
 import SafetySettingConfigModal from './SafetySettingConfigModal';
 import Subdescription from '@/components/ui/Description';
+import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
 
 type PromptOnlyConfigModalProps = {
     data: PromptEditorData;
@@ -96,19 +95,17 @@ function PromptOnlyConfigModal({
                 <div style={{ height: '0.5em' }} />
                 <b className='undraggable'>입력</b>
                 <Delimiter />
-                <DropdownOldForm
-                    name='입력 레이아웃'
+                <DropdownForm
+                    label='입력 레이아웃'
                     value={data.config.inputType}
-                    onChange={(item) => {
-                        console.log(item);
-                        data.config.inputType = item.key as PromptInputType;
+                    onChange={(next) => {
+                        data.config.inputType = next;
                         refresh();
                     }}
-                    items={[
-                        { name: '일반', key: 'normal' },
-                        { name: '채팅', key: 'chat' },
-                    ]}
-                />
+                >
+                    <Dropdown.Item name='일반' value='normal'/>
+                    <Dropdown.Item name='채팅' value='chat'/>
+                </DropdownForm>
                 <div style={{ height: '0.5em' }} />
                 <b className='undraggable'>모델</b>
                 <Delimiter />

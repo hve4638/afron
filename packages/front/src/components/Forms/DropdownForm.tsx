@@ -57,7 +57,7 @@ function DropdownForm<T,>({
             <Dropdown
                 className={classNames(dropdownProps.className ?? '')}
                 style={{
-                    minWidth: '5em',
+                    minWidth: '2em',
                     height: '100%',
                     fontSize: '0.8em',
                     ...(dropdownProps.style ?? {}),
@@ -81,6 +81,9 @@ function DropdownForm<T,>({
         </Row>
     );
 }
+
+DropdownForm.Item = Dropdown.Item;
+DropdownForm.Group = Dropdown.Group;
 
 export { default as Dropdown } from '@/components/ui/Dropdown';
 export default DropdownForm;

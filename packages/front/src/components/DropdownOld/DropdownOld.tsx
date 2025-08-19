@@ -149,6 +149,7 @@ function DropdownOld({
                     }
                 }}
             >
+                'DEPRECATED'
                 {currentName}
                 <GoogleFontIcon value='arrow_drop_down'/>
             </div>

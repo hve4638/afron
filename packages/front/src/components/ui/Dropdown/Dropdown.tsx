@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useRef, useMemo, useCallback, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 import { GIcon } from '@/components/GoogleFontIcon';
 
-import { DropdownItem, DropdownProps } from './types';
+import { DropdownItem, DropdownItemList, DropdownProps } from './types';
 import Group from './Group';
 import Item from './Item';
 import useDropdown from './Dropdown.hook';
@@ -14,7 +13,7 @@ import DropdownOption from './DropdownOption';
 
 import styles from './Dropdown.module.scss';
 
-const Dropdown = <T,>({
+function Dropdown<T>({
     className = '',
     style = {},
 
@@ -24,14 +23,18 @@ const Dropdown = <T,>({
     value,
     onChange = () => { },
     onItemNotFound = () => { },
+
+    renderSelectedItem = ({ name }) => <>{name}</>,
     children,
-}: DropdownProps<T>) => {
+}: DropdownProps<T>) {
     const {
         state: {
             options,
             selectedItem,
+            selectedItemList,
             isOpen,
             layer2ItemsCache,
+            focusedLayer1Item,
             focusedLayer1ItemRect,
         },
         setState,
@@ -50,6 +53,8 @@ const Dropdown = <T,>({
         value,
         onChange,
     });
+
+    const Renderer = renderSelectedItem;
 
     return (
         <div
@@ -70,7 +75,14 @@ const Dropdown = <T,>({
                     }
                 }}
             >
-                {selectedItem?.name}
+                {
+                    selectedItem != null
+                    && <Renderer
+                        name={selectedItem.name ?? ''}
+                        value={selectedItem.value}
+                        parents={selectedItemList}
+                    />
+                }
                 <GIcon value='arrow_drop_down' />
             </div>
             {
@@ -96,7 +108,8 @@ const Dropdown = <T,>({
                                     style={itemProps.style}
                                     item={option}
 
-                                    // renderItem={renderLayer1Item}
+                                    renderItem={itemProps.renderItem}
+                                    renderGroup={itemProps.renderGroup}
                                     onFocus={(rect) => {
                                         focusLayer1(option, rect);
                                     }}
@@ -133,8 +146,11 @@ const Dropdown = <T,>({
                                     className={classNames(itemProps.className)}
                                     style={itemProps.style}
                                     item={option}
-                                    
-                                    // renderItem={renderLayer2Item}
+                                    parents={[focusedLayer1Item as DropdownItemList<T>]}
+
+                                    renderItem={itemProps.renderItem}
+                                    renderGroup={itemProps.renderGroup}
+
                                     onClick={() => {
                                         clickItem(option as DropdownItem<T>);
                                     }}

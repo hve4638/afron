@@ -2,9 +2,8 @@ import classNames from 'classnames';
 import { useTranslation } from "react-i18next";
 import styles from './styles.module.scss';
 
-import { Align, Column, Flex, Grid, Row } from "@/components/layout";
+import { Align, Column, Flex, Row } from "@/components/layout";
 import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
-import { CheckBoxForm, DropdownOldForm } from '@/components/forms';
 import Button from '@/components/Button';
 
 import { useModal } from '@/hooks/useModal';

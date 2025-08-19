@@ -21,7 +21,11 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
 
         const result = target.flatMap((item, i) => {
             const result = convertDropdownItem<T>(item, i);
-            return result ? [result] : [];
+            return (
+                result == null ? []
+                    : Array.isArray(result) ? result
+                        : [result]
+            );
         });
 
         return result;
@@ -42,12 +46,15 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
         else if ('list' in item) return item.list;
         else return null;
     }, [focusedLayer1ItemKey])
+
+    const [focusedLayer1Item, setFocusedLayer1Item] = useState<DropdownItem<T> | DropdownItemList<T> | null>();
     const [focusedLayer1ItemRect, setFocusedLayer1ItemRect] = useState<{
         top: number; left: number;
         width: number; height: number;
     }>();
 
     const [selectedItem, setSelectedItem] = useState<DropdownItem<T> | null>(null);
+    const [selectedItemList, setSelectedItemList] = useState<DropdownItemList<T>[]>([]);
 
     useLayoutEffect(() => {
         // 현재 선택된 아이템 지정
@@ -58,6 +65,7 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
                 firstItem ??= option.value;
                 if (option.value === value) {
                     setSelectedItem(option);
+                    setSelectedItemList([]);
                     return;
                 }
             }
@@ -67,6 +75,7 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
 
                     if (subitem.value === value) {
                         setSelectedItem(subitem);
+                        setSelectedItemList([option]);
                         return;
                     }
                 }
@@ -75,6 +84,7 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
 
         onItemNotFound(firstItem);
         setSelectedItem(null);
+        setSelectedItemList([]);
     }, [options, value, onItemNotFound]);
 
     useEffect(() => {
@@ -109,6 +119,7 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
             height: 0,
         });
         setFocusedLayer1ItemKey(item.key);
+        setFocusedLayer1Item(item)
     }
 
     const clickItem = (item: DropdownItem<T>) => {
@@ -122,8 +133,10 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
         state: {
             options,
             selectedItem,
+            selectedItemList,
             isOpen,
             layer2ItemsCache,
+            focusedLayer1Item,
             focusedLayer1ItemRect,
         },
         setState: {

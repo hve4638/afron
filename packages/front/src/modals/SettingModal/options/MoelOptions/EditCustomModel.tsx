@@ -1,5 +1,4 @@
-import DivButton from '@/components/DivButton';
-import { ButtonForm, CheckBoxForm, DropdownOldForm, StringForm, StringLongForm } from '@/components/forms';
+import { ButtonForm, StringForm, StringLongForm } from '@/components/forms';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
 import { useModal } from '@/hooks/useModal';
@@ -9,6 +8,7 @@ import SelectAuthKeyModal from './SelectAuthKeyModal';
 import useHotkey from '@/hooks/useHotkey';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { GIconButton } from '@/components/GoogleFontIcon';
+import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
 
 interface EditCustomModelModalProps {
     value?: CustomModelCreate;
@@ -99,19 +99,20 @@ function EditCustomModelModal({
                 instantChange={true}
             />
             <div style={{ height: '0.75em' }} />
-            <DropdownOldForm
-                name='요청 형식'
+            <DropdownForm
+                label='요청 형식'
                 value={requestFormat}
-                onChange={(value) => setRequestFormat(value.key as 'chat_completions')}
-                onItemNotFound={() => {
-                    setRequestFormat('chat_completions');
+                onChange={(next) => setRequestFormat(next as 'chat_completions')}
+                onItemNotFound={(first) => {
+                    if (first != null) {
+                        setRequestFormat('chat_completions');
+                    }
                 }}
-                items={[
-                    { key: 'chat_completions', name: 'Chat Completions' },
-                    { key: 'anthropic_claude', name: 'Anthropic Claude' },
-                    { key: 'generative_language', name: 'Google Generative Language' },
-                ]}
-            />
+            >
+                <Dropdown.Item name='Chat Completions' value='chat_completions' />
+                <Dropdown.Item name='Anthropic Claude' value='anthropic_claude' />
+                <Dropdown.Item name='Google Generative Language' value='generative_language' />
+            </DropdownForm>
             <div style={{ height: '0.25em' }} />
             {/* <CheckBoxForm
                 name='추론 모델 여부'
