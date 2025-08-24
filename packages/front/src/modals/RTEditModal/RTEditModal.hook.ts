@@ -14,6 +14,7 @@ import ProfileEvent from '@/features/profile-event';
 import { emitEvent } from '@/hooks/useEvent';
 import { t } from 'i18next';
 import NewRTModal from '../NewRTModal';
+import { RTExportPreviewModal } from '../RTExportModal';
 
 type useRTEditModalProps = {
     isFocused: boolean;
@@ -32,7 +33,7 @@ function useRTEditModal({
 
     const nextDirId = () => `__dir_${nextDirIdRef.current++}`
 
-    const changeTree = async (nodes: ITreeNode<string>[]) => {
+    const relocateTree = async (nodes: ITreeNode<string>[]) => {
         setTree(nodes);
 
         const next: RTMetadataTree = nodes.map((node) => {
@@ -63,7 +64,7 @@ function useRTEditModal({
     }
 
     const addDirectoryNode = async () => {
-        changeTree([
+        relocateTree([
             ...tree,
             {
                 name: t('rt.new_directory'),
@@ -102,8 +103,20 @@ function useRTEditModal({
                 await ProfileEvent.rt.rename(value, nameTrimmed);
             }
 
-            changeTree(next);
+            relocateTree(next);
         }
+    }
+
+    const confirmNodeDeletion = (name: string, value: string) => {
+        modal.open(DeleteConfirmDialog, {
+            onDelete: async () => {
+                deleteNode(value);
+                return true;
+            },
+            onCancel: async () => {
+                return true;
+            },
+        });
     }
 
     const deleteNode = async (value: string) => {
@@ -125,22 +138,10 @@ function useRTEditModal({
 
         await Promise.all(promises);
 
-        changeTree(next);
+        relocateTree(next);
     }
 
-    const confirmNodeDeletion = (name: string, value: string) => {
-        modal.open(DeleteConfirmDialog, {
-            onDelete: async () => {
-                deleteNode(value);
-                return true;
-            },
-            onCancel: async () => {
-                return true;
-            },
-        });
-    }
-
-    const openNewRTModal = () => {
+    const openRTCreateModal = () => {
         modal.open(NewRTModal, {
             onAddRT: (rtId: string, mode: RTMode) => {
                 navigatePromptEditor(rtId);
@@ -150,6 +151,12 @@ function useRTEditModal({
 
     const navigatePromptEditor = (rtId: string) => {
         navigate(`/workflow/${rtId}/prompt/default`);
+    }
+    
+    const openRTExportModal = (rtId: string) => {
+        modal.open(RTExportPreviewModal, {
+            rtId,
+        });
     }
 
     useEffect(() => {
@@ -187,7 +194,6 @@ function useRTEditModal({
     return {
         state: {
             tree,
-
             disappear,
         },
         action: {
@@ -197,14 +203,15 @@ function useRTEditModal({
             close,
 
             tree: {
-                relocate: changeTree,
+                relocate: relocateTree,
 
                 addDirectoryNode,
                 renameNode,
             },
 
             confirmNodeDeletion,
-            openNewRTModal,
+            openRTCreateModal,
+            openRTExportModal,
         }
     }
 }

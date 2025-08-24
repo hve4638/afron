@@ -1,4 +1,3 @@
-import { LegacyRef, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Flex, Row } from '@/components/layout';
 import { NumberInput } from '@/components/Input';
 import classNames from 'classnames';

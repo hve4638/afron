@@ -13,6 +13,8 @@ interface TextInputProps {
 
     className?: string;
     style?: React.CSSProperties;
+
+    disabled?: boolean;
 }
 
 const TextInput = forwardRef(({
@@ -25,6 +27,7 @@ const TextInput = forwardRef(({
     style = {},
 
     placeholder = '',
+    disabled = false,
 }: TextInputProps, ref: React.Ref<HTMLInputElement>) => {
     const composingRef = useRef(false);
     const [current, setCurrent] = useState<string>(value);
@@ -34,6 +37,7 @@ const TextInput = forwardRef(({
     }, [value]);
 
     const changeValue = (value: string) => {
+        if (disabled) return;
         setCurrent(value);
 
         if (instantChange) {
@@ -45,7 +49,7 @@ const TextInput = forwardRef(({
     };
     const commitValue = () => {
         if (current === value) return;
-        
+
         onChange(current);
 
         if (!instantChange) {
@@ -61,12 +65,16 @@ const TextInput = forwardRef(({
             className={
                 classNames(
                     styles['text-input'],
-                    { [styles['warn']]: warn },
+                    {
+                        [styles['warn']]: warn,
+                        'dimmed-color': disabled,
+                    },
                     className,
                 )
             }
             style={{
-                ...style
+                ...style,
+                cursor: disabled ? 'default' : 'text',
             }}
             placeholder={placeholder}
 

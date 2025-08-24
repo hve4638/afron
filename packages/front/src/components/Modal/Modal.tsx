@@ -56,7 +56,6 @@ function Modal({
             >
                 <ModalBackground
                     disappear={disappear}
-                    // enableRoundedBackground={enableRoundedBackground}
                     {...backgroundProps}
                 >
                     <ModalBox
@@ -64,7 +63,6 @@ function Modal({
                         style={{
                             minHeight: '0',
                             maxHeight: '90%',
-                            // overflowY: 'auto',
 
                             display: 'grid',
                             gridTemplateRows: hasHeader ? 'auto 1fr' : '1fr',
@@ -79,8 +77,6 @@ function Modal({
                                 display: 'block',
                                 padding: '0.25em 0.25em 0.25em 0.15em',
 
-                                // height: '100px',
-                                // maxHeight: '90%',
                                 overflowX: 'hidden',
                                 overflowY: 'auto',
                             }}

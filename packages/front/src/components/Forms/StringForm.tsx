@@ -9,7 +9,6 @@ import styles from './styles.module.scss';
 interface StringFormProps {
     name: string;
     value: string;
-    warning?: string;
     onChange: (x: string) => void;
     instantChange?: boolean;
 
@@ -17,8 +16,9 @@ interface StringFormProps {
     style?: React.CSSProperties;
     width?: string;
 
-    info?: string;
     warn?: string;
+
+    disabled?: boolean;
 }
 
 function StringForm({
@@ -32,8 +32,9 @@ function StringForm({
     className = '',
     style = {},
     width,
+    disabled = false,
 }: StringFormProps) {
-    const inputRef = useRef(null);
+    const inputRef = useRef(null)
 
     return (
         <Column
@@ -42,8 +43,6 @@ function StringForm({
             style={{
                 ...style,
                 width: '100%',
-                // marginTop: '0.5em',
-                // marginBottom: (warn != null) ? '0em' : '0.5em',
             }}
         >
             <Row
@@ -65,6 +64,7 @@ function StringForm({
                     onChange={onChange}
                     value={value}
                     instantChange={instantChange}
+                    disabled={disabled}
                 />
             </Row>
             {

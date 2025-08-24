@@ -1,3 +1,1 @@
-import RTExportModal from './RTExportModal';
-
-export default RTExportModal;
+export { default as RTExportPreviewModal } from './RTExportPreviewModal';

@@ -26,7 +26,8 @@ function RTEditModal({
             tree: treeAction,
 
             confirmNodeDeletion,
-            openNewRTModal,
+            openRTCreateModal,
+            openRTExportModal,
         },
         state: {
             tree,
@@ -66,9 +67,7 @@ function RTEditModal({
                         }}
                         value='create_new_folder'
                         hoverEffect='square'
-                        onClick={() => {
-                            treeAction.addDirectoryNode();
-                        }}
+                        onClick={() => treeAction.addDirectoryNode()}
                     />
                 </Row>
                 <div />
@@ -81,18 +80,10 @@ function RTEditModal({
                             <LeafNode
                                 name={name}
                                 value={value}
-                                onRename={(renamed) => {
-                                    treeAction.renameNode(value, renamed);
-                                }}
-                                onDelete={() => {
-                                    confirmNodeDeletion(name, value);
-                                }}
-                                onEdit={() => {
-                                    navigatePromptEditor(value);
-                                }}
-                                onExport={() => {
-                                    console.log('export', value);
-                                }}
+                                onRename={(renamed) => treeAction.renameNode(value, renamed)}
+                                onDelete={() => confirmNodeDeletion(name, value)}
+                                onEdit={() => navigatePromptEditor(value)}
+                                onExport={() => openRTExportModal(value)}
                             />
                         );
                     }}
@@ -136,7 +127,7 @@ function RTEditModal({
                 >
                     <Button
                         onClick={()=>{
-                            
+                            // openRTExportModal();
                             close();
                         }}
                         style={{
@@ -146,7 +137,7 @@ function RTEditModal({
                     >{t('rt.rt_load')}</Button>
                     <Button
                         onClick={() => {
-                            openNewRTModal();
+                            openRTCreateModal();
                             close();
                         }}
                         style={{
