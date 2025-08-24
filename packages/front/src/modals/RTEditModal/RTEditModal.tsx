@@ -1,25 +1,13 @@
-import { Children, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useTranslation } from 'react-i18next';
-
 import Button from '@/components/Button';
 import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
-import { ITreeDirectoryNode, ITreeLeafNode, ITreeNode } from '@/components/TreeView/types';
 import { EditableText } from '@/components/EditableText';
 import TreeView from '@/components/TreeView';
 
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
-import { useModal } from '@/hooks/useModal';
-
-import { DeleteConfirmDialog } from '@/modals/Dialog';
-import NewRTModal from '@/modals/NewRTModal';
-
 import { LeafNode } from './nodes';
-import ProfileEvent from '@/features/profile-event';
-import { emitEvent } from '@/hooks/useEvent';
+import useRTEditModal from './RTEditModal.hook';
+import { t } from 'i18next';
 
 type RTEditModalProps = {
     isFocused: boolean;
@@ -30,142 +18,24 @@ function RTEditModal({
     isFocused,
     onClose
 }: RTEditModalProps) {
-    const navigate = useNavigate();
-    const { t } = useTranslation();
-    const modal = useModal();
-    const [disappear, close] = useModalDisappear(onClose);
-    const nextDirIdRef = useRef<number>(0);
+    const {
+        action: {
+            navigatePromptEditor,
+            close,
 
-    const [tree, setTree] = useState<ITreeNode<string>[]>([]);
+            tree: treeAction,
 
-    const nextDirId = () => `__dir_${nextDirIdRef.current++}`
-
-    const changeTree = async (nodes: ITreeNode<string>[]) => {
-        setTree(nodes);
-
-        const next: RTMetadataTree = nodes.map((node) => {
-            if (node.type === 'directory') {
-                return {
-                    type: 'directory',
-                    name: node.name,
-                    children: node.children.map(
-                        (child) => ({
-                            type: 'node',
-                            name: child.name,
-                            id: child.value,
-                        } satisfies RTMetadataNode)
-                    ),
-                } satisfies RTMetadataDirectory;
-            }
-            else {
-                return {
-                    type: 'node',
-                    name: node.name,
-                    id: node.value,
-                } satisfies RTMetadataNode;
-            }
-        })
-
-        await ProfileEvent.rt.updateTree(next);
-        emitEvent('refresh_rt_tree');
-    }
-
-    const renameNode = async (value: string, newName: string) => {
-        const nameTrimmed = newName.trim();
-        if (nameTrimmed.length === 0) {
-            return;
+            confirmNodeDeletion,
+            openNewRTModal,
+        },
+        state: {
+            tree,
+            disappear,
         }
-
-        const findNode: (nodes: ITreeNode<string>[], value: string) => ITreeNode<string> | null = (nodes, value) => {
-            for (const node of nodes) {
-                if (node.value === value) {
-                    return node;
-                }
-                if (node.type === 'directory') {
-                    const found = findNode(node.children, value);
-                    if (found) return found;
-                }
-            }
-
-            return null;
-        }
-
-        const node = findNode(tree, value);
-        if (node) {
-            const next = [...tree];
-            node.name = nameTrimmed;
-            if (node.type === 'node') {
-                await ProfileEvent.rt.rename(value, nameTrimmed);
-            }
-
-            changeTree(next);
-        }
-    }
-
-    const deleteNode = async (value: string) => {
-        const promises: Promise<void>[] = [];
-        const next = tree.flatMap((node) => {
-            if (node.value !== value) return [node];
-            else {
-                if (node.type === 'directory') {
-                    return node.children;
-                }
-                else {
-                    promises.push(
-                        ProfileEvent.rt.remove(node.value)
-                    );
-                    return [];
-                }
-            }
-        });
-
-        await Promise.all(promises);
-
-        changeTree(next);
-    }
-
-    const openDeleteNodeDialog = (name: string, value: string) => {
-        modal.open(DeleteConfirmDialog, {
-            onDelete: async () => {
-                deleteNode(value);
-                return true;
-            },
-            onCancel: async () => {
-                return true;
-            },
-        });
-    }
-
-    useEffect(() => {
-        ProfileEvent.rt.getTree()
-            .then((tree) => {
-                const tree2 = tree.map((node) => {
-                    if (node.type === 'directory') {
-                        return {
-                            name: node.name,
-                            value: nextDirId(),
-                            type: 'directory',
-                            children: node.children.map((child) => ({
-                                type: 'node',
-                                name: child.name,
-                                value: child.id,
-                            })),
-                        } as ITreeDirectoryNode<string>;
-                    }
-
-                    return {
-                        type: 'node',
-                        name: node.name,
-                        value: node.id,
-                    } as ITreeLeafNode<string>;
-                });
-                setTree(tree2);
-            });
-    }, []);
-
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
+    } = useRTEditModal({
+        isFocused,
+        onClose,
+    });
 
     return (
         <Modal
@@ -197,22 +67,14 @@ function RTEditModal({
                         value='create_new_folder'
                         hoverEffect='square'
                         onClick={() => {
-                            changeTree([
-                                ...tree,
-                                {
-                                    name: t('rt.new_directory'),
-                                    type: 'directory',
-                                    value: nextDirId(),
-                                    children: [],
-                                } satisfies ITreeDirectoryNode<string>,
-                            ]);
+                            treeAction.addDirectoryNode();
                         }}
                     />
                 </Row>
                 <div />
-                <TreeView
+                <TreeView<string>
                     tree={tree}
-                    onChange={(next) => changeTree(next)}
+                    onChange={(next) => treeAction.relocate(next)}
                     relocatable={true}
                     renderLeafNode={({ name, value }) => {
                         return (
@@ -220,13 +82,13 @@ function RTEditModal({
                                 name={name}
                                 value={value}
                                 onRename={(renamed) => {
-                                    renameNode(value, renamed);
+                                    treeAction.renameNode(value, renamed);
                                 }}
                                 onDelete={() => {
-                                    openDeleteNodeDialog(name, value);
+                                    confirmNodeDeletion(name, value);
                                 }}
                                 onEdit={() => {
-                                    navigate(`/workflow/${value}/prompt/default`);
+                                    navigatePromptEditor(value);
                                 }}
                                 onExport={() => {
                                     console.log('export', value);
@@ -249,13 +111,13 @@ function RTEditModal({
                                     <EditableText
                                         value={name}
                                         onChange={(renamed) => {
-                                            renameNode(value, renamed);
+                                            treeAction.renameNode(value, renamed);
                                         }}
                                     />
                                 </Flex>
                                 <DeleteButton
                                     onClick={(e) => {
-                                        openDeleteNodeDialog(name, value);
+                                        confirmNodeDeletion(name, value);
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}
@@ -273,20 +135,6 @@ function RTEditModal({
                     }}
                 >
                     <Button
-                        onClick={() => {
-                            modal.open(NewRTModal, {
-                                onAddRT: (rtId: string, mode: RTMode) => {
-                                    navigate(`/workflow/${rtId}/prompt/default`);
-                                }
-                            });
-                            close();
-                        }}
-                        style={{
-                            minWidth: '80px',
-                            height: '100%'
-                        }}
-                    >{t('rt.rt_create')}</Button>
-                    {/* <Button
                         onClick={()=>{
                             
                             close();
@@ -295,27 +143,20 @@ function RTEditModal({
                             minWidth: '80px',
                             height: '100%'
                         }}
-                    >{t('rt.rt_load')}</Button> */}
+                    >{t('rt.rt_load')}</Button>
+                    <Button
+                        onClick={() => {
+                            openNewRTModal();
+                            close();
+                        }}
+                        style={{
+                            minWidth: '80px',
+                            height: '100%'
+                        }}
+                    >{t('rt.rt_create')}</Button>
                 </Row>
             </Grid>
         </Modal>
-    );
-}
-
-function EditButton({ onClick }: {
-    onClick?: (e: React.MouseEvent<HTMLLabelElement, MouseEvent> | React.KeyboardEvent<HTMLLabelElement>) => void;
-}) {
-    return (
-        <GIconButton
-            value='edit'
-            style={{
-                fontSize: '22px',
-                width: '22px',
-                height: '22px',
-            }}
-            hoverEffect='square'
-            onClick={onClick}
-        />
     );
 }
 
