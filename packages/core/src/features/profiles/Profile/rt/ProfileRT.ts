@@ -4,14 +4,14 @@ import type IProfileRT from './IProfileRT';
 import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
 
 class ProfileRT implements IProfileRT {
-    constructor(private storage:IACSubStorage, private rtId:string) {
-        
+    constructor(private storage: IACSubStorage, private rtId: string) {
+
     }
 
     private async accessMetadata() {
         return await this.storage.accessAsJSON(`${this.rtId}:index.json`);
     }
-    private async accessPrompt(promptId:string) {
+    private async accessPrompt(promptId: string) {
         return await this.storage.accessAsJSON(`${this.rtId}:prompts:${promptId}`);
     }
     private async accessForm() {
@@ -21,14 +21,14 @@ class ProfileRT implements IProfileRT {
         return await this.storage.accessAsJSON(`${this.rtId}:node.json`);
     }
 
-    async getForms():Promise<PromptVar[]> {
+    async getForms(): Promise<PromptVar[]> {
         const indexAC = await this.accessMetadata();
         const formAC = await this.accessForm();
 
-        const formIds:string[] = indexAC.getOne('forms') ?? [];
-        return formIds.map((formId)=>{
-            const form:RTForm = formAC.getOne(formId);
-            
+        const formIds: string[] = indexAC.getOne('forms') ?? [];
+        return formIds.map((formId) => {
+            const form: RTForm = formAC.getOne(formId);
+
             const promptVar = RTFormParser.toPromptVar(form);
             // @TODO 필요한지 확인
             promptVar.id = formId;
@@ -36,132 +36,138 @@ class ProfileRT implements IProfileRT {
         });
     }
 
-    // node
-    async getNodes():Promise<Record<string, any>> {
+    async getNodes(): Promise<Record<string, any>> {
         const flowAC = await this.accessNode();
         const nodes = flowAC.getAll();
 
         return nodes;
     }
 
-    async addNode(node:string):Promise<number> {
+    async addNode(node: string): Promise<number> {
         const flowAC = await this.accessNode();
         const nodes = flowAC.getAll() ?? {};
 
         let nextId = 0;
-        do { 
+        do {
             nextId++;
-        } while(nextId in nodes);
+        } while (nextId in nodes);
         const newNode = {
-            id : nextId,
-            node : node,
-            option : {},
-            forms : [],
-            link_to : {},
-            addition : {
-                x : 0,
-                y : 0,
+            id: nextId,
+            node: node,
+            option: {},
+            forms: [],
+            link_to: {},
+            addition: {
+                x: 0,
+                y: 0,
             },
         }
         try {
-            flowAC.set({ [nextId] : newNode });
+            flowAC.set({ [nextId]: newNode });
             return nextId;
         }
-        catch(e) {
+        catch (e) {
             console.error("Failed to add node:", e);
             return -1;
         }
     }
-    async removeNode(nodeId:number):Promise<boolean> {
+    async removeNode(nodeId: number): Promise<boolean> {
+        /// @TODO 구현 필요
         throw new Error("Not implemented yet");
     }
-    async updateNodeOption(nodeId:number, option:Record<string, any>):Promise<boolean> {
+    async updateNodeOption(nodeId: number, option: Record<string, any>): Promise<boolean> {
         const flowAC = await this.accessNode();
         const node = flowAC.getOne(`${nodeId}`);
         if (!node) {
             return false;
         }
         flowAC.set({
-            [nodeId] : {
-                option : option
+            [nodeId]: {
+                option: option
             }
         });
         return true;
     }
-    async setEntrypoint(nodeId:number):Promise<void> {
+    async setEntrypoint(nodeId: number): Promise<void> {
         const metadataAC = await this.accessMetadata();
         const flowAC = await this.accessNode();
         const node = flowAC.getOne(`${nodeId}`);
         if (!node) {
             throw new Error(`Node '${nodeId}' not found`);
         }
-        
+
         metadataAC.set({
-            entrypoint_node : nodeId,
+            entrypoint_node: nodeId,
         });
     }
 
-    async connectNode(nodeFrom:RTNodeEdge, nodeTo:RTNodeEdge):Promise<boolean> {
+    async connectNode(nodeFrom: RTNodeEdge, nodeTo: RTNodeEdge): Promise<boolean> {
         const flowAC = await this.accessNode();
-        const linkTo:Record<string, { node_id:number, input:string }[]> = flowAC.getOne(`${nodeFrom.nodeId}.link_to`) ?? {};
-        
+        const linkTo: Record<string, { node_id: number, input: string }[]> = flowAC.getOne(`${nodeFrom.nodeId}.link_to`) ?? {};
+
         linkTo[nodeFrom.ifName] ??= [];
         linkTo[nodeFrom.ifName].push({
-            node_id : nodeTo.nodeId,
-            input : nodeTo.ifName,
+            node_id: nodeTo.nodeId,
+            input: nodeTo.ifName,
         })
         flowAC.setOne(`${nodeFrom.nodeId}.link_to`, linkTo);
         return true;
     }
-    async disconnectNode(nodeFrom:RTNodeEdge, nodeTo:RTNodeEdge):Promise<boolean> {
+    async disconnectNode(nodeFrom: RTNodeEdge, nodeTo: RTNodeEdge): Promise<boolean> {
         const flowAC = await this.accessNode();
-        const linkTo:Record<string, { node_id:number, input:string }[]> = flowAC.getOne(`${nodeFrom.nodeId}.link_to`) ?? {};
-        
+        const linkTo: Record<string, { node_id: number, input: string }[]> = flowAC.getOne(`${nodeFrom.nodeId}.link_to`) ?? {};
+
         if (!linkTo[nodeFrom.ifName]) {
             return false;
         }
         else {
             const next = linkTo[nodeFrom.ifName].filter(
-                (item)=>{
+                (item) => {
                     return !(
                         item.node_id === nodeTo.nodeId &&
                         item.input === nodeTo.ifName
                     );
                 }
             );
-            
+
             flowAC.setOne(
                 `${nodeFrom.nodeId}.link_to`,
                 next
             );
         }
-        
+
         return true;
     }
 
-    async getMetadata():Promise<RTIndex> {
+    async getMetadata(): Promise<RTIndex> {
         const indexAC = await this.accessMetadata();
-        
+
         return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'form', 'entrypoint_node') as RTIndex;
     }
-    async setMetadata(input:KeyValueInput):Promise<void> {
+    async setMetadata(input: KeyValueInput): Promise<void> {
         const indexAC = await this.accessMetadata();
-        
+
         indexAC.set(input);
     }
 
-    async getPromptMetadata(promptId:string):Promise<RTPromptData> {
+    async getPromptStruct(promptId: string): Promise<StorageStruct.RT.Prompt> {
+        const promptAC = await this.accessPrompt(promptId);
+
+        return promptAC.getAll() as StorageStruct.RT.Prompt;
+    }
+
+    async getPromptMetadata(promptId: string): Promise<RTPromptMetadata> {
         const promptAC = await this.accessPrompt(promptId);
 
         const name = await this.getPromptName(promptId);
         let { id, variables, model } = promptAC.get('id', 'variables', 'model');
-        
-        return { id, name, variables, model } as RTPromptData;
+
+        return { id, name, variables, model } as RTPromptMetadata;
     }
     /**
      * 특별한 처리를 필요로 하지 않는 프롬프트 메타데이터 갱신
      */
-    async setPromptMetadata(promptId:string, input:RTPromptDataEditable):Promise<void> {
+    async setPromptMetadata(promptId: string, input: RTPromptDataEditable): Promise<void> {
         const promptAC = await this.accessPrompt(promptId);
 
         if (input.name) {
@@ -169,10 +175,9 @@ class ProfileRT implements IProfileRT {
             delete input.name;
         }
         promptAC.set(input);
-
     }
 
-    async getPromptName(promptId:string):Promise<string> {
+    async getPromptName(promptId: string): Promise<string> {
         const indexAC = await this.accessMetadata();
         const promptAC = await this.accessPrompt(promptId);
 
@@ -185,7 +190,7 @@ class ProfileRT implements IProfileRT {
             return promptAC.getOne('name');
         }
     }
-    async setPromptName(promptId:string, name:string):Promise<void> {
+    async setPromptName(promptId: string, name: string): Promise<void> {
         const indexAC = await this.accessMetadata();
         const promptAC = await this.accessPrompt(promptId);
 
@@ -196,35 +201,35 @@ class ProfileRT implements IProfileRT {
         }
         else {
             promptAC.setOne('name', name);
-            
+
         }
     }
 
-    async getPromptContents(promptId:string):Promise<string> {
+    async getPromptContents(promptId: string): Promise<string> {
         const promptAC = await this.accessPrompt(promptId);
 
         return promptAC.getOne('contents');
     }
-    async setPromptContents(promptId:string, contents:string):Promise<void> {
+    async setPromptContents(promptId: string, contents: string): Promise<void> {
         const promptAC = await this.accessPrompt(promptId);
 
         promptAC.setOne('contents', contents);
     }
 
-    async getPromptVariableNames(promptId:string):Promise<string[]> {
+    async getPromptVariableNames(promptId: string): Promise<string[]> {
         const promptAC = await this.accessPrompt(promptId);
 
-        const variableNames:string[] = promptAC.getOne('variables') ?? [];
+        const variableNames: string[] = promptAC.getOne('variables') ?? [];
         return variableNames;
     }
-    async getPromptVariables(promptId:string):Promise<PromptVar[]> {
+    async getPromptVariables(promptId: string): Promise<PromptVar[]> {
         const promptAC = await this.accessPrompt(promptId);
         const formAC = await this.accessForm();
 
-        const variables:{ form_id:string, name:string }[] = promptAC.getOne('variables') ?? [];
-        return variables.map(({ form_id, name })=>{
-            const form:RTForm = formAC.getOne(form_id);
-            
+        const variables: { form_id: string, name: string }[] = promptAC.getOne('variables') ?? [];
+        return variables.map(({ form_id, name }) => {
+            const form: RTForm = formAC.getOne(form_id);
+
             const promptVar = RTFormParser.toPromptVar(form);
             promptVar.id = form_id;
             promptVar.name = name;
@@ -242,13 +247,13 @@ class ProfileRT implements IProfileRT {
      * @param promptVars 
      * @returns 
      */
-    async setPromptVariables(promptId:string, promptVars:PromptVar[]):Promise<string[]> {
+    async setPromptVariables(promptId: string, promptVars: PromptVar[]): Promise<string[]> {
         const promptAC = await this.accessPrompt(promptId);
-        
-        const variables:{ name:string, form_id:string }[] = promptAC.getOne('variables') ?? [];
-        const varIds:string[] = [];
+
+        const variables: { name: string, form_id: string }[] = promptAC.getOne('variables') ?? [];
+        const varIds: string[] = [];
         for (const promptVar of promptVars) {
-            let formId:string = '';
+            let formId: string = '';
             try {
                 // 이미 존재하면 갱신, 없으면 새로 생성
                 if (!promptVar.id) {
@@ -268,32 +273,32 @@ class ProfileRT implements IProfileRT {
                         throw new Error(`Form ID '${formId}' not found in prompt variables`);
                     }
                 }
-        
+
                 varIds.push(formId);
             }
-            catch(e) {
+            catch (e) {
                 promptVar.id ??= 'unknown';
                 const form = PromptVarParser.toRTForm(promptVar);
 
                 console.error(`Failed to set prompt variables : ${promptVar.name} (${formId})`);
                 console.error('variable : ', promptVar);
                 console.error('form (transition) : ', form);
-                
+
                 throw e;
             }
         }
-    
+
         promptAC.setOne('variables', variables);
         return varIds;
     }
-    async removePromptVariables(promptId:string, varIds:string[]) {
+    async removePromptVariables(promptId: string, varIds: string[]) {
         const indexAC = await this.accessMetadata();
         const promptAC = await this.accessPrompt(promptId);
 
-        const variables:{ name:string, form_id:string, weak?:boolean }[] = promptAC.getOne('variables') ?? [];
-        const formIds:string[] = indexAC.getOne('forms') ?? [];
+        const variables: { name: string, form_id: string, weak?: boolean }[] = promptAC.getOne('variables') ?? [];
+        const formIds: string[] = indexAC.getOne('forms') ?? [];
 
-        const removed:string[] = [];
+        const removed: string[] = [];
         for (const varId of varIds) {
             const v = variables.find(v => v.form_id === varId);
             if (!v) continue;
@@ -304,18 +309,18 @@ class ProfileRT implements IProfileRT {
             }
         }
 
-        const filteredVars = variables.filter((v)=>!removed.includes(v.form_id));
+        const filteredVars = variables.filter((v) => !removed.includes(v.form_id));
         promptAC.setOne('variables', filteredVars);
-        
-        const filteredIds = formIds.filter((id)=>!removed.includes(id));
+
+        const filteredIds = formIds.filter((id) => !removed.includes(id));
         indexAC.setOne('forms', filteredIds);
     }
 
-    private async addForm(promptVar:PromptVar):Promise<string> {
+    private async addForm(promptVar: PromptVar): Promise<string> {
         const indexAC = await this.accessMetadata();
         const formAC = await this.accessForm();
 
-        let formId:string;
+        let formId: string;
         do {
             formId = uuidv7();
         } while (formAC.existsOne(formId));
@@ -323,24 +328,28 @@ class ProfileRT implements IProfileRT {
 
         const form = PromptVarParser.toRTForm(promptVar);
         formAC.setOne(formId, form);
-        
+
         const formIds = indexAC.getOne('forms') ?? [];
         indexAC.setOne('forms', [...formIds, formId]);
 
         return formId;
     }
-    private async updateForm(formId:string, promptVar:PromptVar) {
+    private async updateForm(formId: string, promptVar: PromptVar) {
         const formAC = await this.accessForm();
 
         promptVar.id = formId;
         const form = PromptVarParser.toRTForm(promptVar);
-        
+
         formAC.setOne(formId, form);
     }
-    private async removeForm(formId:string):Promise<void> {
+    private async removeForm(formId: string): Promise<void> {
         const formAC = await this.accessForm();
-        
+
         formAC.removeOne(formId);
+    }
+
+    async drop() {
+        return await this.storage.dropDir(`${this.rtId}`);
     }
 }
 

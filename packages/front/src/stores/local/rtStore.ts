@@ -7,7 +7,7 @@ export interface RTState {
     get : {
         metadata(): Promise<RTIndex>;
 
-        promptMetadata(promptId:string): Promise<RTPromptData>;
+        promptMetadata(promptId:string): Promise<RTPromptMetadata>;
         promptName(promptId:string): Promise<string>;
         promptVars(promptId:string): Promise<PromptVar[]>;
         promptContents(promptId:string): Promise<string>;

@@ -22,7 +22,8 @@ function general(): IPCInvokerGeneral {
             let ver: VersionInfo | null;
             if (prerelease) {
                 ver = await runtime.appVersionManager.getLatestBeta();
-            } else {
+            }
+            else {
                 ver = await runtime.appVersionManager.getLatestStable();
             }
 

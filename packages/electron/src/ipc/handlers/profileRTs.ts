@@ -77,6 +77,14 @@ function handler():IPCInvokerProfileRTs {
             return [null] as const;
         },
 
+        async importFromFile(profileId: string, rtId: string) {
+            
+            return [null] as const;
+        },
+        async exportToFile(profileId: string, rtId: string) {
+
+            return [null] as const;
+        }
     }
 }
 

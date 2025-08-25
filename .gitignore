@@ -24,14 +24,9 @@ coverage/
 .tsbuildinfo*
 .rollup.cache
 .report
+.claude
 GEMINI.md
-CLUADE.md
-
-# 임시 파일
-front-old/
-tsconfig.app.tsbuildinfo
-
-# misc
+CLAUDE.md
 .DS_Store
 .env.local
 .env.development.local
@@ -42,3 +37,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# 임시 파일
+front-old/
+tsconfig.app.tsbuildinfo

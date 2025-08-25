@@ -106,6 +106,9 @@ declare global {
 
         generateId(profileId: string): EResult<string>;
         changeId(profileId: string, oldRTId: string, newRTId: string): ENoResult;
+
+        importFromFile(profileId: string, rtId: string): ENoResult;
+        exportToFile(profileId: string, rtId: string): ENoResult;
     };
 
     type IPCInvokerProfileRT = {
@@ -128,7 +131,7 @@ declare global {
     };
 
     type IPCInvokerProfileRTPrompt = {
-        getMetadata(profileId: string, rtId: string, promptId: string): EResult<RTPromptData>;
+        getMetadata(profileId: string, rtId: string, promptId: string): EResult<RTPromptMetadata>;
         setMetadata(profileId: string, rtId: string, promptId: string, metadata: RTPromptDataEditable): ENoResult;
 
         getName(profileId: string, rtId: string, promptId: string): EResult<string>;

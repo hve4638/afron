@@ -393,7 +393,7 @@ class ElectronIPCAPI implements IIPCAPI {
         },
     } as const;
     profileRTPrompt = {
-        async getMetadata(profileId:string, rtId:string, promptId:string):Promise<RTPromptData> {
+        async getMetadata(profileId:string, rtId:string, promptId:string):Promise<RTPromptMetadata> {
             const [err, metadata] = await electron.profileRTPrompt.getMetadata(profileId, rtId, promptId);
             if (err) throw new IPCError(err.message);
             return metadata;

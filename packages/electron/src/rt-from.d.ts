@@ -10,7 +10,7 @@ declare global {
         entrypoint_node : number;
     }
 
-    type RTPromptData = {
+    type RTPromptMetadata = {
         id : string;
         name : string;
         variables : string[];

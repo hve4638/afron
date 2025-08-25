@@ -1,3 +1,5 @@
+import '../storage-struct';
+
 declare global {
     type RTIndex = {
         version : string;
@@ -10,26 +12,9 @@ declare global {
         entrypoint_node : number;
     }
 
-    type RTPromptData = {
-        id : string;
-        name : string;
-        variables : string[];
-
-        model: {
-            stream: boolean;
-            
-            top_p: number;
-            temperature: number;
-            max_tokens: number;
-            use_thinking: boolean;
-            thinking_tokens: number;
-            thinking_auto_budget: boolean;
-            thinking_tokens: number;
-            // thinking_summary: boolean;
-
-            safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
-        };
-    }
+    type RTPromptMetadata = Pick<StorageStruct.RT.Prompt, 
+        'id' | 'name' | 'variables' | 'model'
+    >
 
     type RTPromptDataEditable = {
         name? : string;

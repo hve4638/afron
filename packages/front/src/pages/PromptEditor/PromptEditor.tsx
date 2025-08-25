@@ -1,4 +1,4 @@
-import { ModalProvider, useModal } from '@/hooks/useModal';
+import { ModalProvider } from '@/hooks/useModal';
 import useTrigger from '@/hooks/useTrigger';
 import type {
     PromptInputType
