@@ -1,40 +1,33 @@
-import RequestAPI from "@/api/request";
-import ProfilesAPI, { SessionAPI } from "@/api/profiles";
+import ProfilesAPI, { SessionAPI } from '@/api/profiles';
+import { RequestEventPipe } from '@/api/events';
+
 import { useSessionStore } from "@/stores";
-import { emitEvent } from "@/hooks/useEvent";
 import useErrorLogStore from "@/stores/useErrorLogStore";
+import { emitEvent } from "@/hooks/useEvent";
 import { getHttpStatusMessage } from "@/utils/status_code";
 
 class RequestManager {
-    static instance: RequestManager | null = null;
+    static instance?: RequestManager;
 
     static getInstance() {
-        if (!RequestManager.instance) {
-            RequestManager.instance = new RequestManager();
-        }
+        RequestManager.instance ??= new RequestManager();
         return RequestManager.instance;
     }
 
-    private constructor() {
-
-    }
+    private constructor() { }
 
     async request(profileId: string, sessionId: string) {
         const sessionAPI = ProfilesAPI.profile(profileId).session(sessionId);
 
-        RequestAPI.request(profileId, sessionId)
-            .then((chId) => {
-                this.handleResponse(chId, sessionAPI);
-            })
+        RequestEventPipe.request(profileId, sessionId)
+            .then((chId) => this.handleResponse(chId, sessionAPI));
     }
 
     async preview(profileId: string, sessionId: string) {
         const sessionAPI = ProfilesAPI.profile(profileId).session(sessionId);
 
-        RequestAPI.preview(profileId, sessionId)
-            .then((chId) => {
-                this.handleResponse(chId, sessionAPI);
-            })
+        RequestEventPipe.preview(profileId, sessionId)
+            .then((chId) => this.handleResponse(chId, sessionAPI));
     }
 
     private async handleResponse(chId: string, sessionAPI: SessionAPI) {
@@ -50,7 +43,7 @@ class RequestManager {
         const { add: addErrorLog } = useErrorLogStore.getState();
 
         while (true) {
-            const data = await RequestAPI.response(chId);
+            const data = await RequestEventPipe.receive(chId);
             // console.info('$ Received data:', data);
 
             if (data === null || data.type === 'close') {
@@ -67,7 +60,7 @@ class RequestManager {
                 break;
             }
             else if (data.type === 'send_raw_request_preview') {
-                emitEvent('show_rt_preview', data.preview);
+                emitEvent('open_rt_preview_modal', data.preview);
             }
             else if (data.type === 'update') {
                 for (const typeName of data.update_types) {

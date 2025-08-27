@@ -1,6 +1,6 @@
 
 export interface IRTPackMetadata {
+    class: 'rt-pack';
     packVersion: 0;
-    rtVersion: string;
     createdAt: number;
 }

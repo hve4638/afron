@@ -6,7 +6,7 @@ import { terser } from 'rollup-plugin-terser';
 
 export default [
   {
-    input: ['src/main.ts', 'src/preload.ts'],
+    input: ['src/main.ts', 'src/preload/preload.ts'],
     output: [
       {
         dir: "dist",

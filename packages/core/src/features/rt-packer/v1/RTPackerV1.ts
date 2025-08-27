@@ -1,15 +1,15 @@
-import { IRTPackMetadata } from '../types';
+import { IRTPackMetadata } from './types';
 import { Profile } from '@/features/profiles';
 import { RTPackFailed } from '../errors';
 import { ZipBuilder, ZipBuilderError } from '@/lib/zipper';
 
-const RTPACK_VERSION = 1;
+const RTPACK_VERSION = 0;
 
 export class RTPackerV1 {
     #profile: Profile;
     #rtId?: string;
     #exportPath?: string;
-    #reserveRTId?: boolean;
+    #reserveUUID?: boolean;
 
     constructor(profile: Profile) {
         this.#profile = profile;
@@ -25,17 +25,18 @@ export class RTPackerV1 {
         return this;
     }
 
-    reserveRTId(reserveRTId: boolean): this {
-        this.#reserveRTId = reserveRTId;
+    reserveUUID(enabled: boolean): this {
+        this.#reserveUUID = enabled;
         return this;
     }
 
     async pack(): Promise<void> {
         if (!this.#rtId) throw new RTPackFailed("RT ID is not set");
         if (!this.#exportPath) throw new RTPackFailed("Export path is not set");
-        if (this.#reserveRTId === undefined) throw new RTPackFailed("Reserve RT ID is not set");
+        if (this.#reserveUUID === undefined) throw new RTPackFailed("Reserve UUID is not set");
 
         const rt = this.#profile.rt(this.#rtId);
+        await rt.fixMetadata();
         const rtMetadata = await rt.getMetadata();
 
         if (rtMetadata.mode === 'prompt_only') {
@@ -48,8 +49,8 @@ export class RTPackerV1 {
     async #packPromptOnly(rtMetadata: RTIndex): Promise<void> {
         try {
             const metadata: IRTPackMetadata = {
+                class: 'rt-pack',
                 packVersion: RTPACK_VERSION,
-                rtVersion: rtMetadata.version,
                 createdAt: Math.floor(Date.now() / 1000),
             };
 
@@ -83,11 +84,10 @@ export class RTPackerV1 {
     async #prepareIndexData(rtMetadata: RTIndex): Promise<any> {
         const indexData = { ...rtMetadata };
 
-        // reserveRTId가 false면 id와 uuid 제거
-        if (!this.#reserveRTId) {
-            delete (indexData as any).id;
+        if (!this.#reserveUUID) {
             delete (indexData as any).uuid;
         }
+        delete (indexData as any).id;
 
         return indexData;
     }

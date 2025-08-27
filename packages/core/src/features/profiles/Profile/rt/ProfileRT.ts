@@ -139,6 +139,16 @@ class ProfileRT implements IProfileRT {
         return true;
     }
 
+    /** 버전 업데이트되며 누락된 필드 추가 */
+    async fixMetadata() {
+        const indexAC = await this.accessMetadata();
+        const uuid = indexAC.getOne('uuid');
+
+        if (!uuid) {
+            indexAC.setOne('uuid', uuidv7());
+        }
+    }
+
     async getMetadata(): Promise<RTIndex> {
         const indexAC = await this.accessMetadata();
 

@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react'
-import LocalAPI from '@/api/local';
-import RequestAPI from '@/api/request';
+import { useEffect, useState } from 'react';
+import { v7 as uuidv7 } from 'uuid';
 
-import { subscribeStates } from '@/stores';
+import LocalAPI from '@/api/local';
+import { GlobalEventPipe, RequestEventPipe } from '@/api/events';
+
+import { subscribeStates, useProfileAPIStore } from '@/stores';
 import useMemoryStore from '@/stores/useMemoryStore';
-import { useEvent } from '@/hooks/useEvent';
+import { emitEvent, useEvent } from '@/hooks/useEvent';
+import { RTExportManager } from '@/features/event-pipe-handler';
+
+
 
 function useInitialize() {
     useEffect(() => {
@@ -13,10 +18,12 @@ function useInitialize() {
     }, []);
 
     useEffect(() => {
-        RequestAPI.register()
+        RequestEventPipe.register();
+        GlobalEventPipe.register();
 
         return () => {
-            RequestAPI.unregister();
+            RequestEventPipe.unregister();
+            GlobalEventPipe.unregister();
         }
     }, []);
 
@@ -34,6 +41,14 @@ function useInitialize() {
     useEvent('change_profile', () => {
         useMemoryStore.setState({ profileId: null });
     }, []);
+
+    useEvent('export_rt_to_file', ({ rtId }) => {
+        const { api } = useProfileAPIStore.getState();
+
+        const modalId = uuidv7();
+        emitEvent('open_progress_modal', { modalId });
+        RTExportManager.exportFile(api.id, rtId, { modalId });
+    })
 }
 
 export default useInitialize;

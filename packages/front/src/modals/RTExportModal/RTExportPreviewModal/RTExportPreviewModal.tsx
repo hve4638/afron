@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import { TextForm } from '@/components/forms';
 import { Align, Gap, Row } from '@/components/layout';
 import { Modal, ModalHeader, ModalRequiredProps } from '@/components/Modal';
+import { emitEvent } from '@/hooks/useEvent';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import { useProfileAPIStore } from '@/stores';
@@ -51,21 +52,21 @@ function RTExportModal({
             <TextForm
                 name='이름'
                 value={rtMetadata?.name ?? ''}
-                onChange={(next) => setRTMetadata(prev => ({...prev, name: next } as RTIndex))}
+                onChange={(next) => setRTMetadata(prev => ({ ...prev, name: next } as RTIndex))}
                 disabled={true}
             />
             <Gap h='0.5em' />
             <TextForm
                 name='버전'
                 value={rtMetadata?.version ?? ''}
-                onChange={(next) => setRTMetadata(prev => ({...prev, version: next } as RTIndex))}
+                onChange={(next) => setRTMetadata(prev => ({ ...prev, version: next } as RTIndex))}
                 disabled={true}
             />
             <Gap h='0.5em' />
             <TextForm
                 name='ID'
                 value={rtMetadata?.id ?? ''}
-                onChange={(next) => setRTMetadata(prev => ({...prev, version: next } as RTIndex))}
+                onChange={(next) => setRTMetadata(prev => ({ ...prev, version: next } as RTIndex))}
                 disabled={true}
             />
 
@@ -78,7 +79,7 @@ function RTExportModal({
             >
                 <Button
                     onClick={() => {
-
+                        emitEvent('export_rt_to_file', { rtId, modalId: '' });
                         close();
                     }}
                     style={{

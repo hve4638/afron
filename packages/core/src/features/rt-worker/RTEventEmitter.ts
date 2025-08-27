@@ -186,7 +186,7 @@ class RTEventEmitter {
                 });
             },
             other: (detail: string[] = []) => {
-                this.logger.debug(`RTEventEmitter] RTSender.error.other (${this.#id})`);
+                this.logger.debug(`[RTEventEmitter] RTSender.error.other (${this.#id})`);
                 this.#sendForce({
                     type: 'error',
                     reason_id: 'other',

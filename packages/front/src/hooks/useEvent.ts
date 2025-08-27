@@ -57,16 +57,18 @@ type Events = {
     change_profile: ping;
     input_file_upload: { file: File, latch: Latch };
 
-    /* RequestManager에서 호출됨 */
-    show_rt_preview: RTEventPreviewData;
     logging_error: LogEntry;
     show_toast_message: Toast;
+
+    /* 모달 열기 */
+    open_rt_preview_modal: RTEventPreviewData;
+    open_error_log: string | null;
+    open_progress_modal: { modalId: string; description?: string; progress?: number; };
 
     /* Chaining */
     request_ready: Channel<unknown>;
 
-    /* modal */
-    open_error_log: string | null;
+    export_rt_to_file: { rtId: string; modalId: string; };
 }
 
 export type EventNames = keyof Events;

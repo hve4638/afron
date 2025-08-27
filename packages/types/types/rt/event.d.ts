@@ -52,8 +52,6 @@ type RTEventDataOthers = {
     type: 'close';
 }
 
-
-
 declare global {
     type RTEventPreviewData = {
         url: string;
