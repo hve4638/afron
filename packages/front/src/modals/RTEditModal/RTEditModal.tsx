@@ -8,6 +8,7 @@ import TreeView from '@/components/TreeView';
 import { LeafNode } from './nodes';
 import useRTEditModal from './RTEditModal.hook';
 import { t } from 'i18next';
+import { emitEvent } from '@/hooks/useEvent';
 
 type RTEditModalProps = {
     isFocused: boolean;
@@ -126,15 +127,20 @@ function RTEditModal({
                     }}
                 >
                     <Button
-                        onClick={()=>{
-                            // openRTExportModal();
+                        onClick={() => {
+                            emitEvent('import_rt_from_file');
                             close();
                         }}
                         style={{
                             minWidth: '80px',
                             height: '100%'
                         }}
-                    >{t('rt.rt_load')}</Button>
+                    >
+                        <Row columnAlign='center' style={{ gap: '0.2em', }}>
+                            <GIcon value='folder' />
+                            <span>{t('rt.rt_load')}</span>
+                        </Row>
+                    </Button>
                     <Button
                         onClick={() => {
                             openRTCreateModal();
@@ -142,9 +148,14 @@ function RTEditModal({
                         }}
                         style={{
                             minWidth: '80px',
-                            height: '100%'
+                            height: '100%',
                         }}
-                    >{t('rt.rt_create')}</Button>
+                    >
+                        <Row columnAlign='center' style={{ gap: '0.2em', }}>
+                            <GIcon value='draft' />
+                            <span>{t('rt.rt_create')}</span>
+                        </Row>
+                    </Button>
                 </Row>
             </Grid>
         </Modal>

@@ -62,13 +62,13 @@ function RTExportModal({
                 onChange={(next) => setRTMetadata(prev => ({ ...prev, version: next } as RTIndex))}
                 disabled={true}
             />
-            <Gap h='0.5em' />
+            {/* <Gap h='0.5em' />
             <TextForm
                 name='ID'
                 value={rtMetadata?.id ?? ''}
                 onChange={(next) => setRTMetadata(prev => ({ ...prev, version: next } as RTIndex))}
                 disabled={true}
-            />
+            /> */}
 
             <Gap h='1em' />
             <Row
@@ -79,7 +79,7 @@ function RTExportModal({
             >
                 <Button
                     onClick={() => {
-                        emitEvent('export_rt_to_file', { rtId, modalId: '' });
+                        emitEvent('export_rt_to_file', { rtId });
                         close();
                     }}
                     style={{

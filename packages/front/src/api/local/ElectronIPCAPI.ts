@@ -339,16 +339,13 @@ class ElectronIPCAPI implements IIPCAPI {
             const [err] = await electron.profileRT.reflectMetadata(profileId, rtId);
             if (err) throw new IPCError(err.message);
         },
-        async importFile(token:string, profileId: string, rtId: string): Promise<string> {
-            const [err] = await electron.profileRTs.importFile(token, profileId, rtId);
+        async importFile(token:string, profileId: string) {
+            const [err] = await electron.profileRTs.importFile(token, profileId);
             if (err) throw new IPCError(err.message);
-            return token;
         },
-        async exportFile(token:string, profileId: string, rtId: string): Promise<string> {
+        async exportFile(token:string, profileId: string, rtId: string) {
             const [err] = await electron.profileRTs.exportFile(token, profileId, rtId);
             if (err) throw new IPCError(err.message);
-            return token;
-
         }
     } as const;
     profileRT = {

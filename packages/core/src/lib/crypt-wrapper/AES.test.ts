@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import AES from './AES';
 import { CryptError } from './errors';
 

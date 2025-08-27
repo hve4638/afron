@@ -21,7 +21,7 @@ function handler(): IPCInvokerProfileRTs {
         async generateId(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rtId = await profile.generateRTId();
-
+            
             return [null, rtId] as const;
         },
 
@@ -62,14 +62,12 @@ function handler(): IPCInvokerProfileRTs {
             return [null] as const;
         },
 
-        // [IPCInvokerName.HasProfileRTId]: 
         async existsId(profileId: string, rtId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const exists = await profile.hasRTId(rtId);
 
             return [null, exists] as const;
         },
-        // [IPCInvokerName.ChangeProfileRTId]:
         async changeId(profileId: string, oldRTId: string, newRTId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             profile.changeRTId(oldRTId, newRTId);
@@ -78,8 +76,9 @@ function handler(): IPCInvokerProfileRTs {
             return [null] as const;
         },
 
-        async importFile(token: string, profileId: string, rtId: string) {
-            
+        async importFile(token: string, profileId: string) {
+            const rtImportProcess = runtime.eventProcess.RTImportProcess();
+            rtImportProcess.process(token, profileId);
 
             return [null] as const;
         },

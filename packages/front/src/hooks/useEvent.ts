@@ -56,7 +56,7 @@ type Events = {
     /* UI 이벤트 */
     change_profile: ping;
     input_file_upload: { file: File, latch: Latch };
-
+5
     logging_error: LogEntry;
     show_toast_message: Toast;
 
@@ -68,7 +68,8 @@ type Events = {
     /* Chaining */
     request_ready: Channel<unknown>;
 
-    export_rt_to_file: { rtId: string; modalId: string; };
+    import_rt_from_file: ping;
+    export_rt_to_file: { rtId: string; };
 }
 
 export type EventNames = keyof Events;

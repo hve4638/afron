@@ -9,14 +9,19 @@ type GlobalEventDataError = {
             'other';
         }
     )
-type GlobalEventDataExportFile = {
-    type: 'export_rt_to_file';
+type GlobalEventDataRTExport = {
+    type: 'rt_export';
     state: 'ready' | 'cancel' | 'done' | 'block';
 } | {
-    type: 'export_rt_to_file';
+    type: 'rt_export';
     state: 'progress';
     percent: number;
     description: string;
+}
+
+type GlobalEventDataRTImport = {
+    type: 'rt_import';
+    state: 'ready' | 'cancel' | 'done' | 'block' | 'failed';
 }
 
 type GlobalEventDataClose = {
@@ -24,11 +29,12 @@ type GlobalEventDataClose = {
 }
 
 declare global {
-    type GlobalEventDataWithoutId = (
-        GlobalEventDataError
-        | GlobalEventDataExportFile
+    type GlobalEventDataWithoutId =
+        | GlobalEventDataRTImport
+        | GlobalEventDataRTExport
+        | GlobalEventDataError
         | GlobalEventDataClose
-    );
+        ;
 
     type GlobalEventData = {
         id: string;

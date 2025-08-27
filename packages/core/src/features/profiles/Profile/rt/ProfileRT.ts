@@ -21,6 +21,33 @@ class ProfileRT implements IProfileRT {
         return await this.storage.accessAsJSON(`${this.rtId}:node.json`);
     }
 
+    readonly raw = {
+        getForm: async () => {
+            const formAC = await this.accessForm();
+            return formAC.getAll();
+        },
+        setForm: async (data: Record<string, RTForm>) => {
+            const formAC = await this.accessForm();
+            formAC.set(data);
+        },
+
+        getPrompt: async (promptId: string) => {
+            const promptAC = await this.accessPrompt(promptId);
+            return promptAC.getAll() as StorageStruct.RT.Prompt;
+        },
+        setPrompt: async (promptId: string, data: StorageStruct.RT.Prompt) => {
+            const promptAC = await this.accessPrompt(promptId);
+            return promptAC.set(data)
+        },
+
+
+        setIndex: async (input: Partial<StorageStruct.RT.Index>) => {
+            const indexAC = await this.accessMetadata();
+
+            indexAC.set(input);
+        }
+    }
+
     async getForms(): Promise<PromptVar[]> {
         const indexAC = await this.accessMetadata();
         const formAC = await this.accessForm();
@@ -152,7 +179,7 @@ class ProfileRT implements IProfileRT {
     async getMetadata(): Promise<RTIndex> {
         const indexAC = await this.accessMetadata();
 
-        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'form', 'entrypoint_node') as RTIndex;
+        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'forms', 'entrypoint_node') as RTIndex;
     }
     async setMetadata(input: KeyValueInput): Promise<void> {
         const indexAC = await this.accessMetadata();

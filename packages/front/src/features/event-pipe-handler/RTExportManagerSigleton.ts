@@ -21,15 +21,18 @@ class RTExportManagerSington {
             const data = await GlobalEventPipe.receive(chId);
 
             if (data == null || data.type === 'close') {
-                console.log('Export channel closed');
-
                 emitProgressModalEvent('close', { id: config.modalId });
                 break;
             }
-            else if (data.type === 'export_rt_to_file') {
-                console.log('Received export_rt_to_file event:', data);
-                
-                // emitProgressModalEvent('description', { id: config.modalId, value: data.description });
+            else if (data.type === 'rt_export') {
+                console.log('Received rt_export event:', data);
+                switch (data.state) {
+                    case 'ready':
+                        emitProgressModalEvent('description', { id: config.modalId, value: 'Exporting...' });
+                        break;
+                    case 'done':
+                        break;
+                }
             }
         }
     }

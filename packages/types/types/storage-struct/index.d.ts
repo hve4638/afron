@@ -3,6 +3,17 @@ import '../chatai';
 declare global {
     namespace StorageStruct {
         namespace RT {
+            type Index = {
+                version: string;
+                id: string;
+                name: string;
+                uuid: string;
+                mode: 'flow' | 'prompt_only';
+                input_type: 'normal' | 'chat';
+                forms: string[];
+                entrypoint_node: number;
+            }
+
             // request-template.<rt-id>.prompt.<prompt-id>
             type Prompt = {
                 id: string;

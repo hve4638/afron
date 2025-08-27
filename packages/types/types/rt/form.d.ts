@@ -1,16 +1,8 @@
 import '../storage-struct';
 
 declare global {
-    type RTIndex = {
-        version : string;
-        id : string;
-        name : string;
-        uuid : string;
-        mode : 'flow' | 'prompt_only';
-        input_type : 'normal' | 'chat';
-        form : string[];
-        entrypoint_node : number;
-    }
+    ///@TODO: 과거 타입 정의, StorageStruct.RT 기반으로 다시 변경하기
+    type RTIndex = StorageStruct.RT.Index;
 
     type RTPromptMetadata = Pick<StorageStruct.RT.Prompt, 
         'id' | 'name' | 'variables' | 'model'

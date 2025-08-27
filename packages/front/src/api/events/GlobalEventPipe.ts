@@ -20,8 +20,14 @@ class GlobalEventPipeSingleton extends EventPipe<GlobalEventData> {
 
     async exportFile(profileId: string, rtId: string): Promise<string> {
         const chId = this.open();
-
         await LocalAPI.profileRTs.exportFile(chId, profileId, rtId);
+        return chId;
+    }
+
+    async importRTFile(profileId: string): Promise<string> {
+        const chId = this.open();
+
+        await LocalAPI.profileRTs.importFile(chId, profileId);
 
         return chId;
     }

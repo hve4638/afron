@@ -107,7 +107,7 @@ declare global {
         generateId(profileId: string): EResult<string>;
         changeId(profileId: string, oldRTId: string, newRTId: string): ENoResult;
 
-        importFile(token:string, profileId: string, rtId: string): ENoResult;
+        importFile(token:string, profileId: string): ENoResult;
         exportFile(token:string, profileId: string, rtId: string): ENoResult;
     };
 

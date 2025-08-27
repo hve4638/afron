@@ -1,18 +1,22 @@
-import { IRTPackMetadata } from './types';
+import { RTPackV1 } from './types';
 import { Profile } from '@/features/profiles';
 import { RTPackFailed } from '../errors';
 import { ZipBuilder, ZipBuilderError } from '@/lib/zipper';
+import { LevelLogger } from '@/types';
+import NoLogger from '@/features/nologger';
 
 const RTPACK_VERSION = 0;
 
 export class RTPackerV1 {
+    protected logger: LevelLogger;
     #profile: Profile;
     #rtId?: string;
     #exportPath?: string;
     #reserveUUID?: boolean;
 
-    constructor(profile: Profile) {
+    constructor(profile: Profile, logger?: LevelLogger) {
         this.#profile = profile;
+        this.logger = logger ?? NoLogger.instance;
     }
 
     rtId(rtId: string): this {
@@ -48,9 +52,9 @@ export class RTPackerV1 {
 
     async #packPromptOnly(rtMetadata: RTIndex): Promise<void> {
         try {
-            const metadata: IRTPackMetadata = {
+            const metadata: RTPackV1.Metadata = {
                 class: 'rt-pack',
-                packVersion: RTPACK_VERSION,
+                version: RTPACK_VERSION,
                 createdAt: Math.floor(Date.now() / 1000),
             };
 
@@ -81,40 +85,45 @@ export class RTPackerV1 {
         throw new RTPackFailed(`'${rtMetadata.mode}' mode is not implemented yet`);
     }
 
-    async #prepareIndexData(rtMetadata: RTIndex): Promise<any> {
-        const indexData = { ...rtMetadata };
+    async #prepareIndexData(rtIndex: RTIndex): Promise<RTPackV1.Index> {
+        const {
+            version,
+            mode,
+            name,
+            uuid,
+            input_type,
+            entrypoint_node,
+            forms,
+        } = rtIndex;
 
-        if (!this.#reserveUUID) {
-            delete (indexData as any).uuid;
-        }
-        delete (indexData as any).id;
-
-        return indexData;
+        return {
+            version,
+            mode,
+            name,
+            uuid: this.#reserveUUID ? uuid : null,
+            input_type,
+            entrypoint_node,
+            forms,
+        };
     }
 
-    async #prepareFormData(rtMetadata: RTIndex): Promise<Record<string, any>> {
-        if (!rtMetadata.form || rtMetadata.form.length === 0) {
+    async #prepareFormData(rtIndex: RTIndex): Promise<RTPackV1.Form> {
+        if (!rtIndex.forms || rtIndex.forms.length === 0) {
             return {};
         }
 
         const rt = this.#profile.rt(this.#rtId!);
-        const forms = await rt.getForms();
+        const form = await rt.raw.getForm();
 
-        // form 데이터를 formId를 키로 하는 객체로 구성
         const formData: Record<string, any> = {};
-
-        // metadata.form에 존재하는 form만 포함
-        for (const formId of rtMetadata.form) {
-            const form = forms.find(f => f.id === formId);
-            if (form) {
-                formData[formId] = form;
-            }
+        for (const formId of rtIndex.forms) {
+            formData[formId] = form[formId];
         }
 
         return formData;
     }
 
-    async #preparePrompt(promptId: string): Promise<StorageStruct.RT.Prompt> {
+    async #preparePrompt(promptId: string): Promise<RTPackV1.Prompt> {
         const rt = this.#profile.rt(this.#rtId!);
         const promptData = await rt.getPromptStruct(promptId);
 
