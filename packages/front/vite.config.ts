@@ -19,6 +19,13 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern'
+            }
+        }
+    },
     resolve: {
         alias: [
             alias('@', 'src'),
