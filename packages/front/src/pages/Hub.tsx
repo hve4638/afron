@@ -1,18 +1,16 @@
-import { useLayoutEffect, useMemo, useState } from 'react'
-import { BrowserRouter, HashRouter, Routes, Route, useParams } from 'react-router-dom'
-import Home from './Home';
-import PromptEditor, {
-    PromptEditAction,
-    PromptEditMode
-} from './PromptEditor';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { RTStoreContextProvider } from '@/context';
-import WorkflowEditor from './WorkflowEditor';
+
+import Home from './Home';
+import PromptEditor from './PromptEditor';
+import TestPage from './Test';
 
 function Hub() {
     return (
         <HashRouter>
             <Routes>
                 <Route path="/" element={<Home/>}/>
+                <Route path="/test" element={<TestPage/>}/>
                 <Route
                     path="/prompt/:rtId"
                     element={
