@@ -1,0 +1,38 @@
+.code-block-container {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin: 8px 0;
+    overflow: hidden;
+    border: 1px solid rgba(146, 148, 152, 0.1);
+
+    .code-block-header {
+        padding: 4px 0;
+        padding-left: 0.5em;
+        padding-right: 4px;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(146, 148, 152, 0.2);
+        height: 1.6em;
+        // font-size: 0.85em;
+    }
+
+    .code-block {
+        margin: 0;
+        padding: 0.5em 1em;
+        background-color: transparent;
+        overflow-x: auto;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 0.8em;
+        line-height: 1.4;
+
+        code {
+            background-color: transparent;
+            color: var(--normal);
+            padding: 0;
+            white-space: pre;
+        }
+    }
+
+    .code-block-language {
+        font-size: 0.75em;
+    }
+}

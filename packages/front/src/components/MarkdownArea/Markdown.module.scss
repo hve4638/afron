@@ -1,0 +1,183 @@
+@mixin md {
+    &:not(:first-child) {
+        margin-top: 0.5em;
+    }
+
+    &:is(hr + *):not(:first-child) {
+        margin-top: 1em;
+    }
+    &:is(ul + *):not(:first-child) {
+        margin-top: 1em;
+    }
+    &:is(ol + *):not(:first-child) {
+        margin-top: 1em;
+    }
+    &:has(+ ul) {
+        margin-bottom: 0.25em;
+    }
+    &:has(+ ol) {
+        margin-bottom: 0.25em;
+    }
+}
+
+.markdown-area {
+    display: block;
+    overflow-x: hidden;
+    resize: none;
+    outline: none;
+    --normal: rgb(201, 201, 201);
+    --think: rgb(237, 163, 85);
+    --say: white;
+    --accent: rgb(0, 208, 255);
+    --accent: rgb(177, 222, 232);
+
+    p {
+        @include md;
+
+        margin: 0px;
+        color: var(--normal);
+    }
+
+    h1 {
+        @include md;
+
+        margin: 0px;
+        margin-bottom: 0.25em;
+
+        padding: 0px;
+        font-size: 1.45em;
+        font-weight: bold;
+    }
+
+    h2 {
+        @include md;
+
+        margin: 0px;
+        margin-bottom: 0.25em;
+        padding: 0px;
+        font-size: 1.25em;
+        font-weight: bold;
+    }
+
+    h3 {
+        @include md;
+
+        margin: 0px;
+        margin-bottom: 0.25em;
+        padding: 0px;
+        font-size: 1.125em;
+        font-weight: bold;
+    }
+
+    h4 {
+        @include md;
+
+        margin: 0px;
+        margin-bottom: 4px;
+        padding: 0px;
+        font-size: 1em;
+        font-weight: bold;
+
+        &:is(.markdown hr+*) {
+            margin-top: 1em;
+        }
+    }
+
+
+    hr {
+        margin: 1em 0;
+        border-top: 1px solid rgba(102, 102, 102, 0.637);
+    }
+
+    code {
+        @include md;
+
+        color: rgb(177, 222, 232);
+        margin: 0px;
+    }
+
+    strong {
+        // **
+        @include md;
+
+        color: white;
+
+        &:not(p strong) {
+            display: inline-block;
+        }
+    }
+
+    em {
+        @include md;
+
+        color: var(--think);
+        
+        &:not(p em) {
+            display: inline-block;
+        }
+    }
+
+    ul {
+        margin: 0;
+        line-height: 0.5em;
+        padding-left: 1.25em;
+
+        ul {
+            padding-left: 1em;
+        }
+
+        li {
+            line-height: normal;
+        }
+    }
+
+    ol {
+        margin: 0;
+        line-height: 0.5em;
+        padding-left: 1.25em;
+
+        li {
+            line-height: normal;
+        }
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 8px 0;
+        font-size: 0.9em;
+
+        th,
+        td {
+            // border: ;
+            border: 1px solid rgba(146, 148, 152, 0.3);
+            padding: 0 12px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        th {
+            // background-color: rgba(146, 148, 152, 0.1);
+            font-weight: bold;
+            color: var(--normal);
+        }
+
+        td {
+            color: var(--normal);
+        }
+    }
+
+    pre {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+    }
+
+    :global(.say) {
+        color: var(--say);
+    }
+
+    :global(.accent) {
+        color: var(--accent);
+    }
+}

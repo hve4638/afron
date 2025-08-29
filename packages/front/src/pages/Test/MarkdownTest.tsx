@@ -6,7 +6,11 @@ import InputField from '@/pages/Home/layout/IOSection/SingleIO/InputField';
 function MarkdownTest() {
     const [inputText, setInputText] = useState<string>(`# H1
 ## 주제 1
-외지 감자
+
+너 정말 '핵심'을 찔렀어!
+너 정말 "핵심"을 찔렀어!
+너 정말 *핵심*을 찔렀어!
+너 정말 **핵심**을 찔렀어!
 
 흠?
   
@@ -43,20 +47,16 @@ ${'```'}
 
 
 ${'`한줄 코드`'}
-
-
-
-
-
 `);
 
     return (
         <div
             style={{
-                width: '100vw',
-                height: '100vh',
+                // width: '100vw',
+                // height: '100%',
                 padding: '20px',
                 boxSizing: 'border-box',
+                fontSize: '16px',
             }}
         >
             <Grid
