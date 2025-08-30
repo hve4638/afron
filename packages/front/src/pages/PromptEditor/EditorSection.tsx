@@ -7,7 +7,6 @@ import useLazyThrottle from '@/hooks/useLazyThrottle';
 import { calcTextPosition } from '@/utils';
 
 import type { PromptEditorData } from '@/types';
-// import { registerPromptLanguage, promptLanguageId } from './monaco-prompt-language';
 import { registerPromptTemplateLanguage, PROMPT_THEME, PROMPT_LANGUAGE } from '@/features/monaco-prompt-template-language';
 
 import styles from './styles.module.scss';
