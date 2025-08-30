@@ -6,8 +6,6 @@ const pattern_plain = /^([^"*]+)(["*].*)/
 export const splitByQuotes = (text: string) => {
     const parts: string[] = [];
 
-    console.group('spliteByQuotes');
-    console.log(text);
     const tryMatchAndAddParts = (pattern: RegExp) => {
         const group = pattern.exec(text);
 
@@ -38,7 +36,6 @@ export const splitByQuotes = (text: string) => {
             || AddRemainder()
         ) continue;
     }
-    console.groupEnd();
 
     return parts;
 }
