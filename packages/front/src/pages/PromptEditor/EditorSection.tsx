@@ -7,6 +7,8 @@ import useLazyThrottle from '@/hooks/useLazyThrottle';
 import { calcTextPosition } from '@/utils';
 
 import type { PromptEditorData } from '@/types';
+// import { registerPromptLanguage, promptLanguageId } from './monaco-prompt-language';
+import { registerPromptTemplateLanguage, PROMPT_THEME, PROMPT_LANGUAGE } from '@/features/monaco-prompt-template-language';
 
 import styles from './styles.module.scss';
 
@@ -20,6 +22,19 @@ function EditorSection({
     const { t } = useTranslation();
     const monaco = useMonaco();
     const editorRef = useRef<any>(null);
+    const [isLanguageRegistered, setIsLanguageRegistered] = useState(false);
+
+    // Register custom language and theme when monaco is available
+    useEffect(() => {
+        if (monaco && !isLanguageRegistered) {
+            try {
+                registerPromptTemplateLanguage(monaco);
+                setIsLanguageRegistered(true);
+            } catch (error) {
+                console.error('Failed to register prompt language:', error);
+            }
+        }
+    }, [monaco]);
 
     const setErrorMarker = (markers:{
         message:string,
@@ -86,6 +101,7 @@ function EditorSection({
         wordWrap: 'bounded',
         wrappingStrategy: 'advanced',
     };
+
     
     return (
         <div
@@ -93,7 +109,8 @@ function EditorSection({
         >
             <Editor
                 options={editorOptions}
-                theme='vs-dark'
+                language={isLanguageRegistered ? PROMPT_LANGUAGE : 'plaintext'}
+                theme={isLanguageRegistered ? PROMPT_THEME : 'vs-dark'}
                 width='100%'
                 height='auto'
                 value={data.contents}
