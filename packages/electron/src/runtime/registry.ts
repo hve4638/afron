@@ -5,6 +5,7 @@ export const registry:RuntimeRegistry = {
     globalStorage: null as any,
     masterKeyManager: null as any,
     rtWorker: null as any,
+    eventProcess: null as any,
     ipcFrontAPI: null as any,
     appVersionManager : null as any,
     migrationService: null as any,

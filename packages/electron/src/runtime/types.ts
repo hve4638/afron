@@ -7,18 +7,15 @@ import type {
     RTWorker,
     Logger,
 } from '@afron/core';
-// import type MasterKeyManager from '@/features/master-key';
-// import type Profiles from '@/features/profiles';
-// import type RTWorker from '@/features/rt-worker';
-// import AppVersionManager from '@/features/app-version';
 import MigrationService from '@/features/migration-service';
-// import Logger from '@/features/logger';
+import EventProcess from '@/features/event-process/EventProcess';
 
 export type RuntimeRegistry = {
     profiles: Profiles;
     globalStorage: IACStorage;
     masterKeyManager: MasterKeyManager;
     rtWorker: RTWorker;
+    eventProcess: EventProcess;
     ipcFrontAPI: IPCInvokerInterface;
     appVersionManager: AppVersionManager;
     migrationService: MigrationService;

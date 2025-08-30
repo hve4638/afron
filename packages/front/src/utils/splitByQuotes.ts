@@ -1,17 +1,20 @@
-const pattern_say = /^(["][^"]*["])(.*)/
-const pattern_think = /^([*][^*]*[*])(.*)/
+const pattern_say = /^(.*)(["][^"]*["])(.*)/
+const pattern_accent = /^(.*)(['][^']*['])(.*)/
+const pattern_think = /^(.*)([*][^*]*[*])(.*)/
 const pattern_plain = /^([^"*]+)(["*].*)/
 
-export const splitByQuotes = (str: string) => {
+export const splitByQuotes = (text: string) => {
     const parts: string[] = [];
-    let text: string = str.trim();
 
-    const tryMatchAndAddParts = (pattern) => {
+    const tryMatchAndAddParts = (pattern: RegExp) => {
         const group = pattern.exec(text);
 
         if (group) {
-            parts.push(group[1]);
-            text = group[2];
+            const [_, prefix, matched, postfix] = group;
+            if (prefix !== '') parts.push(prefix);
+            parts.push(matched);
+            text = postfix;
+
             return true;
         }
         else {
@@ -24,8 +27,10 @@ export const splitByQuotes = (str: string) => {
         return true;
     }
 
-    while (text.trim() !== '') {
-        if (tryMatchAndAddParts(pattern_say)
+    while (text !== '') {
+        if (0
+            || tryMatchAndAddParts(pattern_say)
+            || tryMatchAndAddParts(pattern_accent)
             || tryMatchAndAddParts(pattern_think)
             || tryMatchAndAddParts(pattern_plain)
             || AddRemainder()

@@ -57,7 +57,7 @@
     @include palette-tab($name);
 }
 
-$palette-names: red, orange, yellow, green, sky, blue, purple, default;
+$palette-names: "red", "orange", "yellow", "green", "sky", "blue", "purple", "default";
 
 @each $name in $palette-names {
     .palette-#{$name} {

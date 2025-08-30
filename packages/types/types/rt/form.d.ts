@@ -1,35 +1,12 @@
+import '../storage-struct';
+
 declare global {
-    type RTIndex = {
-        version : string;
-        id : string;
-        name : string;
-        uuid : string;
-        mode : 'flow' | 'prompt_only';
-        input_type : 'normal' | 'chat';
-        form : string[];
-        entrypoint_node : number;
-    }
+    ///@TODO: 과거 타입 정의, StorageStruct.RT 기반으로 다시 변경하기
+    type RTIndex = StorageStruct.RT.Index;
 
-    type RTPromptData = {
-        id : string;
-        name : string;
-        variables : string[];
-
-        model: {
-            stream: boolean;
-            
-            top_p: number;
-            temperature: number;
-            max_tokens: number;
-            use_thinking: boolean;
-            thinking_tokens: number;
-            thinking_auto_budget: boolean;
-            thinking_tokens: number;
-            // thinking_summary: boolean;
-
-            safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
-        };
-    }
+    type RTPromptMetadata = Pick<StorageStruct.RT.Prompt, 
+        'id' | 'name' | 'variables' | 'model'
+    >
 
     type RTPromptDataEditable = {
         name? : string;

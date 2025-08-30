@@ -9,7 +9,7 @@ class PromptOnlyTemplateFactory {
     }
 
     static async empty(profile: Profile, rtId: string, name: string) {
-        await this.createTool(profile, rtId, name);;
+        await this.createTool(profile, rtId, name);
     }
     static async normal(profile: Profile, rtId: string, name: string) {
         const tool = await this.createTool(profile, rtId, name);

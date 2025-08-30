@@ -18,19 +18,18 @@ class RequestAPI {
         RequestAPI.instance ??= new RequestAPI();
         return RequestAPI.instance;
     }
-
     private constructor() {}
 
     async register() {
         if (this.#bindId) return;
         const binded = this.#onRequest.bind(this)
 
-        this.#bindId = await LocalAPI.addRequestListener(binded);
+        this.#bindId = await LocalAPI.events.onRequest(binded);
     }
     async unregister() {
         if (this.#bindId == null) return;
 
-        await LocalAPI.removeRequestListener(this.#bindId);
+        await LocalAPI.events.off(this.#bindId);
         this.#bindId = null;
     }
 

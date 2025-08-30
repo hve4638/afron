@@ -14,7 +14,6 @@ export const MODEL_SETTINGS = {
     'thinking_effort': JSONType.Union('minimal', 'low', 'medium', 'high').nullable().default_value('medium'),
     'verbosity': JSONType.Union('low', 'medium', 'high').nullable().default_value('medium'),
 
-    // 'thinking_summary': JSONType.Bool().nullable().default_value(false),
     'safety_settings': {
         'HARM_CATEGORY_HARASSMENT': SAFETY_SETTING_THRESHOLD,
         'HARM_CATEGORY_HATE_SPEECH': SAFETY_SETTING_THRESHOLD,

@@ -149,18 +149,18 @@ class ProfileRTs implements IRTControl {
         });
         await this.#storeData();
 
-        if (metadata.mode === 'prompt_only') {
-            template = 'basic';
-        }
+        // if (metadata.mode === 'prompt_only') {
+        //     template = 'basic';
+        // }
 
-        const templateBuilder = new RTTemplateBuilder(rt)
-        switch(template) {
-            case 'basic':
-                await templateBuilder.basic();
-                break;
-            case 'chat':
-                break;
-        }
+        // const templateBuilder = new RTTemplateBuilder(rt)
+        // switch(template) {
+        //     case 'basic':
+        //         await templateBuilder.basic();
+        //         break;
+        //     case 'chat':
+        //         break;
+        // }
     }
     
     /**
@@ -178,6 +178,8 @@ class ProfileRTs implements IRTControl {
         this.#tree = newTree;
         this.#rtIds = this.#rtIds.filter((id)=>(id !== rtId));
         this.#storeData();
+
+        await this.rt(rtId).drop();
     }
 
     /**

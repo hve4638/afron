@@ -1,7 +1,7 @@
 {
   "name": "@afron/electron",
   "private": true,
-  "version": "0.9.2",
+  "version": "0.10.0",
   "description": "ChatAI Frontend",
   "repository": "https://github.com/hve4638/ai-front.git",
   "author": "Hve",
@@ -9,7 +9,6 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "yarn build && electron-forge start",
-    
     "start:fast": "electron-forge start",
     "start:dev": "yarn build && cross-env ELECTRON_DEV=TRUE electron .",
     "start:dev:mem": "yarn build && cross-env ELECTRON_DEV=TRUE ELECTRON_IN_MEMORY=TRUE electron .",
@@ -22,7 +21,6 @@
     "compile": "tsc",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    
     "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "devDependencies": {
@@ -71,6 +69,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "js-tiktoken": "^1.0.20",
     "ps-list": "^8.1.1",
+    "sanitize-filename": "^1.6.3",
     "sharp": "^0.34.2",
     "systeminformation": "^5.23.23",
     "tiktoken": "^1.0.21",

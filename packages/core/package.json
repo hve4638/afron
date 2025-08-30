@@ -24,7 +24,7 @@
     "@hve/chatai": "^0.16.0",
     "@hve/mime": "^1.0.0",
     "@hve/prompt-template": "^0.2.0",
-    "ac-storage": "^0.14.0",
+    "ac-storage": "^0.14.1",
     "archiver": "^7.0.1",
     "better-sqlite3": "^12.2.0",
     "file-type": "^21.0.0",

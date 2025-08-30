@@ -12,9 +12,9 @@ import { app } from 'electron';
 
 
 async function initialize() {
-    const documentPath = personal('cp949') ?? process.env['USERPROFILE'] + '/documents' ?? './';
+    const documentPath = personal('cp949') ?? process.env['USERPROFILE'] + '/documents';
     const programPath = new ProgramPath(path.join(documentPath, 'Afron'));
-
+    
     programPath.makeRequiredDirectory();
     
     if (!app.isPackaged) {

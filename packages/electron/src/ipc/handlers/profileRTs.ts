@@ -3,14 +3,15 @@ import { IPCInvokerName } from 'types';
 
 import runtime from '@/runtime';
 import { type Profile } from '@afron/core';
+import { RTExportProcess } from '@/features/event-process';
 
-function handler():IPCInvokerProfileRTs {
+function handler(): IPCInvokerProfileRTs {
     const throttles = {};
 
-    const saveProfile = (profile:Profile) => {
+    const saveProfile = (profile: Profile) => {
         const throttleId = `profile_${profile.path}`;
         throttles[throttleId] ??= utils.throttle(500);
-        throttles[throttleId](()=>{
+        throttles[throttleId](() => {
             profile.commit();
         });
     }
@@ -20,7 +21,7 @@ function handler():IPCInvokerProfileRTs {
         async generateId(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rtId = await profile.generateRTId();
-
+            
             return [null, rtId] as const;
         },
 
@@ -40,7 +41,7 @@ function handler():IPCInvokerProfileRTs {
         },
 
         /* RT 컨트롤 */
-        async createUsingTemplate(profileId: string, rtMetadata:RTMetadata, templateId: string) {
+        async createUsingTemplate(profileId: string, rtMetadata: RTMetadata, templateId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             await profile.createUsingTemplate(rtMetadata, templateId);
 
@@ -57,18 +58,16 @@ function handler():IPCInvokerProfileRTs {
             const profile = await runtime.profiles.getProfile(profileId);
             profile.removeRT(promptId);
             saveProfile(profile);
-            
+
             return [null] as const;
         },
 
-        // [IPCInvokerName.HasProfileRTId]: 
         async existsId(profileId: string, rtId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const exists = await profile.hasRTId(rtId);
 
             return [null, exists] as const;
         },
-        // [IPCInvokerName.ChangeProfileRTId]:
         async changeId(profileId: string, oldRTId: string, newRTId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             profile.changeRTId(oldRTId, newRTId);
@@ -77,6 +76,18 @@ function handler():IPCInvokerProfileRTs {
             return [null] as const;
         },
 
+        async importFile(token: string, profileId: string) {
+            const rtImportProcess = runtime.eventProcess.RTImportProcess();
+            rtImportProcess.process(token, profileId);
+
+            return [null] as const;
+        },
+        async exportFile(token: string, profileId: string, rtId: string) {
+            const rtExportProcess = runtime.eventProcess.RTExportProcess();
+            rtExportProcess.process(token, profileId, rtId);
+
+            return [null] as const;
+        }
     }
 }
 

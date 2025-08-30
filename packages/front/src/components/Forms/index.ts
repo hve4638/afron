@@ -8,10 +8,12 @@ import HotkeyForm from './HotkeyForm';
 import CheckBoxForm from './CheckBoxForm';
 import DropdownForm from './DropdownForm';
 
+const TextForm = StringForm;
 export {
     ToggleSwitchForm,
     NumberForm,
     StringForm,
+    TextForm,
     StringLongForm,
     ButtonForm,
     HotkeyForm,

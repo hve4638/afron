@@ -60,8 +60,6 @@ function NewRTModal({
                         setStep(NewRTModalStep.SelectRTType);
                     }}
                     onConfirm={async (metadata)=>{
-                        // )
-                        // await profile.createRT(
                         await ProfileEvent.rt.create({
                             name: metadata.name,
                             id: metadata.id,

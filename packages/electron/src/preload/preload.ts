@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { IPCListenerPing } from './data';
+import { IPCListenerPing } from '../data';
+import { createListenerManager } from './listener-utils';
 
 type IPCInvokerKeys = keyof IPCInvokerInterface;
 type IPCInvokerPath = {
@@ -95,6 +96,8 @@ const ipcInvokerPath = {
         existsId: 0,
         generateId: 0,
         changeId: 0,
+        exportFile: 0,
+        importFile: 0,
     },
     profileRT: {
         getMetadata: 0,
@@ -149,27 +152,31 @@ const ipcInvokers: IPCInvokerInterface = Object.fromEntries(
     ) as [IPCInvokerKeys, Record<string, (...args: any) => Promise<any>>][]
 ) as IPCInvokerInterface;
 
-// listener 인터페이스
-// @TODO: 나중엔 이것도 의존성을 강하게 부여해서 강건성 높여야함
-let bindId = 0;
-const bindedListener = new Map<number, any>();
-const ipcListeners: IPCListenerInterface = {
-    addRequestListener: async (listener: (event: any, token: string, data: any) => void) => {
-        const index = bindId++;
-        bindedListener.set(index, listener);
+const listenerManager = createListenerManager();
 
-        ipcRenderer.on(IPCListenerPing.Request, listener);
-        return [null, index];
+const ipcListeners: IPCListenerInterface = {
+    addRequestListener: async (listener) => {
+        return listenerManager.add(IPCListenerPing.Request, listener);
     },
     removeRequestListener: async (bindId: number) => {
-        const binded = bindedListener.get(bindId);
-        if (binded) {
-            ipcRenderer.off(IPCListenerPing.Request, binded);
-            bindedListener.delete(bindId);
-        }
-        return [null];
+        return listenerManager.remove(bindId);
     },
-}
+
+    events: {
+        onRequest: async (listener) => {
+            return listenerManager.add(IPCListenerPing.Request, listener);
+        },
+        onGlobal: async (listener) => {
+            return listenerManager.add(IPCListenerPing.Global, listener);
+        },
+        onDebug: async (listener) => {
+            return listenerManager.add(IPCListenerPing.Debug, listener);
+        },
+        off: async (bindId: number) => {
+            return listenerManager.remove(bindId);
+        },
+    }
+};
 
 const ipcExports = {
     ...ipcInvokers,

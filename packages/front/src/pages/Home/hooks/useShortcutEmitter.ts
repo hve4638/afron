@@ -2,8 +2,11 @@ import { useEffect } from 'react';
 import { Shortcut } from '@/types/shortcut';
 import useShortcutStore from '@/stores/useShortcutStore';
 import { emitEvent, EventNames } from '@/hooks/useEvent';
+import useHotkey from '@/hooks/useHotkey';
+import { useNavigate } from 'react-router';
 
 function useShortcutEmitter() {
+    const navigate = useNavigate();
     const shortcuts = useShortcutStore();
 
     useShortcut(shortcuts.font_size_up, 'font_size_up');
@@ -24,6 +27,15 @@ function useShortcutEmitter() {
     useShortcut(shortcuts.tab7, 'change_tab7');
     useShortcut(shortcuts.tab8, 'change_tab8');
     useShortcut(shortcuts.tab9, 'change_tab9');
+
+    useHotkey({
+        'F12': (e) => {
+            if (e.altKey && e.ctrlKey) {
+                console.log('F12 + Alt');
+                navigate('/test');
+            }
+        }
+    }, true)
 }
 
 function useShortcut(shortcut: Shortcut, eventName: EventNames) {

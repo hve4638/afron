@@ -1,12 +1,15 @@
 import React, { ReactNode } from 'react';
 import ReactMarkdown, { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
+import remarkBreaks from 'remark-breaks';
 import rehypeHighlight from 'rehype-highlight';
 
 import { splitByQuotes } from '@/utils/splitByQuotes';
 import classNames from 'classnames';
+import CodeBlock from './components/CodeBlock';
 
+import styles from './Markdown.module.scss';
+import LocalAPIInstance from '@/api/local';
 
 const customRenderers: Partial<Components> = {
     p({ children }) {
@@ -36,6 +39,7 @@ const customRenderers: Partial<Components> = {
             }
         }
 
+
         return (
             <p>
                 {
@@ -56,27 +60,62 @@ const customRenderers: Partial<Components> = {
                 }
             </p>
         );
+    },
+    em({ children }) {
+        return <em className='think'>{children}</em>;
+    },
+    code(data) {
+        return <code>{data.children}</code>;
+    },
+    pre(props) {
+        const { children, className } = props;
+        const child = React.Children.only(children) as React.ReactElement;
+        if (child && (child.type as any)?.name === 'code') {
+            return (
+                <CodeBlock>
+                    {children}
+                </CodeBlock>
+            );
+        }
+        return <pre className={className} {...props}>{children}</pre>;
+    },
+    a({ children, href }) {
+        return <a
+            className='link'
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={()=>{
+                if (href) {
+                    LocalAPIInstance.general.openBrowser(href);
+                }
+            }}
+        >{children}
+        </a>;
     }
 };
 
-function MarkdownArea({ 
-    className='',
-    style={},
+function MarkdownArea({
+    className = '',
+    style = {},
     onKeyDown,
     content
-}:{ content: string, className?: string, style?: React.CSSProperties, onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void }) {
+}: { content: string, className?: string, style?: React.CSSProperties, onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void }) {
     return (
         <div
-            className={classNames('markdown-area', className)}
-            style={style}
+            className={classNames(styles['markdown-area'], className)}
+            style={{
+                ...style,
+                display: 'block',
+            }}
             onKeyDown={onKeyDown}
         >
             <ReactMarkdown
-                children={content}
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                remarkPlugins={[remarkGfm, remarkBreaks]}
+                rehypePlugins={[rehypeHighlight]}
+                // rehypePlugins={[rehypeRaw, rehypeHighlight]}
                 components={customRenderers}
-            />
+            >{content}
+            </ReactMarkdown>
         </div>
     );
 }

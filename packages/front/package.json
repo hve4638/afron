@@ -41,6 +41,7 @@
     "react-tooltip": "^5.29.0",
     "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
+    "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "sass": "^1.80.6",
     "spinners-react": "^1.0.10",

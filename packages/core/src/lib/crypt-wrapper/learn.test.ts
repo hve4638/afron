@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { describe, expect, test } from 'vitest';
 
 describe('AES', () => {
     test('scrypt', () => {

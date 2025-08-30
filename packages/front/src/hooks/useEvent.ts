@@ -56,17 +56,20 @@ type Events = {
     /* UI 이벤트 */
     change_profile: ping;
     input_file_upload: { file: File, latch: Latch };
-
-    /* RequestManager에서 호출됨 */
-    show_rt_preview: RTEventPreviewData;
+5
     logging_error: LogEntry;
     show_toast_message: Toast;
+
+    /* 모달 열기 */
+    open_rt_preview_modal: RTEventPreviewData;
+    open_error_log: string | null;
+    open_progress_modal: { modalId: string; description?: string; progress?: number; };
 
     /* Chaining */
     request_ready: Channel<unknown>;
 
-    /* modal */
-    open_error_log: string | null;
+    import_rt_from_file: ping;
+    export_rt_to_file: { rtId: string; };
 }
 
 export type EventNames = keyof Events;

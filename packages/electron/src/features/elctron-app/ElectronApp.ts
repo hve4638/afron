@@ -42,13 +42,14 @@ class ElectronApp {
 
         const win = this.win;
         const winRef = new WeakRef(win);
-        // runtime.rtWorker.setBrowserWindowRef(new WeakRef(win));
+        
+        runtime.eventProcess.resetBrowserWindow(win);
         runtime.rtWorker.addRTEventListener((event) => {
             const window = winRef.deref();
             if (window) {
                 window.webContents.send(IPCListenerPing.Request, event.id, event);
             }
-        })
+        });
 
         const {
             dev, devUrl, showDevTool

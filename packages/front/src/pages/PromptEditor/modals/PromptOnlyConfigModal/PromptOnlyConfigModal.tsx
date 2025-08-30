@@ -137,7 +137,6 @@ function PromptOnlyConfigModal({
                     value={data.model.thinking_effort}
                     onChange={(next) => changeModelConfig('thinking_effort', next)}
                 />
-                <div style={{ height: '1em' }} />
                 <ModelForm.Verbosity
                     value={data.model.verbosity}
                     onChange={(next) => changeModelConfig('verbosity', next)}

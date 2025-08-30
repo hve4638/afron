@@ -25,12 +25,19 @@ declare global {
     }
 
     type IPCListenerInterface = {
-        addRequestListener(listener:(event:any, token:string, data:any)=>void): EResult<number>;
-        removeRequestListener(bindId:number): ENoResult;
-        // addDebugLogListener(message:string): EResult<number>;
-        // removeRequestListener(message:string): EResult<number>;
+        /** @deprecated */
+        addRequestListener(listener: (event: any, token: string, data: any) => void): EResult<number>;
+        /** @deprecated */
+        removeRequestListener(bindId: number): ENoResult;
+
+        events: {
+            onRequest(listener: (event: any, token: string, data: any) => void): EResult<number>;
+            onGlobal(listener: (event: any, token: string, data: any) => void): EResult<number>;
+            onDebug(listener: (event: any, token: string, data: any) => void): EResult<number>;
+            off(bindId: number): ENoResult;
+        }
     };
-    
+
     type IPCInterface = IPCInvokerInterface & IPCListenerInterface;
 
     type IPCInvokerPath = {
