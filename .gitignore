@@ -40,3 +40,4 @@ yarn-error.log*
 # 임시 파일
 front-old/
 tsconfig.app.tsbuildinfo
+docs/
