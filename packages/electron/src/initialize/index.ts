@@ -1,15 +1,16 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { app } from 'electron';
+import { personal } from 'win-known-folders';
+
+import ProgramPath from '@/features/program-path';
+import { initIPC } from '@/ipc'
+import { formatDateLocal } from '@/utils';
+
+import { initRegistryWithEnv } from './initRegistryWithEnv';
 import { initAfronEnv } from './initAfronEnv'
 import { initRegistry } from './initRegistry'
 import { initDevOptions } from './initDevOptions'
-import { initIPC } from '@/ipc'
-import ProgramPath from '@/features/program-path';
-import { personal } from 'win-known-folders';
-import { initRegistryWithEnv } from './initRegistryWithEnv';
-import { formatDateLocal } from '@/utils';
-import { app } from 'electron';
-
 
 async function initialize() {
     const documentPath = personal('cp949') ?? process.env['USERPROFILE'] + '/documents';
@@ -32,6 +33,5 @@ async function initialize() {
     initIPC();
     await initDevOptions();
 }
-
 
 export default initialize;

@@ -7,8 +7,6 @@ import {
     
     RTPromptOnlyTemplateTool,
 } from '@afron/core';
-// import Profiles from '@/features/profiles';
-// import { PromptOnlyTemplateFactory, RTPromptOnlyTemplateTool } from '@/features/rt-template-factory';
 
 import AIFrontPromptLoader from './AIFrontPromptLoader';
 import { VarMetadata } from './LegacyPromptParser';
@@ -56,8 +54,6 @@ class MigrationService {
         }
         else {
             await prompt.loadPromptTemplate();
-
-            // runtime.ipcFrontAPI.profileRTs.createUsingTemplate(profileId, { id: prompt.key, name: prompt.name, mode: 'prompt_only' }, 'empty');
 
             const profile = await runtime.profiles.getProfile(profileId);
 
