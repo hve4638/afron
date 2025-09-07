@@ -31,11 +31,10 @@ function useShortcutEmitter() {
     useHotkey({
         'F12': (e) => {
             if (e.altKey && e.ctrlKey) {
-                console.log('F12 + Alt');
                 navigate('/test');
             }
         }
-    }, true)
+    }, import.meta.env['VITE_DEV'] === 'TRUE');
 }
 
 function useShortcut(shortcut: Shortcut, eventName: EventNames) {
