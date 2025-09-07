@@ -32,6 +32,10 @@ class RTWorker {
         this.#handlers.push(handler);
     }
 
+    async removeAllRTEventListeners(): Promise<void> {
+        this.#handlers = [];
+    }
+
     async request(token: string, { profile, sessionId }: WorkRequired, { preview = false }: WorkOptions): Promise<string> {
         // 토큰 중복 여부 검사
         // 토큰은 동기화 문제 때문에 frontend에서 받아오므로 항상 검증 필요
@@ -60,7 +64,9 @@ class RTWorker {
 
         // emitter 핸들러 등록
         const emitter = new RTEventEmitter(token, this.logger);
-        emitter.on(this.#handlers[0]);
+        for (const handler of this.#handlers) {
+            emitter.on(handler);
+        }
 
         // 옵션에 따라 입력 필드 비우기
         const configAC = await profile.accessAsJSON('config.json');
