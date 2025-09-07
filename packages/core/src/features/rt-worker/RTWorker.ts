@@ -28,11 +28,11 @@ class RTWorker {
         this.logger = logger ?? NoLogger.instance;
     }
 
-    async addRTEventListener(handler: RTEventListener): Promise<void> {
+    addRTEventListener(handler: RTEventListener) {
         this.#handlers.push(handler);
     }
 
-    async removeAllRTEventListeners(): Promise<void> {
+    removeAllRTEventListeners() {
         this.#handlers = [];
     }
 

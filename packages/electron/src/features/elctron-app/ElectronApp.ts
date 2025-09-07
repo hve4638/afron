@@ -39,7 +39,7 @@ class ElectronApp {
 
         return win;
     }
-    
+
     async #openNewWindow(existingWin?: BrowserWindow): Promise<BrowserWindow> {
         let win = existingWin ?? (await this.#createBrowserWindow());
         if (win == null) {
@@ -49,10 +49,15 @@ class ElectronApp {
 
         const winRef = new WeakRef(win);
         runtime.eventProcess.resetBrowserWindow(win);
-        runtime.rtWorker.addRTEventListener((event) => {
+        
+        runtime.rtWorker.removeAllRTEventListeners();
+        runtime.rtWorker.addRTEventListener((event: RTEventData) => {
             const window = winRef.deref();
             if (window) {
                 window.webContents.send(IPCListenerPing.Request, event.id, event);
+            }
+            else {
+                runtime.logger.warn(`RTEvent handle failed. BrowserWindow has been closed. (event id: ${event.id})`);
             }
         });
 
@@ -115,22 +120,16 @@ class ElectronApp {
     /** 앱 핸들러 설정, 최초 1회 실행 */
     async #setupAppHandler(app: Electron.App) {
         app.on('window-all-closed', async () => {
-            if (process.platform !== 'darwin') {
-                runtime.logger.info('Quitting app');
+            runtime.logger.trace('[Electron][app] window-all-closed');
 
-                try {
-                    globalShortcut.unregisterAll();
-                    await runtime.globalStorage.commitAll();
-                    await runtime.profiles.saveAll();
-                }
-                finally {
-                    app.quit();
-                    runtime.logger.info('Exit');
-                }
+            if (process.platform !== 'darwin') {
+                app.quit();
             }
         });
 
         app.on('activate', async () => {
+            runtime.logger.trace('[Electron][app] activate');
+
             if (
                 process.platform === 'darwin'
                 && BrowserWindow.getAllWindows().length === 0
@@ -143,9 +142,11 @@ class ElectronApp {
         });
 
         app.on('will-quit', async () => {
-            globalShortcut.unregisterAll();
+            runtime.logger.trace('[Electron][app] will-quit');
+            runtime.logger.info('App is quitting, cleaning up...');
 
             try {
+                globalShortcut.unregisterAll();
                 await runtime.globalStorage.commitAll();
                 await runtime.profiles.saveAll();
             }
@@ -158,18 +159,20 @@ class ElectronApp {
     /** BrowserWindow 핸들러 설정, 윈도우 생성시 실행 */
     async #setupWindowHandler(win: BrowserWindow) {
         const cacheAC = await runtime.globalStorage.accessAsJSON('cache.json');
-        const throttledResize = throttle(100);
+        const throttledResize = throttle(500);
 
         win.on('resize', () => {
+            runtime.logger.trace('[Electron][win] resize');
+
             const [width, height] = win.getSize();
             throttledResize(() => {
-                runtime.logger.trace(`Window resized: ${width}x${height}`);
-
                 cacheAC.setOne('lastsize', [width, height]);
             });
         });
 
         win.on('close', async (event) => {
+            runtime.logger.trace('[Electron][win] close');
+
             runtime.logger.info('Window closed');
         });
     }
