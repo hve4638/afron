@@ -16,6 +16,8 @@
     "build": "rollup -c",
     "dist": "yarn dist:win",
     "dist:win": "electron-builder -c.extraMetadata.main=./dist/main.js",
+    "dist:mac": "electron-builder -c.extraMetadata.main=./dist/main.js --mac",
+    "make:mac": "electron-forge make --platform=darwin",
     "playground": "tsx ./src/playground",
     "test": "jest",
     "compile": "tsc",
@@ -27,6 +29,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "@electron-forge/cli": "^7.5.0",
     "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-dmg": "^7.5.0",
     "@electron-forge/maker-rpm": "^7.5.0",
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.5.0",
@@ -91,6 +94,46 @@
     "directories": {
       "buildResources": "static/assets",
       "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "./static/favicon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "artifactName": "${productName}-${version}-mac-${arch}.${ext}",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "./build/entitlements.mac.plist",
+      "entitlementsInherit": "./build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "backgroundColor": "#ffffff",
+      "window": {
+        "width": 600,
+        "height": 420
+      },
+      "contents": [
+        {
+          "x": 130,
+          "y": 220,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     }
   }
 }
