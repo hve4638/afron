@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useHotkey from 'hooks/useHotkey';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
 import UploadForm from '@/components/UploadForm';
-import { StringForm, StringLongForm } from '@/components/forms';
+import { StringForm, StringLongForm } from '@/components/forms_';
 
 type StringInputModalProps = {
     title: string;

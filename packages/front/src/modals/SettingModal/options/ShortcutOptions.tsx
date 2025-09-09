@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { CheckBoxForm, HotkeyForm } from '@/components/forms';
+import { CheckBoxForm, HotkeyForm } from '@/components/forms_';
 import ShortcutModal from './ShortcutModal';
 import { shortcutToText } from 'utils/shortcut';
 import { Shortcut } from 'types/shortcut';

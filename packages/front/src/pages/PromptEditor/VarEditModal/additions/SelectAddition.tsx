@@ -3,7 +3,7 @@ import { TextInput } from 'components/Input';
 import { Align, Flex, Grid, Row } from 'components/layout';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import DropdownForm, { Dropdown } from '@/components/forms_/DropdownForm';
 
 type PropmtVarSelectOptionProps = {
     promptVar: PromptVarSelect;

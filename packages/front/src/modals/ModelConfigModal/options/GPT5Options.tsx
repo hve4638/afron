@@ -1,4 +1,4 @@
-import { CheckBoxForm } from '@/components/forms';
+import { CheckBoxForm } from '@/components/forms_';
 import Delimiter from '@/components/Delimiter';
 import ModelForm from '@/components/model-ui';
 

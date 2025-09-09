@@ -1,4 +1,4 @@
-import SliderForm from '@/components/forms/SliderForm';
+import SliderForm from '@/components/forms_/SliderForm';
 import { useMemo } from 'react';
 import { safetyFilterThresholdMap, safetyFilterThresholdMapReverse } from '../data';
 

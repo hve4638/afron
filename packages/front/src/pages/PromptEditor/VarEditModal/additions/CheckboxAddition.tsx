@@ -1,4 +1,4 @@
-import { CheckBoxForm } from '@/components/forms';
+import { CheckBoxForm } from '@/components/forms_';
 import { useTranslation } from 'react-i18next';
 
 type PropmtVarCheckboxOptionProps = {

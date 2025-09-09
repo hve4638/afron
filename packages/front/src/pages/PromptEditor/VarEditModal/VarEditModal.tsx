@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { ModalBackground, ModalBox, ModalHeader } from 'components/Modal';
-import { StringForm } from '@/components/forms';
+import { StringForm } from '@/components/forms_';
 
 import {
     Additions,
@@ -14,7 +14,7 @@ import { MODAL_DISAPPEAR_DURATION } from 'data'
 import useModalDisappear from '@/hooks/useModalDisappear';
 import useHotkey from '@/hooks/useHotkey';
 import { useTranslation } from 'react-i18next';
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import DropdownForm, { Dropdown } from '@/components/forms_/DropdownForm';
 
 const VAR_DROPDOWN_ITEMS = [
     dropdownItem('텍스트', 'text'),

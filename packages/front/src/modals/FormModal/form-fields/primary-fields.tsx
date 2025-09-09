@@ -1,6 +1,6 @@
-import { CheckBoxForm, NumberForm, StringForm } from '@/components/forms'
+import { CheckBoxForm, NumberForm, StringForm } from '@/components/forms_'
 import FormFieldProps from './types'
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm'
+import DropdownForm, { Dropdown } from '@/components/forms_/DropdownForm'
 
 export function TextField({ name, promptVar, onChange, value }: FormFieldProps<PromptVarText, string>) {
     return <StringForm

@@ -1,4 +1,4 @@
-import { NumberForm } from "../forms";
+import { NumberForm } from "../forms_";
 
 interface TemperatureFormProps {
     value: number | undefined;

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { CheckBoxForm } from '@/components/forms';
+import { CheckBoxForm } from '@/components/forms_';
 import { Align, Center, Column, Flex, Row } from 'components/layout';
 import CheckBox from 'components/CheckBox';
 import { useCacheStore, useConfigStore, useDataStore, useProfileAPIStore } from '@/stores';

@@ -1,4 +1,4 @@
-import { ButtonForm, StringForm, StringLongForm } from '@/components/forms';
+import { ButtonForm, StringForm, StringLongForm } from '@/components/forms_';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
 import { useModal } from '@/hooks/useModal';
@@ -8,7 +8,7 @@ import SelectAuthKeyModal from './SelectAuthKeyModal';
 import useHotkey from '@/hooks/useHotkey';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { GIconButton } from '@/components/GoogleFontIcon';
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import DropdownForm, { Dropdown } from '@/components/forms_/DropdownForm';
 
 interface EditCustomModelModalProps {
     value?: CustomModelCreate;
