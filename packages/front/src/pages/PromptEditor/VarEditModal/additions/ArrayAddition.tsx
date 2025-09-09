@@ -5,7 +5,7 @@ import CheckboxAddition from './CheckboxAddition';
 import NumberAddition from './NumberAddition';
 import SelectAddition from './SelectAddition';
 import StructAddition from './StructAddition';
-import DropdownForm, { Dropdown } from '@/components/forms_/DropdownForm';
+import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
 
 const VAR_DROPDOWN_ITEMS = [
     dropdownItem('텍스트', 'text'),

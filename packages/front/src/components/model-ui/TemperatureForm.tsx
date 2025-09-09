@@ -1,4 +1,4 @@
-import { NumberForm } from "../forms_";
+import { NumberForm } from "../forms";
 
 interface MaxTokenFormProps {
     value: number | undefined;

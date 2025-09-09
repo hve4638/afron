@@ -1,4 +1,4 @@
-import DropdownForm, { Dropdown } from '@/components/forms_/DropdownForm';
+import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
 
 interface VerbosityFormProps {
     candidates?: readonly SupportedVerbosity[];

@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react';
 import { LayoutModes, ThemeModes } from '@/types/profile';
 import { useConfigStore } from '@/stores';
 
-import SliderForm from '@/components/forms_/SliderForm';
+import SliderForm from '@/components/forms/SliderForm';
 import { Column } from '@/components/layout';
-import { CheckBoxForm, DropdownForm, NumberForm } from '@/components/forms_';
+import { CheckBoxForm, DropdownForm, NumberForm } from '@/components/forms';
 
 import { remapDecimal } from '@/utils/math';
 import styles from '../styles.module.scss';

@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import styles from './styles.module.scss';
 import { MODAL_DISAPPEAR_DURATION } from 'data';
 import useModalDisappear from 'hooks/useModalDisappear';
-import { ButtonForm } from '@/components/forms_';
+import { ButtonForm } from '@/components/forms';
 import { ProfileNameLayout } from './layout';
 import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '@/modals/Dialog';

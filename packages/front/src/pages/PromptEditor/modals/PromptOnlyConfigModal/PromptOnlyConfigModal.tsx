@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Modal, ModalHeader } from '@/components/Modal';
-import { ButtonForm, StringForm } from '@/components/forms_';
+import { ButtonForm, StringForm } from '@/components/forms';
 
 import useTrigger from '@/hooks/useTrigger';
 import styles from './styles.module.scss';
@@ -15,7 +15,7 @@ import ModelForm from '@/components/model-ui';
 import { useModal } from '@/hooks/useModal';
 import SafetySettingConfigModal from './SafetySettingConfigModal';
 import Subdescription from '@/components/ui/Description';
-import DropdownForm, { Dropdown } from '@/components/forms_/DropdownForm';
+import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
 
 type PromptOnlyConfigModalProps = {
     data: PromptEditorData;

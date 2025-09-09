@@ -1,5 +1,5 @@
 import { useConfigStore } from '@/stores';
-import { CheckBoxForm, DropdownForm, NumberForm } from '@/components/forms_';
+import { CheckBoxForm, DropdownForm, NumberForm } from '@/components/forms';
 import { Column } from '@/components/layout';
 
 import styles from '../styles.module.scss';

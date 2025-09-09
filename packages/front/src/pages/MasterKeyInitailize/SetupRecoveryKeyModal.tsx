@@ -6,7 +6,7 @@ import Button from "components/Button";
 import classNames from "classnames";
 import ReactLoading from 'react-loading';
 import useModalDisappear from "hooks/useModalDisappear";
-import { StringForm } from "@/components/forms_";
+import { StringForm } from "@/components/forms";
 
 interface RecoveryKeySetupModalProps {
     onSubmit: (recoveryKey:string) => Promise<boolean>;

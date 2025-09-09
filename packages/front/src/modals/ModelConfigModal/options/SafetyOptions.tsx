@@ -1,5 +1,5 @@
 import Delimiter from '@/components/Delimiter';
-import { CheckBoxForm } from '@/components/forms_';
+import { CheckBoxForm } from '@/components/forms';
 import SafetyFilterSlider from './SafetyFilterSlider';
 import { OptionsProps } from './types';
 import ModelForm from '@/components/model-ui';
