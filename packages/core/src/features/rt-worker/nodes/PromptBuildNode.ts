@@ -1,11 +1,11 @@
-import { CBFFail, CBFResult, PromptGenerator, PromptTemplate } from '@hve/prompt-template';
+import APTL, { TemplateOutput, PromptGenerator } from 'advanced-prompt-template-lang';
 import { Chat, ChatMessages, ChatRole } from '@hve/chatai';
 import { BUILT_IN_VARS, HOOKS } from '../data';
-import WorkNode from './WorkNode';
 import { WorkNodeStop } from './errors';
+import WorkNode from './WorkNode';
+import { UserInput } from './types';
 import ChatGenerator from '../prompt-generator/ChatGenerator';
 import { InputPromptGenerator } from '../prompt-generator';
-import { UserInput } from './types';
 
 export type PromptBuildNodeInput = {
     input: UserInput;
@@ -60,14 +60,14 @@ class PromptBuildNode extends WorkNode<PromptBuildNodeInput, PromptBuildNodeOutp
             vars[v.name] = form[v.id!] ?? getDefaultValue(v);
         });
 
-        const { nodes, errors } = PromptTemplate.build(contents);
-        if (errors.length > 0) {
+        const compileOutput = APTL.compile(contents);
+        if (!compileOutput.ok) {
             this.logger.error(`Prompt build failed (id=${this.nodeId})`);
 
             rtEventEmitter.emit.error.promptBuildFailed(
-                errors.map((e: CBFFail) => {
-                    this.logger.debug(`Prompt build failed ${e.message}`);
-                    return `${e.message} (${e.positionBegin})`;
+                compileOutput.errors.map((reason) => {
+                    this.logger.debug(`Prompt build failed ${reason.error_type}`);
+                    return `${reason.text} (${reason.position.begin})`;
                 })
             );
             throw new WorkNodeStop();
@@ -77,9 +77,9 @@ class PromptBuildNode extends WorkNode<PromptBuildNodeInput, PromptBuildNodeOutp
         additionalBuiltInVars['input'] = new InputPromptGenerator({ text: input.text, files: input.files });
         additionalBuiltInVars['chat'] = new ChatGenerator(chat);
 
-        let generator: Generator<CBFResult>;
+        let generator: Generator<TemplateOutput>;
         try {
-            generator = PromptTemplate.execute(nodes, {
+            generator = APTL.execute(compileOutput, {
                 builtInVars: {
                     ...BUILT_IN_VARS,
                     ...additionalBuiltInVars,
@@ -89,55 +89,38 @@ class PromptBuildNode extends WorkNode<PromptBuildNodeInput, PromptBuildNodeOutp
             });
         }
         catch (e) {
-
             throw new WorkNodeStop();
         }
 
         const promptMessage: ChatMessages = [];
-        const processResult = (result: CBFResult) => {
-            switch (result.type) {
-                case 'ROLE':
-                    switch (result.role.toLowerCase()) {
-                        case 'user':
-                            promptMessage.push(ChatRole.User());
+        try {
+            APTL.format(generator, {
+                role: ({ role }) => {
+                    switch (role.toLowerCase()) {
+                        case 'system':
+                            promptMessage.push(ChatRole.System());
                             break;
                         case 'assistant':
                         case 'model':
                         case 'bot':
                             promptMessage.push(ChatRole.Assistant());
                             break;
-                        case 'system':
-                            promptMessage.push(ChatRole.System());
+                        case 'user':
+                        default:
+                            promptMessage.push(ChatRole.User());
                             break;
                     }
-                    break;
-                case 'TEXT':
-                    if (promptMessage.length === 0) {
-                        promptMessage.push(ChatRole.User());
-                    }
-                    promptMessage.at(-1)?.content.push(Chat.Text(result.text));
-                    break;
-                case 'IMAGE':
-                    if (promptMessage.length === 0) {
-                        promptMessage.push(ChatRole.User());
-                    }
-                    promptMessage.at(-1)?.content.push(Chat.Image.Base64(result.data));
-                    break;
-                case 'FILE':
-                    if (promptMessage.length === 0) {
-                        promptMessage.push(ChatRole.User());
-                    }
-                    promptMessage.at(-1)?.content.push(Chat.PDF.Base64(result.filename, result.data));
-                    break;
-                case 'SPLIT':
-                    break;
-            }
-        }
-
-        try {
-            for (const result of generator) {
-                processResult(result);
-            }
+                },
+                text: ({ text }) => {
+                    promptMessage.at(-1)?.content.push(Chat.Text(text));
+                },
+                image: ({ data, dataType, filename }) => {
+                    promptMessage.at(-1)?.content.push(Chat.Image.Base64(data));
+                },
+                file: ({ data, dataType, filename }) => {
+                    promptMessage.at(-1)?.content.push(Chat.PDF.Base64(filename, data));
+                },
+            });
         }
         catch (e) {
             this.logger.warn(e);

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import Editor, { useMonaco } from '@monaco-editor/react';
-import { PromptTemplate, CBFFail } from '@hve/prompt-template';
+import APTL, {  } from 'advanced-prompt-template-lang';
 
 import useLazyThrottle from '@/hooks/useLazyThrottle';
 import { calcTextPosition } from '@/utils';
@@ -63,7 +63,7 @@ function EditorSection({
     }
 
     const lint = useLazyThrottle((text:string)=>{
-        const result = PromptTemplate.build(text);
+        const result = APTL.compile(text);
         if (result.errors.length === 0) {
             clearErrorMarker();
         }
@@ -72,17 +72,17 @@ function EditorSection({
                 const {
                     line : startLineNumber,
                     column : startColumn,
-                } = calcTextPosition(text, e.positionBegin);
+                } = calcTextPosition(text, e.position.begin);
                 const {
                     line : endLineNumber,
                     column : endColumn,
-                } = calcTextPosition(text, e.positionEnd);
+                } = calcTextPosition(text, e.position.end);
                 return {
-                    message: t(`prompt.error.${e.type}`) + `(${e.type})`, 
-                    startLineNumber : startLineNumber + 1,
-                    endLineNumber : endLineNumber + 1,
-                    startColumn : startColumn + 1,
-                    endColumn : endColumn + 1,
+                    message: t(`prompt.error.${e.error_type}`) + `(${e.error_type})`, 
+                    startLineNumber: startLineNumber + 1,
+                    endLineNumber: endLineNumber + 1,
+                    startColumn: startColumn + 1,
+                    endColumn: endColumn + 1,
                 }
             });
             console.log('markers')
@@ -100,7 +100,6 @@ function EditorSection({
         wordWrap: 'bounded',
         wrappingStrategy: 'advanced',
     };
-
     
     return (
         <div

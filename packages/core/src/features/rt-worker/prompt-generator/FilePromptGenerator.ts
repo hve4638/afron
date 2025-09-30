@@ -1,4 +1,4 @@
-import { CBFResult, PromptGenerator } from '@hve/prompt-template';
+import { PromptGenerator } from 'advanced-prompt-template-lang';
 import { parseInputFileToCBFResult } from './utils';
 
 class FilePromptGenerator extends PromptGenerator {
