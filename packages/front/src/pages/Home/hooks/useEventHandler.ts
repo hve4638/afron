@@ -28,7 +28,7 @@ function useEventHandler() {
     useEvent('send_request', async () => {
         if (!checkAPI()) return;
         if (last_session_id == null) return;
-
+        
         const waitChannel = new Channel();
         emitEvent('request_ready', waitChannel);
         await waitChannel.consume();
