@@ -20,7 +20,10 @@ function RequestButton() {
                 height: '40px',
             }}
             onClick={() => {
-                emitEvent('send_request');
+                if (sessionState.state === 'idle') {
+                    emitEvent('send_request');
+                }
+                
             }}
         />
     )

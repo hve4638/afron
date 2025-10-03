@@ -17,10 +17,16 @@ type WorkOptions = {
     preview?: boolean;
 }
 
+interface RTWorkSession {
+    running: boolean;
+    emitter: RTEventEmitter;
+}
+
 class RTWorker {
     protected logger: LevelLogger;
 
-    #tokens: Set<string> = new Set();
+    // #tokens: Set<string> = new Set();
+    #sessions: Map<string, RTWorkSession> = new Map();
     #handlers: RTEventListener[];
 
     constructor(handlers: RTEventListener[], logger?: LevelLogger) {
@@ -38,14 +44,12 @@ class RTWorker {
 
     async request(token: string, { profile, sessionId }: WorkRequired, { preview = false }: WorkOptions): Promise<string> {
         // 토큰 중복 여부 검사
-        // 토큰은 동기화 문제 때문에 frontend에서 받아오므로 항상 검증 필요
-        if (this.#tokens.has(token)) {
+        // 토큰은 front단에서 생성하고 받아오므로 항상 검증 필요
+        if (this.#sessions.has(token)) {
             this.logger.error(`RTWork failed: duplicate token`, token);
 
             throw new Error(`Duplicate token: ${token}`);
         }
-        this.#tokens.add(token);
-        this.logger.trace(`RT request started (${token})`)
 
         // RTWorkflow 필요 데이터 생성
         const session = profile.session(sessionId);
@@ -67,6 +71,10 @@ class RTWorker {
         for (const handler of this.#handlers) {
             emitter.on(handler);
         }
+
+        // 세션 등록
+        this.#sessions.set(token, { emitter, running: true });
+        this.logger.trace(`RT request started (${token})`)
 
         // 옵션에 따라 입력 필드 비우기
         const configAC = await profile.accessAsJSON('config.json');
@@ -98,10 +106,31 @@ class RTWorker {
             .finally(() => {
                 emitter.emit.directive.close();
 
-                this.#tokens.delete(token);
+                this.#sessions.delete(token);
             });
 
         return token;
+    }
+
+    /**
+     * 현재 진행 중인 RT 작업을 중단
+     * @param token
+     */
+    abort(token: string): boolean {
+        const session = this.#sessions.get(token);
+        if (!session) {
+            this.logger.info(`RTWork abort ignored (unregistered token)`, token);
+            return false;
+        }
+
+        const { emitter } = session;
+        this.#sessions.delete(token);
+
+        emitter.emit.error.aborted();
+        emitter.emit.directive.close();
+        emitter.offAll();
+
+        return true;
     }
 }
 

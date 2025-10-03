@@ -16,6 +16,13 @@ interface SessionCacheFields {
 
     state: 'loading' | 'idle' | 'error' | 'done';
     markdown: boolean;
+    running_rt: {
+        [key: string]: {
+            token: string;
+            createdAt: number;
+            state: string;
+        }
+    };
 }
 
 interface SessionConfigFields {
@@ -27,7 +34,7 @@ interface SessionConfigFields {
 
 interface SessionManagedFields {
     input_files: InputFilePreview[];
-    cached_thumbnails: Record<string, string|null>;
+    cached_thumbnails: Record<string, string | null>;
 }
 
 const defaultCache: SessionCacheFields = {
@@ -38,6 +45,7 @@ const defaultCache: SessionCacheFields = {
     last_history: null,
     state: 'idle',
     markdown: true,
+    running_rt: {},
 }
 const defaultConfig: SessionConfigFields = {
     name: null,
@@ -52,7 +60,7 @@ const defaultManaged: SessionManagedFields = {
 
 type SessionFields = SessionCacheFields & SessionConfigFields;
 
-interface SessionState extends SessionFields, SessionManagedFields {
+export interface SessionState extends SessionFields, SessionManagedFields {
     actions: {
         addInputFile(filename: string, base64Data: string): Promise<void>;
         updateInputFiles(fileHashes: InputFileHash[]): Promise<void>;
@@ -98,7 +106,7 @@ export const useSessionStore = create<SessionState>((set, get) => {
                 }
 
                 const metadata = await deps.api.session(deps.last_session_id).inputFiles.add(filename, base64Data);
-                const next:InputFilePreview[] = [...input_files];
+                const next: InputFilePreview[] = [...input_files];
                 next.push({
                     filename: metadata.filename,
                     size: metadata.size,
@@ -116,10 +124,10 @@ export const useSessionStore = create<SessionState>((set, get) => {
                     console.warn('No session ID available for uploading input file.');
                     return;
                 }
-                
+
                 const { updated, removed } = await deps.api.session(deps.last_session_id).inputFiles.update(fileHashes);
-                
-                const next:InputFilePreview[] = [];
+
+                const next: InputFilePreview[] = [];
                 for (const metadata of updated) {
                     const file = input_files.find(f => f.hash_sha256 === metadata.hash_sha256);
                     if (file) {
@@ -137,7 +145,7 @@ export const useSessionStore = create<SessionState>((set, get) => {
                         delete cached_thumbnails[file.hash_sha256];
                     }
                 }
-                
+
                 set({ input_files: next });
             },
             refetchInputFiles: async () => {
@@ -151,7 +159,7 @@ export const useSessionStore = create<SessionState>((set, get) => {
                 const hashes = Object.keys(cached_thumbnails);
                 const files = await deps.api.session(last_session_id).inputFiles.getPreviews();
                 const next: InputFile[] = files.map(f => {
-                    const file:Partial<InputFilePreview> = {
+                    const file: Partial<InputFilePreview> = {
                         filename: f.filename,
                         size: f.size,
                         type: f.type,

@@ -19,9 +19,8 @@ function handler(): IPCInvokerRequest {
             return [null] as const;
         },
         async abort(token: string) {
-            /// @TODO : 구현 필요
-
-            throw new Error('Not implemented');
+            runtime.rtWorker.abort(token);
+            
             return [null] as const;
         },
     }

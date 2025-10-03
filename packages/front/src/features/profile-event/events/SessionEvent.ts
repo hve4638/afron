@@ -75,11 +75,15 @@ class SessionEvent {
                 const configPromise = sessionAPI.get('config.json', [
                     'name', 'color', 'delete_lock', 'model_id', 'rt_id'
                 ]);
-                const cachePromise = sessionAPI.get('cache.json', [
-                    'state'
+                // const cachePromise = sessionAPI.get('cache.json', [
+                //     'state'
+                // ]);
+                const dataPromise = sessionAPI.get('data.json', [
+                    'running_rt'
                 ]);
                 const { name, color, delete_lock, model_id, rt_id } = await configPromise;
-                const { state } = await cachePromise;
+                // const { state } = await cachePromise;
+                const { running_rt } = await dataPromise as { running_rt: Record<string, { token: string, state: string }> };
 
                 let displayName = name;
                 if (name == null || name === '') {
@@ -96,6 +100,24 @@ class SessionEvent {
                     }
                 }
 
+                const STATE_ORDER = {
+                    'idle': 0,
+                    'done': 0,
+                    'loading': 1,
+                    'error': 2,
+                } as const;
+                let state: string = 'idle';
+                let stateOrder: number = 0;
+                for (const rt of Object.values(running_rt ?? {})) {
+                    const order = STATE_ORDER[rt.state];
+                    
+                    if (order == null) continue;
+                    if (stateOrder < order) {
+                        stateOrder = order;
+                        state = rt.state;
+                    }
+                }
+
                 return {
                     id: sid,
                     name: name ?? '',
@@ -104,7 +126,7 @@ class SessionEvent {
                     deleteLock: delete_lock ?? false,
                     modelId: model_id,
                     rtId: rt_id,
-                    state: state ?? 'idle',
+                    state: (state ?? 'idle') as 'idle' | 'loading' | 'error' | 'done',
                 }
             })
         )
