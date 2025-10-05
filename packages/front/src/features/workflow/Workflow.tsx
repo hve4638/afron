@@ -1,34 +1,34 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
     ReactFlow,
     MiniMap,
     Controls,
     Background,
-    useNodesState,
-    useEdgesState,
-    addEdge,
     BackgroundVariant,
-    type OnConnect,
-    Handle,
-    Position,
-    type NodeProps,
-    type Connection,
-    NodeTypes,
-    Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { WorkflowNodeTypes } from './nodes';
 import { useWorkflow } from './Workflow.hooks';
 import { buildNode } from './utils';
-import { HandleColors, HandleTypes } from './nodes/types';
+import { ConnectionLine } from './ConnectionLine';
+import { Sidebar } from './Sidebar';
+import { FlowEdge } from '@/lib/xyflow';
+
+export interface WorkflowProps {
+    nodes: ReturnType<typeof buildNode>[];
+    edges: FlowEdge[];
+    children?: React.ReactNode;
+}
 
 export function Workflow({
     nodes: initialNodes,
-    edges: initialEdges
-}: { nodes: ReturnType<typeof buildNode>[], edges: Edge[] }) {
+    edges: initialEdges,
+    children,
+}: WorkflowProps) {
     const {
         nodes, onNodesChange,
         edges, onEdgesChange,
+        lastSelectedNode, setLastSelectedNode,
         onConnect,
         isValidConnection,
     } = useWorkflow({
@@ -36,16 +36,7 @@ export function Workflow({
         initialEdges
     });
 
-    const getEdgeColor = (edge: Edge) => {
-        const sourceNode = nodes.find(n => n.id === edge.source);
-        if (!sourceNode) return '#555';
-
-        const sourceHandle = edge.sourceHandle;
-        if (!sourceHandle) return '#555';
-
-        const handleType = HandleTypes[sourceHandle as keyof typeof HandleTypes];
-        return handleType ? HandleColors[handleType] : '#555';
-    };
+    const closeSidebar = useCallback(() => setLastSelectedNode(null), [setLastSelectedNode]);
 
     return (
         <ReactFlow
@@ -55,21 +46,32 @@ export function Workflow({
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={WorkflowNodeTypes}
-            deleteKeyCode="Delete"
+            deleteKeyCode='Delete'
             edgesReconnectable={true}
             isValidConnection={isValidConnection}
+            connectionLineComponent={ConnectionLine}
+            proOptions={{ hideAttribution: true }}
             defaultEdgeOptions={{
                 style: { strokeWidth: 2 }
             }}
         >
-            <Controls />
+            {children}
+            {
+                lastSelectedNode != null &&
+                <Sidebar
+                    node={lastSelectedNode}
+                    onClose={closeSidebar}
+                />
+            }
             <MiniMap
                 style={{
                     backgroundColor: '#1f1f1f',
+                    right: '350px'
                 }}
                 maskColor="rgba(0, 0, 0, 0.6)"
                 nodeColor="#333333"
                 nodeStrokeColor="#555555"
+
             />
             <Background
                 variant={BackgroundVariant.Dots}

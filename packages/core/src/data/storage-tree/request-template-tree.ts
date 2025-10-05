@@ -19,37 +19,33 @@ const REQUEST_TEMPLATE_TREE = {
             'entrypoint_node': JSONType.Number(),
         }),
         'form.json': StorageAccess.JSON({
-            // key : formId
+            // key: formId
             '*': FORM_JSON_TREE,
         }),
-        'node.json': StorageAccess.JSON({
-            '*': {
-                'id': JSONType.Number(),
-                'node': JSONType.Union(
-                    'input', 'output',
-                    'prompt', 'chatai-fetch',
-                    'stringify-chatml',
+        'flow.json': StorageAccess.JSON({
+            '*': { // key: node id
+                'type': JSONType.Union(
+                    'input',
+                    'output',
+                    'prompt-template',
+                    'llm-fetch',
+                    // 'stringify-chatml',
                 ),
-                'option': JSONType.Struct(),
-                'forms': JSONType.Array({
-                    'id': JSONType.String(),
-                    'external_id': JSONType.String().nullable(),
+                'description': JSONType.String(),
+                'data': JSONType.Struct(),
+                'connection_to': JSONType.Array({
+                    'from_handle': JSONType.Number(),
+                    'to_node': JSONType.String(),
+                    'to_handle': JSONType.String(),
                 }),
-                'link_to': {
-                    // key : output interface nmae
-                    '*': JSONType.Array({
-                        'node_id': JSONType.Number(),
-                        'input': JSONType.String(),
-                    }),
-                },
-                'addition': {
+                'position': {
                     'x': JSONType.Number().default_value(0),
                     'y': JSONType.Number().default_value(0),
                 },
             },
         }),
         'prompts': {
-            // key : promptId
+            // key: promptId
             '*': StorageAccess.JSON({
                 'id': JSONType.String(),
                 'name': JSONType.String(),

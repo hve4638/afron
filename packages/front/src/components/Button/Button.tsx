@@ -5,15 +5,15 @@ interface ButtonProps {
     style?: React.CSSProperties;
     onClick?: () => void;
     children?: React.ReactNode;
-    disabled?:boolean;
+    disabled?: boolean;
 }
 
 function Button({
-    disabled=false,
-    className='',
-    style={},
+    disabled = false,
+    className = '',
+    style = {},
     children,
-    onClick=()=>{}
+    onClick = () => { }
 }: ButtonProps) {
     return (
         <button
@@ -22,23 +22,23 @@ function Button({
                     'button',
                     'btn-radius',
                     className,
-                    { disabled : disabled }
+                    { disabled: disabled }
                 )
             }
             tabIndex={disabled ? -1 : 0}
             style={{
                 ...style,
             }}
-            onClick={()=>{
+            onClick={() => {
                 if (!disabled) {
                     onClick();
                 }
             }}
-            onKeyDown={(e)=>{
+            onKeyDown={(e) => {
                 if (e.key === 'Enter' && !disabled) {
                     onClick();
                     e.stopPropagation();
-                }  
+                }
             }}
         >
             {

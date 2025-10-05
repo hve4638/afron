@@ -40,3 +40,4 @@ yarn-error.log*
 front-old/
 tsconfig.app.tsbuildinfo
 docs/
+GUIDE.md

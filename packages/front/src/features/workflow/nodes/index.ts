@@ -9,3 +9,5 @@ export const WorkflowNodeTypes = {
     [PromptTemplateNode.nodeType]: PromptTemplateNode,
     [LLMFetchNode.nodeType]: LLMFetchNode,
 } as const;
+
+export { isHandleCompatible } from './utils';

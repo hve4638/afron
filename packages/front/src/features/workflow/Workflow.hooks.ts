@@ -1,25 +1,16 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import {
-    ReactFlow,
-    MiniMap,
-    Controls,
-    Background,
     useNodesState,
     useEdgesState,
     addEdge,
-    BackgroundVariant,
     type OnConnect,
-    Handle,
-    Position,
-    type NodeProps,
     type Connection,
-    NodeTypes,
-    type Node as FlowNode,
-    type Edge as FlowEdge,
     IsValidConnection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { HandleTypes, HandleColors } from './nodes/types';
+import { isHandleCompatible, WorkflowNodeTypes } from './nodes';
+import { FlowEdge, FlowNode } from '@/lib/xyflow';
 
 export function useWorkflow({
     initialNodes,
@@ -27,6 +18,31 @@ export function useWorkflow({
 }: { initialNodes: FlowNode[], initialEdges: FlowEdge[] }) {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    const [lastSelectedNode, setLastSelectedNode] = useState<FlowNode | null>(null);
+
+    const coloredEdges = useMemo(() => {
+        return edges.map(edge => {
+            const sourceNode = nodes.find(n => n.id === edge.source);
+            if (!sourceNode || !edge.sourceHandle) return edge;
+
+            const data = WorkflowNodeTypes[sourceNode.type!].data;
+            const handleType = data.outputTypes[edge.sourceHandle];
+            const color = HandleColors[handleType] ?? {
+                value: '#555555',
+                selected: '#222222',
+            };
+
+            return {
+                ...edge,
+                style: {
+                    ...edge.style,
+                    stroke: edge.selected ? color.selected : color.value,
+                    strokeWidth: 2
+                }
+            };
+        });
+    }, [edges, nodes]);
 
     const onConnect: OnConnect = useCallback(
         (params) => {
@@ -37,7 +53,7 @@ export function useWorkflow({
             if (sourceNode && sourceHandle) {
                 const handleType = HandleTypes[sourceHandle as keyof typeof HandleTypes];
                 if (handleType) {
-                    edgeColor = HandleColors[handleType];
+                    edgeColor = HandleColors[handleType].value;
                 }
             }
 
@@ -53,29 +69,53 @@ export function useWorkflow({
 
     const isValidConnection = useCallback(
         (connection: Connection) => {
-            if (connection.source === connection.target) return false;
+            const {
+                sourceHandle,
+                targetHandle
+            } = connection;
 
+            if (connection.source === connection.target) return false;
             const sourceNode = nodes.find((n) => n.id === connection.source);
             const targetNode = nodes.find((n) => n.id === connection.target);
 
-            if (!sourceNode || !targetNode) return false;
+            if (
+                !sourceNode
+                || !targetNode
+                || !sourceHandle
+                || !targetHandle
+            ) {
+                return false;
+            }
 
-            const sourceHandle = connection.sourceHandle;
-            const targetHandle = connection.targetHandle;
+            const sourceHandleType = sourceNode.data['outputTypes']![sourceHandle];
+            const targetHandleType = targetNode.data['inputTypes']![targetHandle];
 
-            if (!sourceHandle || !targetHandle) return false;
+            if (!sourceHandleType || !targetHandleType) return false;
+            if (sourceHandleType === targetHandleType) return true;
 
-            const sourceType = HandleTypes[sourceHandle];
-            const targetType = HandleTypes[targetHandle];
-
-            return sourceType === targetType;
+            return isHandleCompatible(sourceHandleType, targetHandleType);
         },
         [nodes],
     ) as IsValidConnection<FlowEdge>;
 
+    useLayoutEffect(() => {
+        const selectedNode = nodes.find(n => n.selected);
+
+        if (
+            selectedNode != null
+            && (
+                lastSelectedNode == null
+                || selectedNode.id !== lastSelectedNode.id
+            )
+        ) {
+            setLastSelectedNode(selectedNode);
+        }
+    }, [nodes]);
+
     return {
         nodes, onNodesChange,
-        edges, onEdgesChange,
+        edges: coloredEdges, onEdgesChange,
+        lastSelectedNode, setLastSelectedNode,
         onConnect,
         isValidConnection,
     }

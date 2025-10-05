@@ -1,0 +1,16 @@
+.node {
+    position: relative;
+    display: block;
+    background-color: #333333;
+    border-radius: 4px;
+    border: 1px solid #555;
+
+    &:global(.selected) {
+        border-color: #e6e6e6;
+    }
+
+    .divider {
+        margin: 1px 0;
+        border-color: #555;
+    }
+}

@@ -60,7 +60,6 @@ function RTDropdown() {
                     },
                 }}
                 onChange={(next) => {
-                    console.log('click!', next)
                     if (next === CREATE_NEW_PROMPT) {
                         openNewRTModal();
                     }
