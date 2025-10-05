@@ -43,6 +43,21 @@ declare global {
                 };
                 contents: string;
             }
+
+            type FlowNode = {
+                type: FlowNodeType;
+                description: string;
+                data: Record<string, any>;
+                connection_to: Array<{
+                    from_handle: string;
+                    to_node: string;
+                    to_handle: string;
+                }>;
+                position: {
+                    x: number;
+                    y: number;
+                };
+            }
         }
     }
 

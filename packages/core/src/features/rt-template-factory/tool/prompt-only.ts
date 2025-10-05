@@ -1,4 +1,4 @@
-import { Profile } from '../profiles'
+import { Profile } from '../../profiles'
 import { v7 as uuidv7 } from 'uuid';
 
 export class RTPromptOnlyTemplateTool {

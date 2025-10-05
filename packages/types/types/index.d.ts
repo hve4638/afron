@@ -4,5 +4,6 @@ import './event-pipe'
 import './storage-struct'
 import './chatai/chatai-model'
 import './utils'
+import './rt'
 
 export {};

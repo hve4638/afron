@@ -2,6 +2,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { IACSubStorage } from 'ac-storage';
 import type IProfileRT from './IProfileRT';
 import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
+import { FlowNodeIf, FlowNodePosition } from './types';
 
 class ProfileRT implements IProfileRT {
     constructor(private storage: IACSubStorage, private rtId: string) {
@@ -17,8 +18,8 @@ class ProfileRT implements IProfileRT {
     private async accessForm() {
         return await this.storage.accessAsJSON(`${this.rtId}:form.json`);
     }
-    private async accessNode() {
-        return await this.storage.accessAsJSON(`${this.rtId}:node.json`);
+    private async accessFlow() {
+        return await this.storage.accessAsJSON(`${this.rtId}:flow.json`);
     }
 
     readonly raw = {
@@ -39,8 +40,6 @@ class ProfileRT implements IProfileRT {
             const promptAC = await this.accessPrompt(promptId);
             return promptAC.set(data)
         },
-
-
         setIndex: async (input: Partial<StorageStruct.RT.Index>) => {
             const indexAC = await this.accessMetadata();
 
@@ -64,105 +63,104 @@ class ProfileRT implements IProfileRT {
     }
 
     async getNodes(): Promise<Record<string, any>> {
-        const flowAC = await this.accessNode();
+        const flowAC = await this.accessFlow();
         const nodes = flowAC.getAll();
 
         return nodes;
     }
 
-    async addNode(node: string): Promise<number> {
-        const flowAC = await this.accessNode();
-        const nodes = flowAC.getAll() ?? {};
+    async addNode(type: FlowNodeType, position: FlowNodePosition = { x: 0, y: 0 }): Promise<string> {
+        const flowAC = await this.accessFlow();
+        const nodes: Record<string, StorageStruct.RT.FlowNode> = flowAC.getAll() ?? {};
 
-        let nextId = 0;
-        do {
-            nextId++;
-        } while (nextId in nodes);
-        const newNode = {
-            id: nextId,
-            node: node,
-            option: {},
-            forms: [],
-            link_to: {},
-            addition: {
-                x: 0,
-                y: 0,
-            },
+        let index = 0;
+        let nodeId = `${type}-${index}`;
+        while (nodeId in nodes) {
+            index++;
         }
+
+        const newNode: StorageStruct.RT.FlowNode = {
+            type: type,
+            description: '',
+            connection_to: [],
+            data: {},
+            position,
+        }
+
         try {
-            flowAC.set({ [nextId]: newNode });
-            return nextId;
+            flowAC.set({ [nodeId]: newNode });
+
+            return nodeId;
         }
         catch (e) {
             console.error("Failed to add node:", e);
-            return -1;
+
+            return '';
         }
     }
-    async removeNode(nodeId: number): Promise<boolean> {
-        /// @TODO 구현 필요
-        throw new Error("Not implemented yet");
+    async removeNode(nodeId: string): Promise<void> {
+        const flowAC = await this.accessFlow();
+
+        flowAC.removeOne(nodeId);
     }
-    async updateNodeOption(nodeId: number, option: Record<string, any>): Promise<boolean> {
-        const flowAC = await this.accessNode();
-        const node = flowAC.getOne(`${nodeId}`);
-        if (!node) {
-            return false;
-        }
+    async updateNodeData(nodeId: string, data: Record<string, any>): Promise<boolean> {
+        const flowAC = await this.accessFlow();
+        const node = flowAC.getOne(nodeId);
+        if (!node) return false;
+
         flowAC.set({
-            [nodeId]: {
-                option: option
+            [nodeId]: { data }
+        });
+        return true;
+    }
+    async updateNodePosition(nodeId: string, position: FlowNodePosition): Promise<boolean> {
+        const flowAC = await this.accessFlow();
+        const node = flowAC.getOne(nodeId);
+        if (!node) return false;
+
+        flowAC.set({
+            [nodeId]: { position }
+        });
+        return true;
+    }
+
+    async connectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean> {
+        const flowAC = await this.accessFlow();
+        const nodes: StorageStruct.RT.FlowNode = flowAC.getOne(from.node);
+
+        const fromNode = nodes[from.node];
+        if (!fromNode) return false;
+
+        fromNode.connection_to.push({
+            from_handle: from.ifName,
+            to_node: to.node,
+            to_handle: to.ifName,
+        });
+        flowAC.set({
+            [from.node]: { connection_to: fromNode.connection_to }
+        });
+
+        return true;
+    }
+    async disconnectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean> {
+        const flowAC = await this.accessFlow();
+
+        const fromNode: StorageStruct.RT.FlowNode = flowAC.getOne(from.node);
+        if (!fromNode) return false;
+
+        const next = fromNode.connection_to.filter(
+            ({ from_handle, to_node, to_handle }) => {
+                return !(
+                    from_handle === from.ifName &&
+                    to_node === to.node &&
+                    to_handle === to.ifName
+                );
             }
+        );
+
+        flowAC.set({
+            [from.node]: { connection_to: next }
         });
-        return true;
-    }
-    async setEntrypoint(nodeId: number): Promise<void> {
-        const metadataAC = await this.accessMetadata();
-        const flowAC = await this.accessNode();
-        const node = flowAC.getOne(`${nodeId}`);
-        if (!node) {
-            throw new Error(`Node '${nodeId}' not found`);
-        }
-
-        metadataAC.set({
-            entrypoint_node: nodeId,
-        });
-    }
-
-    async connectNode(nodeFrom: RTNodeEdge, nodeTo: RTNodeEdge): Promise<boolean> {
-        const flowAC = await this.accessNode();
-        const linkTo: Record<string, { node_id: number, input: string }[]> = flowAC.getOne(`${nodeFrom.nodeId}.link_to`) ?? {};
-
-        linkTo[nodeFrom.ifName] ??= [];
-        linkTo[nodeFrom.ifName].push({
-            node_id: nodeTo.nodeId,
-            input: nodeTo.ifName,
-        })
-        flowAC.setOne(`${nodeFrom.nodeId}.link_to`, linkTo);
-        return true;
-    }
-    async disconnectNode(nodeFrom: RTNodeEdge, nodeTo: RTNodeEdge): Promise<boolean> {
-        const flowAC = await this.accessNode();
-        const linkTo: Record<string, { node_id: number, input: string }[]> = flowAC.getOne(`${nodeFrom.nodeId}.link_to`) ?? {};
-
-        if (!linkTo[nodeFrom.ifName]) {
-            return false;
-        }
-        else {
-            const next = linkTo[nodeFrom.ifName].filter(
-                (item) => {
-                    return !(
-                        item.node_id === nodeTo.nodeId &&
-                        item.input === nodeTo.ifName
-                    );
-                }
-            );
-
-            flowAC.setOne(
-                `${nodeFrom.nodeId}.link_to`,
-                next
-            );
-        }
-
         return true;
     }
 

@@ -34,7 +34,7 @@ const REQUEST_TEMPLATE_TREE = {
                 'description': JSONType.String(),
                 'data': JSONType.Struct(),
                 'connection_to': JSONType.Array({
-                    'from_handle': JSONType.Number(),
+                    'from_handle': JSONType.String(),
                     'to_node': JSONType.String(),
                     'to_handle': JSONType.String(),
                 }),

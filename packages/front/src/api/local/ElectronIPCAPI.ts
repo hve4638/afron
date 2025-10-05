@@ -367,27 +367,6 @@ class ElectronIPCAPI implements IIPCAPI {
             if (err) throw new IPCError(err.message);
             return forms;
         },
-        async addNode(profileId: string, rtId: string, nodeCategory: string): Promise<number> {
-            const [err, nodeId] = await electron.profileRT.addNode(profileId, rtId, nodeCategory);
-            if (err) throw new IPCError(err.message);
-            return nodeId;
-        },
-        async removeNode(profileId: string, rtId: string, nodeId: number) {
-            const [err] = await electron.profileRT.removeNode(profileId, rtId, nodeId);
-            if (err) throw new IPCError(err.message);
-        },
-        async updateNodeOption(profileId: string, rtId: string, nodeId: number, option: Record<string, unknown>) {
-            const [err] = await electron.profileRT.updateNodeOption(profileId, rtId, nodeId, option);
-            if (err) throw new IPCError(err.message);
-        },
-        async connectNode(profileId: string, rtId: string, connectFrom: RTNodeEdge, connectTo: RTNodeEdge) {
-            const [err] = await electron.profileRT.connectNode(profileId, rtId, connectFrom, connectTo);
-            if (err) throw new IPCError(err.message);
-        },
-        async disconnectNode(profileId: string, rtId: string, connectFrom: RTNodeEdge, connectTo: RTNodeEdge) {
-            const [err] = await electron.profileRT.disconnectNode(profileId, rtId, connectFrom, connectTo);
-            if (err) throw new IPCError(err.message);
-        },
     } as const;
     profileRTStorage = {
         async get(profileId: string, rtId: string, accessorId: string, keys: string[]) {

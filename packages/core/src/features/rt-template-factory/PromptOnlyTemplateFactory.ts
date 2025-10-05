@@ -1,7 +1,7 @@
 import { Profile } from '../profiles';
-import { RTPromptOnlyTemplateTool } from './tool';
+import { RTPromptOnlyTemplateTool } from './tool/prompt-only';
 
-class PromptOnlyTemplateFactory {
+export class PromptOnlyTemplateFactory {
     private static async createTool(profile: Profile, rtId: string, name: string) {
         const tool = new RTPromptOnlyTemplateTool(profile);
 
@@ -148,5 +148,3 @@ class PromptOnlyTemplateFactory {
         );
     }
 }
-
-export default PromptOnlyTemplateFactory;

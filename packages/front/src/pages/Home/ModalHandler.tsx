@@ -34,13 +34,18 @@ function ModalHandler() {
 
     useEvent('open_new_rt_modal', () => {
         modal.open(NewRTModal, {
-            onAddRT: (rtId: string) => {
-                navigate(`/workflow/${rtId}/prompt/default`);
+            onAddRT: (rtId, rtMode) => {
+                if (rtMode === 'prompt_only') {
+                    navigate(`/workflow/${rtId}/prompt/default`);
+                }
+                else if (rtMode === 'flow') {
+                    navigate(`/workflow/${rtId}`);
+                }
             },
         });
     }, []);
 
-    return <></>
+    return <></>;
 }
 
 export default ModalHandler;

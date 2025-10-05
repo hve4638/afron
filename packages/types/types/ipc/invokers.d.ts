@@ -117,12 +117,6 @@ declare global {
         reflectMetadata(profileId: string, rtId: string): ENoResult;
 
         getForms(profileId: string, rtId: string): EResult<PromptVar[]>;
-
-        addNode(profileId: string, rtId: string, nodeCategory: string): EResult<number>;
-        removeNode(profileId: string, rtId: string, nodeId: number): ENoResult;
-        updateNodeOption(profileId: string, rtId: string, nodeId: number, option: Record<string, unknown>): ENoResult;
-        connectNode(profileId: string, rtId: string, connectFrom: RTNodeEdge, connectTo: RTNodeEdge): ENoResult;
-        disconnectNode(profileId: string, rtId: string, connectFrom: RTNodeEdge, connectTo: RTNodeEdge): ENoResult;
     };
 
     type IPCInvokerProfileRTStorage = {

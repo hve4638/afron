@@ -105,12 +105,6 @@ const ipcInvokerPath = {
         reflectMetadata: 0,
 
         getForms: 0,
-
-        addNode: 0,
-        removeNode: 0,
-        updateNodeOption: 0,
-        connectNode: 0,
-        disconnectNode: 0,
     },
     profileRTStorage: {
         get: 0,

@@ -1,18 +1,17 @@
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
-import { Modal, ModalHeader } from 'components/Modal';
-import { Align, Center, Column, Grid, Row } from 'components/layout';
-import useHotkey from 'hooks/useHotkey';
-import useModalDisappear from 'hooks/useModalDisappear';
 import { useTranslation } from 'react-i18next';
-import style from './styles.module.scss';
 import classNames from 'classnames';
+
+import { GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { Align, Center, Grid, Row } from '@/components/layout';
+
+import style from './RTSelectStep.module.scss';
 
 type RTSelectWidgetProps = {
     onPrev : () => void;
     onSelectRTType : (type:'prompt_only'|'flow') => void;
 }
 
-function RTSelectWidget(props:RTSelectWidgetProps) {
+export function RTSelectStep(props:RTSelectWidgetProps) {
     const { t } = useTranslation();
 
     return (
@@ -37,7 +36,7 @@ function RTSelectWidget(props:RTSelectWidgetProps) {
                 onClick={()=>{
                     props.onSelectRTType('flow');
                 }}
-                disabled={true}
+                // disabled={true}
             />
         </Row>
     )
@@ -93,5 +92,3 @@ function RTTypeButton({
         </Grid>
     );
 }
-
-export default RTSelectWidget;

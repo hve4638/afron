@@ -18,11 +18,7 @@ class RTAPI {
     async getForms() { return await LocalAPI.profileRT.getForms(this.#profileId, this.#rtId); }
 
     node = {
-        add : async (nodeCategory: string) => LocalAPI.profileRT.addNode(this.#profileId, this.#rtId, nodeCategory),
-        remove : async (nodeId: number) => LocalAPI.profileRT.removeNode(this.#profileId, this.#rtId, nodeId),
-        updateOption : async (nodeId: number, option:Record<string, unknown>) => LocalAPI.profileRT.updateNodeOption(this.#profileId, this.#rtId, nodeId, option),
-        connect : async (from:RTNodeEdge, to:RTNodeEdge) => LocalAPI.profileRT.connectNode(this.#profileId, this.#rtId, from, to),
-        disconnect : async (form:RTNodeEdge, to:RTNodeEdge) => LocalAPI.profileRT.disconnectNode(this.#profileId, this.#rtId, form, to),
+        
     };
     
     prompt = {

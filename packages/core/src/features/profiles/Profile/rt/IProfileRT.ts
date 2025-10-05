@@ -1,18 +1,22 @@
+import { FlowNodeIf, FlowNodePosition } from './types';
+
 interface IProfileRT {
-    getNodes():Promise<Record<string, any>>;
-    addNode(nodeCategory:string):Promise<number>;
-    removeNode(nodeId:number):Promise<boolean>;
-    connectNode(nodeFrom:{ nodeId:number, ifName:string }, nodeTo:{ nodeId:number, ifName:string }):Promise<boolean>;
-    disconnectNode(nodeFrom:{ nodeId:number, ifName:string }, nodeTo:{ nodeId:number, ifName:string }):Promise<boolean>;
+    getNodes(): Promise<Record<string, StorageStruct.RT.FlowNode>>;
+    addNode(type: FlowNodeType, position?: FlowNodePosition): Promise<string>
+    removeNode(nodeId: string): Promise<void>;
+    updateNodeData(nodeId: string, data: Record<string, any>): Promise<boolean>;
+    updateNodePosition(nodeId: string, position: FlowNodePosition): Promise<boolean>;
+    connectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean>;
+    disconnectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean>;
 
-    getMetadata():Promise<Record<string, any>>;
-    setMetadata(input:KeyValueInput):Promise<void>;
+    getMetadata(): Promise<Record<string, any>>;
+    setMetadata(input: KeyValueInput): Promise<void>;
 
-    getPromptContents(promptId:string):Promise<string>;
-    setPromptContents(promptId:string, contents:string):Promise<void>;
-    getPromptVariables(promptId:string):Promise<PromptVar[]>;
-    setPromptVariables(promptId:string, vars:PromptVar[]):Promise<string[]>;
-    removePromptVariables(promptId:string, varName:string[]):Promise<void>;
+    getPromptContents(promptId: string): Promise<string>;
+    setPromptContents(promptId: string, contents: string): Promise<void>;
+    getPromptVariables(promptId: string): Promise<PromptVar[]>;
+    setPromptVariables(promptId: string, vars: PromptVar[]): Promise<string[]>;
+    removePromptVariables(promptId: string, varName: string[]): Promise<void>;
 }
 
 export default IProfileRT;

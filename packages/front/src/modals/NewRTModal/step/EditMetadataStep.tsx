@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import { StringLongForm } from '@/components/forms';
 import { Align, Column, Grid, Row } from '@/components/layout';
-import { POTemplateList } from './POTemplateList';
 import ProfileEvent from '@/features/profile-event';
+import { POTemplateList } from './POTemplateList';
+import { FlowTemplateList } from './FlowTemplateList';
 
 type Metadata = {
     name: string;
@@ -13,14 +14,17 @@ type Metadata = {
     templateId: string;
 }
 
-type EditMetadataWidgetProps = {
+type EditMetadataStepProps = {
+    rtMode: RTMode;
     onPrev: () => void;
     onConfirm: (metadata: Metadata) => void;
 }
 
-function EditMetadataLayout({
-    onPrev, onConfirm
-}: EditMetadataWidgetProps) {
+export function EditMetadataStep({
+    rtMode,
+    onPrev,
+    onConfirm
+}: EditMetadataStepProps) {
     const { t } = useTranslation();
     const [name, setName] = useState<string>('');
     const [id, setId] = useState<string>('');
@@ -84,10 +88,20 @@ function EditMetadataLayout({
                         onChange={(next)=>setId(next)}
                     /> */}
                 </Column>
-                <POTemplateList
-                    value={templateId}
-                    onChange={(next) => setTemplateId(next)}
-                />
+                {
+                    rtMode === 'prompt_only' &&
+                    <POTemplateList
+                        value={templateId}
+                        onChange={(next) => setTemplateId(next)}
+                    />
+                }
+                {
+                    rtMode === 'flow' &&
+                    <FlowTemplateList
+                        value={templateId}
+                        onChange={(next) => setTemplateId(next)}
+                    />
+                }
             </Grid>
             <Row
                 className='wfill'
@@ -126,5 +140,3 @@ function EditMetadataLayout({
         </Column>
     )
 }
-
-export default EditMetadataLayout;
