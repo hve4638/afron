@@ -45,7 +45,7 @@ type Events = {
     refresh_input: ping; // 입력 새로고침, backend에서 변경 후 refetch 필요시
     refresh_chat: ping; // 채팅 새로고침
     refresh_chat_without_scroll: ping;
-
+    
     /*  */
     update_input_token_count: ping;
 
@@ -64,6 +64,7 @@ type Events = {
     open_rt_preview_modal: RTEventPreviewData;
     open_error_log: string | null;
     open_progress_modal: { modalId: string; description?: string; progress?: number; };
+    open_new_rt_modal: ping;
 
     /* Chaining */
     request_ready: Channel<unknown>;

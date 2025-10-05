@@ -1,19 +1,19 @@
 import { Children, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 import { ITreeDirectoryNode, ITreeLeafNode, ITreeNode } from '@/components/TreeView/types';
 
 import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { useModal } from '@/hooks/useModal';
+import { emitEvent } from '@/hooks/useEvent';
+import useModalDisappear from '@/hooks/useModalDisappear';
 
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 
 import ProfileEvent from '@/features/profile-event';
-import { emitEvent } from '@/hooks/useEvent';
-import { t } from 'i18next';
-import NewRTModal from '../NewRTModal';
+
 import { RTExportPreviewModal } from '../RTExportModal';
 
 type useRTEditModalProps = {
@@ -141,18 +141,6 @@ function useRTEditModal({
         relocateTree(next);
     }
 
-    const openRTCreateModal = () => {
-        modal.open(NewRTModal, {
-            onAddRT: (rtId: string, mode: RTMode) => {
-                navigatePromptEditor(rtId);
-            }
-        });
-    }
-
-    const navigatePromptEditor = (rtId: string) => {
-        navigate(`/workflow/${rtId}/prompt/default`);
-    }
-    
     const openRTExportModal = (rtId: string) => {
         modal.open(RTExportPreviewModal, {
             rtId,
@@ -210,7 +198,6 @@ function useRTEditModal({
             },
 
             confirmNodeDeletion,
-            openRTCreateModal,
             openRTExportModal,
         }
     }

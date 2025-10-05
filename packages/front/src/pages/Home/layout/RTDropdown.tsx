@@ -4,6 +4,7 @@ import { GIcon, GoogleFontIcon } from '@/components/GoogleFontIcon';
 import DivButton from '@/components/DivButton';
 import Dropdown from '@/components/ui/Dropdown';
 import useRTDropdown from './RTDropdown.hook';
+import { emitEvent } from '@/hooks/useEvent';
 
 const CREATE_NEW_PROMPT = 'CREATE_NEW_PROMPT';
 function RTDropdown() {
@@ -15,7 +16,6 @@ function RTDropdown() {
             rtId,
         },
         action: {
-            openNewRTModal,
             changeRT
         }
     } = useRTDropdown();
@@ -23,7 +23,7 @@ function RTDropdown() {
     return (
         tree.length === 0
             ? <DivButton
-                onClick={openNewRTModal}
+                onClick={() => emitEvent('open_new_rt_modal')}
             >
                 <GoogleFontIcon value='add' style={{ marginRight: '4px' }} />
                 <span>새 요청 템플릿</span>
@@ -34,7 +34,7 @@ function RTDropdown() {
                 }}
                 value={rtId}
                 itemProps={{
-                    style:{
+                    style: {
                         fontSize: '0.9em',
                     },
                     renderItem: ({ name, value }) => {
@@ -44,7 +44,7 @@ function RTDropdown() {
                                 <span>{name}</span>
                             </>
                         }
-
+                        
                         return name;
                     },
                     renderGroup: ({ name, }) => {
@@ -61,7 +61,7 @@ function RTDropdown() {
                 }}
                 onChange={(next) => {
                     if (next === CREATE_NEW_PROMPT) {
-                        openNewRTModal();
+                        emitEvent('open_new_rt_modal')
                     }
                     else {
                         changeRT(next);

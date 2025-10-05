@@ -27,7 +27,6 @@ function RTEditModal({
             tree: treeAction,
 
             confirmNodeDeletion,
-            openRTCreateModal,
             openRTExportModal,
         },
         state: {
@@ -143,7 +142,7 @@ function RTEditModal({
                     </Button>
                     <Button
                         onClick={() => {
-                            openRTCreateModal();
+                            emitEvent('open_new_rt_modal');
                             close();
                         }}
                         style={{

@@ -7,8 +7,6 @@ import ProfileEvent from '@/features/profile-event';
 import { emitEvent, useEventState } from '@/hooks/useEvent';
 import { useModal } from '@/hooks/useModal';
 
-import NewRTModal from '@/modals/NewRTModal';
-
 function useRTDropdown() {
     const navigate = useNavigate();
     const refreshPing = useEventState('refresh_rt_tree');
@@ -28,14 +26,6 @@ function useRTDropdown() {
             });
     }, [refreshPing]);
 
-    const openNewRTModal = () => {
-        modal.open(NewRTModal, {
-            onAddRT: (rtId: string, mode: RTMode) => {
-                navigate(`/workflow/${rtId}/prompt/default`);
-            }
-        });
-    }
-
     const changeRT = async (rtId: string) => {
         await updateSessionState.rt_id(rtId);
 
@@ -51,7 +41,6 @@ function useRTDropdown() {
             rtId,
         },
         action: {
-            openNewRTModal,
             changeRT,
         }
     }

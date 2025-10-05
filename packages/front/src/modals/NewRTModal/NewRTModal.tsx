@@ -13,25 +13,25 @@ const enum NewRTModalStep {
 }
 
 type NewRTModalProps = {
-    onAddRT: (rtId: string, rtMode:RTMode) => void;
+    onAddRT: (rtId: string, rtMode: RTMode) => void;
 
     isFocused: boolean;
     onClose: () => void;
 }
 
-function NewRTModal({
-    onAddRT = ()=>{},
+export function NewRTModal({
+    onAddRT = () => { },
 
     isFocused,
-    onClose = ()=>{},
-}:NewRTModalProps) {
+    onClose = () => { },
+}: NewRTModalProps) {
     const { t } = useTranslation();
     const [disappear, close] = useModalDisappear(onClose);
     const [step, setStep] = useState<NewRTModalStep>(NewRTModalStep.SelectRTType);
     const [rtMode, setRTMode] = useState<RTMode>('prompt_only');
 
     useHotkey({
-        'Escape' : close,
+        'Escape': close,
     }, isFocused, []);
 
     return (
@@ -47,7 +47,7 @@ function NewRTModal({
                 step === NewRTModalStep.SelectRTType &&
                 <RTSelectWidget
                     onPrev={close}
-                    onSelectRTType={(selected)=>{
+                    onSelectRTType={(selected) => {
                         setRTMode(selected);
                         setStep(NewRTModalStep.EditMetadata);
                     }}
@@ -56,16 +56,16 @@ function NewRTModal({
             {
                 step === NewRTModalStep.EditMetadata &&
                 <EditMetadataLayout
-                    onPrev={()=>{
+                    onPrev={() => {
                         setStep(NewRTModalStep.SelectRTType);
                     }}
-                    onConfirm={async (metadata)=>{
+                    onConfirm={async (metadata) => {
                         await ProfileEvent.rt.create({
                             name: metadata.name,
                             id: metadata.id,
                             mode: rtMode,
                         }, metadata.templateId);
-                        
+
                         onAddRT(metadata.id, rtMode);
                     }}
                 />
@@ -73,5 +73,3 @@ function NewRTModal({
         </Modal>
     )
 }
-
-export default NewRTModal;

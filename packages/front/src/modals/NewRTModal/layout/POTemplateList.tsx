@@ -9,7 +9,8 @@ type POTemplateListProps = {
     onChange: (value: string) => void;
 }
 
-function POTemplateList({
+// PromptOnly Template List
+export function POTemplateList({
     value,
     onChange,
 }: POTemplateListProps) {
@@ -106,5 +107,3 @@ function TemplateDiv({ title, description, icon, selected, onClick, value }:Temp
         </Row>
     )
 }
-
-export default POTemplateList;
