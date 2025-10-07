@@ -18,7 +18,7 @@ function FlowTest() {
         <Workflow
             nodes={initialNodes}
             edges={initialEdges}
-
+            data={{} as any}
         />
     );
 }

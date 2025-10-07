@@ -75,6 +75,10 @@ class ProfileAPI {
         /** @deprecated use `existsId` instead */
         hasId : async (rtId:string) => LocalAPI.profileRTs.existsId(this.#profileId, rtId),
     } as const;
+    workflow = {
+        getFlowData: async (rtId:string) => await LocalAPI.profileRTFlow.getFlowData(this.#profileId, rtId),
+        setFlowData: async (rtId:string, flowData:Record<string, any>) => await LocalAPI.profileRTFlow.setFlowData(this.#profileId, rtId, flowData),
+    }
     customModels = {
         getAll : async () => await LocalAPI.profile.getCustomModels(this.#profileId),
         set : async (model:CustomModel) => await LocalAPI.profile.setCustomModel(this.#profileId, model),

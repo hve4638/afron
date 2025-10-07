@@ -1,7 +1,7 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
 
-function handler():IPCInvokerProfileRT {
+function handler(): IPCInvokers.ProfileRT {
     const throttle = ThrottleAction.getInstance();
 
     return {
@@ -24,11 +24,11 @@ function handler():IPCInvokerProfileRT {
         async reflectMetadata(profileId: string, rtId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             profile.updateRTMetadata(rtId);
-            
+
             return [null];
         },
 
-        async getForms(profileId:string, rtId:string) {
+        async getForms(profileId: string, rtId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
 

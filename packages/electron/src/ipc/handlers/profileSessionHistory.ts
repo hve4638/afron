@@ -1,7 +1,7 @@
 import runtime from '@/runtime';
 import { IPCInvokerName } from 'types';
 
-function handler(): IPCInvokerProfileSessionHistory {
+function handler(): IPCInvokers.ProfileSessionHistory {
     const throttles = {};
 
     return {

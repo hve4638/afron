@@ -1,7 +1,7 @@
 import ThrottleAction from '@/features/throttle-action';
 import runtime from '@/runtime';
 
-function globalStorage():IPCInvokerGlobalStorage {
+function globalStorage():IPCInvokers.GlobalStorage {
     const throttle = ThrottleAction.getInstance();
 
     return {

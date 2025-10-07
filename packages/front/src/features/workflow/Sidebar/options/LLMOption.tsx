@@ -1,7 +1,8 @@
 import ModelForm from '@/components/model-ui';
 import { Column, Gap } from '@/components/layout';
+import { OptionProps } from './types';
 
-export function LLMOption() {
+export function LLMOption({ nodeData, refresh }: OptionProps) {
     return (
         <Column
             style={{

@@ -4,18 +4,27 @@ import { RTStoreContextProvider } from '@/context';
 import Home from './Home';
 import PromptEditor from './PromptEditor';
 import TestPage from './Test';
+import { WorkflowEditor } from './WorkflowEditor';
 
 function Hub() {
     return (
         <HashRouter>
             <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/test" element={<TestPage/>}/>
+                <Route path="/" element={<Home />} />
+                <Route path="/test" element={<TestPage />} />
                 <Route
                     path="/prompt/:rtId"
                     element={
                         <RTStoreContextProvider>
-                            <PromptEditor/>
+                            <PromptEditor />
+                        </RTStoreContextProvider>
+                    }
+                />
+                <Route
+                    path="/workflow/:rtId"
+                    element={
+                        <RTStoreContextProvider>
+                            <WorkflowEditor />
                         </RTStoreContextProvider>
                     }
                 />
@@ -23,7 +32,7 @@ function Hub() {
                     path="/workflow/:rtId/prompt/:promptId"
                     element={
                         <RTStoreContextProvider>
-                            <PromptEditor/>
+                            <PromptEditor />
                         </RTStoreContextProvider>
                     }
                 />

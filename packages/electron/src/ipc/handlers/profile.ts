@@ -1,6 +1,6 @@
 import runtime from '@/runtime';
 
-function handler(): IPCInvokerProfile {
+function handler(): IPCInvokers.Profile {
     return {
         async getCustomModels(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);

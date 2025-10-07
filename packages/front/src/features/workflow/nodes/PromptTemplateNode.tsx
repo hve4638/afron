@@ -6,11 +6,16 @@ import Button from '@/components/Button';
 import { Align, Column, Row } from '@/components/layout';
 import { GIcon } from '@/components/GoogleFontIcon';
 import { Form } from '@/components/forms';
+import { useWorkflowContext } from '../context';
 
 export function PromptTemplateNode(props: NodeProps) {
+    const { data } = useWorkflowContext();
+    const nodeData = data[props.id];
+
     return (
         <BaseNode
             title='프롬프트 템플릿'
+            nodeData={nodeData}
             {...props}
         >
             <Column
@@ -41,6 +46,6 @@ PromptTemplateNode.data = buildNodeData(
         ['input', HandleTypes.Input],
     ],
     [
-        ['messsages', HandleTypes.ChatMessages],
+        ['messages', HandleTypes.ChatMessages],
     ]
 );

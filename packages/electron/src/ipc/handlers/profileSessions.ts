@@ -1,9 +1,9 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
 
-function profileSessions():IPCInvokerProfileSessions {
+function profileSessions(): IPCInvokers.ProfileSessions {
     const throttle = ThrottleAction.getInstance();
-    
+
     return {
         async add(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
@@ -18,11 +18,11 @@ function profileSessions():IPCInvokerProfileSessions {
 
             throttle.saveProfile(profile);
             return [null] as const;
-        }, 
+        },
         async undoRemoved(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const sid = await profile.sessions.undoRemove();
-            
+
             throttle.saveProfile(profile);
 
             if (sid == null) {

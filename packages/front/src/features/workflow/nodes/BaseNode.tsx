@@ -24,11 +24,15 @@ import { useBaseNode } from './BaseNode.hook';
 
 export interface BaseNodeProps extends NodeProps, CommonProps {
     title: string;
+    nodeData: RTFlowNodeData;
+
     children?: React.ReactNode;
 }
 
 export function BaseNode({
     title,
+    nodeData,
+
     className,
     style,
     data,
@@ -54,16 +58,25 @@ export function BaseNode({
             style={{
                 ...style,
                 minWidth: '180px',
+                maxWidth: '180px',
                 fontSize: '12px',
             }}
         >
             <Row rowAlign={Align.Center}>
                 {label}
             </Row>
-            <hr className={styles['divider']}/>
+            <hr className={styles['divider']} />
             {handles}
             {children}
             <Gap h='2px' />
+            {
+                nodeData.description !== ''
+                &&
+                <>
+                    <div className={styles['description']}>{nodeData.description}</div>
+                    <Gap h='2px' />
+                </>
+            }
         </div>
     );
 }

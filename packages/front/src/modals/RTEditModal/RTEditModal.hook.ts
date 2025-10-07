@@ -25,7 +25,6 @@ function useRTEditModal({
     isFocused,
     onClose
 }: useRTEditModalProps) {
-    const navigate = useNavigate();
     const modal = useModal();
     const nextDirIdRef = useRef<number>(0);
 
@@ -186,7 +185,7 @@ function useRTEditModal({
         },
         action: {
             navigatePromptEditor: (rtId: string) => {
-                navigate(`/workflow/${rtId}/prompt/default`);
+                emitEvent('goto_rt_editor', { rtId });
             },
             close,
 

@@ -1,12 +1,13 @@
-import ModelForm from '@/components/model-ui';
-import { Column, Gap } from '@/components/layout';
-import { DropdownForm } from '@/components/forms';
-import { WorkflowNodeTypes } from '../../nodes';
 import { Textarea } from '@/components/ui/Textarea';
-import Delimiter from '@/components/Delimiter';
+import { Column } from '@/components/layout';
 import Button from '@/components/Button';
 
-export function PromptTemplateOption() {
+import { OptionProps } from './types';
+
+export function PromptTemplateOption({
+    nodeData,
+    refresh,
+}: OptionProps) {
     return (
         <Column
             style={{
@@ -21,6 +22,8 @@ export function PromptTemplateOption() {
                     fontSize: '0.75em',
                     marginBottom: '4px',
                 }}
+                value={nodeData['description']}
+                onChange={() => refresh()}
             />
             <Button>프롬프트 편집</Button>
         </Column>

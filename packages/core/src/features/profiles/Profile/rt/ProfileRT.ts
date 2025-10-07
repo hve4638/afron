@@ -82,7 +82,7 @@ class ProfileRT implements IProfileRT {
         const newNode: StorageStruct.RT.FlowNode = {
             type: type,
             description: '',
-            connection_to: [],
+            connection: [],
             data: {},
             position,
         }
@@ -126,18 +126,17 @@ class ProfileRT implements IProfileRT {
 
     async connectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean> {
         const flowAC = await this.accessFlow();
-        const nodes: StorageStruct.RT.FlowNode = flowAC.getOne(from.node);
+        const node: StorageStruct.RT.FlowNode | null = flowAC.getOne(from.node);
 
-        const fromNode = nodes[from.node];
-        if (!fromNode) return false;
+        if (!node) return false;
 
-        fromNode.connection_to.push({
+        node.connection.push({
             from_handle: from.ifName,
             to_node: to.node,
             to_handle: to.ifName,
         });
         flowAC.set({
-            [from.node]: { connection_to: fromNode.connection_to }
+            [from.node]: { connection: node.connection }
         });
 
         return true;
@@ -148,7 +147,7 @@ class ProfileRT implements IProfileRT {
         const fromNode: StorageStruct.RT.FlowNode = flowAC.getOne(from.node);
         if (!fromNode) return false;
 
-        const next = fromNode.connection_to.filter(
+        const next = fromNode.connection.filter(
             ({ from_handle, to_node, to_handle }) => {
                 return !(
                     from_handle === from.ifName &&
@@ -159,9 +158,22 @@ class ProfileRT implements IProfileRT {
         );
 
         flowAC.set({
-            [from.node]: { connection_to: next }
+            [from.node]: { connection: next }
         });
         return true;
+    }
+
+    async getFlowData(): Promise<RTFlowData> {
+        const flowAC = await this.accessFlow();
+        const nodes: Record<string, StorageStruct.RT.FlowNode> = flowAC.getAll() ?? {};
+
+        return nodes;
+    }
+
+    async setFlowData(data: RTFlowData): Promise<void> {
+        const flowAC = await this.accessFlow();
+
+        flowAC.set(data);
     }
 
     /** 버전 업데이트되며 누락된 필드 추가 */

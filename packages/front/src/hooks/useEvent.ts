@@ -71,6 +71,8 @@ type Events = {
 
     import_rt_from_file: ping;
     export_rt_to_file: { rtId: string; };
+
+    goto_rt_editor: { rtId: string; }
 }
 
 export type EventNames = keyof Events;

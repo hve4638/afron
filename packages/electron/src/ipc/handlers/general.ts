@@ -3,7 +3,7 @@ import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
 import { ChatAIModels } from '@afron/chatai-models'
 
-function general(): IPCInvokerGeneral {
+function general(): IPCInvokers.General {
     const throttle = ThrottleAction.getInstance();
 
     return {

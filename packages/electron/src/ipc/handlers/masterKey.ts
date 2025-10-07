@@ -2,7 +2,7 @@ import { MasterKeyInitResult } from '@afron/core';
 import runtime from '@/runtime';
 import { IPCInvokerName } from 'types';
 
-function handler():IPCInvokerMasterKey {
+function handler():IPCInvokers.MasterKey {
     return {
         async init() {
             const result = await runtime.masterKeyManager.init();

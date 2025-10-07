@@ -1,6 +1,6 @@
 import runtime from '@/runtime';
 
-function handler(): IPCInvokerRequest {
+function handler(): IPCInvokers.Request {
     return {
         async requestRT(token: string, profileId: string, sessionId: string) {
             const profile = await runtime.profiles.getProfile(profileId);

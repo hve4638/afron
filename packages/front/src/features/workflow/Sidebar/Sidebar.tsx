@@ -5,43 +5,43 @@ import { Form } from '@/components/forms';
 import ModelForm from '@/components/model-ui';
 import { LLMOption } from './options/LLMOption';
 import { FlowNode } from '@/lib/xyflow';
-import { useMemo } from 'react';
+import { RefObject, useMemo } from 'react';
 import { WorkflowNodeTypes } from '../nodes';
 import { PromptTemplateOption } from './options';
 import { Textarea } from '@/components/ui/Textarea';
+import { OptionProps } from './options';
 
 interface SidebarProps {
     node: FlowNode;
+    data: RefObject<RTFlowData>;
+    refresh: () => void;
+
     onClose?: () => void;
 }
 
 export function Sidebar({
     node,
-    onClose
-}: SidebarProps) {
-    console.log('Sidebar node', node);
-    if (node) {
-        console.group('Node Info');
-        console.log(node.id)
-        console.log(node.type);
-        console.log(node.data);
-        console.log();
-        console.log(node.measured);
-        console.groupEnd();
-    }
-    const title = (node.data['label'] ?? 'Unknown') as string;
+    data,
+    refresh,
 
+    onClose,
+}: SidebarProps) {
+    const nodeData = useMemo(() => {
+        return (data.current?.[node.id] ?? {}) as RTFlowNodeData;
+    }, [node, data]);
+
+    const title = (node.data['label'] ?? 'Unknown') as string;
     const option = useMemo(() => {
         if (node.type === 'llm-fetch') {
-            return <LLMOption />;
+            return <LLMOption nodeData={nodeData!} refresh={refresh} />;
         }
         else if (node.type === 'prompt-template') {
-            return <PromptTemplateOption />;
+            return <PromptTemplateOption nodeData={nodeData!} refresh={refresh} />;
         }
 
         return null;
     }, [node]);
-
+    
     return (
         <Column
             className={styles['sidebar']}
@@ -80,6 +80,11 @@ export function Sidebar({
                     borderRadius: '2px',
                     height: '4em',
                     fontSize: '0.75em',
+                }}
+                value={nodeData.description ?? ''}
+                onChange={(e) => {
+                    nodeData.description = e.target.value;
+                    refresh();
                 }}
             />
             {

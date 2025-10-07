@@ -12,28 +12,30 @@ import profileRTs from './profileRTs';
 import profileRT from './profileRT';
 import profileRTStorage from './profileRTStorage';
 import profileRTPrompt from './profileRTPrompt';
+import { profileRTFlow } from './profileRTFlow';
 import request from './request';
 
-function get():IPCInvokerInterface {
+function get(): IPCInvokerInterface {
     return {
-        general : general(),
-        globalStorage : globalStorage(),
-        masterKey : masterKey(),
-        
-        profiles : profiles(),
-        profile : profile(),
-        profileStorage : profileStorage(),
-        profileSession : profileSession(),
-        profileSessions : profileSessions(),
-        profileSessionStorage : profileSessionStorage(),
-        profileSessionHistory : profileSessionHistory(),
+        general: general(),
+        globalStorage: globalStorage(),
+        masterKey: masterKey(),
 
-        profileRTs : profileRTs(),
-        profileRT : profileRT(),
-        profileRTStorage : profileRTStorage(),
-        profileRTPrompt : profileRTPrompt(),
-        
-        request : request(),
+        profiles: profiles(),
+        profile: profile(),
+        profileStorage: profileStorage(),
+        profileSession: profileSession(),
+        profileSessions: profileSessions(),
+        profileSessionStorage: profileSessionStorage(),
+        profileSessionHistory: profileSessionHistory(),
+
+        profileRTs: profileRTs(),
+        profileRT: profileRT(),
+        profileRTStorage: profileRTStorage(),
+        profileRTPrompt: profileRTPrompt(),
+        profileRTFlow: profileRTFlow(),
+
+        request: request(),
     };
 }
 

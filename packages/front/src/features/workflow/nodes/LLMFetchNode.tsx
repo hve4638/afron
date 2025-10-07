@@ -6,11 +6,16 @@ import { buildNodeData } from './utils';
 import Button from '@/components/Button';
 import { Align, Column, Gap, Row } from '@/components/layout';
 import { NodeOption } from './NodeOption';
+import { useWorkflowContext } from '../context';
 
 export function LLMFetchNode(props: NodeProps) {
+    const { data } = useWorkflowContext();
+    const nodeData = data[props.id] ?? {};
+
     return (
         <BaseNode
             title='LLM'
+            nodeData={nodeData}
             {...props}
         >
             <hr />
@@ -20,8 +25,8 @@ export function LLMFetchNode(props: NodeProps) {
                 }}
             >
                 <NodeOption label='model' value='선택'/>
-                <NodeOption label='max tokens' value='1024'/>
-                <NodeOption label='top p' value='1'/>
+                <NodeOption label='max tokens' value={nodeData.data?.['max_tokens']}/>
+                <NodeOption label='top p' value={nodeData.data?.['top']}/>
                 {/* <Gap h='2px' /> */}
                 {/* <Button>
                     고급 설정

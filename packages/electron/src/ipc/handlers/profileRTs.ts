@@ -5,7 +5,7 @@ import runtime from '@/runtime';
 import { type Profile } from '@afron/core';
 import { RTExportProcess } from '@/features/event-process';
 
-function handler(): IPCInvokerProfileRTs {
+function handler(): IPCInvokers.ProfileRTs {
     const throttles = {};
 
     const saveProfile = (profile: Profile) => {

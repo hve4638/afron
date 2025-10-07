@@ -122,6 +122,10 @@ const ipcInvokerPath = {
         getContents: 0,
         setContents: 0,
     },
+    profileRTFlow: {
+        getFlowData: 0,
+        setFlowData: 0,
+    },
     request: {
         requestRT: 0,
         previewPrompt: 0,
@@ -144,7 +148,7 @@ const ipcInvokers: IPCInvokerInterface = Object.fromEntries(
             ) as Record<string, (...args: any) => Promise<any>>
         ] as [IPCInvokerKeys, Record<string, (...args: any) => Promise<any>>]
     ) as [IPCInvokerKeys, Record<string, (...args: any) => Promise<any>>][]
-) as IPCInvokerInterface;
+) as unknown as IPCInvokerInterface;
 
 const listenerManager = createListenerManager();
 

@@ -2,13 +2,13 @@ import * as utils from '@utils';
 import runtime from '@/runtime';
 import { type Profile } from '@afron/core';
 
-function handler():IPCInvokerProfileStorage {
+function handler(): IPCInvokers.ProfileStorage {
     const throttles = {};
 
-    const saveProfile = (profile:Profile) => {
+    const saveProfile = (profile: Profile) => {
         const throttleId = `profile_${profile.path}`;
         throttles[throttleId] ??= utils.throttle(500);
-        throttles[throttleId](()=>{
+        throttles[throttleId](() => {
             profile.commit();
         });
     }
@@ -56,7 +56,7 @@ function handler():IPCInvokerProfileStorage {
 
             return [null] as const;
         },
-        
+
         async setAsSecret(profileId: string, id: string, data: KeyValueInput) {
             const profile = await runtime.profiles.getProfile(profileId);
             const accessor = await profile.accessAsSecret(id);

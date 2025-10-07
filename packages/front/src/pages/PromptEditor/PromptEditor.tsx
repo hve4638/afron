@@ -30,6 +30,7 @@ function PromptEditor() {
     if (!loaded) {
         return <></>
     }
+    
     return (
         <div
             className={styles['prompt-editor']}

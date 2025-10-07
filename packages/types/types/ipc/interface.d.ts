@@ -4,24 +4,25 @@ import './result';
 
 declare global {
     type IPCInvokerInterface = {
-        general: IPCInvokerGeneral;
-        globalStorage: IPCInvokerGlobalStorage;
-        masterKey: IPCInvokerMasterKey;
+        general: IPCInvokers.General;
+        globalStorage: IPCInvokers.GlobalStorage;
+        masterKey: IPCInvokers.MasterKey;
 
-        profiles: IPCInvokerProfiles;
-        profile: IPCInvokerProfile;
-        profileStorage: IPCInvokerProfileStorage;
-        profileSessions: IPCInvokerProfileSessions;
-        profileSession: IPCInvokerProfileSession;
-        profileSessionStorage: IPCInvokerProfileSessionStorage;
-        profileSessionHistory: IPCInvokerProfileSessionHistory;
+        profiles: IPCInvokers.Profiles;
+        profile: IPCInvokers.Profile;
+        profileStorage: IPCInvokers.ProfileStorage;
+        profileSessions: IPCInvokers.ProfileSessions;
+        profileSession: IPCInvokers.ProfileSession;
+        profileSessionStorage: IPCInvokers.ProfileSessionStorage;
+        profileSessionHistory: IPCInvokers.ProfileSessionHistory;
 
-        profileRTs: IPCInvokerProfileRTs;
-        profileRT: IPCInvokerProfileRT;
-        profileRTStorage: IPCInvokerProfileRTStorage;
-        profileRTPrompt: IPCInvokerProfileRTPrompt;
+        profileRTs: IPCInvokers.ProfileRTs;
+        profileRT: IPCInvokers.ProfileRT;
+        profileRTStorage: IPCInvokers.ProfileRTStorage;
+        profileRTPrompt: IPCInvokers.ProfileRTPrompt;
+        profileRTFlow: IPCInvokers.ProfileRTFlow;
 
-        request: IPCInvokerRequest;
+        request: IPCInvokers.Request;
     }
 
     type IPCListenerInterface = {

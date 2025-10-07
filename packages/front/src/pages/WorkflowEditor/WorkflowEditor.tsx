@@ -1,60 +1,31 @@
-import React, { useCallback } from 'react';
-import {
-    ReactFlow,
-    MiniMap,
-    Controls,
-    Background,
-    useNodesState,
-    useEdgesState,
-    addEdge,
-    BackgroundVariant,
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
-import { InputNode } from './nodes';
+import { Workflow } from '@/features/workflow';
+import { useWorkflowEditor } from './WorkflowEditor.hook';
 
-const initialNodes = [
-    {
-        id: '1',
-        type: 'input',
-        position: { x: 0, y: 0 },
-        data: {
-            label: '1232131',
-            ports: ['123']
-        }
-     },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+import styles from './WorkflowEditor.module.scss';
+import { Grid, Row } from '@/components/layout';
+import useTrigger from '@/hooks/useTrigger';
 
-const nodeTypes = {
-    input : InputNode,
-}
+export function WorkflowEditor() {
+    const { nodes, edges, dataRef } = useWorkflowEditor();
+    const [refreshCount, refresh] = useTrigger();
 
-function WorkflowEditor() {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-    const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+    if (nodes == null || edges == null) {
+        return <></>;
+    }
 
     return (
-        <div style={{ width: '100vw', height: '100vh' }}>
-            <ReactFlow
-                nodeTypes={nodeTypes}
+        <Grid
+            className={styles['workflow-editor']}
+            rows='40px 1fr'
+            columns='auto'
+        >
+            <Row>Header</Row>
+            <Workflow
                 nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-            >
-                <Background
-                    variant={BackgroundVariant.Lines}
-                    gap={32}
-                    size={1}
-                    color="#ddd1"
-                />
-            </ReactFlow>
-        </div>
+                data={dataRef}
+                refresh={refresh}
+            />
+        </Grid >
     );
 }
-
-export default WorkflowEditor;

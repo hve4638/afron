@@ -431,6 +431,17 @@ class ElectronIPCAPI implements IIPCAPI {
             if (err) throw new IPCError(err.message);
         }
     } as const;
+    profileRTFlow = {
+        async getFlowData(profileId: string, rtId: string): Promise<RTFlowData> {
+            const [err, data] = await electron.profileRTFlow.getFlowData(profileId, rtId);
+            if (err) throw new IPCError(err.message);
+            return data;
+        },
+        async setFlowData(profileId: string, rtId: string, data: RTFlowData) {
+            const [err] = await electron.profileRTFlow.setFlowData(profileId, rtId, data);
+            if (err) throw new IPCError(err.message);
+        }
+    } as const;
     request = {
         async requestRT(token: string, profileId: string, sessionId: string) {
             const [err] = await window.electron.request.requestRT(token, profileId, sessionId);
@@ -445,7 +456,7 @@ class ElectronIPCAPI implements IIPCAPI {
             if (err) throw new IPCError(err.message);
         }
     } as const;
-
+    
     events = {
         async onGlobal(listener) {
             const [err, bindId] = await electron.events.onGlobal(listener);

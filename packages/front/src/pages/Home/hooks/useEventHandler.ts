@@ -1,9 +1,13 @@
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
+import Channel from '@hve/channel';
+
 import { emitEvent, EventNames, useEvent } from '@/hooks/useEvent';
 import { useCacheStore, useProfileAPIStore, useSessionStore } from '@/stores';
 import RequestManager from '@/features/request-manager';
-import Channel from '@hve/channel';
-import { useCallback } from 'react';
 function useEventHandler() {
+    const navigate = useNavigate();
+
     const api = useProfileAPIStore(state => state.api);
     const last_session_id = useCacheStore(state => state.last_session_id);
     const checkAPI = useCallback(() => {
@@ -48,6 +52,17 @@ function useEventHandler() {
             }
         }
     }, []);
+
+    useEvent('goto_rt_editor', async ({ rtId }) => {
+        const { mode } = await api.rt(rtId).getMetadata();
+
+        if (mode === 'flow') {
+            navigate(`/workflow/${rtId}`);
+        }
+        else if (mode === 'prompt_only') {
+            navigate(`/workflow/${rtId}/prompt/default`);
+        }
+    }, [api]);
 }
 
 export default useEventHandler;

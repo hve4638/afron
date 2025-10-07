@@ -1,7 +1,7 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
 
-function profileSession():IPCInvokerProfileSession {
+function profileSession():IPCInvokers.ProfileSession {
     const throttle = ThrottleAction.getInstance();
     
     return {

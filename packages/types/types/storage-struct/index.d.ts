@@ -48,7 +48,7 @@ declare global {
                 type: FlowNodeType;
                 description: string;
                 data: Record<string, any>;
-                connection_to: Array<{
+                connection: Array<{
                     from_handle: string;
                     to_node: string;
                     to_handle: string;

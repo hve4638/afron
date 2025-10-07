@@ -13,7 +13,7 @@ import runtime from '@/runtime';
 //         ? ENoResult
 //         : Promise<readonly [EError] | readonly [null, T]>;
 
-function handler():IPCInvokerProfiles {
+function handler():IPCInvokers.Profiles {
     const throttle = ThrottleAction.getInstance();
     
     return {

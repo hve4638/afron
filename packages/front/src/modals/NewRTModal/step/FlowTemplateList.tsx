@@ -20,12 +20,12 @@ export function FlowTemplateList({
             description: '미리 정의되지 않은 빈 템플릿 생성',
             value: 'empty',
         },
-        // {
-        //     title: '단일 요청',
-        //     icon: 'description',
-        //     description: '기본 요청과 응답 템플릿',
-        //     value: 'normal',
-        // },
+        {
+            title: '단일 요청',
+            icon: 'description',
+            description: '기본 요청과 응답 템플릿',
+            value: 'normal',
+        },
     ]
 
     return (
