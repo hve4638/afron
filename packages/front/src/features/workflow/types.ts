@@ -1,13 +1,4 @@
-import { WorkflowNodeTypes } from './nodes';
+type SetStateAction<S> = S | ((prevState: S) => S);
 
-type WorkflowNodeTypeName = keyof typeof WorkflowNodeTypes;
-
-export interface A {
-    id: string;
-    position: {
-        x: number;
-        y: number;
-    };
-    type: WorkflowNodeTypeName;
-    data: any;
-}
+export type ChangeRTFlowDataAction = (nodeId: string, data: SetStateAction<RTFlowNodeData>) => void;
+export type RemoveRTFlowDataAction = (nodeId: string) => void;

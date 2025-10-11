@@ -1,10 +1,8 @@
 import React, { ReactNode } from 'react';
-import { Column, Flex, Grid, Row } from 'components/layout';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
-import classNames from 'classnames';
+import FocusLock from 'react-focus-lock';
+
 import ModalBackground, { ModalBackgroundProps } from './ModalBackground';
 import ModalBox from './ModalBox';
-import FocusLock from 'react-focus-lock';
 import { CommonProps } from '@/types';
 import useHotkey from '@/hooks/useHotkey';
 

@@ -1,10 +1,10 @@
 import {
     ConnectionLineComponentProps, getBezierPath, Handle, InternalNode, Position,
-    type Node,
 } from '@xyflow/react';
 import { WorkflowNodeTypes } from './nodes';
 import { HandleColors } from './nodes/types';
 import { useMemo } from 'react';
+import { FlowNode } from '@/lib/xyflow';
 
 export function ConnectionLine({
     fromX,
@@ -36,8 +36,7 @@ export function ConnectionLine({
     );
 }
 
-
-function getColor(node: InternalNode<Node>, handle: Handle) {
+function getColor(node: InternalNode<FlowNode>, handle: Handle) {
     if (node && handle) {
         const nodeType = node.type;
         const handleType = handle.type;

@@ -8,7 +8,7 @@ export const HandleTypes = {
 } as const;
 export type HandleTypes = typeof HandleTypes[keyof typeof HandleTypes];
 
-type HandleColor = {
+export type HandleColor = {
     value: string;
     selected: string;
 }

@@ -1,11 +1,8 @@
-import { NodeProps } from '@xyflow/react';
-import { BaseNode } from './BaseNode';
-import { HandleTypes } from './types';
-import { buildNodeData } from './utils';
+import { Align, Row } from '@/components/layout';
 
-import Button from '@/components/Button';
-import { Align, Column, Gap, Row } from '@/components/layout';
-
+/**
+ * 노드 옵션 표시
+ */
 export function NodeOption({ label, value }: { label: string; value?: string }) {
     return (
         <Row

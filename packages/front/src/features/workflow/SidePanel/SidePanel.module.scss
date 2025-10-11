@@ -1,0 +1,40 @@
+:root {
+    --panel-button-hover-color: rgba(255, 255, 255, 0.2);
+}
+
+.panel-button {
+    position: relative;
+    background-color: transparent;
+
+    &:hover {
+        background-color: var(--panel-button-hover-color);
+    }
+
+    &.enabled {
+        color: var(--highlight-text-color);
+    }
+
+    transition: 0.15s ease background-color,
+    0.15s ease color;
+
+    .line {
+        position: absolute;
+        left: 0;
+        height: 100%;
+        width: 2px;
+
+        background-color: var(--highlight-text-color);
+
+        transition: 0.15s ease background-color,
+            0.15s ease color;
+    }
+}
+
+.left-panel {
+    background-color: rgb(34, 34, 37);
+    border: 1px solid rgb(69, 69, 75);
+    padding: 8px 8px;
+    min-width: 240px;
+    height: 100%;
+    z-index: 1001;
+}

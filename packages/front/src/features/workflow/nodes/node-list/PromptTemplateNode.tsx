@@ -1,16 +1,15 @@
 import { NodeProps } from '@xyflow/react';
-import { BaseNode } from './BaseNode';
-import { HandleTypes } from './types';
-import { buildNodeData } from './utils';
-import Button from '@/components/Button';
-import { Align, Column, Row } from '@/components/layout';
-import { GIcon } from '@/components/GoogleFontIcon';
-import { Form } from '@/components/forms';
-import { useWorkflowContext } from '../context';
+import { Column } from '@/components/layout';
+
+import { buildNodeData } from '../utils';
+import { HandleTypes } from '../types';
+import { BaseNode } from '../BaseNode';
+
+import { useWorkflowContext } from '../../context';
 
 export function PromptTemplateNode(props: NodeProps) {
-    const { data } = useWorkflowContext();
-    const nodeData = data[props.id];
+    const { getNodeData } = useWorkflowContext();
+    const nodeData = getNodeData(props.id);
 
     return (
         <BaseNode

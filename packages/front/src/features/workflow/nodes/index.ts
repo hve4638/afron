@@ -1,7 +1,9 @@
-import { InputNode } from './InputNode';
-import { OutputNode } from './OutputNode';
-import { PromptTemplateNode } from './PromptTemplateNode';
-import { LLMFetchNode } from './LLMFetchNode';
+import {
+    InputNode,
+    OutputNode,
+    PromptTemplateNode,
+    LLMFetchNode,
+ } from './node-list';
 
 export const WorkflowNodeTypes = {
     [InputNode.nodeType]: InputNode,
@@ -9,5 +11,8 @@ export const WorkflowNodeTypes = {
     [PromptTemplateNode.nodeType]: PromptTemplateNode,
     [LLMFetchNode.nodeType]: LLMFetchNode,
 } as const;
+export type WorkflowNodeTypeNames = keyof typeof WorkflowNodeTypes;
 
 export { isHandleCompatible } from './utils';
+
+export * from './types';

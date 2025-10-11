@@ -1,16 +1,16 @@
 import { NodeProps } from '@xyflow/react';
-import { BaseNode } from './BaseNode';
-import { HandleTypes } from './types';
-import { buildNodeData } from './utils';
+import { Column } from '@/components/layout';
 
-import Button from '@/components/Button';
-import { Align, Column, Gap, Row } from '@/components/layout';
-import { NodeOption } from './NodeOption';
-import { useWorkflowContext } from '../context';
+import { BaseNode } from '../BaseNode';
+import { HandleTypes } from '../types';
+import { buildNodeData } from '../utils';
+
+import { NodeOption } from './components/NodeOption';
+import { useWorkflowContext } from '../../context';
 
 export function LLMFetchNode(props: NodeProps) {
-    const { data } = useWorkflowContext();
-    const nodeData = data[props.id] ?? {};
+    const { getNodeData } = useWorkflowContext();
+    const nodeData = getNodeData(props.id);
 
     return (
         <BaseNode
@@ -25,8 +25,8 @@ export function LLMFetchNode(props: NodeProps) {
                 }}
             >
                 <NodeOption label='model' value='선택'/>
-                <NodeOption label='max tokens' value={nodeData.data?.['max_tokens']}/>
-                <NodeOption label='top p' value={nodeData.data?.['top']}/>
+                <NodeOption label='max tokens' value={nodeData.data['max_tokens']}/>
+                <NodeOption label='top p' value={nodeData.data['top']}/>
                 {/* <Gap h='2px' /> */}
                 {/* <Button>
                     고급 설정

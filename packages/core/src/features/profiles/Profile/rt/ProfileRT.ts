@@ -173,6 +173,8 @@ class ProfileRT implements IProfileRT {
     async setFlowData(data: RTFlowData): Promise<void> {
         const flowAC = await this.accessFlow();
 
+        const keys = Object.keys(flowAC.getAll());
+        flowAC.remove(keys);
         flowAC.set(data);
     }
 
