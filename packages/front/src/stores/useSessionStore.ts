@@ -7,6 +7,7 @@ import useChannelStore from './useChannelStore';
 import { HistoryData } from '@/features/session-history';
 import useCacheStore from './useCacheStore';
 import { emitEvent } from '@/hooks/useEvent';
+import { InputFile, InputFileHash, InputFilePreview } from '@afron/types';
 
 interface SessionCacheFields {
     input: string;

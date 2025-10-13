@@ -3,6 +3,7 @@ import { dialog } from 'electron';
 import { RTPacker, GlobalEventEmitter, NoLogger } from '@afron/core';
 import type { LevelLogger } from '@afron/core';
 import runtime from '@/runtime';
+import { GlobalEventData } from '@afron/types';
 
 class RTImportProcess {
     #eventSender: (data: GlobalEventData) => unknown;

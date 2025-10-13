@@ -1,5 +1,6 @@
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
 import { buildNode } from '@/features/workflow';
+import { RTFlowData } from '@afron/types';
 
 /**
  * Convert RTFlowData to FlowNode and FlowEdge arrays

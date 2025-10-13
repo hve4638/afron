@@ -1,6 +1,7 @@
 import LocalAPI from '@/api/local';
 
 import EventPipe from './EventPipe';
+import { RTEventData } from '@afron/types';
 
 /**
  * RT 요청 수행 API

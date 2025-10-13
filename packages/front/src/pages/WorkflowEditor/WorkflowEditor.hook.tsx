@@ -3,6 +3,7 @@ import { useProfileAPIStore } from '@/stores';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { convertFlowDataToWorkflow, applyConnnectionsToFlowData, applyWorkflowData } from './utils';
+import { RTFlowData } from '@afron/types';
 
 export function useWorkflowEditor() {
     const navigate = useNavigate();

@@ -1,5 +1,6 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
+import { IPCInvokers, RTFlowData } from '@afron/types';
 
 export function profileRTFlow(): IPCInvokers.ProfileRTFlow {
     const throttle = ThrottleAction.getInstance();

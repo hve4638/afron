@@ -1,4 +1,5 @@
 import runtime from '@/runtime';
+import { CustomModel, GlobalModelConfiguration, IPCInvokers } from '@afron/types';
 
 function handler(): IPCInvokers.Profile {
     return {

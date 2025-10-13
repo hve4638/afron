@@ -2,15 +2,16 @@ import { type IJSONAccessor, IACSubStorage } from 'ac-storage';
 import { ProfileError } from '../errors';
 import IRTControl from './IRTControl';
 import ProfileRT from './ProfileRT';
+import type { KeyValueInput, RTMetadata, RTMetadataNode, RTMetadataTree, RTMode } from '@afron/types';
 
 class ProfileRTs implements IRTControl {
-    #storage:IACSubStorage;
-    #tree:RTMetadataTree;
-    #rtIds:string[];
-    #lastNewRTIdIndex:number = 0;
-    #loaded:boolean = false;
+    #storage: IACSubStorage;
+    #tree: RTMetadataTree;
+    #rtIds: string[];
+    #lastNewRTIdIndex: number = 0;
+    #loaded: boolean = false;
 
-    constructor(storage:IACSubStorage) {
+    constructor(storage: IACSubStorage) {
         this.#storage = storage;
         this.#tree = [];
         this.#rtIds = [];
@@ -21,11 +22,11 @@ class ProfileRTs implements IRTControl {
         return this.#storage.accessAsJSON('index.json');
     }
 
-    async #accessPromptData(rtId:string, promptId:string):Promise<IJSONAccessor> {
+    async #accessPromptData(rtId: string, promptId: string): Promise<IJSONAccessor> {
         return await this.#storage.accessAsJSON(`${rtId}:prompts:${promptId}.json`);
     }
 
-    async #accessRTIndex(rtId:string):Promise<IJSONAccessor> {
+    async #accessRTIndex(rtId: string): Promise<IJSONAccessor> {
         return await this.#storage.accessAsJSON(`${rtId}:index.json`);
     }
 
@@ -34,23 +35,23 @@ class ProfileRTs implements IRTControl {
         const prompts = await this.#accessEntrypoint();
         this.#tree = prompts.getOne('tree') ?? [];
         this.#rtIds = prompts.getOne('ids') ?? [];
-        
+
         this.#loaded = true;
     }
 
     async #storeData() {
         const prompts = await this.#accessEntrypoint();
         prompts.set({
-            'tree' :  this.#tree,
-            'ids' : this.#rtIds, 
+            'tree': this.#tree,
+            'ids': this.#rtIds,
         });
     }
-    
-    #getRTIds(tree:RTMetadataTree) {
-        let promptIds:string[] = [];
-        for(const item of tree) {
+
+    #getRTIds(tree: RTMetadataTree) {
+        let promptIds: string[] = [];
+        for (const item of tree) {
             if (item.type === 'directory') {
-                item.children.forEach((child)=>{
+                item.children.forEach((child) => {
                     promptIds.push(child.id);
                 });
             }
@@ -62,14 +63,14 @@ class ProfileRTs implements IRTControl {
         return promptIds;
     }
 
-    #hasId(rtId:string):boolean {
+    #hasId(rtId: string): boolean {
         return this.#rtIds.includes(rtId);
     }
-    
+
     /**
      * 각 RT의 이름을 트리 목록에 갱신
      */
-    async #updateRTNameInTree(rtId:string, newName:string) {
+    async #updateRTNameInTree(rtId: string, newName: string) {
         try {
             for (const item of this.#tree) {
                 if (item.type === 'directory') {
@@ -90,13 +91,13 @@ class ProfileRTs implements IRTControl {
             await this.#storeData();
         }
     }
-    
-    async getTree():Promise<RTMetadataTree> {
+
+    async getTree(): Promise<RTMetadataTree> {
         await this.#loadData();
-        
+
         return this.#tree;
     }
-    
+
     /**
      * RT 트리 갱신
      * 
@@ -106,9 +107,9 @@ class ProfileRTs implements IRTControl {
      * 
      * 새 디렉토리는 updateTree를 통해 바로 추가 및 제거할 수 있으며 빈 디렉토리도 허용된다.
      */
-    async updateTree(newTree:RTMetadataTree) {
+    async updateTree(newTree: RTMetadataTree) {
         await this.#loadData();
-        
+
         const prevIds = this.#getRTIds(this.#tree);
         const newIds = this.#getRTIds(newTree);
 
@@ -120,12 +121,12 @@ class ProfileRTs implements IRTControl {
         this.#tree = newTree;
         await this.#storeData();
     }
-    
+
     /**
      * 새 RT 추가 및 RTTree 반영
      * @param metadata 
      */
-    async addRT(metadata:RTMetadata, template?:RTTemplate) {
+    async addRT(metadata: RTMetadata) {
         await this.#loadData();
 
         if (this.#hasId(metadata.id)) {
@@ -134,48 +135,35 @@ class ProfileRTs implements IRTControl {
 
         const rt = this.rt(metadata.id);
         await rt.setMetadata({
-            id : metadata.id,
-            name : metadata.name,
-            mode : metadata.mode,
-            input_type : 'normal',
+            id: metadata.id,
+            name: metadata.name,
+            mode: metadata.mode,
+            input_type: 'normal',
         });
 
         this.#rtIds.push(metadata.id);
         this.#tree.push({
-            type : 'node',
-            id : metadata.id,
-            name : metadata.name
+            type: 'node',
+            id: metadata.id,
+            name: metadata.name
         });
         await this.#storeData();
-
-        // if (metadata.mode === 'prompt_only') {
-        //     template = 'basic';
-        // }
-
-        // const templateBuilder = new RTTemplateBuilder(rt)
-        // switch(template) {
-        //     case 'basic':
-        //         await templateBuilder.basic();
-        //         break;
-        //     case 'chat':
-        //         break;
-        // }
     }
-    
+
     /**
      * RT 제거 및 RTTree 반영
      * @param metadata 
      */
-    async removeRT(rtId:string) {
+    async removeRT(rtId: string) {
         this.#loadData();
-        
+
         if (!this.#hasId(rtId)) {
             throw invalidRTIdError(rtId);
         }
         const newTree = this.#removeRTTreeAsId(this.#tree, rtId);
 
         this.#tree = newTree;
-        this.#rtIds = this.#rtIds.filter((id)=>(id !== rtId));
+        this.#rtIds = this.#rtIds.filter((id) => (id !== rtId));
         this.#storeData();
 
         await this.rt(rtId).drop();
@@ -186,9 +174,9 @@ class ProfileRTs implements IRTControl {
      * @param oldRTId 
      * @param newRTId 
      */
-    async changeId(oldRTId:string, newRTId:string) {
+    async changeId(oldRTId: string, newRTId: string) {
         await this.#loadData();
-        
+
         if (!this.#hasId(oldRTId)) throw invalidRTIdError(oldRTId);
         if (this.#hasId(newRTId)) throw rtIdAlreadyExistsError(newRTId);
 
@@ -197,8 +185,8 @@ class ProfileRTs implements IRTControl {
         const metadata = this.#findRTMetadata(this.#tree, oldRTId);
         if (metadata) {
             metadata.id = newRTId;
-            
-            const newIds = this.#rtIds.filter((id)=>(id !== oldRTId));
+
+            const newIds = this.#rtIds.filter((id) => (id !== oldRTId));
             newIds.push(newRTId);
             this.#rtIds = newIds;
         }
@@ -206,7 +194,7 @@ class ProfileRTs implements IRTControl {
         await this.#storeData();
     }
 
-    async hasId(rtId:string):Promise<boolean> {
+    async hasId(rtId: string): Promise<boolean> {
         await this.#loadData();
         return this.#hasId(rtId);
     }
@@ -214,28 +202,28 @@ class ProfileRTs implements IRTControl {
     /**
      * 사용되지 않는 RT ID 생성
      */
-    async generateId():Promise<string> {
+    async generateId(): Promise<string> {
         await this.#loadData();
-        
-        let rtId:string;
+
+        let rtId: string;
         let index = this.#lastNewRTIdIndex;
         do {
             rtId = `rt-${index++}`;
         } while (this.#hasId(rtId));
-        
+
         this.#lastNewRTIdIndex = index;
         return rtId;
     }
 
-    #findRTMetadata(tree:RTMetadataTree, rtId:string):RTMetadataNode|null {
-        const item = tree.find((item)=>(item.type !== 'directory' && item.id === rtId));
+    #findRTMetadata(tree: RTMetadataTree, rtId: string): RTMetadataNode | null {
+        const item = tree.find((item) => (item.type !== 'directory' && item.id === rtId));
         if (item) {
             return item as RTMetadataNode;
         }
 
         for (const index in tree) {
             if (tree[index].type === 'directory') {
-                const filtered = tree[index].children.find((item)=>(item.id !== rtId));
+                const filtered = tree[index].children.find((item) => (item.id !== rtId));
                 if (filtered) {
                     return filtered;
                 }
@@ -243,14 +231,14 @@ class ProfileRTs implements IRTControl {
         }
         return null;
     }
-    
-    #removeRTTreeAsId(tree:RTMetadataTree, rtId:string):RTMetadataTree {
-        const newTree = tree.filter((item)=>(item.type === 'directory' || item.id !== rtId));
-        
+
+    #removeRTTreeAsId(tree: RTMetadataTree, rtId: string): RTMetadataTree {
+        const newTree = tree.filter((item) => (item.type === 'directory' || item.id !== rtId));
+
         if (newTree.length === tree.length) {
             for (const index in newTree) {
                 if (newTree[index].type === 'directory') {
-                    const filtered = newTree[index].children.filter((item)=>(item.id !== rtId));
+                    const filtered = newTree[index].children.filter((item) => (item.id !== rtId));
                     newTree[index] = {
                         ...newTree[index],
                         children: filtered,
@@ -261,13 +249,13 @@ class ProfileRTs implements IRTControl {
         return newTree;
     }
 
-    async getRTMode(rtId:string):Promise<RTMode> {
+    async getRTMode(rtId: string): Promise<RTMode> {
         const indexAccessor = await this.#accessRTIndex(rtId);
         return indexAccessor.getOne('mode') ?? 'prompt_only';
     }
-    async setRTMode(rtId:string, mode:RTMode) {
+    async setRTMode(rtId: string, mode: RTMode) {
         const indexAccessor = await this.#accessRTIndex(rtId);
-        switch(mode) {
+        switch (mode) {
             case 'prompt_only':
             case 'flow':
                 indexAccessor.setOne('mode', mode);
@@ -283,25 +271,25 @@ class ProfileRTs implements IRTControl {
      * @param promptId 
      * @param data 
      */
-    async setRTPromptData(rtId:string, promptId:string, data:KeyValueInput) {
+    async setRTPromptData(rtId: string, promptId: string, data: KeyValueInput) {
         this.#loadData();
         const promptDataAccessor = await this.#accessPromptData(rtId, promptId);
         promptDataAccessor.set(data);
     }
 
-    async getRTPromptData(rtId:string, promptId:string, keys:string[]) {
+    async getRTPromptData(rtId: string, promptId: string, keys: string[]) {
         this.#loadData();
         const indexAccessor = await this.#accessPromptData(rtId, promptId);
-        
+
         return indexAccessor.get(...keys);
     }
-    
+
     /* RAW 접근 */
-    async getRTData(rtId:string, accessId:string, keys:string[]):Promise<any> {
+    async getRTData(rtId: string, accessId: string, keys: string[]): Promise<any> {
         const accessor = await this.#storage.accessAsJSON(`${rtId}:${accessId}`);
         return accessor.get(...keys);
     }
-    async setRTData(rtId:string, accessId:string, data:KeyValueInput) {
+    async setRTData(rtId: string, accessId: string, data: KeyValueInput) {
         const accessor = await this.#storage.accessAsJSON(`${rtId}:${accessId}`);
         return accessor.set(data);
     }
@@ -313,22 +301,22 @@ class ProfileRTs implements IRTControl {
      * 
      * @param rtId 
      */
-    async updateRTMetadata(rtId:string) {
+    async updateRTMetadata(rtId: string) {
         const ac = await this.#accessRTIndex(rtId);
         const name = ac.getOne('name');
 
         this.#updateRTNameInTree(rtId, name);
     }
 
-    rt(rtId:string):ProfileRT {
+    rt(rtId: string): ProfileRT {
         return new ProfileRT(this.#storage, rtId);
     }
 }
 
-function rtIdAlreadyExistsError(rtId:string) {
+function rtIdAlreadyExistsError(rtId: string) {
     throw new ProfileError(`rt id already exists : ${rtId}`);
 }
-function invalidRTIdError(rtId:string) {
+function invalidRTIdError(rtId: string) {
     throw new ProfileError(`Invalid rt id : ${rtId}`);
 }
 

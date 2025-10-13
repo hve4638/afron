@@ -1,29 +1,30 @@
 import { describe, expect, test } from 'vitest';
 import PromptVarParser from './PromptVarParser';
+import { RTForm } from '@afron/types';
 
 describe('PromptVarParser', () => {
-    const tables:{ promptVar:PromptVar, form:RTForm  }[] = [
+    const tables: { promptVar: PromptVar, form: RTForm }[] = [
         {
-            promptVar : {
-                type : 'text',
-                id : '0',
-                name : 'test-1',
-                display_name : 'test 1',
-                default_value : 'hello world',
-                placeholder : 'empty',
-                allow_multiline : false,
+            promptVar: {
+                type: 'text',
+                id: '0',
+                name: 'test-1',
+                display_name: 'test 1',
+                default_value: 'hello world',
+                placeholder: 'empty',
+                allow_multiline: false,
             },
-            form : {
-                type : 'text',
-                id : '0',
-                display_name : 'test 1',
-                display_on_header : false,
-                
-                config : {
-                    text : {
-                        default_value : 'hello world',
-                        placeholder : 'empty',
-                        allow_multiline : false,
+            form: {
+                type: 'text',
+                id: '0',
+                display_name: 'test 1',
+                display_on_header: false,
+
+                config: {
+                    text: {
+                        default_value: 'hello world',
+                        placeholder: 'empty',
+                        allow_multiline: false,
                     }
                 }
             }

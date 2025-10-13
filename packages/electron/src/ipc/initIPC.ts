@@ -2,31 +2,32 @@ import { ipcMain } from 'electron';
 import { IPCInvokerName } from 'types';
 import getHandlers from './handlers';
 import runtime, { updateRegistry } from '@/runtime';
+import { IPCInvokerInterface } from '@afron/types';
 
 export function initIPC() {
-    const handlers:IPCInvokerInterface = getHandlers();
+    const handlers: IPCInvokerInterface = getHandlers();
 
-    for(const category in handlers) {
+    for (const category in handlers) {
         for (const invokeKey in handlers[category]) {
             const handler = handlers[category][invokeKey]
             handleIPC(`${category}_${invokeKey}`, handler);
         }
     }
 
-    updateRegistry({ ipcFrontAPI : handlers });
+    updateRegistry({ ipcFrontAPI: handlers });
 }
 
-function handleIPC(ping:string, callback:any) {
+function handleIPC(ping: string, callback: any) {
     const handler = async (event: any, ...args: any) => {
         runtime.logger.trace(`IPCCall:`, ping, ...args);
         try {
             const result = await callback(...args);
             return result;
         }
-        catch (error:any) {
+        catch (error: any) {
             runtime.logger.error(`IPCError:`, ping, ...args);
             runtime.logger.error(error);
-            
+
             return [makeErrorStruct(error)];
         }
     };
@@ -36,17 +37,17 @@ function handleIPC(ping:string, callback:any) {
     return handler;
 }
 
-function makeErrorStruct(error:any) {
+function makeErrorStruct(error: any) {
     try {
         return {
-            name : error.name,
-            message : error.message,
+            name: error.name,
+            message: error.message,
         }
     }
-    catch(error) {
+    catch (error) {
         return {
-            name : 'UnknownError',
-            message : 'Unknown error',
+            name: 'UnknownError',
+            message: 'Unknown error',
         }
     }
 }

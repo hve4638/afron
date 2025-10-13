@@ -1,3 +1,5 @@
+import { RTFlowNodeData } from '@afron/types'
+
 type SetStateAction<S> = S | ((prevState: S) => S);
 
 export type ChangeRTFlowDataAction = (nodeId: string, data: SetStateAction<RTFlowNodeData>) => void;

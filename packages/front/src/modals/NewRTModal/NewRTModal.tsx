@@ -7,6 +7,7 @@ import useModalDisappear from '@/hooks/useModalDisappear';
 import ProfileEvent from '@/features/profile-event';
 
 import { RTSelectStep, EditMetadataStep } from './step';
+import { RTMode } from '@afron/types';
 
 const enum NewRTModalSteps {
     SelectRTType = 0,

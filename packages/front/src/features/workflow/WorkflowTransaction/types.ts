@@ -1,4 +1,5 @@
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
+import { RTFlowNodeData } from '@afron/types';
 
 export declare namespace TransactionAction {
     type MoveNode = {

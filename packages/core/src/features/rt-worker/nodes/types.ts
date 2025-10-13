@@ -3,6 +3,7 @@ import { HistoryMessageRow } from '@/features/acstorage-accessor';
 
 import RTEventEmitter from '../RTEventEmitter';
 import { HistoryMessageAddRequired } from '@/features/acstorage-accessor/HistoryAccessor/types';
+import { InputFile } from '@afron/types';
 
 export type HistoryData = {
     type: 'text' | 'image_url' | 'image_base64' | 'file_url' | 'file_base64';

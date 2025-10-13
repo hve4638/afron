@@ -1,4 +1,5 @@
 import { ProfileSessionMetadata } from '@/types';
+import { ChatAIModelData, CustomModelCreate, RTMetadata, RTMetadataTree, VertexAIAuth } from '@afron/types';
 
 export type ProviderName = 'openai' | 'anthropic' | 'google' | 'vertexai' | 'custom';
 

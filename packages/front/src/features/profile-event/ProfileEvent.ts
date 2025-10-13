@@ -7,6 +7,7 @@ import {
     CurrentSessionFormEvent,
     GlobalModelConfigEvent
 } from './events';
+import { CustomModelCreate, RTMetadata, RTMetadataTree, VertexAIAuth } from '@afron/types';
 
 class ProfileEvent {
     static readonly session = {

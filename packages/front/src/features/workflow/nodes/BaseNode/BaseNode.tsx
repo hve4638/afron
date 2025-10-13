@@ -11,6 +11,7 @@ import { CommonProps } from '@/types';
 import { useBaseNode } from './BaseNode.hook';
 
 import styles from './BaseNode.module.scss';
+import { RTFlowNodeData } from '@afron/types';
 
 export interface BaseNodeProps extends NodeProps, CommonProps {
     title: string;

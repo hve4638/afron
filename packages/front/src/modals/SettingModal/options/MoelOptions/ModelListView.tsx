@@ -9,6 +9,7 @@ import useTrigger from '@/hooks/useTrigger';
 import styles from './styles.module.scss';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import ProfileEvent from '@/features/profile-event';
+import { ChatAIModel, ChatAIModelGroup, ChatAIModelCategory } from '@afron/types';
 
 interface ModelListViewProps {
     modelCategory?: ChatAIModelCategory;

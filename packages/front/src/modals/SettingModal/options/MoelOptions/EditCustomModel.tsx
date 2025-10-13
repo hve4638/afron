@@ -9,6 +9,7 @@ import useHotkey from '@/hooks/useHotkey';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import { CustomModelCreate } from '@afron/types';
 
 interface EditCustomModelModalProps {
     value?: CustomModelCreate;

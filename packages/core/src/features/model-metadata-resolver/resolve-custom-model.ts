@@ -1,3 +1,4 @@
+import { ChatAIConfig, CustomModel } from '@afron/types';
 
 
 export function resolveCustomModelInfo(customModel: CustomModel): ChatAIConfig {

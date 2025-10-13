@@ -1,4 +1,5 @@
-import { RTNode, RTNodeDirectory, RTNodeTree } from 'types/rt-node';
+import { RTMetadataDirectory, RTMetadataNode, RTMetadataTree } from '@afron/types';
+import { RTNode, RTNodeDirectory, RTNodeTree } from '@/types/rt-node';
 
 type RTNodeOptions = Omit<RTNode, 'type' | 'id' | 'name'>;
 

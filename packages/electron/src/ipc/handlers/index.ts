@@ -14,6 +14,7 @@ import profileRTStorage from './profileRTStorage';
 import profileRTPrompt from './profileRTPrompt';
 import { profileRTFlow } from './profileRTFlow';
 import request from './request';
+import { IPCInvokerInterface } from '@afron/types';
 
 function get(): IPCInvokerInterface {
     return {

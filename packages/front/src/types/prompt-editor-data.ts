@@ -1,4 +1,5 @@
 import { PromptInputType } from '@/types';
+import { ModelConfiguration } from '@afron/types';
 
 /**
  * PromptEditor 내에서 사용하는 프롬프트 데이터

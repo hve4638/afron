@@ -1,5 +1,6 @@
 import { PromptGenerator } from 'advanced-prompt-template-lang';
 import { parseInputFileToCBFResult } from './utils';
+import { InputFile } from '@afron/types';
 
 class FilePromptGenerator extends PromptGenerator {
     #file: InputFile;

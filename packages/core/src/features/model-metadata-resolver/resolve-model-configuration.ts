@@ -1,3 +1,5 @@
+import { GlobalModelConfiguration, ModelConfiguration, Optional } from '@afron/types';
+
 export function resolveModelConfiguration(
     globalConfigs: Optional<GlobalModelConfiguration>[] = [],
     configs: Optional<ModelConfiguration>[] = [],

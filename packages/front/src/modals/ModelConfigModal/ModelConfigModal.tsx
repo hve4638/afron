@@ -10,6 +10,7 @@ import ProfileEvent from '@/features/profile-event';
 import useTrigger from '@/hooks/useTrigger';
 import { CommonOptions, GPT5Options, SafetyOptions, ThinkingOptions } from './options';
 import useMemoryStore from '@/stores/useMemoryStore';
+import { ChatAIModel, GlobalModelConfiguration } from '@afron/types';
 
 type ModelConfigModalProps = {
     modelId: string;

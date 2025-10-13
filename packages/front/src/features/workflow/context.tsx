@@ -2,6 +2,7 @@ import { useContextForce } from '@/context';
 import { createContext, SetStateAction, useCallback } from 'react';
 import { ChangeRTFlowDataAction, RemoveRTFlowDataAction } from './types';
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
+import { RTFlowData, RTFlowNodeData } from '@afron/types';
 
 export interface WorkflowState {
     nodes: FlowNode[];

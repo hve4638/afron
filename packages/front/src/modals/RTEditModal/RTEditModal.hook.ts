@@ -15,6 +15,7 @@ import { DeleteConfirmDialog } from '@/modals/Dialog';
 import ProfileEvent from '@/features/profile-event';
 
 import { RTExportPreviewModal } from '../RTExportModal';
+import { RTMetadataDirectory, RTMetadataNode, RTMetadataTree } from '@afron/types';
 
 type useRTEditModalProps = {
     isFocused: boolean;

@@ -2,6 +2,7 @@ import { SessionAPI } from '@/api/profiles';
 import { emitEvent } from '@/hooks/useEvent';
 import useErrorLogStore, { LogData } from '@/stores/useErrorLogStore';
 import { getHttpStatusMessage } from '@/utils/status_code';
+import { RTEventData } from '@afron/types';
 
 type RTEventErrorData = (
     RTEventData & {

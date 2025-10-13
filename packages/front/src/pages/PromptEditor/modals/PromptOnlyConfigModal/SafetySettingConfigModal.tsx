@@ -10,6 +10,7 @@ import { Column, Row } from '@/components/layout';
 import ModelForm from '@/components/model-ui';
 
 import { PromptEditorData } from '@/types';
+import { ModelConfiguration } from '@afron/types';
 
 type SafetySettingConfigModalProps = {
     data: PromptEditorData;

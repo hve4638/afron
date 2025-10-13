@@ -1,4 +1,5 @@
 import runtime from '@/runtime';
+import { IPCInvokers } from '@afron/types';
 
 function handler(): IPCInvokers.Request {
     return {

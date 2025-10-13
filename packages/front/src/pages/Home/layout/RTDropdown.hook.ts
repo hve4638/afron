@@ -6,6 +6,7 @@ import ProfileEvent from '@/features/profile-event';
 
 import { emitEvent, useEventState } from '@/hooks/useEvent';
 import { useModal } from '@/hooks/useModal';
+import { RTMetadataTree } from '@afron/types';
 
 function useRTDropdown() {
     const navigate = useNavigate();

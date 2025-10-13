@@ -1,3 +1,4 @@
+import { HistoryMessage, HistoryMetadata, HistorySearch } from '@afron/types';
 import { HistoryData } from './types';
 import useProfileAPIStore from '@/stores/useProfileAPIStore'
 

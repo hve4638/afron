@@ -1,6 +1,7 @@
 import * as utils from '@utils';
 import runtime from '@/runtime';
 import { type Profile } from '@afron/core';
+import { IPCInvokers, KeyValueInput } from '@afron/types';
 
 function handler(): IPCInvokers.ProfileStorage {
     const throttles = {};

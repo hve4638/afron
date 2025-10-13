@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import { PromptData } from '@/types';
+import { RTIndex, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
 
 export interface RTState {
     id: string|null;

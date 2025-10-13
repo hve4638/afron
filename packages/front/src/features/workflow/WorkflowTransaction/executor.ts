@@ -1,6 +1,7 @@
 import { SetStateAction } from 'react';
 import { TransactionAction } from './types';
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
+import { FlowNodeType, RTFlowNodeData } from '@afron/types';
 
 /**
  * Transaction 실행에 필요한 콜백 인터페이스

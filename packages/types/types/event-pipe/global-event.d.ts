@@ -28,17 +28,16 @@ type GlobalEventDataClose = {
     type: 'close';
 }
 
-declare global {
-    type GlobalEventDataWithoutId =
-        | GlobalEventDataRTImport
-        | GlobalEventDataRTExport
-        | GlobalEventDataError
-        | GlobalEventDataClose
-        ;
+export type GlobalEventDataWithoutId = (
+    GlobalEventDataRTImport
+    | GlobalEventDataRTExport
+    | GlobalEventDataError
+    | GlobalEventDataClose
+);
+    
 
-    type GlobalEventData = {
-        id: string;
-    } & GlobalEventDataWithoutId;
-}
+export type GlobalEventData = {
+    id: string;
+} & GlobalEventDataWithoutId;
 
 export { };

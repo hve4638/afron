@@ -1,3 +1,4 @@
+import { FlowNodeType, KeyValueInput, StorageStruct } from '@afron/types';
 import { FlowNodeIf, FlowNodePosition } from './types';
 
 interface IProfileRT {

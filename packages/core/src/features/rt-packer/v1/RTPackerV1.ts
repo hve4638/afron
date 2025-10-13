@@ -4,6 +4,7 @@ import { RTPackFailed } from '../errors';
 import { ZipBuilder, ZipBuilderError } from '@/lib/zipper';
 import { LevelLogger } from '@/types';
 import NoLogger from '@/features/nologger';
+import { RTIndex } from '@afron/types';
 
 const RTPACK_VERSION = 0;
 

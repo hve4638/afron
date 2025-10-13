@@ -14,6 +14,7 @@ import {
 import { useWorkflowContext } from '../context';
 
 import styles from './NodeOptionPanel.module.scss';
+import { RTFlowNodeData } from '@afron/types';
 
 interface NodeOptionPanelProps {
     node: FlowNode;

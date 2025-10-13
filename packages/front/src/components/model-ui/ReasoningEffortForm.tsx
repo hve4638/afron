@@ -1,4 +1,5 @@
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import { SupportedThinkingEfforts } from '@afron/types';
 
 interface ReasoningEffortFormProps {
     candidates?: readonly SupportedThinkingEfforts[];

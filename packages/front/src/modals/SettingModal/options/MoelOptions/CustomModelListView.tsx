@@ -12,6 +12,7 @@ import DivButton from '@/components/DivButton';
 import { useModal } from '@/hooks/useModal';
 import EditCustomModelModal from './EditCustomModel';
 import ProfileEvent from '@/features/profile-event';
+import { CustomModel } from '@afron/types';
 
 interface ModelListViewProps {
     onClick: (model: CustomModel) => Promise<void>;

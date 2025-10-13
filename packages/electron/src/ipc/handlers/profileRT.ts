@@ -1,5 +1,6 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
+import { IPCInvokers, RTIndex } from '@afron/types';
 
 function handler(): IPCInvokers.ProfileRT {
     const throttle = ThrottleAction.getInstance();

@@ -15,6 +15,7 @@ import { AIFRONT_PATH, PROMPT_DIR_PATH } from './data';
 import { LegacyAIFrontData, LegacyPromptMetadata, LegacyPromptMetadataList } from './type';
 
 import runtime from '@/runtime'
+import { RTMetadataDirectory, RTMetadataNode } from '@afron/types';
 
 type PromptData = { id: string, children?: PromptData[] };
 

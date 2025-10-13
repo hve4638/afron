@@ -1,3 +1,4 @@
+import { InputFile } from '@afron/types';
 import { TemplateOutput } from 'advanced-prompt-template-lang';
 
 export function parseInputFileToCBFResult(file: InputFile): TemplateOutput {

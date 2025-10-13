@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPCListenerPing } from '../data';
 import { createListenerManager } from './listener-utils';
+import { IPCInvokerInterface, IPCListenerInterface } from '@afron/types';
 
 type IPCInvokerKeys = keyof IPCInvokerInterface;
 type IPCInvokerPath = {

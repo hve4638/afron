@@ -1,3 +1,4 @@
+import { RTForm, StorageStruct } from "@afron/types";
 
 export namespace RTPackV1 {
     export interface Metadata {

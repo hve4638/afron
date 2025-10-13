@@ -11,6 +11,7 @@ import Button from 'components/Button';
 import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
 import RTTreeView from 'features/rtTreeView';
 import useModalDisappear from 'hooks/useModalDisappear';
+import { RTMetadataTree } from '@afron/types';
 
 type RTSaveModalProps = {
     item:RTNodeTree;

@@ -3,6 +3,7 @@ import { IACSubStorage } from 'ac-storage';
 import type IProfileRT from './IProfileRT';
 import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
 import { FlowNodeIf, FlowNodePosition } from './types';
+import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, StorageStruct } from '@afron/types';
 
 class ProfileRT implements IProfileRT {
     constructor(private storage: IACSubStorage, private rtId: string) {
@@ -188,10 +189,10 @@ class ProfileRT implements IProfileRT {
         }
     }
 
-    async getMetadata(): Promise<RTIndex> {
+    async getMetadata(): Promise<StorageStruct.RT.Index> {
         const indexAC = await this.accessMetadata();
 
-        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'forms', 'entrypoint_node') as RTIndex;
+        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'forms', 'entrypoint_node') as StorageStruct.RT.Index;
     }
     async setMetadata(input: KeyValueInput): Promise<void> {
         const indexAC = await this.accessMetadata();

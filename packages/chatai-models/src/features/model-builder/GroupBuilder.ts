@@ -1,3 +1,5 @@
+import { ChatAIConfig, ChatAIFlags, ChatAIModel, ChatAIModelGroup } from "@afron/types";
+
 interface GroupBuilderOptions {
     categoryId: string;
     baseModelConfig: ChatAIConfig;

@@ -1,5 +1,6 @@
 import { IPCError } from 'api/error';
 import { IIPCAPI } from './types';
+import { CustomModel, GlobalModelConfiguration, HistorySearch, InputFileHash, KeyValueInput, RTFlowData, RTIndex, RTMetadata, RTMetadataTree, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
 
 const electron = window.electron;
 

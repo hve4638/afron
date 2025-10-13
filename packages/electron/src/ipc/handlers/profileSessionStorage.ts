@@ -1,5 +1,6 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
+import { EResult, InputFileHash, InputFilePreview, InputFilesUpdateInfo, IPCInvokers, KeyValueInput } from '@afron/types';
 
 function handler(): IPCInvokers.ProfileSessionStorage {
     const throttle = ThrottleAction.getInstance();

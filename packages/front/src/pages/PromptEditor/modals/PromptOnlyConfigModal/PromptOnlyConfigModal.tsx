@@ -16,6 +16,7 @@ import { useModal } from '@/hooks/useModal';
 import SafetySettingConfigModal from './SafetySettingConfigModal';
 import Subdescription from '@/components/ui/Description';
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import { ModelConfiguration } from '@afron/types';
 
 type PromptOnlyConfigModalProps = {
     data: PromptEditorData;

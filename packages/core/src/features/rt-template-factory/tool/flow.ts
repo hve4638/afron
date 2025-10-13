@@ -1,5 +1,6 @@
 import { Profile } from '@/features/profiles';
 import { FlowNodeIf, FlowNodePosition } from '@/features/profiles/Profile/rt/types';
+import { FlowNodeType } from '@afron/types';
 import { v7 as uuidv7 } from 'uuid';
 
 export class RTFlowTemplateTool {

@@ -8,6 +8,7 @@ import ModelListView from './ModelListView';
 import useMemoryStore from '@/stores/useMemoryStore';
 import CustomModelListView from './CustomModelListView';
 import ProfileEvent from '@/features/profile-event';
+import { ChatAIModelCategory } from '@afron/types';
 
 function ModelOptions() {
     const { api } = useProfileAPIStore();

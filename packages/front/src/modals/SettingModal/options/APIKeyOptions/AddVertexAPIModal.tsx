@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useHotkey from 'hooks/useHotkey';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
 import UploadForm from '@/components/UploadForm';
+import { VertexAIAuth } from '@afron/types';
 
 type StringInputModalProps = {
     title:string;

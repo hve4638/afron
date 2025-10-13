@@ -1,5 +1,6 @@
 import { CategoryBuilder } from '@/features/model-builder';
 import { flags } from '@/data';
+import { ChatAIConfig } from '@afron/types';
 
 const {
     latest,

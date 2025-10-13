@@ -1,3 +1,4 @@
+import { StructuredVersion, VersionInfo } from '@afron/types';
 import axios from 'axios';
 
 type GitHubRelease = {

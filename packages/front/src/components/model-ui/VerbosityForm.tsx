@@ -1,4 +1,5 @@
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import { SupportedVerbosity } from '@afron/types';
 
 interface VerbosityFormProps {
     candidates?: readonly SupportedVerbosity[];

@@ -3,6 +3,7 @@ import { TransactionAction } from './types';
 import { FlowNode, FlowEdge } from '@/lib/xyflow';
 import { TransactionExecutor, TransactionExecutorCallbacks } from './executor';
 import { useWorkflowContext } from '../context';
+import { RTFlowNodeData } from '@afron/types';
 
 const MAX_HISTORY_SIZE = 50;
 

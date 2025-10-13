@@ -6,6 +6,7 @@ import { WorkNodeStop } from './errors';
 import { ProfileAPIKeyControl } from '@/features/profiles/ProfileControl';
 import ChatAIFetcher, { ChatAIFetcherFailed } from '@/features/chatai-fetcher';
 import { resolveModelConfiguration } from '@/features/model-metadata-resolver';
+import { ChatAIModel, CustomModel, ModelConfiguration } from '@afron/types';
 
 type ChatAIFetchNodeInput = {
     messages: ChatMessages;

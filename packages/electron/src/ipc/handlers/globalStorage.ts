@@ -1,17 +1,18 @@
 import ThrottleAction from '@/features/throttle-action';
 import runtime from '@/runtime';
+import { IPCInvokers, KeyValueInput } from '@afron/types';
 
-function globalStorage():IPCInvokers.GlobalStorage {
+function globalStorage(): IPCInvokers.GlobalStorage {
     const throttle = ThrottleAction.getInstance();
 
     return {
-        async get(identifier:string, key:string[]) {
+        async get(identifier: string, key: string[]) {
             const accessor = await runtime.globalStorage.accessAsJSON(identifier);
             const value = accessor.get(...key)
 
             return [null, value];
         },
-        async set(identifier:string, data:KeyValueInput) {
+        async set(identifier: string, data: KeyValueInput) {
             const accessor = await runtime.globalStorage.accessAsJSON(identifier);
 
             accessor.set(data);

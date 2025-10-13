@@ -2,6 +2,7 @@ import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
 import useDataStore from '@/stores/useDataStore';
 import { ProfileSessionMetadata } from '@/types';
+import { RTMetadata, RTMetadataTree } from '@afron/types';
 
 class RTEvent {
     static async getRTTree() {

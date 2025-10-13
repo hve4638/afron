@@ -6,6 +6,7 @@ import RTEventEmitter, { RTEventListener } from './RTEventEmitter';
 import NoLogger from '../nologger';
 import RTWorkflow from './workflow/RTWorkflow';
 import WorkflowPromptPreview from './workflow/WorkflowPromptPreview';
+import { RTInput } from '@afron/types';
 
 type WorkRequired = {
     profile: Profile;

@@ -1,3 +1,4 @@
+import { ChatAIModel, CustomModel, ModelConfiguration } from '@afron/types';
 import { ChatAI, ChatMessages } from '@hve/chatai';
 
 export type ChatAIRequestAPI = typeof ChatAI.request | typeof ChatAI.previewRequest;

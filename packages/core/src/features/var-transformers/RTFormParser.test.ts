@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import RTFormParser from './RTFormParser';
+import { RTForm } from '@afron/types';
 
 describe('RTFormParser', () => {
     const tables:{ promptVar:PromptVar, form:RTForm  }[] = [

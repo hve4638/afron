@@ -1,44 +1,46 @@
+import { RTForm, RTFormArray, RTFormCheckbox, RTFormNumber, RTFormSelect, RTFormStruct, RTFormStructField, RTFormText } from "@afron/types";
+
 class PromptVarParser {
-    private static parseText(promptVar:PromptVarText):RTFormText {
+    private static parseText(promptVar: PromptVarText): RTFormText {
         return {
-            default_value : promptVar.default_value || '',
-            placeholder : promptVar.placeholder ?? '',
-            allow_multiline : promptVar.allow_multiline ?? false,
+            default_value: promptVar.default_value || '',
+            placeholder: promptVar.placeholder ?? '',
+            allow_multiline: promptVar.allow_multiline ?? false,
         }
     }
-    private static parseNumber(promptVar:PromptVarNumber):RTFormNumber {
+    private static parseNumber(promptVar: PromptVarNumber): RTFormNumber {
         return {
-            default_value : promptVar.default_value || 0,
-            minimum_value : promptVar.minimum_value,
-            maximum_value : promptVar.maximum_value,
-            allow_decimal : promptVar.allow_decimal ?? false,
+            default_value: promptVar.default_value || 0,
+            minimum_value: promptVar.minimum_value,
+            maximum_value: promptVar.maximum_value,
+            allow_decimal: promptVar.allow_decimal ?? false,
         }
     }
-    private static parseCheckbox(promptVar:PromptVarCheckbox):RTFormCheckbox {
+    private static parseCheckbox(promptVar: PromptVarCheckbox): RTFormCheckbox {
         return {
-            default_value : promptVar.default_value || false,
+            default_value: promptVar.default_value || false,
         }
     }
-    private static parseSelect(promptVar:PromptVarSelect):RTFormSelect {
+    private static parseSelect(promptVar: PromptVarSelect): RTFormSelect {
         return {
-            default_value : promptVar.default_value || '',
-            options : promptVar.options.map((item)=>({
-                name : item.name,
-                value : item.value,
+            default_value: promptVar.default_value || '',
+            options: promptVar.options.map((item) => ({
+                name: item.name,
+                value: item.value,
             })),
         }
     }
-    private static parseStruct(promptVar:PromptVarStruct):RTFormStruct {
+    private static parseStruct(promptVar: PromptVarStruct): RTFormStruct {
         const fields = promptVar.fields.map(
-            (field)=>{
-                const subform:RTFormStructField = {
-                    type : field.type as 'text' | 'number' | 'checkbox' | 'select',
-                    name : field.name,
-                    display_name : field.display_name,
-                    config : {},
+            (field) => {
+                const subform: RTFormStructField = {
+                    type: field.type as 'text' | 'number' | 'checkbox' | 'select',
+                    name: field.name,
+                    display_name: field.display_name,
+                    config: {},
                 };
 
-                switch(field.type) {
+                switch (field.type) {
                     case 'text':
                         subform.config.text = this.parseText(field);
                         break;
@@ -55,15 +57,15 @@ class PromptVarParser {
                 return subform;
             }
         );
-        
+
         return { fields };
     }
-    private static parseArray(promptVar:PromptVarArray):RTFormArray {
-        const arrayConfig:RTFormArray = {
-            element_type : promptVar.element.type,
-            minimum_length : promptVar.minimum_length,
-            maximum_length : promptVar.maximum_length,
-            config : {}
+    private static parseArray(promptVar: PromptVarArray): RTFormArray {
+        const arrayConfig: RTFormArray = {
+            element_type: promptVar.element.type,
+            minimum_length: promptVar.minimum_length,
+            maximum_length: promptVar.maximum_length,
+            config: {}
         }
 
         switch (promptVar.element.type) {
@@ -83,24 +85,24 @@ class PromptVarParser {
                 arrayConfig.config.struct = this.parseStruct(promptVar.element);
                 break;
         }
-        
+
         return arrayConfig;
     }
-    
-    static toRTForm(promptVar:PromptVar):RTForm {
+
+    static toRTForm(promptVar: PromptVar): RTForm {
         if (promptVar.id == null) {
             throw new Error('PromptVar id is null');
         }
 
-        const form:RTForm = {
-            type : promptVar.type,
-            id : promptVar.id,
-            display_name : promptVar.display_name,
-            display_on_header : false,
-            
-            config : {}
+        const form: RTForm = {
+            type: promptVar.type,
+            id: promptVar.id,
+            display_name: promptVar.display_name,
+            display_on_header: false,
+
+            config: {}
         }
-        
+
         switch (promptVar.type) {
             case 'text':
                 form.config.text = this.parseText(promptVar);

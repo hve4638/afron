@@ -6,6 +6,7 @@ import { emitEvent } from '@/hooks/useEvent';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import { useProfileAPIStore } from '@/stores';
+import { RTIndex } from '@afron/types';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 

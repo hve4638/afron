@@ -7,6 +7,7 @@ import { Align, Column, Grid, Row } from '@/components/layout';
 import ProfileEvent from '@/features/profile-event';
 import { POTemplateList } from './POTemplateList';
 import { FlowTemplateList } from './FlowTemplateList';
+import { RTMode } from '@afron/types';
 
 type Metadata = {
     name: string;

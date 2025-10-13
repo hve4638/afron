@@ -1,18 +1,19 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
+import { IPCInvokers, RTPromptDataEditable } from '@afron/types';
 
-function handler():IPCInvokers.ProfileRTPrompt {
+function handler(): IPCInvokers.ProfileRTPrompt {
     const throttle = ThrottleAction.getInstance();
 
     return {
-        async getMetadata(profileId:string, rtId:string, promptId:string) {
+        async getMetadata(profileId: string, rtId: string, promptId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             const metadata = await rt.getPromptMetadata(promptId);
 
             return [null, metadata];
         },
-        async setMetadata(profileId:string, rtId:string, promptId:string, metadata:RTPromptDataEditable) {
+        async setMetadata(profileId: string, rtId: string, promptId: string, metadata: RTPromptDataEditable) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             await rt.setPromptMetadata(promptId, metadata);
@@ -22,14 +23,14 @@ function handler():IPCInvokers.ProfileRTPrompt {
             return [null];
         },
 
-        async getName(profileId:string, rtId:string, promptId:string) {
+        async getName(profileId: string, rtId: string, promptId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             const name = await rt.getPromptName(promptId);
 
             return [null, name];
         },
-        async setName(profileId:string, rtId:string, promptId:string, name:string) {
+        async setName(profileId: string, rtId: string, promptId: string, name: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             await rt.setPromptName(promptId, name);
@@ -39,47 +40,47 @@ function handler():IPCInvokers.ProfileRTPrompt {
             return [null];
         },
 
-        async getVariableNames(profileId:string, rtId:string, promptId:string) {
+        async getVariableNames(profileId: string, rtId: string, promptId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             const names = await rt.getPromptVariableNames(promptId);
-            
+
             return [null, names];
         },
-        async getVariables(profileId:string, rtId:string, promptId:string) {
+        async getVariables(profileId: string, rtId: string, promptId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             const variables = await rt.getPromptVariables(promptId);
 
             return [null, variables];
         },
-        async setVariables(profileId:string, rtId:string, promptId:string, vars:PromptVar[]) {
+        async setVariables(profileId: string, rtId: string, promptId: string, vars: PromptVar[]) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
 
-            const varIds:string[] = await rt.setPromptVariables(promptId, vars);
+            const varIds: string[] = await rt.setPromptVariables(promptId, vars);
             throttle.saveProfile(profile);
 
             return [null, varIds] as const;
         },
-        async removeVariables(profileId:string, rtId:string, promptId:string, varIds:string[]) {
+        async removeVariables(profileId: string, rtId: string, promptId: string, varIds: string[]) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
 
             await rt.removePromptVariables(promptId, varIds);
             throttle.saveProfile(profile);
-            
+
             return [null];
         },
-        
-        async getContents(profileId:string, rtId:string, promptId:string) {
+
+        async getContents(profileId: string, rtId: string, promptId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             const contents = await rt.getPromptContents(promptId);
 
             return [null, contents];
         },
-        async setContents(profileId:string, rtId:string, promptId:string, contents:string) {
+        async setContents(profileId: string, rtId: string, promptId: string, contents: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             await rt.setPromptContents(promptId, contents);

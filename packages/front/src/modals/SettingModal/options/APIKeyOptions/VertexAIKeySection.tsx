@@ -8,6 +8,7 @@ import { useModal } from '@/hooks/useModal';
 import APIItem from './APIItem';
 import AddVertexAPIModal from './AddVertexAPIModal';
 import ProfileEvent from '@/features/profile-event';
+import { VertexAIAuth } from '@afron/types';
 
 interface SingleAPIKeySectionProps {
     title: string;

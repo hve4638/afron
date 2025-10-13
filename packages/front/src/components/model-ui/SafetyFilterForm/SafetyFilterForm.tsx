@@ -1,6 +1,7 @@
 import Delimiter from '@/components/Delimiter';
 import { CheckBoxForm } from '@/components/forms';
 import SafetyFilterSlider from './SafetyFilterSlider';
+import { GeminiSafetySetting } from '@afron/types';
 
 type SafetySetting = Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>>;
 

@@ -19,6 +19,7 @@ import ProfileModel from './ProfileModel';
 import { LevelLogger } from '@/types';
 import NoLogger from '@/features/nologger';
 import type { IMasterKeyGettable } from '@/features/masterkey-manager';
+import { RTMetadata, RTMetadataTree } from '@afron/types';
 
 type ProfileRequried = {
     masterKeyGetter: IMasterKeyGettable;

@@ -5,6 +5,7 @@ import runtime from '@/runtime';
 
 import * as staticPath from '@/static-path';
 import { IPCListenerPing } from '@/data';
+import { RTEventData } from '@afron/types';
 
 const MINIMUM_WINDOW_SIZE = [640, 520];
 const DEFAULT_WINDOW_SIZE = [1280, 900];
@@ -49,7 +50,7 @@ class ElectronApp {
 
         const winRef = new WeakRef(win);
         runtime.eventProcess.resetBrowserWindow(win);
-        
+
         runtime.rtWorker.removeAllRTEventListeners();
         runtime.rtWorker.addRTEventListener((event: RTEventData) => {
             const window = winRef.deref();

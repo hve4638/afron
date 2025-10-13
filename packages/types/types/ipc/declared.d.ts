@@ -1,5 +1,1 @@
-declare global {
-    type KeyValueInput = [string, any][] | Record<string, any>;
-}
-
-export {};
+export type KeyValueInput = [string, any][] | Record<string, any>;

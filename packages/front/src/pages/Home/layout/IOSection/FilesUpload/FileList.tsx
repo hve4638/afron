@@ -9,6 +9,7 @@ import useDiff from '@/hooks/useDiff';
 import { clamp } from '@/utils/math';
 
 import styles from './styles.module.scss';
+import { InputFilePreview } from '@afron/types';
 
 interface FilesFormLayoutProps extends CommonProps {
     internalPadding?: string;

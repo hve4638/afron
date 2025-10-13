@@ -9,6 +9,7 @@ import useModalDisappear from '@/hooks/useModalDisappear';
 import { useMemo } from 'react';
 import useRequestPreviewModal from './RequestPreviewModal.hook';
 import { HeaderLine, HeaderLineWithJSON } from './headers';
+import { RTEventPreviewData } from '@afron/types';
 
 type RequestPreviewModalProps = {
     previewData: RTEventPreviewData;

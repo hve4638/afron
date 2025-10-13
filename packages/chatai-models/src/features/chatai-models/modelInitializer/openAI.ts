@@ -1,5 +1,6 @@
 import { flags, configFlags } from '@/data';
 import { CategoryBuilder } from '@/features/model-builder';
+import { ChatAIConfig, ExcludeParamter } from '@afron/types';
 
 const {
     supportThinkingEffort,

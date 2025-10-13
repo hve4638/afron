@@ -15,6 +15,7 @@ import { relocateTree } from './utils';
 import { Tree, TreeDirectoryData, TreeNodeData, TreeOffsets, } from './types';
 import { Regions } from './TreeNode/types';
 import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
+import { RTMetadataTree } from '@afron/types';
 
 type PromptTreeModalProps = {
     item:RTNodeTree;

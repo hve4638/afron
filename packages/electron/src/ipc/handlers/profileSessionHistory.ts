@@ -1,4 +1,5 @@
 import runtime from '@/runtime';
+import { HistoryMessage, HistoryMetadata, HistorySearch, IPCInvokers } from '@afron/types';
 import { IPCInvokerName } from 'types';
 
 function handler(): IPCInvokers.ProfileSessionHistory {

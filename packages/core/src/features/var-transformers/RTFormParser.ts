@@ -1,3 +1,5 @@
+import { RTForm, RTFormArray, RTFormCheckbox, RTFormNumber, RTFormSelect, RTFormStruct, RTFormText } from "@afron/types";
+
 class RTFormParser {
     private static parseText(base:BasePromptVar, config: RTFormText):PromptVarText {
         return {

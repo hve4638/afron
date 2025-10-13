@@ -2,6 +2,7 @@ import SessionAPI from './SessionAPI';
 import LocalAPI from '@/api/local';
 import { IPCError } from '@/api/error';
 import RTAPI from './RTAPI';
+import { CustomModel, KeyValueInput, RTFlowData, RTMetadata, RTMetadataTree } from '@afron/types';
 
 class ProfileAPI {
     #profileId: string;

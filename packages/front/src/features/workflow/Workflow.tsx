@@ -20,6 +20,7 @@ import { ChangeRTFlowDataAction, RemoveRTFlowDataAction } from './types';
 import { Grid } from '@/components/layout';
 import { SidePanel, WorkflowConfig } from './SidePanel';
 import { SidePanelSections } from './SidePanel/types';
+import { RTFlowData } from '@afron/types';
 
 function WorkflowInner({
     children,

@@ -1,4 +1,5 @@
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
+import { GlobalModelConfiguration } from '@afron/types';
 
 class GlobalModelConfigEvent {
     static async getGlobalConfig(modelId: string):Promise<GlobalModelConfiguration> {

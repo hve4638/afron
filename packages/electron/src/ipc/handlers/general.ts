@@ -2,6 +2,7 @@ import * as utils from '@utils';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
 import { ChatAIModels } from '@afron/chatai-models'
+import { IPCInvokers, VersionInfo } from '@afron/types';
 
 function general(): IPCInvokers.General {
     const throttle = ThrottleAction.getInstance();

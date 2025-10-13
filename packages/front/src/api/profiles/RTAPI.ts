@@ -1,5 +1,6 @@
 import { IPCError } from 'api/error'
 import LocalAPI from '@/api/local'
+import { KeyValueInput, RTPromptDataEditable } from '@afron/types';
 
 class RTAPI {
     #profileId: string;

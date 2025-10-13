@@ -54,8 +54,9 @@ function useEventHandler() {
     }, []);
 
     useEvent('goto_rt_editor', async ({ rtId }) => {
-        const { mode } = await api.rt(rtId).getMetadata();
-
+        const metadata = await api.rt(rtId).getMetadata();
+        console.log(metadata);
+        const { mode } = metadata;
         if (mode === 'flow') {
             navigate(`/workflow/${rtId}`);
         }
