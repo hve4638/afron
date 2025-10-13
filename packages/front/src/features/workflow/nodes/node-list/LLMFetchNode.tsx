@@ -1,11 +1,11 @@
 import { NodeProps } from '@xyflow/react';
 import { Column } from '@/components/layout';
 
-import { BaseNode } from '../BaseNode';
+import { BaseNode } from '../BaseNode/BaseNode';
 import { HandleTypes } from '../types';
-import { buildNodeData } from '../utils';
+import { buildNodeData, NodeHandle } from '../utils';
 
-import { NodeOption } from './components/NodeOption';
+import { NodeOption } from '../components/NodeOption';
 import { useWorkflowContext } from '../../context';
 
 export function LLMFetchNode(props: NodeProps) {
@@ -36,14 +36,13 @@ export function LLMFetchNode(props: NodeProps) {
     )
 }
 
-
-LLMFetchNode.nodeType = 'llm-fetch' as const;
-LLMFetchNode.data = buildNodeData(
-    'LLM',
-    [
-        ['messages', HandleTypes.ChatMessages],
+LLMFetchNode.data = buildNodeData({
+    type: 'llm-fetch',
+    alias: ['llm', 'LLM'],
+    inputs: [
+        NodeHandle.ChatMessages(),
     ],
-    [
-        ['llm result', HandleTypes.LLMResult],
+    outputs: [
+        NodeHandle.LLMResult(),
     ]
-);
+});

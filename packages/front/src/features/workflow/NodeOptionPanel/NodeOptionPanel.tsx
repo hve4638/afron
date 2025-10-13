@@ -6,7 +6,11 @@ import { Align, Column, Flex, Gap, Row } from '@/components/layout';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { Textarea } from '@/components/ui/Textarea';
 
-import { PromptTemplateOption, LLMOption } from './options';
+import {
+    PromptTemplateOption,
+    LLMOption,
+    StartOption,
+} from './options';
 import { useWorkflowContext } from '../context';
 
 import styles from './NodeOptionPanel.module.scss';
@@ -63,6 +67,9 @@ export function NodeOptionPanel({
         }
         else if (node.type === 'prompt-template') {
             return <PromptTemplateOption {...props} />;
+        }
+        else if (node.type === 'rt-start') {
+            return <StartOption {...props} />;
         }
 
         return null;

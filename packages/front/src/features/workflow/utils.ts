@@ -16,8 +16,11 @@ export function buildNode(
     return {
         id,
         position,
-        type: node.nodeType,
-        data: node.data,
+        type: node.data.type,
+        data: {
+            label: node.data.alias[0] ?? node.data.type,
+            ...node.data,
+        },
     }
 }
 
@@ -35,7 +38,8 @@ export function findConnnectionLineColor(nodes: FlowNode[], edge: FlowEdge): Han
     const sourceNode = nodes.find(n => n.id === edge.source);
     if (!sourceNode || !edge.sourceHandle) return null;
 
-    const data = WorkflowNodeTypes[sourceNode.type!].data;
+    const data = WorkflowNodeTypes[sourceNode.data['type'] as any].data;
+    console.log('data', data, edge.sourceHandle); 
     const handleType = data.outputTypes[edge.sourceHandle];
     return HandleColors[handleType] ?? null;
 }

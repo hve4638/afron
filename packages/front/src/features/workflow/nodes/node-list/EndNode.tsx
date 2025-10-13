@@ -1,25 +1,25 @@
 import { NodeProps } from '@xyflow/react';
-import { BaseNode } from '../BaseNode/BaseNode';
-import { HandleTypes } from '../types';
-import { buildNodeData, NodeHandle } from '../utils';
-import { useWorkflowContext } from '../../context';
+import { useWorkflowContext } from '@/features/workflow/context';
 
-export function OutputNode(props: NodeProps) {
+import { BaseNode } from '../BaseNode';
+import { buildNodeData, NodeHandle } from '../utils';
+
+export function EndNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
     const nodeData = getNodeData(props.id);
 
     return (
         <BaseNode
-            title='출력'
+            title='종료'
             nodeData={nodeData}
             {...props}
         >
         </BaseNode>
     )
 }
-OutputNode.data = buildNodeData({
-    type: 'rt-output',
-    alias: ['output', '출력'],
+EndNode.data = buildNodeData({
+    type: 'rt-end',
+    alias: ['end', '종료'],
     inputs: [
         NodeHandle.Output(),
     ],

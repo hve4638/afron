@@ -1,9 +1,8 @@
 import { NodeProps } from '@xyflow/react';
 import { Column } from '@/components/layout';
 
-import { buildNodeData } from '../utils';
-import { HandleTypes } from '../types';
-import { BaseNode } from '../BaseNode';
+import { buildNodeData, NodeHandle } from '../utils';
+import { BaseNode } from '../BaseNode/BaseNode';
 
 import { useWorkflowContext } from '../../context';
 
@@ -22,29 +21,17 @@ export function PromptTemplateNode(props: NodeProps) {
                     padding: '2px',
                 }}
             >
-                {/* <Button
-
-                >
-                    <Row
-                        rowAlign={Align.Center}
-                        columnAlign={Align.Center}
-                    >
-                        <GIcon value='edit' style={{ marginRight: '2px' }}/>
-                        프롬프트 편집
-                    </Row>
-                </Button> */}
             </Column>
         </BaseNode>
     )
 }
-
-PromptTemplateNode.nodeType = 'prompt-template' as const;
-PromptTemplateNode.data = buildNodeData(
-    'Prompt Template',
-    [
-        ['input', HandleTypes.Input],
+PromptTemplateNode.data = buildNodeData({
+    type: 'prompt-template',
+    alias: ['prompt', '프롬프트'],
+    inputs: [
+        NodeHandle.Input(),
     ],
-    [
-        ['messages', HandleTypes.ChatMessages],
-    ]
-);
+    outputs: [
+        NodeHandle.ChatMessages(),
+    ],
+});

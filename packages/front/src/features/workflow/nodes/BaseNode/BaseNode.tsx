@@ -1,13 +1,16 @@
 import classNames from 'classnames';
 import {
+    Handle,
+    Position,
     type NodeProps,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { Align, Gap, Row } from '@/components/layout';
 import { CommonProps } from '@/types';
-import styles from './BaseNode.module.scss';
 import { useBaseNode } from './BaseNode.hook';
+
+import styles from './BaseNode.module.scss';
 
 export interface BaseNodeProps extends NodeProps, CommonProps {
     title: string;
@@ -26,8 +29,8 @@ export function BaseNode({
     children,
     selected,
 }: BaseNodeProps) {
-    const { handles } = useBaseNode({
-        data,
+    const { defaultHandles, handles } = useBaseNode({
+        data: data as any,
     });
     const label = (title ?? 'Unknown') as string;
 
@@ -44,7 +47,7 @@ export function BaseNode({
             }
             style={{
                 ...style,
-                minWidth: '180px',
+                minWidth: '140px',
                 maxWidth: '180px',
                 fontSize: '12px',
             }}
@@ -52,15 +55,17 @@ export function BaseNode({
             <Row rowAlign={Align.Center}>
                 {label}
             </Row>
-            <hr className={styles['divider']} />
+            {
+                handles.length > 0 &&
+                <hr className={styles['divider']} />
+            }
+            {defaultHandles}
             {handles}
             {children}
-            <Gap h='2px' />
             {
                 nodeData.description !== '' &&
                 <>
                     <div className={styles['description']}>{nodeData.description}</div>
-                    <Gap h='2px' />
                 </>
             }
         </div>

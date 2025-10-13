@@ -106,7 +106,7 @@ function NodeItem({
             onMouseOver={(e) => !isDragging && (e.currentTarget.style.background = '#3a3a3a')}
             onMouseOut={(e) => e.currentTarget.style.background = '#2a2a2a'}
         >
-            {WorkflowNodeTypes[nodeId].data.label}
+            {WorkflowNodeTypes[nodeId].data.alias[0] ?? nodeId}
         </div>
     )
 }

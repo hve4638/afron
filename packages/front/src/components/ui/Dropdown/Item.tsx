@@ -1,8 +1,10 @@
+import { ReactNode } from 'react';
 import { DROPDOWN_ROLES } from './data';
 
 interface ItemProps {
-    name: string;
+    name: ReactNode;
     value: string;
+    children?: React.ReactNode;
 }
 
 function Item(props: ItemProps) {

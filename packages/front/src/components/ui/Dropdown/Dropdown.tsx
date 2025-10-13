@@ -24,7 +24,7 @@ function Dropdown<T>({
     onChange = () => { },
     onItemNotFound = () => { },
 
-    renderSelectedItem = ({ name }) => <>{name}</>,
+    renderSelectedItem = ({ name }) => name,
     children,
 }: DropdownProps<T>) {
     const {
@@ -77,11 +77,15 @@ function Dropdown<T>({
             >
                 {
                     selectedItem != null
-                    && <Renderer
-                        name={selectedItem.name ?? ''}
-                        value={selectedItem.value}
-                        parents={selectedItemList}
-                    />
+                    && <div
+                        style={{ pointerEvents: 'none' }}
+                    >
+                        <Renderer
+                            name={selectedItem.name ?? ''}
+                            value={selectedItem.value}
+                            parents={selectedItemList}
+                        />
+                    </div>
                 }
                 <GIcon value='arrow_drop_down' />
             </div>

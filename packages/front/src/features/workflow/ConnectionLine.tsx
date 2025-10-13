@@ -28,7 +28,7 @@ export function ConnectionLine({
         <g>
             <path
                 fill='none'
-                stroke={stroke}
+                stroke={'#555'}
                 strokeWidth={2}
                 d={edgePath}
             />

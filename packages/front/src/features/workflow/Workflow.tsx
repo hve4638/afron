@@ -11,7 +11,7 @@ import '@xyflow/react/dist/style.css';
 import { WorkflowNodeTypes } from './nodes';
 import { useWorkflow } from './Workflow.hooks';
 import { ConnectionLine } from './ConnectionLine';
-import { Sidebar } from './NodeOptionPanel';
+import { NodeOptionPanel } from './NodeOptionPanel';
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
 import { WorkflowContext, WorkflowContextProvider } from './context';
 import { NodeLibrary } from './SidePanel/NodeLibrary';
@@ -92,7 +92,7 @@ function WorkflowInner({
                 }
                 {
                     lastSelectedNode != null &&
-                    <Sidebar
+                    <NodeOptionPanel
                         node={lastSelectedNode}
                         onClose={closeSidebar}
                     />

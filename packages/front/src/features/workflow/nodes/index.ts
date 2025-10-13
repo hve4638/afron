@@ -3,13 +3,17 @@ import {
     OutputNode,
     PromptTemplateNode,
     LLMFetchNode,
+    StartNode,
+    EndNode,
  } from './node-list';
 
 export const WorkflowNodeTypes = {
-    [InputNode.nodeType]: InputNode,
-    [OutputNode.nodeType]: OutputNode,
-    [PromptTemplateNode.nodeType]: PromptTemplateNode,
-    [LLMFetchNode.nodeType]: LLMFetchNode,
+    [StartNode.data.type]: StartNode,
+    [EndNode.data.type]: EndNode,
+    [InputNode.data.type]: InputNode,
+    [OutputNode.data.type]: OutputNode,
+    [PromptTemplateNode.data.type]: PromptTemplateNode,
+    [LLMFetchNode.data.type]: LLMFetchNode,
 } as const;
 export type WorkflowNodeTypeNames = keyof typeof WorkflowNodeTypes;
 

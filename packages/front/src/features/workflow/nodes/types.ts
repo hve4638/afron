@@ -1,3 +1,5 @@
+import { FlowNode } from "@/lib/xyflow";
+
 export const HandleTypes = {
     LLMResult: 'LLMResult',
 
@@ -33,3 +35,16 @@ export const HandleColors: Record<HandleTypes, HandleColor> = {
     },
 };
 
+export type EdgeInfo = readonly [
+    string,
+    typeof HandleTypes[keyof typeof HandleTypes],
+];
+export interface WorkflowNodeData<TNodeId extends string = string> {
+    type: TNodeId;
+    alias: string[];
+    
+    inputs: string[];
+    inputTypes: Record<string, string>;
+    outputs: string[];
+    outputTypes: Record<string, string>;
+}

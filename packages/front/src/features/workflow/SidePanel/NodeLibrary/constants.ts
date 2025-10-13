@@ -1,8 +1,12 @@
 import { WorkflowNodeTypes } from '../../nodes';
 
+
+/**
+ * 노드 라이브러리 패널에 표시될 노드 순서
+ */
 export const NodeTypeNames: Array<keyof typeof WorkflowNodeTypes> = [
-    'rt-input',
-    'llm-fetch',
+    'rt-start',
     'prompt-template',
-    'rt-output',
+    'llm-fetch',
+    'rt-end',  
 ];

@@ -40,12 +40,13 @@ export function useNodeLibrary() {
         NodeSearchCache = [];
         for (const nodeId of NodeTypeNames) {
             const node = WorkflowNodeTypes[nodeId];
-            const label = node.data.label.toLowerCase();
-
-            NodeSearchCache.push({
-                keyword: label,
-                value: nodeId,
-            });
+            
+            for (const a of node.data.alias) {
+                NodeSearchCache.push({
+                    keyword: a.toLowerCase(),
+                    value: nodeId,
+                });
+            }
         }
     }, []);
 

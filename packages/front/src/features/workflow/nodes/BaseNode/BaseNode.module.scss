@@ -10,7 +10,7 @@
         border-color: #e6e6e6;
     }
 
-    .divider {
+    hr {
         margin: 1px 0;
         border-color: #555;
     }
@@ -22,4 +22,8 @@
         padding: 0 4px;
         word-break: break-word;
     }
+}
+
+.handle-name {
+    color: rgb(153, 153, 153);
 }

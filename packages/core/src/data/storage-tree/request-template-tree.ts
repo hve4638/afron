@@ -24,13 +24,7 @@ const REQUEST_TEMPLATE_TREE = {
         }),
         'flow.json': StorageAccess.JSON({
             '*': { // key: node id
-                'type': JSONType.Union(
-                    'rt-input',
-                    'rt-output',
-                    'prompt-template',
-                    'llm-fetch',
-                    // 'stringify-chatml',
-                ),
+                'type': JSONType.String(),
                 'description': JSONType.String(),
                 'data': JSONType.Struct(),
                 'connection': JSONType.Array({

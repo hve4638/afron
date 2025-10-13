@@ -22,6 +22,7 @@ const getItemType = (node: React.ReactNode) => {
 }
 export const convertDropdownItem = <T,>(item: React.ReactNode, i: number) => {
     const itemType = getItemType(item);
+    
     if (itemType === 'array') {
         return (item as Array<React.ReactNode>).map((item, i) => convertDropdownItem(item, i)) as Array<DropdownItemList<T>>;
     }

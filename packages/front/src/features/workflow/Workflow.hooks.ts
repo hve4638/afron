@@ -15,10 +15,9 @@ import { FlowEdge, FlowNode } from '@/lib/xyflow';
 
 import { isHandleCompatible } from './nodes';
 import { buildNode, findConnnectionLineColor, getNodeIdFromDropEvent } from './utils';
-import { useWorkflowTransaction } from './WorkflowTransaction/WorkflowTransaction';
+import { useWorkflowTransaction } from './WorkflowTransaction';
 import { useWorkflowContext } from './context';
 import useHotkey from '@/hooks/useHotkey';
-import useTrigger from '@/hooks/useTrigger';
 
 export function useWorkflow() {
     const {
@@ -39,6 +38,7 @@ export function useWorkflow() {
     useEffect(() => onExternalEdgesChange(edges), [edges]);
 
     const edgeColorized = useMemo(() => {
+        return edges;
         return edges.map(edge => {
             const color = findConnnectionLineColor(nodes, edge);
             if (!color) return edge;

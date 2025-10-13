@@ -1,8 +1,10 @@
 import { NodeProps } from '@xyflow/react';
-import { BaseNode } from '../BaseNode';
+import { useWorkflowContext } from '@/features/workflow/context';
+
+import { BaseNode } from '../BaseNode/BaseNode';
+import { buildNodeData, NodeHandle } from '../utils';
 import { HandleTypes } from '../types';
-import { buildNodeData } from '../utils';
-import { useWorkflowContext } from '../../context';
+
 
 export function InputNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
@@ -14,15 +16,15 @@ export function InputNode(props: NodeProps) {
             nodeData={nodeData}
             {...props}
         >
+            <div>fff</div>
         </BaseNode>
     )
 }
 
-InputNode.nodeType = 'rt-input' as const;
-InputNode.data = buildNodeData(
-    'Input',
-    [],
-    [
-        ['input', HandleTypes.Input],
+InputNode.data = buildNodeData({
+    type: 'rt-input',
+    alias: ['input', '입력'],
+    outputs: [
+        NodeHandle.Input(),
     ]
-);
+});

@@ -1,1 +1,1 @@
-export { NodeOptionPanel as Sidebar } from './NodeOptionPanel';
+export { NodeOptionPanel } from './NodeOptionPanel';
