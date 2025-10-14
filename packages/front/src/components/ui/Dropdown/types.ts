@@ -10,6 +10,7 @@ export interface DropdownProps<T> extends CommonProps {
     value: T;
     onChange?: (item: T) => void;
     onItemNotFound?: (firstItem: T | null) => void;
+    align?: 'left' | 'right';
 
     renderSelectedItem?: (props: SelectedItemRenderProps<T>) => React.ReactNode;
 }

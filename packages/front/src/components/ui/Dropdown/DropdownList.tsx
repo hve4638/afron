@@ -1,48 +1,58 @@
-import React, { useMemo, forwardRef } from 'react';
+import React, { useMemo, useRef, useCallback, forwardRef, useLayoutEffect, useState } from 'react';
 import classNames from 'classnames';
 
 import styles from './Dropdown.module.scss';
 
 interface DropdownListProps {
-    className?:string;
+    className?: string;
     style?: React.CSSProperties;
     parentRef: React.RefObject<HTMLDivElement>;
-    reposition?:(rect:DOMRect)=>{left:number, top:number, width:number};
+    reposition?: (inner: DOMRect, parent: DOMRect) => { left?: number; top: number; width: number };
 
     children?: React.ReactNode;
 }
+1
+interface Position {
+    left?: number;
+    top?: number;
+    width: number;
+}
 
-const DropdownList = forwardRef(({
-    className='',
-    style={},
-    reposition=({left, top, width}:DOMRect)=>({left, top, width}),
-    parentRef,
+const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(({
+    className = '',
+    style = {},
+    reposition = ({ left, top, width }: DOMRect) => ({ left, top, width }),
     children,
-}: DropdownListProps, ref:React.LegacyRef<HTMLDivElement>) => {
-    
-    const {
-        left,
-        top,
-        width,
-    } = useMemo(()=>{
-        if (parentRef.current) {
-            const rect = parentRef.current.getBoundingClientRect();
-            return reposition(rect);
-        }
-        return {
-            left: 0,
-            top: 0,
-            width: 0,
-        }
-    }, [parentRef.current, reposition]);
+    parentRef,
+}, forwardedRef) => {
+    const [position, setPosition] = useState<Position>({ left: 0, top: 0, width: 0 });
 
+    useLayoutEffect(() => {
+        const innerRef = forwardedRef as React.RefObject<HTMLDivElement>;
+
+        const parentRect = (
+            (parentRef.current)
+            ? parentRef.current.getBoundingClientRect()
+            : { left: 0, top: 0, width: 0, right: 0, bottom: 0, height: 0, x: 0, y: 0 } as DOMRect
+        );
+
+        if (innerRef.current) {
+            const innerRect = innerRef.current.getBoundingClientRect();
+            setPosition(reposition(innerRect, parentRect));
+        }
+
+
+    }, []);
+
+
+    const { left, top, width } = position;
     return (
         <div
-            ref={ref}
+            ref={forwardedRef}
             className={classNames(styles['dropdown-list'], className)}
             style={{
-                left: left,
-                top: top,
+                left,
+                top,
                 minWidth: width,
                 ...style,
             }}

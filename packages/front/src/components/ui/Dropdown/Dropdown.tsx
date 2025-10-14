@@ -12,6 +12,7 @@ import DropdownList from './DropdownList';
 import DropdownOption from './DropdownOption';
 
 import styles from './Dropdown.module.scss';
+import { useMemo } from 'react';
 
 function Dropdown<T>({
     className = '',
@@ -23,6 +24,8 @@ function Dropdown<T>({
     value,
     onChange = () => { },
     onItemNotFound = () => { },
+
+    align = 'left',
 
     renderSelectedItem = ({ name }) => name,
     children,
@@ -53,6 +56,17 @@ function Dropdown<T>({
         value,
         onChange,
     });
+
+    const headerRect = useMemo(() => {
+        return headerRef.current?.getBoundingClientRect() ?? (
+            {
+                left: 0, right: 0,
+                top: 0, bottom: 0,
+                width: 0, height: 0,
+                x: 0, y: 0,
+            } as DOMRect
+        );
+    }, [headerRef.current]);
 
     const Renderer = renderSelectedItem;
 
@@ -97,11 +111,24 @@ function Dropdown<T>({
                         style={listProps.style}
                         ref={layer1ListRef}
                         parentRef={headerRef}
-                        reposition={({ left, bottom, width }) => ({
-                            left,
-                            top: bottom + 2,
-                            width,
-                        })}
+                        reposition={(rect) => {
+                            const { left, right, bottom, width } = rect;
+
+                            if (align === 'right') {
+                                return {
+                                    left: headerRect.right - width,
+                                    top: headerRect.bottom + 2,
+                                    width: headerRect.width,
+                                };
+                            }
+                            else {
+                                return {
+                                    left: headerRect.left,
+                                    top: headerRect.bottom + 2,
+                                    width,
+                                };
+                            }
+                        }}
                     >
                         {
                             options.map((option, index) => (
@@ -137,11 +164,22 @@ function Dropdown<T>({
                         style={listProps.style}
                         parentRef={layer1ListRef}
 
-                        reposition={({ left, width, top }) => ({
-                            left: left + width + 2,
-                            top: focusedLayer1ItemRect?.top ?? 0,
-                            width,
-                        })}
+                        reposition={({ left, right, width, top }, pRect) => {
+                            if (align === 'right') {
+                                return {
+                                    left: headerRect.right - pRect.width - width - 2,
+                                    top: focusedLayer1ItemRect?.top ?? 0,
+                                    width: headerRect.width,
+                                };
+                            }
+                            else {
+                                return {
+                                    left: headerRect.left,
+                                    top: headerRect.bottom + 2,
+                                    width,
+                                };
+                            }
+                        }}
                     >
                         {
                             layer2ItemsCache.map((option, index) => (

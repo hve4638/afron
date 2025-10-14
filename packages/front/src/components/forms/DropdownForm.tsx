@@ -13,6 +13,7 @@ interface DropdownFormProps<T> extends ReactNodeProps.Common {
     value: T;
     onChange?: (item: T) => void;
     onItemNotFound?: (item: T | null) => void;
+    align?: 'left' | 'right';
 
     label: React.ReactNode;
 
@@ -29,6 +30,7 @@ function DropdownForm<T,>({
     style = {},
 
     label,
+    align,
 
     value,
     onChange,
@@ -72,6 +74,7 @@ function DropdownForm<T,>({
                     },
                 }}
 
+                align={align}
                 value={value}
                 onChange={onChange}
                 onItemNotFound={onItemNotFound}
