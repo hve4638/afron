@@ -4,9 +4,10 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 import { useNavigate, useParams } from 'react-router';
 import { convertFlowDataToWorkflow, applyConnnectionsToFlowData, applyWorkflowData } from './utils';
 import { RTFlowData } from '@afron/types';
+import { useRTStore } from '@/context/RTContext';
+import { emitNavigate } from '@/events/navigate';
 
 export function useWorkflowEditor() {
-    const navigate = useNavigate();
     const { api } = useProfileAPIStore();
     const { rtId } = useParams();
     const [flowNode, setFlowNode] = useState<FlowNode[] | null>(null);
@@ -14,13 +15,15 @@ export function useWorkflowEditor() {
     const [flowData, setFlowData] = useState<RTFlowData>({});
     const [isChanged, setIsChanged] = useState<boolean>(false);
 
+    const rt = useRTStore();
+
     useEffect(() => {
         if (!rtId) return;
 
         (async () => {
-            const flowData = await api.workflow.getFlowData(rtId);
+            const flowData = await rt.get.workflowNodes();
             const { nodes, edges } = convertFlowDataToWorkflow(flowData);
-
+            
             setFlowNode(nodes);
             setFlowEdges(edges);
             setFlowData(flowData);
@@ -31,18 +34,18 @@ export function useWorkflowEditor() {
     /// @TODO: isChanged 체크 여부 개선 필요
     // 현재는 Workflow 로드 시 최초 1회 반드시 setter 호출되므로
     // isChanged가 항상 true
-
     const save = async () => {
         if (!rtId) return;
 
         const appliedFlowData = applyWorkflowData(flowData, flowNode ?? [], flowEdges ?? []);
         await api.workflow.setFlowData(rtId, appliedFlowData);
+        await rt.update.workflowNodes(appliedFlowData);
     }
 
     const close = async () => {
         await save();
 
-        navigate('/');
+        emitNavigate('back');
     }
 
     const setFlowNodeWrap: Dispatch<SetStateAction<FlowNode[]>> = useCallback((next) => {

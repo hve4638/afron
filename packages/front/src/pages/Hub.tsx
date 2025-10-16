@@ -1,17 +1,20 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { RTStoreContextProvider } from '@/context';
 
 import Home from './Home';
 import PromptEditor from './PromptEditor';
 import TestPage from './Test';
 import { WorkflowEditor } from './WorkflowEditor';
+import useHotkey from '@/hooks/useHotkey';
+import { HubEventHandler } from './Hub.hooks';
 
 function Hub() {
     return (
         <HashRouter>
+            <HubEventHandler/>
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/test" element={<TestPage />} />
+                <Route path='/' element={<Home />} />
+                <Route path='/test' element={<TestPage />} />
                 <Route
                     path="/prompt/:rtId"
                     element={
@@ -21,7 +24,7 @@ function Hub() {
                     }
                 />
                 <Route
-                    path="/workflow/:rtId"
+                    path='/workflow/:rtId'
                     element={
                         <RTStoreContextProvider>
                             <WorkflowEditor />
@@ -29,7 +32,7 @@ function Hub() {
                     }
                 />
                 <Route
-                    path="/workflow/:rtId/prompt/:promptId"
+                    path='/workflow/:rtId/prompt/:promptId'
                     element={
                         <RTStoreContextProvider>
                             <PromptEditor />

@@ -11,7 +11,7 @@ export type Emit<TField extends EventMap> = <TKey extends keyof TField>(
     key: TKey,
     ...values: undefined extends TField[TKey] ? [] : [TField[TKey]]
 ) => void;
-export type UseOn<TField extends EventMap> = <TKey extends keyof TField>(
+export type UseEvent<TField extends EventMap> = <TKey extends keyof TField>(
     key: TKey,
     callback: (value: TField[TKey]) => void,
     deps?: React.DependencyList,

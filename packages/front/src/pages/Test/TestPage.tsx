@@ -1,17 +1,16 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Grid, Row, Align } from '@/components/layout';
 import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
 import Dropdown from '@/components/ui/Dropdown';
 import MarkdownTest from './MarkdownTest';
 import FlowTest from './FlowTest';
+import { emitNavigate } from '@/events/navigate';
 
 function TestPage() {
-    const navigate = useNavigate();
     const [option, setOption] = useState<string>('');
 
     const handleExit = () => {
-        navigate('/');
+        emitNavigate('back');
     };
 
     const renderMainContent = () => {

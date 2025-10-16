@@ -7,6 +7,7 @@ interface VerbosityFormProps {
     value: SupportedVerbosity | undefined;
     onChange: (value: SupportedVerbosity) => void;
 
+    align?: 'left' | 'right';
     disabled?: boolean;
 }
 
@@ -16,6 +17,7 @@ function VerbosityForm({
     value,
     onChange,
 
+    align,
     disabled = false,
 }: VerbosityFormProps) {
     return (
@@ -26,6 +28,7 @@ function VerbosityForm({
             onItemNotFound={(value) => {
                 if (value != null) onChange(value);
             }}
+            align={align}
         >
             {candidates.includes('low') && <Dropdown.Item name='low' value='low' />}
             {candidates.includes('medium') && <Dropdown.Item name='medium' value='medium' />}

@@ -1,4 +1,4 @@
-import { ENoResult } from  './result';
+import { ENoResult, EResult } from  './result';
 
 export type IPCListenersInterface = {
     AddRequestListener(listener: (event: any, token: string, data: any) => void): EResult<number>;

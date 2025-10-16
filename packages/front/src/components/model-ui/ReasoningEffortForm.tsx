@@ -7,6 +7,7 @@ interface ReasoningEffortFormProps {
     value?: SupportedThinkingEfforts;
     onChange: (value: SupportedThinkingEfforts) => void;
 
+    align?: 'left' | 'right';
     allowEmpty?: boolean;
     disabled?: boolean;
 }
@@ -17,6 +18,7 @@ function ReasoningEffortForm({
     value,
     onChange,
 
+    align,
     disabled = false,
 }: ReasoningEffortFormProps) {
     return (
@@ -27,6 +29,7 @@ function ReasoningEffortForm({
             onItemNotFound={(next) => {
                 if (next != null) onChange(next);
             }}
+            align={align}
         >
             {candidates.includes('minimal') && <Dropdown.Item name='minimal' value='minimal' />}
             {candidates.includes('low') && <Dropdown.Item name='low' value='low' />}

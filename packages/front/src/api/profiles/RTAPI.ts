@@ -1,6 +1,6 @@
 import { IPCError } from 'api/error'
 import LocalAPI from '@/api/local'
-import { KeyValueInput, RTPromptDataEditable } from '@afron/types';
+import { KeyValueInput, RTFlowData, RTPromptDataEditable } from '@afron/types';
 
 class RTAPI {
     #profileId: string;
@@ -18,8 +18,9 @@ class RTAPI {
 
     async getForms() { return await LocalAPI.profileRT.getForms(this.#profileId, this.#rtId); }
 
-    node = {
-        
+    workflow = {
+        getNodes: async () => await LocalAPI.profileRTFlow.getFlowData(this.#profileId, this.#rtId),
+        setNodes: async (flowData: RTFlowData) => await LocalAPI.profileRTFlow.setFlowData(this.#profileId, this.#rtId, flowData),
     };
     
     prompt = {

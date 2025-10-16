@@ -1,14 +1,34 @@
+import { useMemo } from 'react';
 import { NodeProps } from '@xyflow/react';
+
+import { Column } from '@/components/layout';
+
 import { useWorkflowContext } from '@/features/workflow/context';
 
 import { BaseNode } from '../BaseNode/BaseNode';
-
 import { buildNodeData, NodeHandle } from '../utils';
-import { Column } from '@/components/layout';
+
+import { RTFlowNodeOptions } from '@afron/types';
 
 export function StartNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
-    const nodeData = getNodeData(props.id);
+    const nodeData = getNodeData<RTFlowNodeOptions.RTStart>(props.id);
+
+    const condition = useMemo(() => {
+        switch (nodeData.data.start_trigger) {
+            case 'start':
+                return '실행 시';
+            case 'press-button':
+                if (nodeData.data.button_label) {
+                    return `버튼 클릭 시: ${nodeData.data.button_label}`;
+                }
+                else {
+                    return `버튼 클릭 시`;
+                }
+            default:
+                return `조건 없음: ${nodeData.data.start_trigger}`;
+        }
+    }, [nodeData.data.start_trigger, nodeData.data.button_label]);
 
     return (
         <BaseNode
@@ -19,11 +39,11 @@ export function StartNode(props: NodeProps) {
             <hr />
             <Column
                 style={{
-                    padding: '0 2px',
+                    padding: '0 0.5em',
                     color: 'grey',
                 }}
             >
-                <div>실행 시</div>
+                <div>{condition}</div>
             </Column>
         </BaseNode>
     )

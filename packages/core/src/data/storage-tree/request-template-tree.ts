@@ -19,11 +19,18 @@ const REQUEST_TEMPLATE_TREE = {
             'entrypoint_node': JSONType.Number(),
         }),
         'form.json': StorageAccess.JSON({
-            // key: formId
+            // key: form_id
             '*': FORM_JSON_TREE,
         }),
+        'cache.json': StorageAccess.JSON({
+            'prompts': JSONType.Array({ // workflow 내에서 보여줄 prompt 순서
+                'id': JSONType.String(),
+                'name': JSONType.String(),
+            }).strict(),
+        }),
         'flow.json': StorageAccess.JSON({
-            '*': { // key: node id
+            // key: node_id
+            '*': {
                 'type': JSONType.String(),
                 'description': JSONType.String(),
                 'data': JSONType.Struct(),
@@ -39,7 +46,7 @@ const REQUEST_TEMPLATE_TREE = {
             },
         }),
         'prompts': {
-            // key: promptId
+            // key: prompt_id
             '*': StorageAccess.JSON({
                 'id': JSONType.String(),
                 'name': JSONType.String(),

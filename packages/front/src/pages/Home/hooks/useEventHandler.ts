@@ -5,6 +5,7 @@ import Channel from '@hve/channel';
 import { emitEvent, EventNames, useEvent } from '@/hooks/useEvent';
 import { useCacheStore, useProfileAPIStore, useSessionStore } from '@/stores';
 import RequestManager from '@/features/request-manager';
+import { emitNavigate } from '@/events/navigate';
 function useEventHandler() {
     const navigate = useNavigate();
 
@@ -58,10 +59,10 @@ function useEventHandler() {
         console.log(metadata);
         const { mode } = metadata;
         if (mode === 'flow') {
-            navigate(`/workflow/${rtId}`);
+            emitNavigate('goto_workflow_editor', { rtId });
         }
         else if (mode === 'prompt_only') {
-            navigate(`/workflow/${rtId}/prompt/default`);
+            emitNavigate('goto_prompt_editor', { rtId, promptId: 'default' });
         }
     }, [api]);
 }

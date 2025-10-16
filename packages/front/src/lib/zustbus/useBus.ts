@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { useLatestRef } from '@/hooks/useLatestRef';
-import { Emit, EventMap, StoreShape, UseOn, UseValue, } from './types';
+import { Emit, EventMap, StoreShape, UseEvent, UseValue, } from './types';
 
 function createLocal<E extends EventMap>() {
     return create<StoreShape<E>, [['zustand/subscribeWithSelector', never]]>(
@@ -11,7 +11,7 @@ function createLocal<E extends EventMap>() {
 }
 
 /** @returns [useValue, emit, useOn] */
-export function useBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseOn<E>] {
+export function useBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseEvent<E>] {
     const storeRef = useRef<ReturnType<typeof createLocal<E>>>();
     if (!storeRef.current) storeRef.current = createLocal<E>();
     const useStore = storeRef.current;

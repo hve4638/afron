@@ -1,19 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import { RTStoreContext, useContextForce } from '@/context';
+import { emitNavigate } from '@/events/navigate';
+import { useRTStore } from '@/context/RTContext';
 import { useModal } from '@/hooks/useModal';
+import { ChoiceDialog } from '@/modals/Dialog';
+import { fixPromptVar, getDefaultPromptEditorData } from './utils';
+
+
 import type {
     PromptEditorData,
 } from '@/types';
 
-import { fixPromptVar, getDefaultPromptEditorData } from './utils';
-import { ChoiceDialog } from '@/modals/Dialog';
-
 interface usePromptEditorProps {
-    refresh: ()=>void;
+    refresh: () => void;
 }
 
 function usePromptEditor({
@@ -21,10 +22,9 @@ function usePromptEditor({
 }: usePromptEditorProps) {
     const { t } = useTranslation();
     const modal = useModal();
-    const navigate = useNavigate();
     const { rtId, promptId } = useParams();
 
-    const rtState = useContextForce(RTStoreContext);
+    const rtState = useRTStore();
 
     const [loaded, setLoaded] = useState(false);
 
@@ -53,7 +53,7 @@ function usePromptEditor({
 
     const save = async () => {
         if (!rtId || !promptId) return;
-        
+
         const data = editorData.current;
         if (data.changed.name && data.name) {
             await rtState.update.promptName(promptId, data.name);
@@ -118,7 +118,7 @@ function usePromptEditor({
             //     useThinking: model.use_thinking ?? false,
             //     thinkingTokens: model.thinking_tokens ?? 1024,
 
-                
+
             //     geminiSafetySettings: model.safety_settings ?? editorData.current.model.geminiSafetySettings,
             // };
         }
@@ -141,21 +141,21 @@ function usePromptEditor({
                     { text: '취소', tone: 'dimmed' },
                 ],
                 onSelect: async (choice: string, index: number) => {
-                    if (index === 0) {
+                    if (index === 0) { // 저장
                         await save();
-                        navigate('/');
+                        emitNavigate('back');
                     }
-                    else if (index === 1) {
-                        navigate('/');
+                    else if (index === 1) { // 저장하지 않음
+                        emitNavigate('back');
                     }
-                    else if (index === 2) {
+                    else if (index === 2) { // 취소
                         return true;
                     }
                     return true;
                 },
                 onEnter: async () => {
                     await save();
-                    navigate('/');
+                    emitNavigate('back');
                     return true;
                 },
                 onEscape: async () => true,
@@ -164,7 +164,7 @@ function usePromptEditor({
             });
         }
         else {
-            navigate('/');
+            emitNavigate('back');
         }
     }
 

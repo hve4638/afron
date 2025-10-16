@@ -36,9 +36,7 @@ function WorkflowInner({
 
     const closeSidebar = useCallback(() => setLastSelectedNode(null), [setLastSelectedNode]);
 
-    // ReactFlow 초기화 시 0,0 좌표가 중앙에 오도록 설정
     const onInit = useCallback((reactFlowInstance: any) => {
-        // DOM에서 ReactFlow 컨테이너 찾기
         const container = document.querySelector(`.${styles['workflow']}`);
 
         if (container) {

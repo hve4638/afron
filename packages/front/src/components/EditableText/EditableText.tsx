@@ -3,12 +3,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useProfileAPIStore } from '@/stores';
 import classNames from 'classnames';
+import { CommonProps } from '@/types';
 
-type EditableTextProps = {
+interface EditableTextProps extends CommonProps {
     value: string;
     displayValue?: string;
-    editable? : boolean;
-    onChange?: (value:string)=>void;
+    editable?: boolean;
+    onChange?: (value: string) => void;
     onCancel?: () => void;
 }
 
@@ -35,24 +36,26 @@ type EditableTextProps = {
  * @returns A text element that becomes an input field when double-clicked
  */
 function EditableText({
+    className = '',
+    style = {},
     value,
     displayValue,
     editable = true,
-    onChange = ()=>{},
-}:EditableTextProps) {
+    onChange = () => { },
+}: EditableTextProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [current, setCurrent] = useState(value);
     const [renameMode, setRenameMode] = useState(false);
-    const api = useProfileAPIStore(state=>state.api);
-    
-    useLayoutEffect(()=>{
+    const api = useProfileAPIStore(state => state.api);
+
+    useLayoutEffect(() => {
         setCurrent(value);
     }, [value, renameMode]);
 
     const enableRenameMode = () => {
         if (editable) {
             setRenameMode(true);
-            setTimeout(()=>{
+            setTimeout(() => {
                 inputRef.current?.focus();
             }, 1);
         }
@@ -62,6 +65,7 @@ function EditableText({
         <span
             className={
                 classNames(
+                    className,
                     'flex',
                     // 'session-name'
                 )
@@ -70,42 +74,43 @@ function EditableText({
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
+                ...style,
             }}
             onDoubleClick={enableRenameMode}
         >
-        {
-            !renameMode &&
-            (displayValue ?? value)
-        }
-        {
-            renameMode &&
-            <input
-                ref={inputRef}
-                type='text'
-                style={{
-                    backgroundColor: 'transparent',
-                }}
-                value={current}
-                onChange={(e)=>setCurrent(e.target.value)}
-                onBlur={()=>{
-                    onChange(current);
-                    setRenameMode(false);
-                }}
-                onKeyDown={(e)=>{
-                    if (e.key === 'Enter') {
+            {
+                !renameMode &&
+                (displayValue ?? value)
+            }
+            {
+                renameMode &&
+                <input
+                    ref={inputRef}
+                    type='text'
+                    style={{
+                        backgroundColor: 'transparent',
+                    }}
+                    value={current}
+                    onChange={(e) => setCurrent(e.target.value)}
+                    onBlur={() => {
                         onChange(current);
                         setRenameMode(false);
-                        e.stopPropagation();
-                    }
-                    else if (e.key === 'Escape') {
-                        setCurrent(value);
-                        setRenameMode(false);
-                        e.stopPropagation();
-                    }
-                }}
-                spellCheck={false}
-            />
-        }
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            onChange(current);
+                            setRenameMode(false);
+                            e.stopPropagation();
+                        }
+                        else if (e.key === 'Escape') {
+                            setCurrent(value);
+                            setRenameMode(false);
+                            e.stopPropagation();
+                        }
+                    }}
+                    spellCheck={false}
+                />
+            }
         </span>
     )
 }

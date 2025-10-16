@@ -9,10 +9,7 @@ import { useModal } from '@/hooks/useModal';
 import { RTMetadataTree } from '@afron/types';
 
 function useRTDropdown() {
-    const navigate = useNavigate();
     const refreshPing = useEventState('refresh_rt_tree');
-
-    const modal = useModal();
 
     const rtId = useSessionStore(state => state.rt_id);
     const name = useSessionStore(state => state.name);

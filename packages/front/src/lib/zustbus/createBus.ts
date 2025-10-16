@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-import { Emit, EventMap, StoreShape, UseOn, UseValue } from './types';
+import { Emit, EventMap, StoreShape, UseEvent, UseValue } from './types';
 
 function useLatestRef<T>(value: T) {
     const ref = useRef(value);
@@ -11,7 +11,7 @@ function useLatestRef<T>(value: T) {
 }
 
 /** @returns [useValue, emit, useOn] */
-export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseOn<E>] {
+export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseEvent<E>] {
     const useStore = create<StoreShape<E>, [['zustand/subscribeWithSelector', never]]>(
         subscribeWithSelector(() => ({} as StoreShape<E>))
     );
@@ -20,7 +20,7 @@ export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseOn<E>
         key: K,
         callback: (value: E[K]) => void,
         deps: React.DependencyList = [],
-        enabled: boolean = true
+        enabled: boolean = true,
     ) {
         const cbRef = useLatestRef(callback);
 

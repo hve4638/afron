@@ -16,11 +16,14 @@ export function PromptTemplateNode(props: NodeProps) {
             nodeData={nodeData}
             {...props}
         >
+            <hr />
             <Column
                 style={{
                     padding: '2px',
+                    color: 'grey',
                 }}
             >
+                {/* <span>프롬프트: rtId</span> */}
             </Column>
         </BaseNode>
     )

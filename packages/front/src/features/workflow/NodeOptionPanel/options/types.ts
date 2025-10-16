@@ -1,5 +1,5 @@
-import { RTFlowNodeData } from '@afron/types';
 import { SetStateAction } from 'react';
+import { RTFlowNodeData } from '@afron/types';
 
 export interface OptionProps<T = Record<string, any>> {
     nodeData: RTFlowNodeData;

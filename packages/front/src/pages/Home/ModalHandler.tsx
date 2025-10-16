@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 
-import { useEvent } from '@/hooks/useEvent';
+import { emitEvent, useEvent } from '@/hooks/useEvent';
 import { useModal } from '@/hooks/useModal';
 
 import ErrorLogModal from '@/modals/ErrorLogModal';
@@ -35,12 +35,7 @@ function ModalHandler() {
     useEvent('open_new_rt_modal', () => {
         modal.open(NewRTModal, {
             onAddRT: (rtId, rtMode) => {
-                if (rtMode === 'prompt_only') {
-                    navigate(`/workflow/${rtId}/prompt/default`);
-                }
-                else if (rtMode === 'flow') {
-                    navigate(`/workflow/${rtId}`);
-                }
+                emitEvent('goto_rt_editor', { rtId });
             },
         });
     }, []);

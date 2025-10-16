@@ -6,7 +6,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-import { Align, Gap, Row } from '@/components/layout';
+import { Align, Column, Gap, Row } from '@/components/layout';
 import { CommonProps } from '@/types';
 import { useBaseNode } from './BaseNode.hook';
 
@@ -36,22 +36,24 @@ export function BaseNode({
     const label = (title ?? 'Unknown') as string;
 
     return (
-        <div
+        <Column
             className={
                 classNames(
                     className,
                     styles['node'],
                     {
                         selected,
-                    }
+                    },
                 )
             }
             style={{
                 ...style,
-                minWidth: '140px',
-                maxWidth: '180px',
+                minWidth: '130px',
+                maxWidth: '160px',
+                minHeight: '2.5em',
                 fontSize: '12px',
             }}
+            columnAlign={Align.Center}
         >
             <Row rowAlign={Align.Center}>
                 {label}
@@ -69,6 +71,6 @@ export function BaseNode({
                     <div className={styles['description']}>{nodeData.description}</div>
                 </>
             }
-        </div>
+        </Column>
     );
 }

@@ -1,11 +1,12 @@
 .node {
     position: relative;
-    display: block;
+    // display: flex;
+    // flex-direction: column;
     background-color: #333333;
     border-radius: 4px;
     border: 1px solid #555;
+    // align-items: center;
     
-
     &:global(.selected) {
         border-color: #e6e6e6;
     }

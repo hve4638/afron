@@ -9,6 +9,7 @@ import SidePanel from './SidePanel';
 import usePromptEditor from './PromptEditor.hook';
 
 import styles from './styles.module.scss';
+import { useNavigate } from 'react-router';
 
 function PromptEditor() {
     const [_, refresh] = useTrigger();
@@ -30,7 +31,7 @@ function PromptEditor() {
     if (!loaded) {
         return <></>
     }
-    
+
     return (
         <div
             className={styles['prompt-editor']}

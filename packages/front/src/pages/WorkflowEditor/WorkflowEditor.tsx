@@ -4,8 +4,9 @@ import { useWorkflowEditor } from './WorkflowEditor.hook';
 import styles from './WorkflowEditor.module.scss';
 import { Align, Column, Flex, Gap, Grid, Row } from '@/components/layout';
 import { GIconButton } from '@/components/GoogleFontIcon';
+import { ModalProvider } from '@/hooks/useModal';
 
-export function WorkflowEditor() {
+function WorkflowEditorInner() {
     const {
         workflow: {
             nodes,
@@ -25,7 +26,6 @@ export function WorkflowEditor() {
             className={styles['workflow-editor']}
             rows='40px 1fr'
             columns='auto'
-            // columns='40px auto'
         >
             <Row
                 columnAlign={Align.Center}
@@ -57,4 +57,12 @@ export function WorkflowEditor() {
             }
         </Grid >
     );
+}
+
+export function WorkflowEditor() {
+    return (
+        <ModalProvider>
+            <WorkflowEditorInner />
+        </ModalProvider>
+    )
 }
