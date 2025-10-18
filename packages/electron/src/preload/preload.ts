@@ -126,6 +126,11 @@ const ipcInvokerPath = {
     profileRTFlow: {
         getFlowData: 0,
         setFlowData: 0,
+        
+        getPrompts: 0,
+        setPrompts: 0,
+        addPrompt: 0,
+        removePrompt: 0,
     },
     request: {
         requestRT: 0,

@@ -121,7 +121,7 @@ class Profile {
         if (key == undefined) {
             key = uuidv4().trim();
             uniqueAC.setOne('personal-key', key);
-        }
+    }
         return key;
     }
 

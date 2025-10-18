@@ -4,7 +4,7 @@ import IRTControl from './IRTControl';
 import ProfileRT from './ProfileRT';
 import type { KeyValueInput, RTMetadata, RTMetadataNode, RTMetadataTree, RTMode } from '@afron/types';
 
-class ProfileRTs implements IRTControl {
+export class ProfileRTs implements IRTControl {
     #storage: IACSubStorage;
     #tree: RTMetadataTree;
     #rtIds: string[];

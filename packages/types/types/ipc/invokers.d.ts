@@ -156,6 +156,20 @@ export declare namespace IPCInvokers {
     interface ProfileRTFlow {
         getFlowData(profileId: string, rtId: string): EResult<RTFlowData>;
         setFlowData(profileId: string, rtId: string, data: RTFlowData): ENoResult;
+
+        getPrompts(profileId: string, rtId: string): EResult<StorageStruct.RT.PromptOrder>;
+        setPrompts(profileId: string, rtId: string, order: StorageStruct.RT.PromptOrder): ENoResult;
+        
+        /**
+         * 프롬프트 추가
+         * @return 갱신된 프롬프트 순서 정보 
+         */
+        addPrompt(profileId: string, rtId: string, promptId: string, promptName: string): EResult<StorageStruct.RT.PromptOrder>;
+        /**
+         * 프롬프트 제거
+         * @return 갱신된 프롬프트 순서 정보 
+         */
+        removePrompt(profileId: string, rtId: string, promptId: string): EResult<StorageStruct.RT.PromptOrder>;
     }
 
     interface Request {

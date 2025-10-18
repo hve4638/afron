@@ -1,13 +1,20 @@
 import { v7 as uuidv7 } from 'uuid';
 import { IACSubStorage } from 'ac-storage';
-import type IProfileRT from './IProfileRT';
+// import type IProfileRT from './IProfileRT';
 import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
 import { FlowNodeIf, FlowNodePosition } from './types';
 import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, StorageStruct } from '@afron/types';
+import { RTWorkflowControl } from './RTWorkflowControl';
 
-class ProfileRT implements IProfileRT {
+class ProfileRT {
+    #workflowControl: RTWorkflowControl;
+
     constructor(private storage: IACSubStorage, private rtId: string) {
+        this.#workflowControl = new RTWorkflowControl(storage, rtId);
+    }
 
+    get workflow() {
+        return this.#workflowControl;
     }
 
     private async accessMetadata() {
@@ -61,107 +68,6 @@ class ProfileRT implements IProfileRT {
             promptVar.id = formId;
             return promptVar;
         });
-    }
-
-    async getNodes(): Promise<Record<string, any>> {
-        const flowAC = await this.accessFlow();
-        const nodes = flowAC.getAll();
-
-        return nodes;
-    }
-
-    async addNode(type: FlowNodeType, position: FlowNodePosition = { x: 0, y: 0 }): Promise<string> {
-        const flowAC = await this.accessFlow();
-        const nodes: Record<string, StorageStruct.RT.FlowNode> = flowAC.getAll() ?? {};
-
-        let index = 0;
-        let nodeId = `${type}-${index}`;
-        while (nodeId in nodes) {
-            index++;
-        }
-
-        const newNode: StorageStruct.RT.FlowNode = {
-            type: type,
-            description: '',
-            connection: [],
-            data: {},
-            position,
-        }
-
-        try {
-            flowAC.set({ [nodeId]: newNode });
-
-            return nodeId;
-        }
-        catch (e) {
-            console.error("Failed to add node:", e);
-
-            return '';
-        }
-    }
-    async removeNode(nodeId: string): Promise<void> {
-        const flowAC = await this.accessFlow();
-
-        flowAC.removeOne(nodeId);
-    }
-    async updateNodeData(nodeId: string, data: Record<string, any>): Promise<boolean> {
-        const flowAC = await this.accessFlow();
-        const node = flowAC.getOne(nodeId);
-        if (!node) return false;
-
-        flowAC.set({
-            [nodeId]: { data }
-        });
-        return true;
-    }
-    async updateNodePosition(nodeId: string, position: FlowNodePosition): Promise<boolean> {
-        const flowAC = await this.accessFlow();
-        const node = flowAC.getOne(nodeId);
-        if (!node) return false;
-
-        flowAC.set({
-            [nodeId]: { position }
-        });
-        return true;
-    }
-
-    async connectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean> {
-        const flowAC = await this.accessFlow();
-        const node: StorageStruct.RT.FlowNode | null = flowAC.getOne(from.node);
-
-        if (!node) return false;
-
-        node.connection.push({
-            from_handle: from.ifName,
-            to_node: to.node,
-            to_handle: to.ifName,
-        });
-        flowAC.set({
-            [from.node]: { connection: node.connection }
-        });
-
-        return true;
-    }
-    async disconnectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean> {
-        const flowAC = await this.accessFlow();
-
-        const fromNode: StorageStruct.RT.FlowNode = flowAC.getOne(from.node);
-        if (!fromNode) return false;
-
-        const next = fromNode.connection.filter(
-            ({ from_handle, to_node, to_handle }) => {
-                return !(
-                    from_handle === from.ifName &&
-                    to_node === to.node &&
-                    to_handle === to.ifName
-                );
-            }
-        );
-
-        flowAC.set({
-            [from.node]: { connection: next }
-        });
-        return true;
     }
 
     async getFlowData(): Promise<RTFlowData> {

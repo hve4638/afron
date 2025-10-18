@@ -17,16 +17,14 @@ const REQUEST_TEMPLATE_TREE = {
             'input_type': JSONType.Union('normal', 'chat').default_value('normal'),
             'forms': JSONType.Array(JSONType.String()), // form 순서
             'entrypoint_node': JSONType.Number(),
+            'prompts': JSONType.Array({ // workflow 내에서 보여줄 prompt 순서대로
+                'id': JSONType.String(),
+                'name': JSONType.String(),
+            }).strict(),
         }),
         'form.json': StorageAccess.JSON({
             // key: form_id
             '*': FORM_JSON_TREE,
-        }),
-        'cache.json': StorageAccess.JSON({
-            'prompts': JSONType.Array({ // workflow 내에서 보여줄 prompt 순서
-                'id': JSONType.String(),
-                'name': JSONType.String(),
-            }).strict(),
         }),
         'flow.json': StorageAccess.JSON({
             // key: node_id

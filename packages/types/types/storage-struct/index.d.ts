@@ -12,6 +12,7 @@ export declare namespace StorageStruct {
             input_type: 'normal' | 'chat';
             forms: string[];
             entrypoint_node: number;
+            prompts: PromptOrder;
         }
 
         // request-template.<rt-id>.prompt.<prompt-id>
@@ -58,6 +59,11 @@ export declare namespace StorageStruct {
                 y: number;
             };
         }
+
+        type PromptOrder = {
+            id: string;
+            name: string;
+        }[];
     }
 }
 

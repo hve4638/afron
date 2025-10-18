@@ -27,8 +27,8 @@ export class RTFlowTemplateTool {
     ) {
         const rt = this.profile.rt(this.rtId);
 
-        const nodeId = await rt.addNode(type, position);
-        await rt.updateNodeData(nodeId, data);
+        const nodeId = await rt.workflow.node.addNode(type, position);
+        await rt.workflow.node.updateNodeData(nodeId, data);
 
         return nodeId;
     }
@@ -36,7 +36,7 @@ export class RTFlowTemplateTool {
     async connect(from: FlowNodeIf, to: FlowNodeIf) {
         const rt = this.profile.rt(this.rtId);
 
-        await rt.connectNode(from, to);
+        await rt.workflow.node.connectNode(from, to);
     }
 
     async addPrompt(promptId: string, contents: string[]) {
