@@ -1,9 +1,9 @@
-import { StorageStruct } from '../storage-struct';
+import { ProfileStorage } from '../storage-struct';
 
 ///@TODO: 과거 타입 정의, StorageStruct.RT 기반으로 다시 변경하기
-export type RTIndex = StorageStruct.RT.Index;
+export type RTIndex = ProfileStorage.RT.Index;
 
-export type RTPromptMetadata = Pick<StorageStruct.RT.Prompt,
+export type RTPromptMetadata = Pick<ProfileStorage.RT.Prompt,
     'id' | 'name' | 'variables' | 'model'
 >
 

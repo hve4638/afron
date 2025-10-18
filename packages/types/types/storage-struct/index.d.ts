@@ -1,7 +1,7 @@
 import { GeminiSafetySetting, SupportedThinkingEfforts, SupportedVerbosity } from '../chatai';
 import { FlowNodeType } from '../rt';
 
-export declare namespace StorageStruct {
+export declare namespace ProfileStorage {
     namespace RT {
         type Index = {
             version: string;

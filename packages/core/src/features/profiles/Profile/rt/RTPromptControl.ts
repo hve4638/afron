@@ -1,4 +1,4 @@
-import { StorageStruct } from '@afron/types';
+import { ProfileStorage } from '@afron/types';
 import { IACSubStorage } from 'ac-storage';
 
 export class RTPromptControl {
@@ -38,7 +38,7 @@ export class RTPromptControl {
 
         promptAC.setOne('name', name);
 
-        const { mode, prompts = [] } = indexAC.get('mode', 'prompts') as StorageStruct.RT.Index;
+        const { mode, prompts = [] } = indexAC.get('mode', 'prompts') as ProfileStorage.RT.Index;
         if (mode === 'prompt_only') {
             // prompt_only 모드에서는 rt 이름과 prompt 명이 동일
             indexAC.setOne('name', name);
@@ -56,7 +56,7 @@ export class RTPromptControl {
             }
         }
     }
-    
+
     async getPromptContents(promptId: string): Promise<string> {
         const promptAC = await this.accessPrompt(promptId);
 

@@ -1,4 +1,4 @@
-import { RTForm, StorageStruct } from "@afron/types";
+import { RTForm, ProfileStorage } from "@afron/types";
 
 export namespace RTPackV1 {
     export interface Metadata {
@@ -19,7 +19,7 @@ export namespace RTPackV1 {
 
     export type Form = Record<string, RTForm>;
 
-    export type Prompt = StorageStruct.RT.Prompt;
+    export type Prompt = ProfileStorage.RT.Prompt;
 }
 
 

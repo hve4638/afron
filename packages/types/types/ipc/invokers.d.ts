@@ -1,5 +1,5 @@
 import { ChatAIModelData } from '../chatai/chatai-model';
-import { GlobalModelConfiguration, StorageStruct } from '../storage-struct';
+import { GlobalModelConfiguration, ProfileStorage } from '../storage-struct';
 import { RTMetadata, RTMetadataTree } from '../rt/rt';
 import { RTIndex, RTPromptDataEditable, RTPromptMetadata } from '../rt/form';
 import { RTFlowData } from '../rt';
@@ -125,7 +125,7 @@ export declare namespace IPCInvokers {
     }
 
     interface ProfileRT {
-        getMetadata(profileId: string, rtId: string): EResult<StorageStruct.RT.Index>;
+        getMetadata(profileId: string, rtId: string): EResult<ProfileStorage.RT.Index>;
         setMetadata(profileId: string, rtId: string, metadata: KeyValueInput): ENoResult;
         reflectMetadata(profileId: string, rtId: string): ENoResult;
 
@@ -157,19 +157,19 @@ export declare namespace IPCInvokers {
         getFlowData(profileId: string, rtId: string): EResult<RTFlowData>;
         setFlowData(profileId: string, rtId: string, data: RTFlowData): ENoResult;
 
-        getPrompts(profileId: string, rtId: string): EResult<StorageStruct.RT.PromptOrder>;
-        setPrompts(profileId: string, rtId: string, order: StorageStruct.RT.PromptOrder): ENoResult;
+        getPrompts(profileId: string, rtId: string): EResult<ProfileStorage.RT.PromptOrder>;
+        setPrompts(profileId: string, rtId: string, order: ProfileStorage.RT.PromptOrder): ENoResult;
         
         /**
          * 프롬프트 추가
          * @return 갱신된 프롬프트 순서 정보 
          */
-        addPrompt(profileId: string, rtId: string, promptId: string, promptName: string): EResult<StorageStruct.RT.PromptOrder>;
+        addPrompt(profileId: string, rtId: string, promptId: string, promptName: string): EResult<ProfileStorage.RT.PromptOrder>;
         /**
          * 프롬프트 제거
          * @return 갱신된 프롬프트 순서 정보 
          */
-        removePrompt(profileId: string, rtId: string, promptId: string): EResult<StorageStruct.RT.PromptOrder>;
+        removePrompt(profileId: string, rtId: string, promptId: string): EResult<ProfileStorage.RT.PromptOrder>;
     }
 
     interface Request {

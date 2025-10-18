@@ -3,7 +3,7 @@ import { IACSubStorage } from 'ac-storage';
 // import type IProfileRT from './IProfileRT';
 import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
 import { FlowNodeIf, FlowNodePosition } from './types';
-import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, StorageStruct } from '@afron/types';
+import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, ProfileStorage } from '@afron/types';
 import { RTWorkflowControl } from './RTWorkflowControl';
 
 class ProfileRT {
@@ -42,13 +42,13 @@ class ProfileRT {
 
         getPrompt: async (promptId: string) => {
             const promptAC = await this.accessPrompt(promptId);
-            return promptAC.getAll() as StorageStruct.RT.Prompt;
+            return promptAC.getAll() as ProfileStorage.RT.Prompt;
         },
-        setPrompt: async (promptId: string, data: StorageStruct.RT.Prompt) => {
+        setPrompt: async (promptId: string, data: ProfileStorage.RT.Prompt) => {
             const promptAC = await this.accessPrompt(promptId);
             return promptAC.set(data)
         },
-        setIndex: async (input: Partial<StorageStruct.RT.Index>) => {
+        setIndex: async (input: Partial<ProfileStorage.RT.Index>) => {
             const indexAC = await this.accessMetadata();
 
             indexAC.set(input);
@@ -72,7 +72,7 @@ class ProfileRT {
 
     async getFlowData(): Promise<RTFlowData> {
         const flowAC = await this.accessFlow();
-        const nodes: Record<string, StorageStruct.RT.FlowNode> = flowAC.getAll() ?? {};
+        const nodes: Record<string, ProfileStorage.RT.FlowNode> = flowAC.getAll() ?? {};
 
         return nodes;
     }
@@ -95,10 +95,10 @@ class ProfileRT {
         }
     }
 
-    async getMetadata(): Promise<StorageStruct.RT.Index> {
+    async getMetadata(): Promise<ProfileStorage.RT.Index> {
         const indexAC = await this.accessMetadata();
 
-        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'forms', 'entrypoint_node') as StorageStruct.RT.Index;
+        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'forms', 'entrypoint_node') as ProfileStorage.RT.Index;
     }
     async setMetadata(input: KeyValueInput): Promise<void> {
         const indexAC = await this.accessMetadata();
@@ -106,10 +106,10 @@ class ProfileRT {
         indexAC.set(input);
     }
 
-    async getPromptStruct(promptId: string): Promise<StorageStruct.RT.Prompt> {
+    async getPromptStruct(promptId: string): Promise<ProfileStorage.RT.Prompt> {
         const promptAC = await this.accessPrompt(promptId);
 
-        return promptAC.getAll() as StorageStruct.RT.Prompt;
+        return promptAC.getAll() as ProfileStorage.RT.Prompt;
     }
 
     async getPromptMetadata(promptId: string): Promise<RTPromptMetadata> {

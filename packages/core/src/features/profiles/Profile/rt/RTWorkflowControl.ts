@@ -1,5 +1,5 @@
 import { IACSubStorage } from 'ac-storage';
-import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, StorageStruct } from '@afron/types';
+import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, ProfileStorage } from '@afron/types';
 import { RTWorkflowNodeControl } from './RTWorkflowNodeControl';
 import { matchesAll } from '@/utils/array-utils';
 
@@ -29,7 +29,7 @@ export class RTWorkflowControl {
      */
     async getWorkflowNodes(): Promise<RTFlowData> {
         const flowAC = await this.accessFlow();
-        const nodes: Record<string, StorageStruct.RT.FlowNode> = flowAC.getAll() ?? {};
+        const nodes: Record<string, ProfileStorage.RT.FlowNode> = flowAC.getAll() ?? {};
         return nodes;
     }
 
@@ -45,7 +45,7 @@ export class RTWorkflowControl {
     }
 
     /** 워크플로우 내의 프롬프트 목록 리턴 */
-    async getPrompts(): Promise<StorageStruct.RT.PromptOrder> {
+    async getPrompts(): Promise<ProfileStorage.RT.PromptOrder> {
         const indexAC = await this.accessIndex();
         return indexAC.getOne('prompts') ?? [];
     }
@@ -55,9 +55,9 @@ export class RTWorkflowControl {
      * 
      * 순서 변경만 가능하며, 목록에 없는 항목을 추가하거나 제거할 수 없음
     */
-    async setPromptsOrder(order: StorageStruct.RT.PromptOrder): Promise<void> {
+    async setPromptsOrder(order: ProfileStorage.RT.PromptOrder): Promise<void> {
         const indexAC = await this.accessIndex();
-        const prevOrder: StorageStruct.RT.PromptOrder = indexAC.getOne('prompts') ?? [];
+        const prevOrder: ProfileStorage.RT.PromptOrder = indexAC.getOne('prompts') ?? [];
 
         if (!matchesAll(prevOrder, order, (a, b) => a.id === b.id)) {
             throw new Error("Invalid prompt order change");
@@ -71,7 +71,7 @@ export class RTWorkflowControl {
      */
     async addPrompt(promptId: string, name: string): Promise<void> {
         const indexAC = await this.accessIndex();
-        const prev: StorageStruct.RT.PromptOrder = indexAC.getOne('prompts') ?? [];
+        const prev: ProfileStorage.RT.PromptOrder = indexAC.getOne('prompts') ?? [];
 
         if (promptId === 'default') {
             throw new Error('Cannot use reserved prompt ID');
@@ -84,7 +84,7 @@ export class RTWorkflowControl {
     /** 프롬프트 제거 */
     async removePrompt(promptId: string): Promise<void> {
         const indexAC = await this.accessIndex();
-        const prev: StorageStruct.RT.PromptOrder = indexAC.getOne('prompts') ?? [];
+        const prev: ProfileStorage.RT.PromptOrder = indexAC.getOne('prompts') ?? [];
 
         const next = prev.filter(p => p.id !== promptId);
 
