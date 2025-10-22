@@ -4,7 +4,7 @@ import { RTPackFailed } from '../errors';
 import { ZipBuilder, ZipBuilderError } from '@/lib/zipper';
 import { LevelLogger } from '@/types';
 import NoLogger from '@/features/nologger';
-import { RTIndex } from '@afron/types';
+import { ProfileStorage } from '@afron/types';
 
 const RTPACK_VERSION = 0;
 
@@ -51,7 +51,7 @@ export class RTPackerV1 {
         }
     }
 
-    async #packPromptOnly(rtMetadata: RTIndex): Promise<void> {
+    async #packPromptOnly(rtMetadata: ProfileStorage.RT.Index): Promise<void> {
         try {
             const metadata: RTPackV1.Metadata = {
                 class: 'rt-pack',
@@ -82,11 +82,11 @@ export class RTPackerV1 {
         }
     }
 
-    async #packFlow(rtMetadata: RTIndex): Promise<void> {
+    async #packFlow(rtMetadata: ProfileStorage.RT.Index): Promise<void> {
         throw new RTPackFailed(`'${rtMetadata.mode}' mode is not implemented yet`);
     }
 
-    async #prepareIndexData(rtIndex: RTIndex): Promise<RTPackV1.Index> {
+    async #prepareIndexData(rtIndex: ProfileStorage.RT.Index): Promise<RTPackV1.Index> {
         const {
             version,
             mode,
@@ -108,7 +108,7 @@ export class RTPackerV1 {
         };
     }
 
-    async #prepareFormData(rtIndex: RTIndex): Promise<RTPackV1.Form> {
+    async #prepareFormData(rtIndex: ProfileStorage.RT.Index): Promise<RTPackV1.Form> {
         if (!rtIndex.forms || rtIndex.forms.length === 0) {
             return {};
         }

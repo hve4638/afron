@@ -1,4 +1,6 @@
-import { ProfileStorage } from '@afron/types';
+import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
+import { uuidv7 } from '@/lib/uuid';
+import { ProfileStorage, RTForm } from '@afron/types';
 import { IACSubStorage } from 'ac-storage';
 
 export class RTPromptControl {
@@ -57,24 +59,25 @@ export class RTPromptControl {
         }
     }
 
-    async getPromptContents(promptId: string): Promise<string> {
+    async getContents(promptId: string): Promise<string> {
         const promptAC = await this.accessPrompt(promptId);
 
         return promptAC.getOne('contents');
     }
-    async setPromptContents(promptId: string, contents: string): Promise<void> {
+    async setContents(promptId: string, contents: string): Promise<void> {
         const promptAC = await this.accessPrompt(promptId);
 
         promptAC.setOne('contents', contents);
     }
 
-    async getPromptVariableNames(promptId: string): Promise<string[]> {
+
+    async getVariableNames(promptId: string): Promise<string[]> {
         const promptAC = await this.accessPrompt(promptId);
 
         const variableNames: string[] = promptAC.getOne('variables') ?? [];
         return variableNames;
     }
-    async getPromptVariables(promptId: string): Promise<PromptVar[]> {
+    async getVariables(promptId: string): Promise<PromptVar[]> {
         const promptAC = await this.accessPrompt(promptId);
         const formAC = await this.accessForm();
 
@@ -88,5 +91,127 @@ export class RTPromptControl {
 
             return promptVar;
         });
+    }
+
+    /**
+     * 프롬프트 변수 추가 & 갱신
+     * 
+     * promptVars 요소에서 없는 원소는 id 할당 후 추가, id가 존재하면 상태만 갱신
+     * @return 
+     */
+    async setPromptVariables(promptId: string, promptVars: PromptVar[]): Promise<string[]> {
+        const promptAC = await this.accessPrompt(promptId);
+        const isPromptOnlyMode = (promptId === 'default');
+
+        const variables: { name: string; form_id: string; }[] = promptAC.getOne('variables') ?? [];
+        const varIds: string[] = [];
+        for (const promptVar of promptVars) {
+            let formId: string = '';
+            try {
+                if (!promptVar.id) { // 새로 생성
+                    formId = await this.#addForm(promptVar);
+
+                    variables.push({ name: promptVar.name, form_id: formId });
+                }
+                else { // 기존 항목 갱신
+                    formId = promptVar.id;
+
+                    const v = variables.find(v => v.form_id === formId);
+                    if (v) {
+                        await this.#updateForm(formId, promptVar);
+                        v.name = promptVar.name;
+                    }
+                    else {
+                        throw new Error(`Form ID '${formId}' not found in prompt variables`);
+                    }
+                }
+
+                varIds.push(formId);
+            }
+            catch (e) {
+                promptVar.id ??= 'unknown';
+                const form = PromptVarParser.toRTForm(promptVar);
+
+                console.error(`Failed to set prompt variables : ${promptVar.name} (${formId})`);
+                console.error('variable : ', promptVar);
+                console.error('form (transition) : ', form);
+
+                throw e;
+            }
+        }
+
+        promptAC.setOne('variables', variables);
+        return varIds;
+    }
+    async #addPromptVariable(promptVar: PromptVar, ) {
+
+        return {
+            variables.push({ name: promptVar.name, form_id: formId });
+        }
+    }
+    async removePromptVariables(promptId: string, varIds: string[]) {
+        const indexAC = await this.accessIndex();
+        const promptAC = await this.accessPrompt(promptId);
+
+        const variables: { name: string, form_id: string, weak?: boolean }[] = promptAC.getOne('variables') ?? [];
+        const formIds: string[] = indexAC.getOne('forms') ?? [];
+
+        const removed: string[] = [];
+        for (const varId of varIds) {
+            const v = variables.find(v => v.form_id === varId);
+            if (!v) continue;
+
+            removed.push(varId);
+            if (!v.weak) {
+                this.#removeForm(varId);
+            }
+        }
+
+        const filteredVars = variables.filter((v) => !removed.includes(v.form_id));
+        promptAC.setOne('variables', filteredVars);
+
+        const filteredIds = formIds.filter((id) => !removed.includes(id));
+        indexAC.setOne('forms', filteredIds);
+    }
+
+    /** 겹치지 않음을 보장하는 새로운 form-id 생성해 리턴 */
+    async #getNewFormId(): Promise<string> {
+        const formAC = await this.accessForm();
+
+        let formId: string;
+        do {
+            formId = uuidv7();
+        } while (formAC.existsOne(formId));
+
+        return formId;
+    }
+
+    async #addForm(promptVar: PromptVar): Promise<string> {
+        const indexAC = await this.accessIndex();
+        const formAC = await this.accessForm();
+
+        const formId = await this.#getNewFormId();
+        promptVar.id = formId;
+
+        const form = PromptVarParser.toRTForm(promptVar);
+        formAC.setOne(formId, form);
+
+        const formIds = indexAC.getOne('forms') ?? [];
+        indexAC.setOne('forms', [...formIds, formId]);
+
+        return formId;
+    }
+    async #updateForm(formId: string, promptVar: PromptVar) {
+        const formAC = await this.accessForm();
+
+        promptVar.id = formId;
+        const form: ProfileStorage.RT.Form = PromptVarParser.toRTForm(promptVar);
+
+        formAC.setOne(formId, form);
+    }
+    async #removeForm(formId: string): Promise<void> {
+        const formAC = await this.accessForm();
+
+        formAC.removeOne(formId);
     }
 }

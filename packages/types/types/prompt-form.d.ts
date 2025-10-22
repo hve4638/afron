@@ -14,6 +14,8 @@ declare global {
         id?: string;
         name: string;
         display_name: string;
+
+        include_type: 'form' | 'constant' | 'external';
     }
     interface PromptVarText extends BasePromptVar {
         type: 'text';

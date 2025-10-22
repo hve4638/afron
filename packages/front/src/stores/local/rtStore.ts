@@ -1,13 +1,13 @@
 import { create } from 'zustand'
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
-import { RTFlowData, RTIndex, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
+import { ProfileStorage, RTFlowData, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
 
 // @TODO: context로 옮기는게 나을지 검토
 
 export interface RTState {
     id: string; // string | null 에서 string 으로 변경했는데 잠시 null인 경우가 있을 수 있으니 검토 필요
     get: {
-        metadata(): Promise<RTIndex>;
+        metadata(): Promise<ProfileStorage.RT.Index>;
 
         promptMetadata(promptId: string): Promise<RTPromptMetadata>;
         promptName(promptId: string): Promise<string>;
@@ -17,7 +17,7 @@ export interface RTState {
         workflowNodes: () => Promise<RTFlowData>;
     };
     update: {
-        metadata(data: Partial<RTIndex>): Promise<void>;
+        metadata(data: Partial<ProfileStorage.RT.Index>): Promise<void>;
         promptMetadata(promptId: string, data: RTPromptDataEditable): Promise<void>;
 
         promptName(promptId: string, name: string): Promise<void>;
@@ -76,7 +76,7 @@ export function createRTStore(rtId: string) {
             }
         },
         update: {
-            metadata: async (metadata: Partial<RTIndex>) => {
+            metadata: async (metadata: Partial<ProfileStorage.RT.Index>) => {
                 const rtAPI = getRTAPI(get().id);
 
                 await rtAPI.setMetadata(metadata);

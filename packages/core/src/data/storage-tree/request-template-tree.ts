@@ -1,5 +1,5 @@
 import { JSONType, StorageAccess } from "ac-storage";
-import FORM_JSON_TREE from "./form-json-tree";
+import { FORM_JSON_TREE } from "./form-json-tree";
 import { MODEL_SETTINGS } from "./model-config";
 
 const REQUEST_TEMPLATE_TREE = {
@@ -51,9 +51,13 @@ const REQUEST_TEMPLATE_TREE = {
 
                 'model': MODEL_SETTINGS,
                 'variables': JSONType.Array({
+                    'type': JSONType.Union('constant', 'form', 'external').default_value('form'),
                     'name': JSONType.String(),
-                    'form_id': JSONType.String(),
                     'weak': JSONType.Bool().default_value(false),
+
+                    'form_id': JSONType.String(),
+                    'external_id': JSONType.String(),
+                    'value': JSONType.Any(),
                 }),
                 'constants': JSONType.Array({
                     'name': JSONType.String(),

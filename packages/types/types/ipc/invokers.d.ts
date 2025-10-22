@@ -1,7 +1,7 @@
 import { ChatAIModelData } from '../chatai/chatai-model';
 import { GlobalModelConfiguration, ProfileStorage } from '../storage-struct';
 import { RTMetadata, RTMetadataTree } from '../rt/rt';
-import { RTIndex, RTPromptDataEditable, RTPromptMetadata } from '../rt/form';
+import { RTPromptDataEditable, RTPromptMetadata } from '../rt/form';
 import { RTFlowData } from '../rt';
 
 import { EResult, ENoResult, } from './result';

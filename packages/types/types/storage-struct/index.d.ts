@@ -1,5 +1,5 @@
 import { GeminiSafetySetting, SupportedThinkingEfforts, SupportedVerbosity } from '../chatai';
-import { FlowNodeType } from '../rt';
+import { FlowNodeType, RTForm } from '../rt';
 
 export declare namespace ProfileStorage {
     namespace RT {
@@ -14,7 +14,25 @@ export declare namespace ProfileStorage {
             entrypoint_node: number;
             prompts: PromptOrder;
         }
+        
+        // form.json 내 { [string]: Form } 형식의 Form에 해당
+        type Form = RTForm;
+        // {
+        //     type: 'text' | 'number' | 'checkbox' | 'select' | 'array' | 'struct';
+        //     id: string;
+        //     display_name: string;
+        //     display_on_header: boolean;
 
+        //     config: {
+        //         text?: FormConfig.Text,
+        //         number?: FormConfig.Number,
+        //         checkbox?: FormConfig.Checkbox,
+        //         select?: FormConfig.Select,
+        //         array?: FormConfig.Array,
+        //         struct?: FormConfig.Struct,
+        //     }
+        // }
+        
         // request-template.<rt-id>.prompt.<prompt-id>
         type Prompt = {
             id: string;

@@ -48,7 +48,7 @@ const ARRAY_CONFIG = {
     },
 }
 
-const FORM_JSON_TREE = {
+export const FORM_JSON_TREE = {
     'type' : JSONType.Union('text', 'number', 'checkbox', 'select', 'array', 'struct'),
     'id' : JSONType.String(),
     'display_name' : JSONType.String(),
@@ -63,6 +63,3 @@ const FORM_JSON_TREE = {
         'struct' : STRUCT_CONFIG,
     }
 }
-
-export default FORM_JSON_TREE;
-                    

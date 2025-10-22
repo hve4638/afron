@@ -1,4 +1,4 @@
-import { SupportedVerbosity } from "../chatai";
+import { SupportedVerbosity } from '../chatai';
 
 export type FlowNodeType = (
     'rt-input'

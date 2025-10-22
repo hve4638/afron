@@ -1,6 +1,6 @@
 import { IPCError } from 'api/error';
 import { IIPCAPI } from './types';
-import { CustomModel, GlobalModelConfiguration, HistorySearch, InputFileHash, KeyValueInput, RTFlowData, RTIndex, RTMetadata, RTMetadataTree, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
+import { CustomModel, GlobalModelConfiguration, HistorySearch, InputFileHash, KeyValueInput, ProfileStorage, RTFlowData, RTMetadata, RTMetadataTree, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
 
 const electron = window.electron;
 
@@ -350,7 +350,7 @@ class ElectronIPCAPI implements IIPCAPI {
         }
     } as const;
     profileRT = {
-        async getMetadata(profileId: string, rtId: string): Promise<RTIndex> {
+        async getMetadata(profileId: string, rtId: string): Promise<ProfileStorage.RT.Index> {
             const [err, metadata] = await electron.profileRT.getMetadata(profileId, rtId);
             if (err) throw new IPCError(err.message);
             return metadata;

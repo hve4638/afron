@@ -1,8 +1,8 @@
 import { IACSubStorage } from 'ac-storage';
-import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, ProfileStorage } from '@afron/types';
-import { RTWorkflowNodeControl } from './RTWorkflowNodeControl';
+import { RTFlowData, ProfileStorage } from '@afron/types';
 import { matchesAll } from '@/utils/array-utils';
 
+import { RTWorkflowNodeControl } from './RTWorkflowNodeControl';
 
 export class RTWorkflowControl {
     #nodeControl: RTWorkflowNodeControl;
@@ -80,7 +80,7 @@ export class RTWorkflowControl {
         indexAC.set({ prompts: [...prev, { id: promptId, name }] });
     }
 
-    
+
     /** 프롬프트 제거 */
     async removePrompt(promptId: string): Promise<void> {
         const indexAC = await this.accessIndex();

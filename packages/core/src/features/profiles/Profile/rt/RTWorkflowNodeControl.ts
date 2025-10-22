@@ -1,6 +1,6 @@
 import { IACSubStorage } from 'ac-storage';
 import { FlowNodeIf, FlowNodePosition } from './types';
-import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, ProfileStorage } from '@afron/types';
+import { FlowNodeType, ProfileStorage } from '@afron/types';
 
 /**
  * 워크플로우 노드 고수준 제어 클래스

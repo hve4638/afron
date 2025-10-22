@@ -1,9 +1,7 @@
 import { v7 as uuidv7 } from 'uuid';
 import { IACSubStorage } from 'ac-storage';
-// import type IProfileRT from './IProfileRT';
 import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
-import { FlowNodeIf, FlowNodePosition } from './types';
-import { FlowNodeType, KeyValueInput, RTFlowData, RTForm, RTIndex, RTPromptDataEditable, RTPromptMetadata, ProfileStorage } from '@afron/types';
+import { KeyValueInput, RTFlowData, RTForm, RTPromptDataEditable, RTPromptMetadata, ProfileStorage } from '@afron/types';
 import { RTWorkflowControl } from './RTWorkflowControl';
 
 class ProfileRT {
