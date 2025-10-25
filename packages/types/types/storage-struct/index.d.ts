@@ -14,34 +14,15 @@ export declare namespace ProfileStorage {
             entrypoint_node: number;
             prompts: PromptOrder;
         }
-        
+
         // form.json 내 { [string]: Form } 형식의 Form에 해당
         type Form = RTForm;
-        // {
-        //     type: 'text' | 'number' | 'checkbox' | 'select' | 'array' | 'struct';
-        //     id: string;
-        //     display_name: string;
-        //     display_on_header: boolean;
 
-        //     config: {
-        //         text?: FormConfig.Text,
-        //         number?: FormConfig.Number,
-        //         checkbox?: FormConfig.Checkbox,
-        //         select?: FormConfig.Select,
-        //         array?: FormConfig.Array,
-        //         struct?: FormConfig.Struct,
-        //     }
-        // }
-        
         // request-template.<rt-id>.prompt.<prompt-id>
         type Prompt = {
             id: string;
             name: string
-            variables: Array<{
-                name: string;
-                form_id: string;
-                weak: boolean;
-            }>;
+            variables: PromptVar[];
             constants: Array<{
                 name: string;
                 value: any;
@@ -61,6 +42,19 @@ export declare namespace ProfileStorage {
                 safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
             };
             contents: string;
+        }
+
+        type PromptVar = {
+            /** 변수 유형, external/form 선택 시 외부 연결이 끊기면 unknown으로 지정됨 */
+            type: 'constant' | 'form' | 'external' | 'unknown';
+            id: string;
+            name: string;
+            weak?: boolean;
+
+            /** 'form'이면서 form_id가 없다면 id를 form_id로 대체 사용 (이전버전 호환성) */
+            form_id?: string;
+            external_id?: string;
+            value?: any;
         }
 
         type FlowNode = {

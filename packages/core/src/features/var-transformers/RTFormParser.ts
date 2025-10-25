@@ -1,7 +1,7 @@
-import { RTForm, RTFormConfig } from '@afron/types';
+import { RTForm, RTVarConfig } from '@afron/types';
 
 class RTFormParser {
-    private static parseText(base: BasePromptVar, config: RTFormConfig.Text): PromptVarText {
+    private static parseText(base: BasePromptVar, config: RTVarConfig.Text): PromptVarText {
         return {
             ...base,
             type: 'text',
@@ -10,7 +10,7 @@ class RTFormParser {
             allow_multiline: config.allow_multiline ?? '',
         };
     }
-    private static parseNumber(base: BasePromptVar, config: RTFormConfig.Number): PromptVarNumber {
+    private static parseNumber(base: BasePromptVar, config: RTVarConfig.Number): PromptVarNumber {
         return {
             ...base,
             type: 'number',
@@ -20,14 +20,14 @@ class RTFormParser {
             allow_decimal: config.allow_decimal ?? false,
         };
     }
-    private static parseCheckbox(base: BasePromptVar, config: RTFormConfig.Checkbox): PromptVarCheckbox {
+    private static parseCheckbox(base: BasePromptVar, config: RTVarConfig.Checkbox): PromptVarCheckbox {
         return {
             ...base,
             type: 'checkbox',
             default_value: config.default_value ?? false,
         } as PromptVarCheckbox;
     }
-    private static parseSelect(base: BasePromptVar, config: RTFormConfig.Select): PromptVarSelect {
+    private static parseSelect(base: BasePromptVar, config: RTVarConfig.Select): PromptVarSelect {
         return {
             ...base,
             type: 'select',
@@ -38,7 +38,7 @@ class RTFormParser {
             })),
         }
     }
-    private static parseStruct(base: BasePromptVar, config: RTFormConfig.Struct): PromptVarStruct {
+    private static parseStruct(base: BasePromptVar, config: RTVarConfig.Struct): PromptVarStruct {
         const fields = config.fields.map((field) => {
             const subPromptVar: BasePromptVar = {
                 id: field.name,

@@ -51,6 +51,7 @@ const REQUEST_TEMPLATE_TREE = {
 
                 'model': MODEL_SETTINGS,
                 'variables': JSONType.Array({
+                    'id': JSONType.String(),
                     'type': JSONType.Union('constant', 'form', 'external').default_value('form'),
                     'name': JSONType.String(),
                     'weak': JSONType.Bool().default_value(false),

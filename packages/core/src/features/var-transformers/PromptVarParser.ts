@@ -1,17 +1,24 @@
-import { RTForm, RTFormConfig } from '@afron/types';
+import { uuidv7 } from '@/lib/uuid';
+import { RTForm, RTVarConfig } from '@afron/types';
 
 class PromptVarParser {
     /**
      * PromptVar -> RTForm 변환
+     * 
+     * 
     */
     static toRTForm(promptVar: PromptVar): RTForm {
-        if (promptVar.id == null) {
-            throw new Error('PromptVar id is null');
+        let formId: string
+        if (promptVar.form_id != null) {
+            formId = promptVar.form_id;
         }
-
+        else {
+            formId = uuidv7();
+        }
+        
         const form: RTForm = {
             type: promptVar.type,
-            id: promptVar.id,
+            id: formId,
             display_name: promptVar.display_name,
             display_on_header: false,
 
@@ -41,14 +48,14 @@ class PromptVarParser {
         return form;
     }
 
-    static #parseText(promptVar: PromptVarText): RTFormConfig.Text {
+    static #parseText(promptVar: PromptVarText): RTVarConfig.Text {
         return {
             default_value: promptVar.default_value || '',
             placeholder: promptVar.placeholder ?? '',
             allow_multiline: promptVar.allow_multiline ?? false,
         }
     }
-    static #parseNumber(promptVar: PromptVarNumber): RTFormConfig.Number {
+    static #parseNumber(promptVar: PromptVarNumber): RTVarConfig.Number {
         return {
             default_value: promptVar.default_value || 0,
             minimum_value: promptVar.minimum_value,
@@ -56,12 +63,12 @@ class PromptVarParser {
             allow_decimal: promptVar.allow_decimal ?? false,
         }
     }
-    static #parseCheckbox(promptVar: PromptVarCheckbox): RTFormConfig.Checkbox {
+    static #parseCheckbox(promptVar: PromptVarCheckbox): RTVarConfig.Checkbox {
         return {
             default_value: promptVar.default_value || false,
         }
     }
-    static #parseSelect(promptVar: PromptVarSelect): RTFormConfig.Select {
+    static #parseSelect(promptVar: PromptVarSelect): RTVarConfig.Select {
         return {
             default_value: promptVar.default_value || '',
             options: promptVar.options.map((item) => ({
@@ -70,10 +77,10 @@ class PromptVarParser {
             })),
         }
     }
-    static #parseStruct(promptVar: PromptVarStruct): RTFormConfig.Struct {
+    static #parseStruct(promptVar: PromptVarStruct): RTVarConfig.Struct {
         const fields = promptVar.fields.map(
             (field) => {
-                const subform: RTFormConfig.StructField = {
+                const subform: RTVarConfig.StructField = {
                     type: field.type as 'text' | 'number' | 'checkbox' | 'select',
                     name: field.name,
                     display_name: field.display_name,
@@ -100,8 +107,8 @@ class PromptVarParser {
 
         return { fields };
     }
-    static #parseArray(promptVar: PromptVarArray): RTFormConfig.Array {
-        const arrayConfig: RTFormConfig.Array = {
+    static #parseArray(promptVar: PromptVarArray): RTVarConfig.Array {
+        const arrayConfig: RTVarConfig.Array = {
             element_type: promptVar.element.type,
             minimum_length: promptVar.minimum_length,
             maximum_length: promptVar.maximum_length,

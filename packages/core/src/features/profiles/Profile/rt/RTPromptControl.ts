@@ -1,11 +1,18 @@
 import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
 import { uuidv7 } from '@/lib/uuid';
-import { ProfileStorage, RTForm } from '@afron/types';
-import { IACSubStorage } from 'ac-storage';
+import { BaseRTVar, ProfileStorage, RTForm, RTVar, RTVarCreate, RTVarFormUpdate, RTVarStored, RTVarUpdate } from '@afron/types';
+import { IACSubStorage, IJSONAccessor } from 'ac-storage';
+import { RTFormControl } from './RTFormControl';
 
 export class RTPromptControl {
-    constructor(private storage: IACSubStorage, private rtId: string) {
+    #formControl: RTFormControl;
 
+    constructor(private storage: IACSubStorage, private rtId: string) {
+        this.#formControl = new RTFormControl(storage, rtId);
+    }
+
+    get formControl() {
+        return this.#formControl;
     }
 
     private async accessIndex() {
@@ -99,43 +106,37 @@ export class RTPromptControl {
      * promptVars 요소에서 없는 원소는 id 할당 후 추가, id가 존재하면 상태만 갱신
      * @return 
      */
-    async setPromptVariables(promptId: string, promptVars: PromptVar[]): Promise<string[]> {
+    async setVariables(promptId: string, rtVars: (RTVarCreate | RTVarUpdate)[]): Promise<string[]> {
         const promptAC = await this.accessPrompt(promptId);
-        const isPromptOnlyMode = (promptId === 'default');
 
-        const variables: { name: string; form_id: string; }[] = promptAC.getOne('variables') ?? [];
+        const variables: ProfileStorage.RT.PromptVar[] = promptAC.getOne('variables') ?? [];
         const varIds: string[] = [];
-        for (const promptVar of promptVars) {
-            let formId: string = '';
+        for (const v of rtVars) {
+            let varId: string;
             try {
-                if (!promptVar.id) { // 새로 생성
-                    formId = await this.#addForm(promptVar);
+                if ('id' in v) { // 기존 항목 갱신
+                    this.#updateRTVar(promptId, v, variables);
 
-                    variables.push({ name: promptVar.name, form_id: formId });
+                    varId = v.id;
                 }
-                else { // 기존 항목 갱신
-                    formId = promptVar.id;
+                else { // 새로 생성
+                    const newV = await this.#addRTVar(promptId, v);
+                    variables.push({
+                        type: newV.include_type,
+                        id: newV.id,
+                        name: newV.name,
 
-                    const v = variables.find(v => v.form_id === formId);
-                    if (v) {
-                        await this.#updateForm(formId, promptVar);
-                        v.name = promptVar.name;
-                    }
-                    else {
-                        throw new Error(`Form ID '${formId}' not found in prompt variables`);
-                    }
+                        form_id: (newV.include_type === 'form') ? newV.form_id : undefined,
+                        external_id: (newV.include_type === 'external') ? newV.external_id : undefined,
+                        value: (newV.include_type === 'constant') ? newV.value : undefined,
+                    });
+
+                    varId = newV.id;
                 }
 
-                varIds.push(formId);
+                varIds.push(varId);
             }
             catch (e) {
-                promptVar.id ??= 'unknown';
-                const form = PromptVarParser.toRTForm(promptVar);
-
-                console.error(`Failed to set prompt variables : ${promptVar.name} (${formId})`);
-                console.error('variable : ', promptVar);
-                console.error('form (transition) : ', form);
-
                 throw e;
             }
         }
@@ -143,13 +144,224 @@ export class RTPromptControl {
         promptAC.setOne('variables', variables);
         return varIds;
     }
-    async #addPromptVariable(promptVar: PromptVar, ) {
 
-        return {
-            variables.push({ name: promptVar.name, form_id: formId });
+    /**
+     * RTVarCreate에 id 할당, include_type 처리 후 유효한 RTVarStore 리턴
+     */
+    async #addRTVar(promptId: string, rtVar: RTVarCreate): Promise<RTVarStored> {
+        const varId = uuidv7();
+        const base: BaseRTVar = {
+            id: varId,
+            name: rtVar.name,
+        }
+
+        const includeType = rtVar.include_type;
+        if (includeType === 'constant') {
+            return {
+                ...base,
+
+                include_type: 'constant',
+                value: rtVar.value,
+            }
+        }
+        else if (includeType === 'external') {
+            return {
+                ...base,
+
+                include_type: 'external',
+                external_id: rtVar.external_id,
+            }
+        }
+        else {
+            // includeType이 'form' 및 null 인 경우
+            let formId: string;
+            if ('form_id' in rtVar && rtVar.form_id) { // 기존 form_id 연결
+                this.formControl.linkPromptVar(rtVar.form_id, { promptId, varId });
+
+                return {
+                    ...base,
+                    include_type: 'form',
+                    form_id: rtVar.form_id
+                }
+            }
+            else if ('data' in rtVar && rtVar.data) { // 새 form 생성
+                formId = await this.formControl.addForm({
+                    display_name: rtVar.form_name ?? rtVar.name,
+                    display_on_header: false,
+                }, rtVar.data);
+
+                this.formControl.linkPromptVar(formId, { promptId, varId });
+                return {
+                    ...base,
+                    include_type: 'form',
+                    form_id: formId
+                };
+            }
+            else {
+                throw new Error(`Invalid RTVar form include (id=${base.id})`);
+            }
         }
     }
-    async removePromptVariables(promptId: string, varIds: string[]) {
+    /**
+     * RTVarUpdate 정보를 promptVars에서 찾아 처리 후 갱신된 promptVars 리턴
+     */
+    async #updateRTVar(promptId: string, rtVar: RTVarUpdate, prevPromptVars: ProfileStorage.RT.PromptVar[]): Promise<ProfileStorage.RT.PromptVar[]> {
+        const i = prevPromptVars.findIndex((pv) => pv.id === rtVar.id);
+        if (i < 0) {
+            throw new Error(`Prompt variable not found (id=${rtVar.id})`);
+        }
+
+        const promptVar = { ...prevPromptVars[i] };
+        const nextPromptVars = [...prevPromptVars];
+
+        if (rtVar.include_type != null) {
+            if (rtVar.include_type !== promptVar.type) {
+                this.#tearDownPromptVarInclude(promptId, promptVar);
+
+                const includeType = rtVar.include_type;
+                const varId = promptVar.id;
+                if (includeType === 'constant') {
+                    promptVar.type = 'constant';
+                    promptVar.value = rtVar.value;
+                }
+                else if (includeType === 'external') {
+                    promptVar.type = 'external';
+                    promptVar.external_id = rtVar.external_id;
+                }
+                else {
+                    // includeType이 'form' 및 null 인 경우
+                    let formId: string;
+                    if ('form_id' in rtVar && rtVar.form_id) { // 기존 form_id 연결
+                        this.formControl.linkPromptVar(rtVar.form_id, { promptId, varId });
+
+                        promptVar.type = 'form';
+                        promptVar.form_id = rtVar.form_id;
+                    }
+                    else if ('data' in rtVar && rtVar.data) { // 새 form 생성
+                        formId = await this.formControl.addForm({
+                            display_name: (rtVar.form_name ?? rtVar.name ?? promptVar.name),
+                            display_on_header: false,
+                        }, rtVar.data);
+
+                        this.formControl.linkPromptVar(formId, { promptId, varId });
+
+                        promptVar.type = 'form';
+                        promptVar.form_id = formId;
+                    }
+                    else {
+                        throw new Error(`Invalid RTVarUpdate form include (id=${promptVar.id})`);
+                    }
+                }
+            }
+            else { // include_type이 동일한 경우
+                const includeType = rtVar.include_type;
+                if (includeType === 'constant') {
+                    promptVar.value = rtVar.value;
+                }
+                else if (includeType === 'external') {
+                    promptVar.external_id = rtVar.external_id;
+                }
+                else if (includeType === 'form') {
+                    // form_id가 없는 경우는 새로운 form 생성하는 경우
+                    if (rtVar.form_id == null) {
+                        await this.#formControl.unlinkPromptVar(
+                            promptVar.form_id as string,
+                            { promptId, varId: promptVar.id }
+                        );
+
+                        const formId = await this.#formControl.addForm({
+                            display_name: (rtVar.form_name ?? rtVar.name ?? promptVar.name),
+                            display_on_header: false,
+                        }, rtVar.data);
+                        await this.#formControl.linkPromptVar(formId, { promptId, varId: promptVar.id });
+                        promptVar.form_id = formId;
+                    }
+                    else {
+                        const prevVarId = promptVar.form_id ?? promptVar.id;
+
+                        if (rtVar.form_id == prevVarId) {
+                            await this.#formControl.updateForm(
+                                prevVarId,
+                                (prev) => {
+                                    const next = { ...prev };
+                                    if (rtVar.form_name) {
+                                        next.display_name = rtVar.form_name;
+                                    }
+                                    if (rtVar.data) {
+                                        next.type = rtVar.data.type;
+                                        next.config = rtVar.data.config;
+                                    }
+
+                                    return next;
+                                }
+                            )
+                        }
+                        // 이전과 form_id 다른 경우 기존 form을 언링크 후 새로운 form 연결
+                        // form_name, data 에 대한 갱신도 수행
+                        else {
+                            await this.#formControl.unlinkPromptVar(
+                                promptVar.form_id as string,
+                                { promptId, varId: promptVar.id }
+                            );
+                            await this.#formControl.linkPromptVar(rtVar.form_id, { promptId, varId: promptVar.id });
+                            promptVar.form_id = rtVar.form_id;
+
+                            await this.#formControl.updateForm(
+                                prevVarId,
+                                (prev) => {
+                                    const next = { ...prev };
+                                    if (rtVar.form_name) {
+                                        next.display_name = rtVar.form_name;
+                                    }
+                                    if (rtVar.data) {
+                                        next.type = rtVar.data.type;
+                                        next.config = rtVar.data.config;
+                                    }
+
+                                    return next;
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        return nextPromptVars;
+    }
+    /**
+     * RTVar의 외부 include 연결 정리
+     */
+    async #tearDownPromptVarInclude(
+        promptId: string,
+        promptVar: Readonly<ProfileStorage.RT.PromptVar>
+    ) {
+        const next = { ...promptVar };
+        next.type = 'unknown';
+
+        if (promptVar.type === 'constant') {
+            delete next.value;
+
+            return promptVar;
+        }
+        else if (promptVar.type === 'external') {
+            // @TODO 추후 구현 후 적용
+            // 외부 external 값에서 ref 제거 코드
+
+            // delete next.external_id;
+
+            return promptVar;
+        }
+        else if (promptVar.type === 'form') {
+            await this.#formControl.unlinkPromptVar(
+                promptVar.form_id as string,
+                { promptId, varId: promptVar.id }
+            );
+            delete next.form_id;
+
+            return next;
+        }
+    }
+    async removeVariables(promptId: string, varIds: readonly string[]) {
         const indexAC = await this.accessIndex();
         const promptAC = await this.accessPrompt(promptId);
 
@@ -162,9 +374,10 @@ export class RTPromptControl {
             if (!v) continue;
 
             removed.push(varId);
-            if (!v.weak) {
-                this.#removeForm(varId);
-            }
+            this.#formControl.unlinkPromptVar(
+                varId,
+                { promptId, varId }
+            );
         }
 
         const filteredVars = variables.filter((v) => !removed.includes(v.form_id));
@@ -172,46 +385,5 @@ export class RTPromptControl {
 
         const filteredIds = formIds.filter((id) => !removed.includes(id));
         indexAC.setOne('forms', filteredIds);
-    }
-
-    /** 겹치지 않음을 보장하는 새로운 form-id 생성해 리턴 */
-    async #getNewFormId(): Promise<string> {
-        const formAC = await this.accessForm();
-
-        let formId: string;
-        do {
-            formId = uuidv7();
-        } while (formAC.existsOne(formId));
-
-        return formId;
-    }
-
-    async #addForm(promptVar: PromptVar): Promise<string> {
-        const indexAC = await this.accessIndex();
-        const formAC = await this.accessForm();
-
-        const formId = await this.#getNewFormId();
-        promptVar.id = formId;
-
-        const form = PromptVarParser.toRTForm(promptVar);
-        formAC.setOne(formId, form);
-
-        const formIds = indexAC.getOne('forms') ?? [];
-        indexAC.setOne('forms', [...formIds, formId]);
-
-        return formId;
-    }
-    async #updateForm(formId: string, promptVar: PromptVar) {
-        const formAC = await this.accessForm();
-
-        promptVar.id = formId;
-        const form: ProfileStorage.RT.Form = PromptVarParser.toRTForm(promptVar);
-
-        formAC.setOne(formId, form);
-    }
-    async #removeForm(formId: string): Promise<void> {
-        const formAC = await this.accessForm();
-
-        formAC.removeOne(formId);
     }
 }

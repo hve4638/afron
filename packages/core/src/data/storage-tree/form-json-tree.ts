@@ -61,5 +61,12 @@ export const FORM_JSON_TREE = {
         'select' : SELECT_CONFIG,
         'array' : ARRAY_CONFIG,
         'struct' : STRUCT_CONFIG,
-    }
+    },
+
+    // 프롬프트 변수 및 전역 변수 참조 여부
+    'refs' : JSONType.Array({
+        'type' : JSONType.Union('prompt', 'global'),
+        'prompt_id' : JSONType.String().nullable(),
+        'variable_name' : JSONType.String(),
+    }),
 }

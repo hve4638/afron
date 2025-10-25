@@ -5,17 +5,25 @@ declare global {
         PromptVarText | PromptVarNumber | PromptVarCheckbox | PromptVarSelect | PromptVarStruct | PromptVarArray
     );
 
-    interface BasePromptVar {
+    type BasePromptVar = {
         /**
-         * setter 작업시 id가 없다면 생성, 있다면 갱신 작업을 수행
-         * 
-         * uuid 형식 권장
+         * setter 작업시 id가 없다면 생성, 있다면 갱신 작업 수행
         */
         id?: string;
         name: string;
         display_name: string;
 
         include_type: 'form' | 'constant' | 'external';
+        /** include_type='constant' 인 경우 값 */
+        value?: unknown;
+        /** include_type='external' 인 경우 외부 id 값 */
+        external_id?: string;
+        /**
+         * include_type='form' 인 경우 외부 form Id
+         * 
+         * null인 경우 promptVar의 id가 form_id가 됨 (이전버전 호환성)
+        */
+        form_id?: string | null;
     }
     interface PromptVarText extends BasePromptVar {
         type: 'text';
