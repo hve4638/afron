@@ -65,7 +65,7 @@ export class RTWorkflowControl {
 
         indexAC.set({ prompts: order });
     }
-
+    
     /**
      * 프롬프트 추가, default 프롬프트는 별로도 추가하지 않음
      */

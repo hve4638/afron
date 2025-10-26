@@ -130,7 +130,7 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
 
         const globalConfig = await profile.model.getGlobalModelConfig(modelId);
 
-        const { model } = await rt.getPromptMetadata(this.option.promptId ?? 'default');
+        const { model } = await rt.prompt.getMetadata(this.option.promptId ?? 'default');
         const modelConfiguration = resolveModelConfiguration([globalConfig], [model]);
 
         if (modelId.startsWith('custom:')) {

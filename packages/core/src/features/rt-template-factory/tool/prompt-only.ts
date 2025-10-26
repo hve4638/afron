@@ -1,3 +1,4 @@
+import { RTVar, RTVarCreate, RTVarUpdate } from '@afron/types';
 import { Profile } from '../../profiles'
 import { v7 as uuidv7 } from 'uuid';
 
@@ -30,14 +31,14 @@ export class RTPromptOnlyTemplateTool {
         const prompt = line.join('\n');
 
         const rt = this.profile.rt(this.rtId);
-        await rt.setPromptContents('default', prompt);
+        await rt.prompt.setContents('default', prompt);
 
         return this;
     }
 
-    async form(...vars:PromptVar[]) {
+    async form(...vars: (RTVarCreate | RTVarUpdate)[]) {
         const rt = this.profile.rt(this.rtId);
-        await rt.setPromptVariables('default', vars);
+        await rt.prompt.setVariables('default', vars);
 
         return this;
     }

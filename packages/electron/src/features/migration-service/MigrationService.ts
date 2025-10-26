@@ -4,7 +4,7 @@ import { v7 as uuidv7 } from 'uuid';
 
 import {
     Profiles,
-    
+
     RTPromptOnlyTemplateTool,
 } from '@afron/core';
 
@@ -15,10 +15,13 @@ import { AIFRONT_PATH, PROMPT_DIR_PATH } from './data';
 import { LegacyAIFrontData, LegacyPromptMetadata, LegacyPromptMetadataList } from './type';
 
 import runtime from '@/runtime'
-import { RTMetadataDirectory, RTMetadataNode } from '@afron/types';
+import { RTMetadataDirectory, RTMetadataNode, RTVar, RTVarConfig, RTVarCreate } from '@afron/types';
 
 type PromptData = { id: string, children?: PromptData[] };
 
+/**
+ * ai-front (<0.7) 버전 데이터를 현재 버전으로 마이그레이션셔 
+ */
 class MigrationService {
     existsLegacyData() {
         if (!fs.existsSync(AIFRONT_PATH)) return false;
@@ -64,7 +67,7 @@ class MigrationService {
             await tool.contents(prompt.promptTemplate);
 
             for (const metadata of prompt.vars) {
-                await tool.form(await this.parsePromptVar(metadata));
+                await tool.form(await this.parseVarMetadata(metadata));
             }
 
             return {
@@ -75,108 +78,161 @@ class MigrationService {
         }
     }
 
-    private async parsePromptVar(varMetadata: VarMetadata): Promise<PromptVar> {
+    private async parseVarMetadata(varMetadata: VarMetadata): Promise<RTVarCreate> {
         switch (varMetadata.type) {
             case 'text':
             case 'text-multiline':
                 return {
-                    type: 'text',
+                    include_type: 'form',
                     name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    placeholder: '',
-                    default_value: varMetadata.default_value || '',
-                    allow_multiline: varMetadata.type === 'text-multiline',
+                    form_name: varMetadata.display_name,
+                    data: {
+                        type: 'text',
+                        config: {
+                            text: {
+                                placeholder: '',
+                                default_value: varMetadata.default_value || '',
+                                allow_multiline: varMetadata.type === 'text-multiline',
+                            }
+                        }
+                    },
                 };
             case 'select':
                 return {
-                    type: 'select',
+                    include_type: 'form',
                     name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    default_value: varMetadata.default_value ?? '',
-                    options: varMetadata.options ?? [],
-                };
+                    form_name: varMetadata.display_name,
+                    data: {
+                        type: 'select',
+                        config: {
+                            select: {
+                                default_value: varMetadata.default_value ?? '',
+                                options: varMetadata.options ?? [],
+                            }
+                        }
+                    }
+                }
+
             case 'number':
                 return {
-                    type: 'number',
+                    include_type: 'form',
                     name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    default_value: varMetadata.default_value || 0,
-                    allow_decimal: false,
+                    form_name: varMetadata.display_name,
+                    data: {
+                        type: 'number',
+                        config: {
+                            number: {
+                                default_value: varMetadata.default_value || 0,
+                                allow_decimal: false,
+                            }
+                        }
+                    }
                 };
             case 'boolean':
                 return {
-                    type: 'checkbox',
+                    include_type: 'form',
                     name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    default_value: varMetadata.default_value || false,
+                    form_name: varMetadata.display_name,
+                    data: {
+                        type: 'checkbox',
+                        config: {
+                            checkbox: {
+                                default_value: varMetadata.default_value || false,
+                            }
+                        }
+                    }
                 }
             case 'array':
                 return {
-                    type: 'array',
+                    include_type: 'form',
                     name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    minimum_length: 0,
-                    maximum_length: 100,
-                    element: this.parseArrayPromptVarElement(varMetadata.element),
+                    form_name: varMetadata.display_name,
+                    data: {
+                        type: 'array',
+                        config: {
+                            array: {
+                                minimum_length: 0,
+                                maximum_length: 100,
+                                ...this.#parseRTVarArray(varMetadata.element),
+                            }
+                        }
+                    }
                 }
             case 'struct':
                 return {
-                    type: 'struct',
+                    include_type: 'form',
                     name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    fields: varMetadata.fields.map(field => this.parseStructPromptVarFields(field)),
+                    form_name: varMetadata.display_name,
+                    data: {
+                        type: 'struct',
+                        config: {
+                            struct: {
+                                fields: varMetadata.fields.map(field => this.#parseStructFields(field)),
+                            }
+                        }
+                    }
                 }
         }
     }
 
-    parseArrayPromptVarElement(varMetadata: VarMetadata): Exclude<PromptVar, PromptVarArray> {
+    #parseRTVarArray(varMetadata: VarMetadata): RTVarConfig.Array {
         switch (varMetadata.type) {
             case 'text':
             case 'text-multiline':
                 return {
-                    type: 'text',
-                    name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    placeholder: '',
-                    default_value: varMetadata.default_value || '',
-                    allow_multiline: varMetadata.type === 'text-multiline',
+                    element_type: 'text',
+                    config: {
+                        text: {
+                            placeholder: '',
+                            default_value: varMetadata.default_value || '',
+                            allow_multiline: varMetadata.type === 'text-multiline',
+                        }
+                    }
                 };
             case 'select':
                 return {
-                    type: 'select',
-                    name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    default_value: varMetadata.default_value || '',
-                    options: varMetadata.options || [],
+                    element_type: 'select',
+                    config: {
+                        select: {
+                            default_value: varMetadata.default_value || '',
+                            options: varMetadata.options || [],
+                        }
+                    }
                 };
             case 'number':
                 return {
-                    type: 'number',
-                    name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    default_value: varMetadata.default_value || 0,
-                    allow_decimal: false,
+                    element_type: 'number',
+                    config: {
+                        number: {
+                            default_value: varMetadata.default_value || 0,
+                            allow_decimal: false,
+                        }
+                    }
                 };
             case 'boolean':
                 return {
-                    type: 'checkbox',
-                    name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    default_value: varMetadata.default_value || false,
+                    element_type: 'checkbox',
+                    config: {
+                        checkbox: {
+                            default_value: varMetadata.default_value || false,
+                        }
+                    }
                 }
             case 'array':
                 throw new Error('Array type is not allowed as an element in another array');
             case 'struct':
                 return {
-                    type: 'struct',
-                    name: varMetadata.name,
-                    display_name: varMetadata.display_name,
-                    fields: varMetadata.fields.map(field => this.parseStructPromptVarFields(field)),
+                    element_type: 'struct',
+                    config: {
+                        struct: {
+                            fields: varMetadata.fields.map(field => this.#parseStructFields(field)),
+                        },
+                    }
                 }
         }
     }
 
-    parseStructPromptVarFields(fields: VarMetadata): Exclude<PromptVar, PromptVarStruct | PromptVarArray> {
+    #parseStructFields(fields: VarMetadata): RTVarConfig.StructField {
         switch (fields.type) {
             case 'text':
             case 'text-multiline':
@@ -184,32 +240,48 @@ class MigrationService {
                     type: 'text',
                     name: fields.name,
                     display_name: fields.display_name,
-                    placeholder: '',
-                    default_value: fields.default_value || '',
-                    allow_multiline: fields.type === 'text-multiline',
+                    config: {
+                        text: {
+                            placeholder: '',
+                            default_value: fields.default_value || '',
+                            allow_multiline: fields.type === 'text-multiline',
+                        }
+                    }
                 };
             case 'select':
                 return {
                     type: 'select',
                     name: fields.name,
                     display_name: fields.display_name,
-                    default_value: fields.default_value || '',
-                    options: fields.options || [],
+                    config: {
+                        select: {
+                            default_value: fields.default_value || '',
+                            options: fields.options || [],
+                        }
+                    }
                 };
             case 'number':
                 return {
                     type: 'number',
                     name: fields.name,
                     display_name: fields.display_name,
-                    default_value: fields.default_value || 0,
-                    allow_decimal: false,
+                    config: {
+                        number: {
+                            default_value: fields.default_value || 0,
+                            allow_decimal: false,
+                        }
+                    }
                 };
             case 'boolean':
                 return {
                     type: 'checkbox',
                     name: fields.name,
                     display_name: fields.display_name,
-                    default_value: fields.default_value || false,
+                    config: {
+                        checkbox: {
+                            default_value: fields.default_value || false,
+                        }
+                    },
                 }
             case 'struct':
                 throw new Error('Struct type is not allowed as a field in another struct');

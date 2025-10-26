@@ -1,4 +1,5 @@
 import { ProfileStorage } from '../storage-struct';
+import { ProfileStorage } from '../storage-struct';
 import { RTVarDataNaive } from '../rt-var';
 
 export type RTPromptMetadata = Pick<ProfileStorage.RT.Prompt,

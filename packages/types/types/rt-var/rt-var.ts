@@ -15,15 +15,15 @@ export type BaseRTVar = {
     name: string;
 }
 
-interface RTVarExternal extends BaseRTVar {
+export interface RTVarExternal extends BaseRTVar {
     include_type: 'external';
     external_id: string;
 }
-interface RTVarConstant extends BaseRTVar {
+export interface RTVarConstant extends BaseRTVar {
     include_type: 'constant';
     value: any;
 }
-type RTVarForm = BaseRTVar & {
+export type RTVarForm = BaseRTVar & {
     include_type: 'form';
     form_id: string;
     form_name: string;
@@ -31,6 +31,6 @@ type RTVarForm = BaseRTVar & {
     data: RTVarData;
 }
 // 외부 소스가 사라진 경우 unknown으로 처리
-type RTVarUnknown = BaseRTVar & {
+export type RTVarUnknown = BaseRTVar & {
     include_type: 'unknown';
 }

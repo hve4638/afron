@@ -126,7 +126,7 @@ export class RTPackerV1 {
 
     async #preparePrompt(promptId: string): Promise<RTPackV1.Prompt> {
         const rt = this.#profile.rt(this.#rtId!);
-        const promptData = await rt.getPromptStruct(promptId);
+        const promptData = await rt.prompt.getStruct(promptId);
 
         return {
             id: promptId,

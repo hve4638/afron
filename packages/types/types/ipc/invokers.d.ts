@@ -1,7 +1,7 @@
 import { ChatAIModelData } from '../chatai/chatai-model';
 import { GlobalModelConfiguration, ProfileStorage } from '../storage-struct';
 import { RTMetadata, RTMetadataTree } from '../rt/rt';
-import { RTPromptDataEditable, RTPromptMetadata } from '../rt/form';
+import { RTForm, RTPromptDataEditable, RTPromptMetadata } from '../rt/form';
 import { RTFlowData } from '../rt';
 
 import { EResult, ENoResult, } from './result';
@@ -129,7 +129,7 @@ export declare namespace IPCInvokers {
         setMetadata(profileId: string, rtId: string, metadata: KeyValueInput): ENoResult;
         reflectMetadata(profileId: string, rtId: string): ENoResult;
 
-        getForms(profileId: string, rtId: string): EResult<PromptVar[]>;
+        getForms(profileId: string, rtId: string): EResult<RTForm[]>;
     }
 
     interface ProfileRTStorage {
@@ -146,8 +146,8 @@ export declare namespace IPCInvokers {
 
         getVariableNames(profileId: string, rtId: string, promptId: string): EResult<string[]>;
 
-        getVariables(profileId: string, rtId: string, promptId: string): EResult<PromptVar[]>;
-        setVariables(profileId: string, rtId: string, promptId: string, forms: PromptVar[]): EResult<string[]>;
+        getVariables(profileId: string, rtId: string, promptId: string): EResult<RTVar[]>;
+        setVariables(profileId: string, rtId: string, promptId: string, forms: (RTVarCreate | RTVarUpdate)[]): EResult<string[]>;
         removeVariables(profileId: string, rtId: string, promptId: string, formIds: string[]): ENoResult;
         getContents(profileId: string, rtId: string, promptId: string): EResult<string>;
         setContents(profileId: string, rtId: string, promptId: string, contents: string): ENoResult;
@@ -159,7 +159,7 @@ export declare namespace IPCInvokers {
 
         getPrompts(profileId: string, rtId: string): EResult<ProfileStorage.RT.PromptOrder>;
         setPrompts(profileId: string, rtId: string, order: ProfileStorage.RT.PromptOrder): ENoResult;
-        
+
         /**
          * 프롬프트 추가
          * @return 갱신된 프롬프트 순서 정보 

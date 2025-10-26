@@ -6,6 +6,7 @@ import WorkNode from './WorkNode';
 import { UserInput } from './types';
 import ChatGenerator from '../prompt-generator/ChatGenerator';
 import { InputPromptGenerator } from '../prompt-generator';
+import { RTVar, RTVarForm } from '@afron/types';
 
 export type PromptBuildNodeInput = {
     input: UserInput;
@@ -20,18 +21,21 @@ export type PromptBuildNodeOption = {
     };
 }
 
-function getDefaultValue(promptVar: PromptVar): unknown {
-    switch (promptVar.type) {
+function getDefaultValue(rtVar: RTVarForm): unknown {
+    const data = rtVar.data;
+    switch (data.type) {
         case 'checkbox':
         case 'text':
         case 'number':
-            return promptVar.default_value;
+            return data.config[data.type].default_value;
         case 'select':
-            return (
-                promptVar.options.length == 0
-                    ? ''
-                    : promptVar.options[0].value
-            );
+            const selectConfig = data.config.select;
+            if (selectConfig.default_value) {
+                return selectConfig.default_value;
+            }
+            else {
+                return selectConfig.options[0]?.value ?? null;
+            }
         case 'array':
             return [];
         case 'struct':
@@ -51,14 +55,22 @@ class PromptBuildNode extends WorkNode<PromptBuildNodeInput, PromptBuildNodeOutp
             profile, rtId, rtEventEmitter, chat
         } = this.nodeData;
         const rt = profile.rt(rtId);
-        const promptVars = await rt.getPromptVariables(this.option.promptId);
-        const contents = await rt.getPromptContents(this.option.promptId);
+        const rtVar = await rt.prompt.getVariables(this.option.promptId);
+        const contents = await rt.prompt.getContents(this.option.promptId);
 
         const { form } = this.nodeData;
         const vars = {};
-        promptVars.forEach((v) => {
-            vars[v.name] = form[v.id!] ?? getDefaultValue(v);
-        });
+        for (const v of rtVar) {
+            if (v.include_type === 'form') {
+                vars[v.name] = form[v.id!] ?? getDefaultValue(v);
+            }
+            else if (v.include_type === 'external') {
+
+            }
+            else if (v.include_type === 'constant') {
+                vars[v.name] = v.value;
+            }
+        }
 
         const compileOutput = APTL.compile(contents);
         if (!compileOutput.ok) {

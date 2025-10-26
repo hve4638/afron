@@ -1,3 +1,4 @@
+import { RTVarCreate } from '@afron/types';
 import { Profile } from '../profiles';
 import { RTPromptOnlyTemplateTool } from './tool/prompt-only';
 
@@ -44,30 +45,45 @@ export class PromptOnlyTemplateFactory {
             '{{:input}}',
             '',
             '{{::if prefill_enabled}}',
-            '   ',
-            '   {{::role assistant}}',
-            '   ',
-            '   Output:',
-            '   ',
+            '',
+            '{{::role assistant}}',
+            '',
+            'Output:',
+            '',
             '{{::endif}}',
         );
         await tool.form(
             {
                 name: 'lang',
-                display_name: '언어',
-                type: 'select',
-                default_value: 'korean',
-                options: [
-                    { value: 'korean', name: '한국어' },
-                    { value: 'english', name: '영어' },
-                    { value: 'japanese', name: '일본어' },
-                ],
+                form_name: '언어',
+                include_type: 'form',
+                data: {
+                    type: 'select' as const,
+                    config: {
+                        select: {
+
+                            default_value: 'korean',
+                            options: [
+                                { value: 'korean', name: '한국어' },
+                                { value: 'english', name: '영어' },
+                                { value: 'japanese', name: '일본어' },
+                            ],
+                        }
+                    }
+                },
             },
             {
                 name: 'prefill_enabled',
-                display_name: '프리필 활성화',
-                type: 'checkbox',
-                default_value: false,
+                form_name: '프리필 활성화',
+                include_type: 'form',
+                data: {
+                    type: 'checkbox',
+                    config: {
+                        checkbox: {
+                            default_value: false,
+                        }
+                    }
+                },
             },
         );
     }
@@ -90,59 +106,96 @@ export class PromptOnlyTemplateFactory {
         await tool.form(
             {
                 name: 'input',
-                display_name: '입력값',
-                type: 'text',
-                default_value: '',
-                placeholder: '입력값을 입력하세요',
-                allow_multiline: false,
+                form_name: '입력값',
+                include_type: 'form',
+                data: {
+                    type: 'text',
+                    config: {
+                        text: {
+                            default_value: '',
+                            placeholder: '입력값을 입력하세요',
+                            allow_multiline: false,
+                        },
+                    }
+                }
             },
             {
                 name: 'struct',
-                display_name: '구조체',
-                type: 'struct',
-                fields: [
-                    {
-                        name: 'key',
-                        display_name: '키',
-                        type: 'number',
-                        default_value: 0,
-                        allow_decimal: false,
-                    },
-                    {
-                        name: 'value',
-                        display_name: '값',
-                        type: 'text',
-                        default_value: '',
-                        placeholder: '값을 입력하세요',
-                        allow_multiline: false,
+                form_name: '구조체',
+                include_type: 'form',
+                data: {
+                    type: 'struct',
+                    config: {
+                        struct: {
+                            fields: [
+                                {
+                                    name: 'key',
+                                    display_name: '키',
+                                    type: 'number',
+                                    config: {
+                                        number: {
+                                            default_value: 0,
+                                            allow_decimal: false,
+                                        },
+                                    }
+                                },
+                                {
+                                    name: 'value',
+                                    display_name: '값',
+                                    type: 'text',
+                                    config: {
+                                        text: {
+                                            default_value: '',
+                                            placeholder: '값을 입력하세요',
+                                            allow_multiline: false,
+                                        }
+                                    }
+                                }
+                            ]
+                        }
                     }
-                ]
+                }
             },
             {
                 name: 'array',
-                display_name: '배열',
-                type: 'array',
-                element: {
-                    name: 'key',
-                    display_name: '키',
-                    type: 'struct',
-                    fields: [
-                        {
-                            name: 'field0',
-                            display_name: '필드0',
-                            type: 'text',
-                            default_value: '',
-                            placeholder: '값을 입력하세요',
-                            allow_multiline: false,
-                        },
-                        {
-                            name: 'field1',
-                            display_name: '필드1',
-                            type: 'number',
-                            default_value: 0,
-                            allow_decimal: false,
+                form_name: '배열',
+                include_type: 'form',
+                data: {
+                    type: 'array',
+                    config: {
+                        array: {
+                            element_type: 'struct',
+                            config: {
+                                struct: {
+                                    fields: [
+                                        {
+                                            name: 'field0',
+                                            display_name: '필드0',
+                                            type: 'text',
+                                            config: {
+                                                text: {
+                                                    default_value: '',
+                                                    placeholder: '값을 입력하세요',
+                                                    allow_multiline: false,
+                                                }
+                                            }
+                                        },
+                                        {
+                                            name: 'field1',
+                                            display_name: '필드1',
+                                            type: 'number',
+                                            config: {
+                                                number: {
+                                                    default_value: 0,
+                                                    allow_decimal: false,
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
                         }
-                    ]
+                    }
                 }
             }
         );

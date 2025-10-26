@@ -43,6 +43,6 @@ export class RTFlowTemplateTool {
         const prompt = contents.join('\n');
 
         const rt = this.profile.rt(this.rtId);
-        await rt.setPromptContents(promptId, prompt);
+        await rt.prompt.setContents(promptId, prompt);
     }
 }

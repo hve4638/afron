@@ -1,6 +1,5 @@
-import { PromptVarParser, RTFormParser } from '@/features/var-transformers';
 import { uuidv7 } from '@/lib/uuid';
-import { BaseRTVar, ProfileStorage, RTForm, RTVar, RTVarCreate, RTVarFormUpdate, RTVarStored, RTVarUpdate } from '@afron/types';
+import { BaseRTVar, ProfileStorage, RTForm, RTPromptDataEditable, RTPromptMetadata, RTVar, RTVarCreate, RTVarData, RTVarFormUpdate, RTVarStored, RTVarUpdate } from '@afron/types';
 import { IACSubStorage, IJSONAccessor } from 'ac-storage';
 import { RTFormControl } from './RTFormControl';
 
@@ -26,6 +25,36 @@ export class RTPromptControl {
     }
     private async accessFlow() {
         return await this.storage.accessAsJSON(`${this.rtId}:flow.json`);
+    }
+
+    async getMetadata(promptId: string): Promise<RTPromptMetadata> {
+        const promptAC = await this.accessPrompt(promptId);
+
+        const name = await this.getName(promptId);
+        let { id, variables, model } = promptAC.get('id', 'variables', 'model');
+
+        return { id, name, variables, model } as RTPromptMetadata;
+    }
+    /**
+     * 특별한 처리를 필요로 하지 않는 프롬프트 메타데이터 갱신
+     */
+    async setMetadata(promptId: string, input: RTPromptDataEditable): Promise<void> {
+        const promptAC = await this.accessPrompt(promptId);
+
+        if (input.name) {
+            await this.setName(promptId, input.name);
+            delete input.name;
+        }
+        promptAC.set(input);
+    }
+
+    /**
+     * 프롬프트 전체 구조 가져오기
+     */
+    async getStruct(promptId: string): Promise<ProfileStorage.RT.Prompt> {
+        const promptAC = await this.accessPrompt(promptId);
+
+        return promptAC.getAll() as ProfileStorage.RT.Prompt;
     }
 
     async getName(promptId: string): Promise<string> {
@@ -84,32 +113,57 @@ export class RTPromptControl {
         const variableNames: string[] = promptAC.getOne('variables') ?? [];
         return variableNames;
     }
-    async getVariables(promptId: string): Promise<PromptVar[]> {
+    async getVariables(promptId: string): Promise<RTVar[]> {
         const promptAC = await this.accessPrompt(promptId);
         const formAC = await this.accessForm();
 
-        const variables: { form_id: string, name: string }[] = promptAC.getOne('variables') ?? [];
-        return variables.map(({ form_id, name }) => {
-            const form: RTForm = formAC.getOne(form_id);
+        const variables: ProfileStorage.RT.PromptVar[] = promptAC.getOne('variables') ?? [];
+        return variables.map(({ id, type, form_id, name, external_id, value }) => {
+            if (type === 'form') {
+                const form: RTForm | null = form_id == null ? null : formAC.getOne(form_id);
+                if (form != null) {
+                    return {
+                        id,
+                        name,
+                        include_type: 'form',
+                        form_id: form_id as string,
+                        form_name: form.display_name,
+                        data: {
+                            type: form.type,
+                            config: form.config,
+                        } as RTVarData,
+                    }
+                }
+            }
+            else if (type === 'constant') {
+                return {
+                    id,
+                    name,
+                    include_type: 'constant',
+                    value,
+                }
+            }
+            else if (type === 'external' && external_id) {
+                return {
+                    id,
+                    name,
+                    include_type: 'external',
+                    external_id
+                }
+            }
 
-            const promptVar = RTFormParser.toPromptVar(form);
-            promptVar.id = form_id;
-            promptVar.name = name;
-
-            return promptVar;
+            // fallback
+            return {
+                id,
+                name,
+                include_type: 'unknown',
+            }
         });
     }
-
-    /**
-     * 프롬프트 변수 추가 & 갱신
-     * 
-     * promptVars 요소에서 없는 원소는 id 할당 후 추가, id가 존재하면 상태만 갱신
-     * @return 
-     */
     async setVariables(promptId: string, rtVars: (RTVarCreate | RTVarUpdate)[]): Promise<string[]> {
         const promptAC = await this.accessPrompt(promptId);
 
-        const variables: ProfileStorage.RT.PromptVar[] = promptAC.getOne('variables') ?? [];
+        const variables: ProfileStorage.RT.PromptVar[] = [...(promptAC.getOne('variables') ?? [])];
         const varIds: string[] = [];
         for (const v of rtVars) {
             let varId: string;
