@@ -6,24 +6,24 @@ import { RTVarData } from './var-data';
  * 기존 PromptVar과 비교해 id 필드의 유무로 생성 구분
  */
 export type RTVarCreate = (
-    RTExternalCreate
-    | RTConstantCreate
-    | RTFormCreate
+    RTVarExternalCreate
+    | RTVarConstantCreate
+    | RTVarFormCreate
 );
 
 export type BaseRTVarCreate = {
     name: string;
 }
 
-export interface RTExternalCreate extends BaseRTVarCreate {
+export interface RTVarExternalCreate extends BaseRTVarCreate {
     include_type: 'external';
     external_id: string;
 }
-export interface RTConstantCreate extends BaseRTVarCreate {
+export interface RTVarConstantCreate extends BaseRTVarCreate {
     include_type: 'constant';
     value: any;
 }
-export type RTFormCreate = BaseRTVarCreate & {
+export type RTVarFormCreate = BaseRTVarCreate & {
     include_type: 'form';
 } & (
         {

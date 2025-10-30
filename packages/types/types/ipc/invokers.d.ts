@@ -7,6 +7,7 @@ import { RTFlowData } from '../rt';
 import { EResult, ENoResult, } from './result';
 import { CustomModel, HistoryMessage, HistoryMetadata, HistorySearch, InputFileHash, InputFilePreview, InputFilesUpdateInfo, VersionInfo } from './data';
 import { KeyValueInput } from './declared';
+import { RTVar, RTVarCreate, RTVarUpdate } from '../rt-var';
 
 export interface IPCInvokerGeneral {
     echo(message: string): EResult<string>;

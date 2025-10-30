@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -6,132 +6,101 @@ import { emitNavigate } from '@/events/navigate';
 import { useRTStore } from '@/context/RTContext';
 import { useModal } from '@/hooks/useModal';
 import { ChoiceDialog } from '@/modals/Dialog';
-import { fixPromptVar, getDefaultPromptEditorData } from './utils';
-
+import { convertPromptVarToRTVar, convertRTVarToPromptVar } from './utils';
 
 import type {
     PromptEditorData,
 } from '@/types';
+import { usePromptEditorData } from './hooks';
+import { useBus } from '@/lib/zustbus';
+import { PromptEditorEvent } from './types';
+import VarEditModal from './VarEditModal';
+import { PromptOnlyConfigModal } from './modals';
 
 interface usePromptEditorProps {
-    refresh: () => void;
 }
 
 function usePromptEditor({
-    refresh
+
 }: usePromptEditorProps) {
     const { t } = useTranslation();
     const modal = useModal();
     const { rtId, promptId } = useParams();
 
+    const promptEditorData = usePromptEditorData({});
     const rtState = useRTStore();
 
-    const [loaded, setLoaded] = useState(false);
-
-    // 저장 후 일시적으로 '저장됨' 표시 및 버튼 비활성화를 위함
-    const [saved, setSaved] = useState(false);
-
-    const editorData = useRef<PromptEditorData>({
-        ...getDefaultPromptEditorData(),
-        rtId: rtId ?? '',
-        promptId: promptId ?? '',
-    });
+    const [_, emitPromptEditorEvent, usePromptEditorEvent] = useBus<PromptEditorEvent>();
 
     const isChanged = () => {
-        const changed = Object.entries(editorData.current.changed).some(([key, value]) => value === true);
-        if (
-            changed ||
-            editorData.current.changedVariables.length > 0 ||
-            editorData.current.removedVariables.length > 0
-        ) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        if (!promptEditorData.value) return false;
+
+        const editorData = promptEditorData.value;
+        let changed = Object.entries(editorData.changed).some(([key, value]) => value === true);
+        changed = changed && Object.entries(editorData.changedVariables).some(() => true);
+        changed = changed && editorData.removedVariables.length > 0;
+
+        return changed;
     }
 
     const save = async () => {
         if (!rtId || !promptId) return;
+        if (!promptEditorData.value) return;
+        if (!isChanged()) return;
 
-        const data = editorData.current;
+        const data = promptEditorData.value;
         if (data.changed.name && data.name) {
             await rtState.update.promptName(promptId, data.name);
         }
-        if (data.changed.version && data.version) {
-            await rtState.update.metadata({
-                version: data.version
-            });
-        }
 
-        if (data.changed.config) {
-            await rtState.update.metadata({
-                input_type: data.config.inputType
-            });
-        }
-        if (data.changed.model || data.changed.contents) {
-            await rtState.update.promptMetadata(data.promptId, {
-                model: data.model,
-                contents: data.contents,
-            });
-        }
-
-        if (data.changedVariables.length > 0) {
-            data.variables.forEach((promptVar) => fixPromptVar(promptVar));
-            const variableIds = await rtState.update.promptVars(data.promptId, data.changedVariables);
-
-            for (const i in variableIds) {
-                data.variables[i].id = variableIds[i];
+        {
+            const param: Parameters<typeof rtState.update.metadata>[0] = {};
+            if (data.changed.version && data.version) {
+                param.version = data.version;
+            }
+            if (data.changed.config) {
+                param.input_type = data.config.inputType;
+            }
+            if (Object.keys(param).length > 0) {
+                await rtState.update.metadata(param);
             }
         }
+        {
+            const param: Parameters<typeof rtState.update.promptMetadata>[1] = {};
+
+            if (data.promptOnly.enabled && data.changed.model) {
+                param.model = data.promptOnly.model;
+            }
+            if (data.changed.contents) {
+                param.contents = data.contents;
+            }
+            if (Object.keys(param).length > 0) {
+                await rtState.update.promptMetadata(data.promptId, param);
+            }
+        }
+
+        if (Object.entries(data.changedVariables)) {
+            const promptVars = Object.values(data.changedVariables);
+            const rtVars = promptVars.map(convertPromptVarToRTVar);
+
+            const variableIds = await rtState.update.promptVars(data.promptId, rtVars);
+
+            for (const i in variableIds) {
+                if (promptVars[i].id === variableIds[i]) continue;
+
+                promptEditorData.action.changeVarId(promptVars[i].id, variableIds[i]);
+            }
+        }
+
         if (data.removedVariables.length > 0) {
             await rtState.remove.promptVars(data.promptId, data.removedVariables);
         }
-        // if (data.changed.contents) {
-        //     await rtState.update.promptContents(data.promptId, data.contents);
-        // }
-
-        setSaved(true);
-        data.changed = {};
-        data.changedVariables = [];
-        data.removedVariables = [];
+        
+        promptEditorData.action.clearChanged();
+        emitPromptEditorEvent('on_save');
     }
 
-    // 초기 프롬프트 데이터 로드
-    const load = async () => {
-        if (!rtId || !promptId) return;
-
-        const { input_type, mode } = await rtState.get.metadata();
-        const { name, model } = await rtState.get.promptMetadata(promptId);
-        const contents = await rtState.get.promptContents(promptId);
-        const vars = await rtState.get.promptVars(promptId);
-
-        editorData.current.name = name;
-        if (model) {
-            console.log('[load] model', model);
-            /// @TODO : 원래 model은 반드시 valid하게 와야하는데 {}만 오는 문제
-            editorData.current.model = model;
-            // editorData.current.model = {
-            //     temperature: model.temperature ?? 1.0,
-            //     topP: model.top_p ?? 1.0,
-            //     maxTokens: model.max_tokens ?? 1024,
-            //     useThinking: model.use_thinking ?? false,
-            //     thinkingTokens: model.thinking_tokens ?? 1024,
-
-
-            //     geminiSafetySettings: model.safety_settings ?? editorData.current.model.geminiSafetySettings,
-            // };
-        }
-        editorData.current.contents = contents;
-        editorData.current.changed = {};
-        editorData.current.removedVariables = [];
-        editorData.current.variables = vars;
-        editorData.current.config.inputType = input_type;
-        setLoaded(true);
-        refresh();
-    }
-
-    const back = () => {
+    const back = async () => {
         if (isChanged()) {
             modal.open(ChoiceDialog, {
                 title: '작업을 저장하겠습니까?',
@@ -143,6 +112,7 @@ function usePromptEditor({
                 onSelect: async (choice: string, index: number) => {
                     if (index === 0) { // 저장
                         await save();
+                        emitPromptEditorEvent('save');
                         emitNavigate('back');
                     }
                     else if (index === 1) { // 저장하지 않음
@@ -168,68 +138,71 @@ function usePromptEditor({
         }
     }
 
-    const addPromptVar = () => {
-        let varName = '';
-        let i = 0;
-        while (true) {
-            let candidateName = `variable_${i}`;
-            if (editorData.current.variables.some((item) => item.name === candidateName)) {
-                i++;
-            }
-            else {
-                varName = candidateName;
-                break;
-            }
-        }
+    usePromptEditorEvent('save', async () => {
+        save();
+    }, [rtId, promptId]);
 
-        const newPromptVar: PromptVar = {
-            type: 'text',
-            name: varName,
-            display_name: t('prompt_editor.variable_default_name') + ' ' + i,
-            allow_multiline: false,
-            default_value: '',
-            placeholder: '',
-        }
+    usePromptEditorEvent('back', async () => {
+        back();
+    }, []);
+    usePromptEditorEvent('open_varedit_modal', async ({ varId }) => {
+        modal.open(VarEditModal, {
+            get: promptEditorData.get,
+            action: promptEditorData.action,
+        });
+    }, []);
+    usePromptEditorEvent('open_prompt_only_config_modal', async () => {
+        modal.open(PromptOnlyConfigModal, {
+            data: value,
+        });
+    }, []);
 
-        editorData.current.variables.push(newPromptVar);
-        editorData.current.changedVariables.push(newPromptVar);
-        // editorData.current.changed.variables = true;
+    // 초기 프롬프트 데이터 로드
+    const load = async () => {
+        if (!(rtId && promptId)) return;
 
-        refresh();
+        const { input_type, mode, version } = await rtState.get.metadata();
+        const { name, model } = await rtState.get.promptMetadata(promptId);
+        const contents = await rtState.get.promptContents(promptId);
+        const vars = await rtState.get.promptVars(promptId);
 
-        return newPromptVar;
+        /// @TODO : 원래 model은 반드시 valid하게 와야하는데 {}만 오는 문제
+        // 현재는 처리되는지 확인 필요
+        const data: PromptEditorData = {
+            rtId,
+            promptId,
+            name,
+            version,
+            contents,
+            variables: vars.map(convertRTVarToPromptVar),
+            config: {
+                inputType: input_type,
+            },
+            flags: {
+                syncRTName: true,
+            },
+
+            promptOnly: {
+                enabled: true,
+                model,
+            },
+
+            changed: {},
+            changedVariables: {},
+            addedVariables: [],
+            removedVariables: [],
+        };
+        promptEditorData.reset(data);
     }
 
     useEffect(() => {
         load();
     }, []);
 
-    // 저장 후 버튼 비활성화 타이머
-    useEffect(() => {
-        if (!saved) return;
-
-        const timeoutId = window.setTimeout(() => {
-            setSaved(false);
-        }, 300);
-
-        return () => {
-            window.clearTimeout(timeoutId);
-        }
-    }, [saved]);
-
     return {
-        ref: {
-            editorData
-        },
-        state: {
-            loaded,
-            saved,
-        },
-        action: {
-            save,
-            back,
-            addPromptVar,
-        }
+        promptEditorData,
+        emitPromptEditorEvent,
+        usePromptEditorEvent
     }
 }
 

@@ -1,9 +1,9 @@
 import { ProfileSessionMetadata } from '@/types';
-import { ChatAIModelData, CustomModelCreate, RTMetadata, RTMetadataTree, VertexAIAuth } from '@afron/types';
+import { ChatAIModelData, CustomModelCreate, RTForm, RTMetadata, RTMetadataTree, VertexAIAuth } from '@afron/types';
 
 export type ProviderName = 'openai' | 'anthropic' | 'google' | 'vertexai' | 'custom';
 
-export type PromptVarWithLastValue = (PromptVar & { last_value?: unknown });
+export type RTFormWithLastValue = (RTForm & { last_value?: unknown });
 
 export interface ProfileEventState {
     createSession(): Promise<void>;
@@ -36,7 +36,7 @@ export interface ProfileEventState {
     removeRT(rtId: string): Promise<void>;
     renameRT(rtId: string, newName: string): Promise<void>;
 
-    getCurrentSessionForms(): Promise<PromptVarWithLastValue[]>;
+    getCurrentSessionForms(): Promise<RTFormWithLastValue[]>;
     setCurrentSessionForms(values: Record<string, any>): Promise<void>;
 
     deleteHistoryMessage(historyId: number, origin: 'in' | 'out' | 'both'): Promise<void>;

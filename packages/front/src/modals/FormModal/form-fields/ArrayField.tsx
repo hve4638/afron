@@ -10,8 +10,7 @@ import styles from './styles.module.scss';
 import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
 import { useCallback } from 'react';
 import StructField from './StructField';
-import { getPromptVarDefaultValue } from '../utils';
-
+import { getRTVarDefaultValue } from '../utils';
 
 function ArrayField({ promptVar, onChange, value }: FormFieldProps<PromptVarArray, unknown[]>) {
     const elementCompoment = useCallback((item: any, index: number) => {
@@ -68,7 +67,7 @@ function ArrayField({ promptVar, onChange, value }: FormFieldProps<PromptVarArra
         }
     }, [promptVar, onChange]);
     const addElement = () => {
-        const defaultValue = getPromptVarDefaultValue(promptVar.element);
+        const defaultValue = getRTVarDefaultValue(promptVar.element);
         const newValue = [...value, defaultValue];
         onChange(newValue);
     }

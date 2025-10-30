@@ -1,78 +1,48 @@
 import { ModalProvider } from '@/hooks/useModal';
 import useTrigger from '@/hooks/useTrigger';
-import type {
-    PromptInputType
-} from '@/types';
 
 import EditorSection from './EditorSection';
 import SidePanel from './SidePanel';
 import usePromptEditor from './PromptEditor.hook';
 
 import styles from './styles.module.scss';
-import { useNavigate } from 'react-router';
 
-function PromptEditor() {
+function PromptEditorInner() {
     const [_, refresh] = useTrigger();
     const {
-        ref: {
-            editorData,
-        },
-        state: {
-            loaded,
-            saved,
-        },
-        action: {
-            save,
-            back,
-            addPromptVar,
-        }
+        promptEditorData,
+        emitPromptEditorEvent,
+        usePromptEditorEvent,
     } = usePromptEditor({ refresh });
 
-    if (!loaded) {
-        return <></>
+    if (promptEditorData.value == null) {
+        return <></>;
     }
 
     return (
         <div
             className={styles['prompt-editor']}
         >
-            <EditorSection data={editorData.current} />
+            <EditorSection
+                value={promptEditorData.value}
+                action={promptEditorData.action}
+            />
             <SidePanel
-                data={editorData.current}
-                saved={saved}
-
-                onRefresh={() => refresh()}
-                onSave={async () => await save()}
-                onBack={async () => back()}
-
-                onAddPromptVar={() => {
-                    const promptVar = addPromptVar();
-
-                    return promptVar;
-                }}
-                onRemovePromptVar={(promptVar: PromptVar) => {
-                    editorData.current.variables = editorData.current.variables.filter((item) => item !== promptVar);
-                    editorData.current.changedVariables = editorData.current.changedVariables.filter((item) => item !== promptVar);
-                    if (promptVar.id) {
-                        editorData.current.removedVariables.push(promptVar.id);
-                    }
-
-                    refresh();
-                }}
-                onChangeInputType={(inputType: PromptInputType) => {
-                    return;
-                }}
+                value={promptEditorData.value}
+                action={promptEditorData.action}
+                emitPromptEditorEvent={emitPromptEditorEvent}
+                usePromptEditorEvent={usePromptEditorEvent}
             />
         </div>
     );
 }
 
-function PromptEditorWrapper() {
+export function PromptEditor() {
     return (
         <ModalProvider>
-            <PromptEditor />
+            <PromptEditorInner />
         </ModalProvider>
     )
 }
 
-export default PromptEditorWrapper;
+export default PromptEditor;

@@ -1,22 +1,21 @@
 export {
-    default as TextAddition,
+    TextAddition,
 } from './TextAddition';
 export {
-    default as NumberAddition,
+    NumberAddition
 } from './NumberAddition';
 export {
-    default as CheckboxAddition,
+    CheckboxAddition,
 } from './CheckboxAddition';
 export {
-    default as SelectAddition,
+    SelectAddition,
 } from './SelectAddition';
 export {
-    default as StructAddition,
+    StructAddition,
 } from './StructAddition';
 export {
-    default as ArrayAddition,
+    ArrayAddition,
 } from './ArrayAddition';
-
 export {
-    default as Additions
+    Additions
 } from './Additions';

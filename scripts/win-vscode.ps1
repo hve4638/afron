@@ -3,20 +3,23 @@ if ((Split-Path -Leaf (Get-Location)) -eq "scripts") {
 }
 
 Get-Desktop 0 | Switch-Desktop
-code ".\packages\front"
-Start-Sleep -Seconds 3
-
-Get-Desktop 1 | Switch-Desktop
 code ".\"
 Start-Sleep -Seconds 3
 
-Get-Desktop 2 | Switch-Desktop
-code ".\packages\types"
+Get-Desktop 1 | Switch-Desktop
+code ".\packages\core"
 Start-Sleep -Seconds 3
 
-# Get-Desktop 3 | Switch-Desktop
-# code ".\packages\electron"
-# Start-Sleep -Seconds 3
+Get-Desktop 2 | Switch-Desktop
+code ".\packages\front"
+Start-Sleep -Seconds 3
 
+Get-Desktop 3 | Switch-Desktop
+code ".\packages\electron"
+Start-Sleep -Seconds 3
+
+Get-Desktop 4 | Switch-Desktop
+code ".\packages\types"
+Start-Sleep -Seconds 
 
 Get-Desktop 0 | Switch-Desktop

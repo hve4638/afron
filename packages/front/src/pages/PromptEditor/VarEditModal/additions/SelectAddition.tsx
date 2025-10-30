@@ -1,32 +1,24 @@
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import { TextInput } from 'components/Input';
 import { Align, Flex, Grid, Row } from 'components/layout';
-import { useLayoutEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useLayoutEffect } from 'react';
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import { RTVarConfig } from '@afron/types';
+import { AdditionsProps } from './types';
 
-type PropmtVarSelectOptionProps = {
-    promptVar: PromptVarSelect;
-    onRefresh: () => void;
-}
-
-function PropmtVarSelectOption({
-    promptVar,
-    onRefresh
-}: PropmtVarSelectOptionProps) {
-    const { t } = useTranslation();
-
-    // const options = (promptVar.options ?? []).map((option) => ({
-    //     name: option.name,
-    //     key: option.value
-    // }));
+export function SelectAddition({
+    target,
+    varId,
+    varAction,
+}: AdditionsProps) {
+    const selectConfig = target.data.config.select!;
+    const setConfig = (callback: Parameters<typeof varAction.setDataConfig<'select'>>[2]) => varAction.setDataConfig(varId, 'select', callback);
 
     useLayoutEffect(() => {
-        if (!promptVar.options) {
-            promptVar.options = [];
+        if (!selectConfig.options) {
             addOption();
         }
-    }, [promptVar]);
+    }, [selectConfig]);
 
     const addOption = () => {
         const makeAlphabetIndex = (num: number) => {
@@ -43,8 +35,9 @@ function PropmtVarSelectOption({
             }
             return label;
         }
-        promptVar.options ??= [];
-        const num = promptVar.options.length + 1;
+
+        const currentOptions = selectConfig.options ?? [];
+        const num = currentOptions.length + 1;
 
         const name = `선택 ${num}`;
         let baseValue = `select-${num}`;
@@ -54,31 +47,37 @@ function PropmtVarSelectOption({
         do {
             value = baseValue + makeAlphabetIndex(index);
             index++;
-        } while (promptVar.options.find((item) => item.value === value) != undefined);
+        } while (currentOptions.find((item) => item.value === value) != undefined);
 
-        promptVar.options.push({ name, value });
-        onRefresh();
+        setConfig((prev) => ({
+            ...prev,
+            options: [...currentOptions, { name, value }],
+        }));
     }
 
     return (
         <>
             <hr />
             <DropdownForm
-                label={t('form_editor.default_value_label')}
-                value={promptVar.default_value ?? ''}
+                label='기본값'
+                value={selectConfig.default_value ?? ''}
                 onChange={(next) => {
-                    promptVar.default_value = next;
-                    onRefresh();
+                    setConfig((prev) => ({
+                        ...prev,
+                        default_value: next,
+                    }));
                 }}
                 onItemNotFound={(first) => {
                     if (first != null) {
-                        promptVar.default_value = first;
-                        onRefresh();
+                        setConfig((prev) => ({
+                            ...prev,
+                            default_value: first,
+                        }));
                     }
                 }}
             >
                 {
-                    (promptVar.options ?? []).map((option, i) => (
+                    (selectConfig.options ?? []).map((option, i) => (
                         <Dropdown.Item
                             name={option.name} value={option.value} key={i}
                         />
@@ -94,7 +93,7 @@ function PropmtVarSelectOption({
                     height: '32px',
                 }}
             >
-                <div>{t('form_editor.select_config.option_label')}</div>
+                <div>옵션</div>
                 <GoogleFontIcon
                     enableHoverEffect={true}
                     value='add'
@@ -116,32 +115,44 @@ function PropmtVarSelectOption({
                 }}
             >
                 {
-                    promptVar.options != null &&
-                    promptVar.options.map((option, index) => (
+                    selectConfig.options != null &&
+                    selectConfig.options.map((option, index) => (
                         <SelectOption
                             key={index}
                             option={option}
-                            onRefresh={() => onRefresh()}
                             onChangeName={(name) => {
-                                option.name = name;
-                                onRefresh();
+                                const currentOptions = selectConfig.options ?? [];
+                                const updatedOptions = currentOptions.map((opt, idx) =>
+                                    idx === index ? { ...opt, name } : opt
+                                );
+                                setConfig((prev) => ({
+                                    ...prev,
+                                    options: updatedOptions,
+                                }));
                             }}
                             onChangeValue={(value) => {
-                                const filtered = (promptVar.options ?? []).filter((item) => item.value === value);
+                                const currentOptions = selectConfig.options ?? [];
+                                const filtered = currentOptions.filter((item) => item.value === value);
                                 if (
                                     filtered.length === 0
                                     || (filtered.length === 1 && filtered[0] === option)
                                 ) {
-                                    option.value = value;
-                                    onRefresh();
+                                    const updatedOptions = currentOptions.map((opt, idx) =>
+                                        idx === index ? { ...opt, value } : opt
+                                    );
+                                    setConfig((prev) => ({
+                                        ...prev,
+                                        options: updatedOptions,
+                                    }));
                                 }
                             }}
                             onDelete={(option) => {
-                                const prev = promptVar.options ?? [];
-                                const next = prev.filter((item) => item !== option)
-
-                                promptVar.options = next;
-                                onRefresh();
+                                const currentOptions = selectConfig.options ?? [];
+                                const next = currentOptions.filter((item) => item !== option);
+                                setConfig((prev) => ({
+                                    ...prev,
+                                    options: next,
+                                }));
                             }}
                         />
                     ))
@@ -158,7 +169,6 @@ type SelectOptionProps = {
     option: PromptVarSelectOption;
     onChangeName: (name: string) => void;
     onChangeValue: (value: string) => void;
-    onRefresh: () => void;
     onDelete: (option: PromptVarSelectOption) => void;
 }
 
@@ -166,7 +176,6 @@ function SelectOption({
     option,
     onChangeName,
     onChangeValue,
-    onRefresh,
     onDelete,
 }: SelectOptionProps) {
     return (
@@ -220,4 +229,4 @@ function SelectOption({
     )
 }
 
-export default PropmtVarSelectOption;
+export default SelectAddition;

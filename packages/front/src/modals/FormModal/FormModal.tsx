@@ -12,7 +12,8 @@ import useHotkey from '@/hooks/useHotkey';
 import useTrigger from '@/hooks/useTrigger';
 
 import { ArrayField, CheckBoxField, NumberField, SelectField, StructField, TextField } from './form-fields';
-import { getPromptVarDefaultValue } from './utils';
+import { getRTVarDefaultValue } from './utils';
+import { RTVar } from '@afron/types';
 
 type FormModalProps = {
     isFocused: boolean;
@@ -24,7 +25,7 @@ function FormModal({
     onClose
 }: FormModalProps) {
     const [disappear, close] = useModalDisappear(onClose);
-    const [forms, setForms] = useState<PromptVar[]>([]);
+    const [forms, setForms] = useState<RTVar[]>([]);
     const variables = useRef<Record<string, any>>({});
 
     const [_, refresh] = useTrigger();
@@ -38,13 +39,13 @@ function FormModal({
             .then((forms) => {
                 const vars: Record<string, any> = {};
                 for (const form of forms) {
-                    const formId = form.id!;
+                    const formId = form.id;
 
                     if (form.last_value != null) {
                         vars[formId] = form.last_value;
                     }
                     else {
-                        vars[formId] = getPromptVarDefaultValue(form);
+                        vars[formId] = getRTVarDefaultValue(form);
                     }
                 }
 

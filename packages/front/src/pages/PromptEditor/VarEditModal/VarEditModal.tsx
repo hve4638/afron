@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { ModalBackground, ModalBox, ModalHeader } from 'components/Modal';
 import { StringForm } from '@/components/forms';
@@ -7,7 +7,7 @@ import {
     Additions,
 } from './additions';
 import useTrigger from '@/hooks/useTrigger';
-import { dropdownItem, initPromptVar } from './utils';
+import { dropdownItem, initRTVar } from './utils';
 import styles from './styles.module.scss';
 import { Row } from 'components/layout';
 import { MODAL_DISAPPEAR_DURATION } from 'data'
@@ -15,26 +15,14 @@ import useModalDisappear from '@/hooks/useModalDisappear';
 import useHotkey from '@/hooks/useHotkey';
 import { useTranslation } from 'react-i18next';
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
-
-const VAR_DROPDOWN_ITEMS = [
-    dropdownItem('텍스트', 'text'),
-    dropdownItem('숫자', 'number'),
-    dropdownItem('체크박스', 'checkbox'),
-    dropdownItem('목록', 'select'),
-    dropdownItem('구조체', 'struct'),
-    dropdownItem('배열', 'array'),
-]
-const FIELD_DROPDOWN_ITEMS = [
-    dropdownItem('텍스트', 'text'),
-    dropdownItem('숫자', 'number'),
-    dropdownItem('체크박스', 'checkbox'),
-    dropdownItem('목록', 'select'),
-]
+import { RTVar } from '@afron/types';
+import { PromptEditorData, PromptEditorDataAction, PromptEditorDataGetter } from '../hooks';
+import { PromptVar } from '@/types/prompt-var';
 
 type VarEditModalProps = {
-    variables: PromptVar[];
-    target: PromptVar;
-    onRefresh?: () => void;
+    varId: string;
+
+    promptEditorData: PromptEditorData;
     onClose: () => void;
 }
 
@@ -45,25 +33,21 @@ type VarEditModalProps = {
  * @returns 
  */
 function VarEditModal({
-    variables,
-    target: target,
-    onRefresh = () => { },
+    varId,
+    promptEditorData: {
+        get,
+        action,
+        varAction,
+    },
+
     onClose
 }: VarEditModalProps) {
     const { t } = useTranslation();
     const [disappear, close] = useModalDisappear(onClose);
-    const [refreshSignal, refresh] = useTrigger();
-    const defaultValueCaches = useRef<{
-        text?: string,
-        number?: number,
-        checkbox?: boolean,
-        select?: string,
-    }>({
-        text: '',
-        number: 0,
-        checkbox: false,
-    });
+    const [refreshCount, triggerRefresh] = useTrigger();
 
+    const promptData = useMemo(get, [refreshCount]);
+    const target = useMemo(() => promptData.variables.find(v => v.id === varId)!, [varId, promptData]);
     const [warnVarNameDuplication, setWarnVarNameDuplication] = useState(false);
 
     const fieldRef = useRef<PromptVar | null>(null);
@@ -71,18 +55,6 @@ function VarEditModal({
     useHotkey({
         'Escape': () => close(),
     });
-
-    useLayoutEffect(() => {
-        onRefresh();
-        initPromptVar(target);
-
-        if (target.type != 'struct') {
-            fieldRef.current = null;
-        }
-        else {
-            initPromptVar(fieldRef.current);
-        }
-    }, [refreshSignal]);
 
     return (
         <ModalBackground
@@ -134,7 +106,7 @@ function VarEditModal({
                                     // 우측 필드 편집창 닫기
                                     fieldRef.current = null;
                                 }
-                                refresh();
+                                triggerRefresh();
                             }}
                         >
                             {
@@ -171,7 +143,7 @@ function VarEditModal({
                                     setWarnVarNameDuplication(false);
                                     target.name = name;
                                 }
-                                refresh();
+                                triggerRefresh();
                             }}
                             width='10em'
                         />
@@ -182,14 +154,14 @@ function VarEditModal({
                             value={target.display_name}
                             onChange={(displayName) => {
                                 target.display_name = displayName;
-                                refresh();
+                                triggerRefresh();
                             }}
                             width='10em'
                         />
                         <Additions
                             target={target}
                             fieldVarRef={fieldRef}
-                            onRefresh={refresh}
+                            onRefresh={triggerRefresh}
                         />
                     </ModalBox>
                     {
@@ -212,17 +184,17 @@ function VarEditModal({
                                 <ModalHeader
                                     onClose={() => {
                                         fieldRef.current = null;
-                                        refresh();
+                                        triggerRefresh();
                                     }}
                                 >필드 편집</ModalHeader>
                                 <DropdownForm<PromptVarType>
                                     label='타입'
-                                    
+
                                     value={fieldRef.current.type}
                                     onChange={(next) => {
                                         if (!fieldRef.current) return;
                                         fieldRef.current.type = next;
-                                        refresh();
+                                        triggerRefresh();
                                     }}
                                 >
                                     {FIELD_DROPDOWN_ITEMS.map(({ name, value }, i) => (
@@ -235,7 +207,7 @@ function VarEditModal({
                                     onChange={(name) => {
                                         if (!fieldRef.current) return;
                                         fieldRef.current.name = name;
-                                        refresh();
+                                        triggerRefresh();
                                     }}
                                     width='10em'
                                 />
@@ -245,14 +217,14 @@ function VarEditModal({
                                     onChange={(displayName) => {
                                         if (!fieldRef.current) return;
                                         fieldRef.current.display_name = displayName;
-                                        refresh();
+                                        triggerRefresh();
                                     }}
                                     width='10em'
                                 />
                                 <Additions
                                     target={fieldRef.current}
                                     fieldVarRef={null}
-                                    onRefresh={refresh}
+                                    onRefresh={triggerRefresh}
                                 />
                             </ModalBox>
                         </>

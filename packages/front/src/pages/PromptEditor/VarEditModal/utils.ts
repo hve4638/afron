@@ -1,45 +1,80 @@
-export function dropdownItem(name:string, value:string) {
+import { RTVar, RTVarData, RTVarDataNaive } from "@afron/types";
+
+export function dropdownItem(name: string, value: string) {
     return { name, value };
 }
 
-export function initPromptVar(promptVar:PromptVar|undefined|null) {
-    if (promptVar == undefined) return;
+export function initRTVar(mutableRtVar: RTVar | undefined | null) {
+    if (mutableRtVar == null) return;
 
-    promptVar.name ??= 'new-var';
-    promptVar.display_name ??= 'New Variable';
-    promptVar.type ??= 'text';
+    mutableRtVar.name ??= 'new-var';
+    mutableRtVar.include_type ??= 'form';
+    if (mutableRtVar.include_type === 'form') {
+        mutableRtVar.form_name ??= 'New Variable';
+        mutableRtVar.data ??= { type: 'text', config: {} as any };
+        mutableRtVar.data.type ??= 'text';
+        mutableRtVar.data.config ??= initRTVarFormData(mutableRtVar.data.type);
+    }
+}
 
-    switch (promptVar.type) {
+export function initRTVarFormData(formType: RTVarDataNaive['type']): RTVarData['config'] {
+    switch (formType) {
         case 'text':
-            promptVar.default_value ??= '';
-            promptVar.placeholder ??= '';
-            promptVar.allow_multiline ??= false;
+            return {
+                text: {
+                    default_value: '',
+                    placeholder: '',
+                    allow_multiline: false,
+                }
+            };
             break;
         case 'number':
-            promptVar.allow_decimal ??= false;
+            return {
+                number: {
+                    allow_decimal: false
+                }
+            };
             break;
         case 'checkbox':
-            promptVar.default_value ??= false;
+            return {
+                checkbox: {
+                    default_value: false
+                }
+            };
             break;
         case 'select':
-            promptVar.default_value ??= '';
-            promptVar.options ??= [
-                {
-                    name: '선택 1',
-                    value: 'select-1',
+            return {
+                select: {
+                    default_value: '',
+                    options: [
+                        {
+                            name: '선택 1',
+                            value: 'select-1',
+                        }
+                    ]
                 }
-            ];
-            break;
+            }
         case 'struct':
-            promptVar.fields ??= [];
+            return {
+                struct: {
+                    fields: []
+                }
+            }
             break;
         case 'array':
-            promptVar.element ??= {
-                display_name: '',
-                name: '',
-                type: 'text',
-            } as any;
-            initPromptVar(promptVar.element);
-            break;
+            return {
+                array: {
+                    element_type: 'text',
+                    minimum_length: 0,
+                    maximum_length: undefined,
+                    config: {
+                        text: {
+                            default_value: '',
+                            placeholder: '',
+                            allow_multiline: false,
+                        }
+                    }
+                }
+            }
     }
 }

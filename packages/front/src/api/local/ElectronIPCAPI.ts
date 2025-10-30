@@ -1,6 +1,6 @@
 import { IPCError } from 'api/error';
 import { IIPCAPI } from './types';
-import { CustomModel, GlobalModelConfiguration, HistorySearch, InputFileHash, KeyValueInput, ProfileStorage, RTFlowData, RTMetadata, RTMetadataTree, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
+import { CustomModel, GlobalModelConfiguration, HistorySearch, InputFileHash, KeyValueInput, ProfileStorage, RTFlowData, RTMetadata, RTMetadataTree, RTPromptDataEditable, RTPromptMetadata, RTVar, RTVarCreate, RTVarUpdate } from '@afron/types';
 
 const electron = window.electron;
 
@@ -340,11 +340,11 @@ class ElectronIPCAPI implements IIPCAPI {
             const [err] = await electron.profileRT.reflectMetadata(profileId, rtId);
             if (err) throw new IPCError(err.message);
         },
-        async importFile(token:string, profileId: string) {
+        async importFile(token: string, profileId: string) {
             const [err] = await electron.profileRTs.importFile(token, profileId);
             if (err) throw new IPCError(err.message);
         },
-        async exportFile(token:string, profileId: string, rtId: string) {
+        async exportFile(token: string, profileId: string, rtId: string) {
             const [err] = await electron.profileRTs.exportFile(token, profileId, rtId);
             if (err) throw new IPCError(err.message);
         }
@@ -363,7 +363,7 @@ class ElectronIPCAPI implements IIPCAPI {
             const [err] = await electron.profileRT.reflectMetadata(profileId, rtId);
             if (err) throw new IPCError(err.message);
         },
-        async getForms(profileId: string, rtId: string): Promise<PromptVar[]> {
+        async getForms(profileId: string, rtId: string) {
             const [err, forms] = await electron.profileRT.getForms(profileId, rtId);
             if (err) throw new IPCError(err.message);
             return forms;
@@ -406,12 +406,12 @@ class ElectronIPCAPI implements IIPCAPI {
             if (err) throw new IPCError(err.message);
             return ids;
         },
-        async getVariables(profileId: string, rtId: string, promptId: string): Promise<PromptVar[]> {
+        async getVariables(profileId: string, rtId: string, promptId: string): Promise<RTVar[]> {
             const [err, variables] = await electron.profileRTPrompt.getVariables(profileId, rtId, promptId);
             if (err) throw new IPCError(err.message);
             return variables;
         },
-        async setVariables(profileId: string, rtId: string, promptId: string, vars: PromptVar[]) {
+        async setVariables(profileId: string, rtId: string, promptId: string, vars: (RTVarCreate | RTVarUpdate)[]) {
             const [err, ids] = await electron.profileRTPrompt.setVariables(profileId, rtId, promptId, vars);
             if (err) throw new IPCError(err.message);
 
@@ -441,6 +441,27 @@ class ElectronIPCAPI implements IIPCAPI {
         async setFlowData(profileId: string, rtId: string, data: RTFlowData) {
             const [err] = await electron.profileRTFlow.setFlowData(profileId, rtId, data);
             if (err) throw new IPCError(err.message);
+        },
+
+        async getPrompts(profileId: string, rtId: string) {
+            const [err, order] = await electron.profileRTFlow.getPrompts(profileId, rtId);
+            if (err) throw new IPCError(err.message);
+            return order;
+        },
+        async setPrompts(profileId: string, rtId: string, order: ProfileStorage.RT.PromptOrder) {
+            const [err] = await electron.profileRTFlow.setPrompts(profileId, rtId, order);
+            if (err) throw new IPCError(err.message);
+        },
+
+        async addPrompt(profileId: string, rtId: string, promptId: string, promptName: string) {
+            const [err, order] = await electron.profileRTFlow.addPrompt(profileId, rtId, promptId, promptName);
+            if (err) throw new IPCError(err.message);
+            return order;
+        },
+        async removePrompt(profileId: string, rtId: string, promptId: string) {
+            const [err, order] = await electron.profileRTFlow.removePrompt(profileId, rtId, promptId);
+            if (err) throw new IPCError(err.message);
+            return order;
         }
     } as const;
     request = {
@@ -457,7 +478,7 @@ class ElectronIPCAPI implements IIPCAPI {
             if (err) throw new IPCError(err.message);
         }
     } as const;
-    
+
     events = {
         async onGlobal(listener) {
             const [err, bindId] = await electron.events.onGlobal(listener);

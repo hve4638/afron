@@ -8,72 +8,55 @@ import Button from '@/components/Button';
 
 import { useModal } from '@/hooks/useModal';
 import useHotkey from '@/hooks/useHotkey';
-import VarEditModal from './VarEditModal';
 
-import type { PromptEditorData, PromptInputType } from '@/types';
+import type { PromptEditorData } from '@/types';
 import { EditableText } from '@/components/EditableText';
-import PromptOnlyConfigModal from './modals/PromptOnlyConfigModal';
+import { PromptEditorDataAction } from './hooks';
+import { Emit, UseOn } from '@/lib/zustbus';
+import { PromptEditorEvent } from './types';
+import { useEffect, useState } from 'react';
 
 type SidePanelProps = {
-    data:PromptEditorData;
-    saved?:boolean;
+    value: Readonly<PromptEditorData>;
+    action: Readonly<PromptEditorDataAction>;
 
-    onSave: ()=>Promise<void>;
-    onBack : ()=>void;
-    onRefresh: ()=>void;
-
-    onChangeInputType: (inputType:PromptInputType)=>void;
-    onAddPromptVar: ()=>PromptVar;
-    onRemovePromptVar: (promptVar:PromptVar)=>void;
+    emitPromptEditorEvent: Emit<PromptEditorEvent>;
+    usePromptEditorEvent: UseOn<PromptEditorEvent>;
 }
 
 function SidePanel({
-    data,
-    saved=false,
-
-    onSave,
-    onBack,
-    
-    onRefresh,
-    onChangeInputType,
-    onAddPromptVar,
-    onRemovePromptVar,
-}:SidePanelProps) {
+    value,
+    action,
+    emitPromptEditorEvent,
+    usePromptEditorEvent,
+}: SidePanelProps) {
     const { t } = useTranslation();
     const modal = useModal();
+    const [saved, setSaved] = useState(false);
 
-    const openVarEditorModal = (promptVar:PromptVar) => {
-        modal.open(VarEditModal, {
-            variables : data.variables,
-            target: promptVar,
-            onRefresh: ()=>{
-                if (!data.changedVariables.includes(promptVar)) {
-                    data.changedVariables.push(promptVar);
-                }
-                console.log('changed', promptVar);
-                onRefresh();
-            },
-        });
-    }
-    const openPromptOnlyConfigModal = () => {
-        modal.open(PromptOnlyConfigModal, {
-            data,
-            onRefresh : () => {
-                console.log('changed');
-                onRefresh();
-            },
-        });
-    }
-    
     useHotkey({
-        's' : (e)=>{
+        's': (e) => {
             if (e.ctrlKey) {
-                onSave();
+                emitPromptEditorEvent('save');
+
                 return true;
             }
         }
-    }, modal.count === 0, [onSave]);
-    
+    }, modal.count === 0);
+
+    usePromptEditorEvent('on_save', () => setSaved(true), []);
+
+    useEffect(() => {
+        if (!saved) return;
+        const timeoutId = window.setTimeout(() => {
+            setSaved(false);
+        }, 300);
+
+        return () => {
+            window.clearTimeout(timeoutId);
+        }
+    }, [saved]);
+
     return <Column
         className={styles['edit-panel']}
         style={{
@@ -90,12 +73,10 @@ function SidePanel({
             columnAlign={Align.Center}
         >
             <EditableText
-                value={data.name ?? ''}
+                value={value.name ?? ''}
                 editable={true}
-                onChange={(name)=>{
-                    data.changed.name = true;
-                    data.name = name;
-                    onRefresh();
+                onChange={(name) => {
+                    action.setName(name);
                 }}
             />
             {/* <strong
@@ -114,7 +95,7 @@ function SidePanel({
                     margin: '4px'
                 }}
                 value='settings'
-                onClick={()=>openPromptOnlyConfigModal()}
+                onClick={() => emitPromptEditorEvent('open_prompt_only_config_modal')}
                 hoverEffect='circle'
             />
             <GIconButton
@@ -125,11 +106,11 @@ function SidePanel({
                     margin: '4px'
                 }}
                 value='close'
-                onClick={()=>onBack()}
+                onClick={() => emitPromptEditorEvent('back')}
                 hoverEffect='square'
             />
         </Row>
-        <div style={{height: '1em'}}/>
+        <div style={{ height: '1em' }} />
         {/* <h2
             className='undraggable'
             style={{
@@ -160,56 +141,58 @@ function SidePanel({
                 overflowY: 'auto',
             }}
         >
-        {
-            data.variables.map((item, index)=>(
-                <Row
-                    key={index}
-                    className={
-                        classNames(
-                            'undraggable',
-                            'row-button'
-                        )
-                    }
-                    style={{
-                        width: '100%',
-                        height: '36px',
-                        padding: '4px 8px'
-                    }}
-                    onClick={()=>{
-                        openVarEditorModal(item);
-                    }}
-                >
-                    <span>{item.name}</span>
-                    <Flex/>
-                    <GoogleFontIcon
-                        enableHoverEffect={true}
+            {
+                value.variables.map((item, index) => (
+                    <Row
+                        key={index}
+                        className={
+                            classNames(
+                                'undraggable',
+                                'row-button'
+                            )
+                        }
                         style={{
-                            fontSize: '20px',
-                            cursor: 'pointer',
-                            margin: 'auto 4px',
-                            width: '28px',
-                            height: '28px',
+                            width: '100%',
+                            height: '36px',
+                            padding: '4px 8px'
                         }}
-                        value='delete'
-                        onClick={(e)=>{
-                            e.preventDefault();
-                            e.stopPropagation();
+                        onClick={() => {
+                            emitPromptEditorEvent('open_varedit_modal', { varId: item.id });
+                        }}
+                    >
+                        <span>{item.name}</span>
+                        <Flex />
+                        <GoogleFontIcon
+                            enableHoverEffect={true}
+                            style={{
+                                fontSize: '20px',
+                                cursor: 'pointer',
+                                margin: 'auto 4px',
+                                width: '28px',
+                                height: '28px',
+                            }}
+                            value='delete'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
 
-                            onRemovePromptVar(item);
-                        }}
-                    />
-                </Row>
-            ))
-        }
+                                action.removeVar(item.id);
+                            }}
+                        />
+                    </Row>
+                ))
+            }
         </div>
         <div
             className={classNames(
                 'undraggable center',
                 styles['add-var-button']
             )}
-            onClick={()=>{
-                const promptVar = onAddPromptVar();
-                openVarEditorModal(promptVar);
+            onClick={() => {
+                const varId = action.addVar();
+
+                if (!varId) return;
+                emitPromptEditorEvent('open_varedit_modal', { varId });
             }}
         >
             <GoogleFontIcon
@@ -223,7 +206,7 @@ function SidePanel({
                 {t('prompt_editor.add_form_label')}
             </span>
         </div>
-        <Flex/>
+        <Flex />
         {/* <CheckBoxForm
             name='프롬프트 미리보기'
             checked={true}
@@ -244,13 +227,13 @@ function SidePanel({
                     width: '100%',
                     height: '100%',
                 }}
-                onClick={onSave}
+                onClick={() => emitPromptEditorEvent('save')}
             >
-            {
-                saved
-                ? t('prompt_editor.saved_label')
-                : t('prompt_editor.save_label')
-            }
+                {
+                    saved
+                        ? t('prompt_editor.saved_label')
+                        : t('prompt_editor.save_label')
+                }
             </Button>
         </Row>
     </Column>

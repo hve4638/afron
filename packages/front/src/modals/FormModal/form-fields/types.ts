@@ -1,5 +1,5 @@
 
-type FormFieldProps<TType extends PromptVar, TValue=any> = {
+export type FormFieldProps<TType extends PromptVar, TValue=any> = {
     /**
      * 미지정 시 promptVar.display_name으로 대체
      * 

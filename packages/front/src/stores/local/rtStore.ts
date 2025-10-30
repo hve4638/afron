@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
-import { ProfileStorage, RTFlowData, RTPromptDataEditable, RTPromptMetadata } from '@afron/types';
+import { ProfileStorage, RTFlowData, RTPromptDataEditable, RTPromptMetadata, RTVar, RTVarCreate, RTVarUpdate } from '@afron/types';
 
 // @TODO: context로 옮기는게 나을지 검토
 
@@ -11,7 +11,7 @@ export interface RTState {
 
         promptMetadata(promptId: string): Promise<RTPromptMetadata>;
         promptName(promptId: string): Promise<string>;
-        promptVars(promptId: string): Promise<PromptVar[]>;
+        promptVars(promptId: string): Promise<RTVar[]>;
         promptContents(promptId: string): Promise<string>;
 
         workflowNodes: () => Promise<RTFlowData>;
@@ -21,9 +21,9 @@ export interface RTState {
         promptMetadata(promptId: string, data: RTPromptDataEditable): Promise<void>;
 
         promptName(promptId: string, name: string): Promise<void>;
-        promptVars(promptId: string, vars: PromptVar[]): Promise<string[]>;
+        promptVars(promptId: string, vars: (RTVarCreate | RTVarUpdate)[]): Promise<string[]>;
         promptContents(promptId: string, text: string): Promise<void>;
-        
+
         workflowNodes: (flowData: RTFlowData) => Promise<void>;
     };
     remove: {
@@ -91,7 +91,7 @@ export function createRTStore(rtId: string) {
 
                 await rtAPI.prompt.setName(promptId, name);
             },
-            promptVars: async (promptId: string, vars: PromptVar[]) => {
+            promptVars: async (promptId: string, vars: (RTVarCreate | RTVarUpdate)[]) => {
                 const rtAPI = getRTAPI(get().id);
 
                 return await rtAPI.prompt.setVariables(promptId, vars);
@@ -110,7 +110,7 @@ export function createRTStore(rtId: string) {
         remove: {
             promptVars: async (promptId: string, varIds: string[]) => {
                 const rtAPI = getRTAPI(get().id);
-
+                
                 await rtAPI.prompt.removeVariables(promptId, varIds);
             },
         }

@@ -4,65 +4,41 @@ import CheckboxAddition from './CheckboxAddition';
 import SelectAddition from './SelectAddition';
 import StructAddition from './StructAddition';
 import ArrayAddition from './ArrayAddition';
+import { RTVar, RTVarForm } from '@afron/types';
+import { PromptVarForm } from '@/types/prompt-var';
+import { PromptEditorDataVarAction } from '../../hooks';
+import { AdditionsProps } from './types';
 
-type AdditionsProps = {
-    target:PromptVar;
-    fieldVarRef:React.MutableRefObject<PromptVar|null>|null;
-    onRefresh:()=>void;
-}
+export function Additions(props: AdditionsProps) {
+    const dataType = props.target.data.type;
 
-function Additions({
-    target,
-    fieldVarRef,
-    onRefresh
-}:AdditionsProps) {
     return (
-    <>
-        {
-            target.type === 'text' &&
-            <TextAddition
-                promptVar={target}
-                onRefresh={onRefresh}
-            />
-        }
-        {
-            target.type === 'number' &&
-            <NumberAddition
-                promptVar={target}
-                onRefresh={onRefresh}
-            />
-        }
-        {
-            target.type === 'checkbox' &&
-            <CheckboxAddition
-                promptVar={target}
-                onRefresh={onRefresh}
-            />
-        }
-        {
-            target.type === 'select' &&
-            <SelectAddition
-                promptVar={target}
-                onRefresh={onRefresh}
-            />
-        }
-        {
-            target.type === 'array' &&
-            <ArrayAddition
-                promptVar={target}
-                fieldVarRef={fieldVarRef}
-                onRefresh={onRefresh}
-            />
-        }
-        {
-            target.type === 'struct' &&
-            <StructAddition
-                promptVar={target}
-                fieldVarRef={fieldVarRef}
-                onRefresh={onRefresh}
-            />
-        }
-    </>
+        <>
+            {
+                dataType === 'text' &&
+                <TextAddition {...props} />
+            }
+            {
+                dataType === 'number' &&
+                <NumberAddition {...props} />
+            }
+            {
+                dataType === 'checkbox' &&
+                <CheckboxAddition {...props} />
+            }
+            {
+                dataType === 'select' &&
+                <SelectAddition {...props} />
+            }
+            {
+                dataType === 'array' &&
+                <ArrayAddition {...props} />
+            }
+            {
+                dataType === 'struct' &&
+                <StructAddition {...props} />
+            }
+        </>
     )
 }
 
