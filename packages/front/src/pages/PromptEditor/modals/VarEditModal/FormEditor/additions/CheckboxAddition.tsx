@@ -1,13 +1,14 @@
 import { RTVarConfig } from '@afron/types';
 import { CheckBoxForm } from '@/components/forms';
-import { AdditionsProps } from './types';
+import { AdditionProps } from './types';
 
 export function CheckboxAddition({
-    target,
     varId,
-    varAction
-}: AdditionsProps) {
-    const checkboxConfig = target.data.config.checkbox!;
+    varAction,
+
+    config,
+    onConfigChange,
+}: AdditionProps<'checkbox'>) {
     const setConfig = (callback: Parameters<typeof varAction.setDataConfig<'checkbox'>>[2]) => varAction.setDataConfig(varId, 'checkbox', callback);
 
     return (
@@ -15,9 +16,9 @@ export function CheckboxAddition({
             <hr />
             <CheckBoxForm
                 name='기본값'
-                checked={checkboxConfig.default_value ?? false}
+                checked={config.default_value ?? false}
                 onChange={(checked) => {
-                    setConfig((prev) => ({
+                    onConfigChange((prev) => ({
                         ...prev,
                         default_value: checked,
                     }));

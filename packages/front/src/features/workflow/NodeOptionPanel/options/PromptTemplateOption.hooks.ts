@@ -24,7 +24,7 @@ export function usePromptTemplateOption({
 }: usePromptTemplateOptionProps) {
     const navigate = useNavigate();
     const rt = useRTStore();
-    const [_, emitPromptTemplate, usePromptTemplateEvent] = useBus<PromptTemplateEvent>();
+    const [emitPromptTemplate, usePromptTemplateEvent] = useBus<PromptTemplateEvent>();
 
     usePromptTemplateEvent('select_prompt_id', ({ promptId }) => {
         setOption((prev) => ({

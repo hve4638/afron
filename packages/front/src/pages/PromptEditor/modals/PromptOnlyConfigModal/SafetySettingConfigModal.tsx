@@ -1,3 +1,5 @@
+import { SetStateAction } from 'react';
+import { GeminiSafetySetting, ModelConfiguration } from '@afron/types';
 import { useTranslation } from 'react-i18next';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
@@ -9,46 +11,35 @@ import Subdescription from '@/components/ui/Description';
 import { Column, Row } from '@/components/layout';
 import ModelForm from '@/components/model-ui';
 
-import { PromptEditorData } from '@/types';
-import { ModelConfiguration } from '@afron/types';
+import { PromptDataPO } from './types';
+import { useSafetySettingConfigModal } from './SafetySettingConfigModal.hooks';
 
 type SafetySettingConfigModalProps = {
-    data: PromptEditorData;
+    data: PromptDataPO;
+    onChange: (data: SetStateAction<PromptDataPO>) => void;
 
     isFocused: boolean;
-    onRefresh: () => void;
     onClose: () => void;
 }
 
 function SafetySettingConfigModal({
     data,
-    onRefresh,
+    onChange,
 
     isFocused,
     onClose
 }: SafetySettingConfigModalProps) {
     const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
-    const [_, refreshSignal] = useTrigger();
+    const [disappear, closeModal] = useModalDisappear(onClose);
 
-    const refresh = () => {
-        data.changed.config = true;
-        refreshSignal();
-        onRefresh();
-    }
-
-    const changeModelConfig = <T extends keyof ModelConfiguration,>(key: T, value: ModelConfiguration[T]) => {
-        data.model[key] = value;
-        data.changed.model = true;
-        refresh();
-    }
-
-    useHotkey({
-        'Escape': () => {
-            close();
-            return true;
-        }
-    }, isFocused);
+    const {
+        setGeminiSafetyFilter,
+    } = useSafetySettingConfigModal({
+        data,
+        onChange,
+        closeModal,
+        focused: isFocused,
+    });
 
     return (
         <Modal
@@ -72,8 +63,8 @@ function SafetySettingConfigModal({
                     <div>LOW 시 가장 높은 검열이 적용되며, OFF는 안전 필터가 적용되지 않습니다</div>
                 </Subdescription>
                 <ModelForm.SafetyFilter
-                    value={data.model.safety_settings!}
-                    onChange={(next) => changeModelConfig('safety_settings', { ...data.model.safety_settings, ...next })}
+                    value={data.promptOnly.model.safety_settings!}
+                    onChange={(key, threshold) => setGeminiSafetyFilter(key, threshold)}
                 />
             </Column>
         </Modal>

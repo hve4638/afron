@@ -7,7 +7,7 @@ export function dropdownItem(name: string, value: string) {
 export function initRTVar(mutableRtVar: RTVar | undefined | null) {
     if (mutableRtVar == null) return;
 
-    mutableRtVar.name ??= 'new-var';
+    mutableRtVar.name ??='new-var';
     mutableRtVar.include_type ??= 'form';
     if (mutableRtVar.include_type === 'form') {
         mutableRtVar.form_name ??= 'New Variable';

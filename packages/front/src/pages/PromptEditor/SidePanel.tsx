@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import { useModal } from '@/hooks/useModal';
 import useHotkey from '@/hooks/useHotkey';
 
-import type { PromptEditorData } from '@/types';
+import type { PromptData } from '@/types';
 import { EditableText } from '@/components/EditableText';
 import { PromptEditorDataAction } from './hooks';
 import { Emit, UseOn } from '@/lib/zustbus';
@@ -17,7 +17,7 @@ import { PromptEditorEvent } from './types';
 import { useEffect, useState } from 'react';
 
 type SidePanelProps = {
-    value: Readonly<PromptEditorData>;
+    value: Readonly<PromptData>;
     action: Readonly<PromptEditorDataAction>;
 
     emitPromptEditorEvent: Emit<PromptEditorEvent>;
@@ -157,6 +157,7 @@ function SidePanel({
                             padding: '4px 8px'
                         }}
                         onClick={() => {
+                            console.log('item.', item);
                             emitPromptEditorEvent('open_varedit_modal', { varId: item.id });
                         }}
                     >

@@ -106,19 +106,16 @@ export class RTPromptControl {
         promptAC.setOne('contents', contents);
     }
 
-
     async getVariableNames(promptId: string): Promise<string[]> {
-        const promptAC = await this.accessPrompt(promptId);
-
-        const variableNames: string[] = promptAC.getOne('variables') ?? [];
-        return variableNames;
+        const variables = await this.#getVariables(promptId);
+        return variables.map(v => v.name);
     }
     async getVariables(promptId: string): Promise<RTVar[]> {
-        const promptAC = await this.accessPrompt(promptId);
         const formAC = await this.accessForm();
 
-        const variables: ProfileStorage.RT.PromptVar[] = promptAC.getOne('variables') ?? [];
-        return variables.map(({ id, type, form_id, name, external_id, value }) => {
+        const variables = await this.#getVariables(promptId);
+        return variables.map((promptVar) => {
+            const { id, type, form_id, name, external_id, value } = promptVar;
             if (type === 'form') {
                 const form: RTForm | null = form_id == null ? null : formAC.getOne(form_id);
                 if (form != null) {
@@ -163,7 +160,7 @@ export class RTPromptControl {
     async setVariables(promptId: string, rtVars: (RTVarCreate | RTVarUpdate)[]): Promise<string[]> {
         const promptAC = await this.accessPrompt(promptId);
 
-        const variables: ProfileStorage.RT.PromptVar[] = [...(promptAC.getOne('variables') ?? [])];
+        const variables = await this.#getVariables(promptId);
         const varIds: string[] = [];
         for (const v of rtVars) {
             let varId: string;
@@ -197,6 +194,45 @@ export class RTPromptControl {
 
         promptAC.setOne('variables', variables);
         return varIds;
+    }
+    /**
+     * variables 정보 가져오기
+     * 
+     * 하위버전 포맷 호환성 처리
+     */
+    async #getVariables(promptId: string): Promise<ProfileStorage.RT.PromptVar[]> {
+        const promptAC = await this.accessPrompt(promptId);
+
+        const variables: {
+            name: string;
+            form_id?: string;
+            [key: string]: any;
+        }[] = [
+            ...(promptAC.getOne('variables') ?? [])
+        ];
+        
+        let fixed = false;
+        const promptVars = variables.map<ProfileStorage.RT.PromptVar>((v) => {
+            if ('id' in v) {
+                return v as ProfileStorage.RT.PromptVar;
+            }
+            else {
+                fixed = true;
+                
+                return {
+                    id: uuidv7(),
+                    type: 'form',
+                    name: v.name,
+                    form_id: v.form_id,
+                }
+            }
+        });
+
+        if (fixed) {
+            promptAC.setOne('variables', promptVars);
+        }
+
+        return promptVars;
     }
 
     /**

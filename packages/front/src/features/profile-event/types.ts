@@ -1,9 +1,9 @@
 import { ProfileSessionMetadata } from '@/types';
-import { ChatAIModelData, CustomModelCreate, RTForm, RTMetadata, RTMetadataTree, VertexAIAuth } from '@afron/types';
+import { ChatAIModelData, CustomModelCreate, RTFormNaive, RTMetadata, RTMetadataTree, VertexAIAuth } from '@afron/types';
 
 export type ProviderName = 'openai' | 'anthropic' | 'google' | 'vertexai' | 'custom';
 
-export type RTFormWithLastValue = (RTForm & { last_value?: unknown });
+export type RTFormWithLastValue = (RTFormNaive & { last_value?: unknown });
 
 export interface ProfileEventState {
     createSession(): Promise<void>;

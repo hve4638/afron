@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-import { Emit, EventMap, StoreShape, UseEvent, UseValue } from './types';
+import { Emit, EventMap, StoreShape, UseOn, UseValue } from './types';
 
 function useLatestRef<T>(value: T) {
     const ref = useRef(value);
@@ -11,7 +11,7 @@ function useLatestRef<T>(value: T) {
 }
 
 /** @returns [useValue, emit, useOn] */
-export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseEvent<E>] {
+export function createBus<E extends EventMap>(): [Emit<E>, UseOn<E>, UseValue<E>] {
     const useStore = create<StoreShape<E>, [['zustand/subscribeWithSelector', never]]>(
         subscribeWithSelector(() => ({} as StoreShape<E>))
     );
@@ -45,7 +45,5 @@ export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseEvent
         return useStore((s) => s[key]?.current);
     }
 
-    return [useValue, emit, useOn] as const;
+    return [emit, useOn, useValue] as const;
 }
-
-export type ping = undefined;

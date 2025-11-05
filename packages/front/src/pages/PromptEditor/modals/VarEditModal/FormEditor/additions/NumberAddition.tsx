@@ -1,26 +1,21 @@
-import { useTranslation } from 'react-i18next';
 import { CheckBoxForm, NumberForm } from '@/components/forms';
-import { RTVarConfig } from '@afron/types';
-import { AdditionsProps } from './types';
+import { AdditionProps } from './types';
 
 export function NumberAddition({
-    target,
     varId,
-    varAction
-}: AdditionsProps) {
-    const { t } = useTranslation();
+    varAction,
 
-    const numberConfig = target.data.config.number!;
-    const setConfig = (callback: Parameters<typeof varAction.setDataConfig<'number'>>[2]) => varAction.setDataConfig(varId, 'number', callback);
-
+    config,
+    onConfigChange,
+}: AdditionProps<'number'>) {
     return (
         <>
             <hr />
             <CheckBoxForm
                 name='소수점 허용'
-                checked={numberConfig.allow_decimal ?? false}
+                checked={config.allow_decimal ?? false}
                 onChange={(checked) => {
-                    setConfig((prev) => ({
+                    onConfigChange((prev) => ({
                         ...prev,
                         allow_decimal: checked,
                     }));
@@ -28,14 +23,14 @@ export function NumberAddition({
             />
             <NumberForm
                 name='기본값'
-                value={numberConfig.default_value ?? -1}
+                value={config.default_value ?? -1}
                 onChange={(value) => {
-                    setConfig((prev) => ({
+                    onConfigChange((prev) => ({
                         ...prev,
                         default_value: isNaN(value ?? 0) ? 0 : value,
                     }));
                 }}
-                allowDecimal={numberConfig.allow_decimal ?? false}
+                allowDecimal={config.allow_decimal ?? false}
 
                 width='10em'
             />

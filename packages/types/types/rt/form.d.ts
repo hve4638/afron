@@ -1,5 +1,5 @@
 import { ProfileStorage } from '../storage-struct';
-import { RTVarDataNaive } from '../rt-var';
+import { RTVarDataNaive, RTVarData } from '../rt-var';
 
 export type RTPromptMetadata = Pick<ProfileStorage.RT.Prompt,
     'id' | 'name' | 'variables' | 'model'
@@ -22,15 +22,16 @@ export type BaseRTForm = {
     display_on_header: boolean;
 }
 
-export type RTForm = {
+export type RTFormNaive = BaseRTForm & RTVarDataNaive & {
     id: string;
     refs: RTFormRef[];
-} & BaseRTForm
-    & RTVarDataNaive;
+};
+export type RTForm = BaseRTForm & RTVarData & {
+    id: string;
+    refs: RTFormRef[];
+};
 
-/**
- * 이 Form을 참조하는 RT 변수
-*/
+/** 이 Form을 참조하는 RT 변수 */
 export type RTFormRef = {
     type: 'prompt' | 'global';
     prompt_id?: string;

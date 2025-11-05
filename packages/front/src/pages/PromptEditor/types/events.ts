@@ -1,4 +1,4 @@
-import { Ping, useBus } from '@/lib/zustbus';
+import { Ping } from '@/lib/zustbus';
 
 export interface PromptEditorEvent {
     save: Ping;
@@ -10,3 +10,7 @@ export interface PromptEditorEvent {
     on_save: Ping;
 }
 
+export interface PromptDataUpdateEvent {
+    updated: Ping;
+    // Readonly<PromptEditorData> | null;
+}

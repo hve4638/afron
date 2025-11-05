@@ -2,26 +2,26 @@ import { useTranslation } from 'react-i18next';
 import { CheckBoxForm, StringForm, StringLongForm } from '@/components/forms';
 import { TextAreaInput } from '@/components/Input';
 import { RTVarConfig, RTVarForm } from '@afron/types';
-import { AdditionsProps } from './types';
+import { AdditionProps } from './types';
 
 export function TextAddition({
-    target,
     varId,
     varAction,
-}: AdditionsProps) {
-    const { t } = useTranslation();
 
-    const textConfig = target.data.config.text!;
-    const setConfig = (callback: Parameters<typeof varAction.setDataConfig<'text'>>[2]) => varAction.setDataConfig(varId, 'text', callback);
+    config,
+    onConfigChange,
+}: AdditionProps<'text'>) {
+    const { t } = useTranslation();
+    // const setConfig = (callback: Parameters<typeof varAction.setDataConfig<'text'>>[2]) => varAction.setDataConfig(varId, 'text', callback);
 
     return (
         <>
             <hr />
             <CheckBoxForm
                 name={t('form_editor.text_config.allow_multiline_label')}
-                checked={textConfig.allow_multiline ?? false}
+                checked={config.allow_multiline ?? false}
                 onChange={(checked) => {
-                    setConfig((prev) => ({
+                    onConfigChange((prev) => ({
                         ...prev,
                         allow_multiline: checked,
                     }));
@@ -29,9 +29,9 @@ export function TextAddition({
             />
             <StringForm
                 name={t('form_editor.text_config.placeholder_label')}
-                value={textConfig.placeholder ?? ''}
+                value={config.placeholder ?? ''}
                 onChange={(value) => {
-                    setConfig((prev) => ({
+                    onConfigChange((prev) => ({
                         ...prev,
                         placeholder: value,
                     }));
@@ -39,7 +39,7 @@ export function TextAddition({
                 width='10em'
             />
             {
-                textConfig.allow_multiline
+                config.allow_multiline
                     ? <>
                         <div
                             style={{
@@ -47,9 +47,9 @@ export function TextAddition({
                             }}
                         >{t('form_editor.default_value_label')}</div>
                         <TextAreaInput
-                            value={textConfig.default_value ?? ''}
+                            value={config.default_value ?? ''}
                             onChange={(value) => {
-                                setConfig((prev) => ({
+                                onConfigChange((prev) => ({
                                     ...prev,
                                     default_value: value,
                                 }));
@@ -60,9 +60,9 @@ export function TextAddition({
                     </>
                     : <StringForm
                         name={t('form_editor.default_value_label')}
-                        value={textConfig.default_value ?? ''}
+                        value={config.default_value ?? ''}
                         onChange={(value) => {
-                            setConfig((prev) => ({
+                            onConfigChange((prev) => ({
                                 ...prev,
                                 default_value: value,
                             }));

@@ -1,5 +1,5 @@
 import { GeminiSafetySetting, SupportedThinkingEfforts, SupportedVerbosity } from '../chatai';
-import { FlowNodeType, RTForm } from '../rt';
+import { FlowNodeType, RTFormNaive } from '../rt';
 
 export declare namespace ProfileStorage {
     namespace RT {
@@ -16,7 +16,7 @@ export declare namespace ProfileStorage {
         }
 
         // form.json 내 { [string]: Form } 형식의 Form에 해당
-        type Form = RTForm;
+        type Form = RTFormNaive;
 
         // request-template.<rt-id>.prompt.<prompt-id>
         type Prompt = {

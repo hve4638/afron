@@ -5,7 +5,7 @@ import { PromptVar } from './prompt-var';
 /**
  * PromptEditor 내에서 사용하는 프롬프트 데이터
  */
-export type PromptEditorData = {
+export type PromptData = {
     rtId: string;
     promptId: string;
 
@@ -15,9 +15,13 @@ export type PromptEditorData = {
     contents: string;
 
     config: {
-        inputType: PromptInputType;
+        
         // modelLimit : 'nothing' | '';
     }
+    promptOnly: PromptEditorPromptOnlyData;
+    flags: Partial<{
+        syncRTName: boolean;
+    }>;
 
     changed: Partial<{
         name: boolean;
@@ -25,16 +29,11 @@ export type PromptEditorData = {
         config: boolean;
         version: boolean;
         model: boolean;
+        inputType: boolean;
     }>;
     changedVariables: Record<string, PromptVar>;
     removedVariables: string[];
     addedVariables: string[];
-
-    flags: Partial<{
-        syncRTName: boolean;
-    }>;
-
-    promptOnly: PromptEditorPromptOnlyData;
 }
 
 export type PromptEditorPromptOnlyData = {
@@ -42,4 +41,5 @@ export type PromptEditorPromptOnlyData = {
 } | {
     enabled: true;
     model: ModelConfiguration;
+    inputType: PromptInputType;
 }

@@ -1,9 +1,13 @@
 import { SetStateAction, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PromptEditorData } from '@/types';
-import { ModelConfiguration, RTVar, RTVarDataNaive } from '@afron/types';
+import { useBus } from '@/lib/zustbus';
+import { PromptData } from '@/types';
+import { ModelConfiguration, RTVar, RTVarConfig, RTVarDataNaive } from '@afron/types';
 import { genUntil } from '@/utils/genUntil';
 import { PromptVar } from '@/types/prompt-var';
+import { PromptDataUpdateEvent } from '../types/events';
+import { ActionFail } from '../errors';
+import { getDefaultConfig } from './utils';
 
 interface usePromptEditorProps {
 }
@@ -11,10 +15,15 @@ export function usePromptEditorData({
 
 }: usePromptEditorProps) {
     const { t } = useTranslation();
-    const [promptData, setPromptData] = useState<PromptEditorData | null>(null);
-    const promptDataRef = useRef<PromptEditorData | null>(null);
+    const [promptData, setPromptData] = useState<PromptData | null>(null);
+    const promptDataRef = useRef<PromptData | null>(null);
 
-    const refresh = () => setPromptData(promptDataRef.current);
+    const [emitPromptDataUpdateEvent, usePromptDataUpdateEvent] = useBus<PromptDataUpdateEvent>();
+
+    const refresh = () => {
+        emitPromptDataUpdateEvent('updated');
+        setPromptData(promptDataRef.current);
+    }
 
     useLayoutEffect(() => {
         // promptDataRef.current = initPromptData;
@@ -56,7 +65,7 @@ export function usePromptEditorData({
             return next;
         });
     }
-    const setConfig = (config: PromptEditorData['config']) => {
+    const setConfig = (config: PromptData['config']) => {
         if (!promptDataRef.current) return;
         promptDataRef.current.config = config;
         promptDataRef.current.changed.config = true;
@@ -64,10 +73,10 @@ export function usePromptEditorData({
         refresh();
     }
     const setVar = (varId: string, rtVar: PromptVar | ((prev: PromptVar) => PromptVar)) => {
-        if (!promptDataRef.current) return;
+        if (!promptDataRef.current) return new ActionFail('data not loaded');
 
-        const varIndex = promptDataRef.current.variables.findIndex((item) => item.name === varId);
-        if (varIndex === -1) return;
+        const varIndex = promptDataRef.current.variables.findIndex((item) => item.id === varId);
+        if (varIndex === -1) throw new ActionFail('Could not find variable: ' + varId);
 
         if (typeof rtVar === 'function') {
             rtVar = rtVar(promptDataRef.current.variables[varIndex]);
@@ -75,6 +84,7 @@ export function usePromptEditorData({
 
         promptDataRef.current.variables[varIndex] = rtVar;
         promptDataRef.current.changedVariables[varId] = rtVar;
+        refresh();
     }
     const addVar = () => {
         if (!promptDataRef.current) return;
@@ -128,8 +138,6 @@ export function usePromptEditorData({
         else {
             promptDataRef.current.removedVariables.push(varId);
         }
-
-
         refresh();
     }
     /**
@@ -167,7 +175,7 @@ export function usePromptEditorData({
         promptDataRef.current.removedVariables = [];
         refresh();
     }
-    const reset = (promptData: PromptEditorData) => {
+    const reset = (promptData: PromptData) => {
         promptDataRef.current = promptData;
 
         refresh();
@@ -197,7 +205,7 @@ export function usePromptEditorData({
         refresh();
 
     }
-    const setVarData = (varId: string, varData: RTVarDataNaive | ((data: RTVarDataNaive) => RTVarDataNaive)) => {
+    const setVarData = (varId: string, varData: SetStateAction<RTVarDataNaive>) => {
         if (!promptDataRef.current) return;
 
         const promptVar = promptDataRef.current.variables.find((item) => item.id === varId);
@@ -218,6 +226,35 @@ export function usePromptEditorData({
                     : varData
             ),
         }));
+        refresh();
+    }
+    const setVarDataType = (
+        varId: string,
+        configType: RTVarDataNaive['type']
+    ) => {
+        if (!promptDataRef.current) return;
+
+        const getData = (prev: PromptVar) => {
+            if (prev.include_type !== 'form') {
+                throw new Error('VarData는 form 타입에서만 설정할 수 있습니다.');
+            }
+            return prev.data;
+        }
+
+        setVar(varId, (prev) => {
+            const prevData = getData(prev);
+
+            return {
+                ...prev,
+                data: {
+                    type: configType,
+                    config: {
+                        [configType]: getDefaultConfig(configType),
+                        ...prevData.config,
+                    }
+                },
+            }
+        });
         refresh();
     }
     const setVarDataConfig = <T extends RTVarDataNaive['type']>(
@@ -244,8 +281,8 @@ export function usePromptEditorData({
                         ...prevData.config,
                         [configType]: (
                             typeof config === 'function'
-                            ? config(prevData.config[configType] ?? {} as any) // @TODO 기본 값 처리
-                            : config
+                                ? config(prevData.config[configType] ?? {} as any) // @TODO 기본 값 처리
+                                : config
                         )
                     }
                 },
@@ -254,11 +291,92 @@ export function usePromptEditorData({
         refresh();
     };
 
+    const setVarField = (
+        varId: string,
+        fieldName: string,
+        next: SetStateAction<RTVarConfig.StructField>,
+    ) => {
+        if (!promptDataRef.current) return;
+
+        const promptVar = promptDataRef.current.variables.find((item) => item.id === varId);
+        if (!promptVar) throw new ActionFail('');
+        if (promptVar.include_type !== 'form') throw new ActionFail('');
+        if (promptVar.data.type !== 'struct') throw new ActionFail('');
+        if (!promptVar.data.config.struct) throw new ActionFail('');
+
+        const structConfig = promptVar.data.config.struct;
+        const fieldIndex = structConfig.fields.findIndex(f => f.name === fieldName);
+        if (fieldIndex == -1) throw new ActionFail('');
+
+        structConfig.fields[fieldIndex] = (
+            typeof next === 'function'
+                ? next(structConfig.fields[fieldIndex])
+                : next
+        );
+
+        refresh();
+    }
+
+    const setVarFieldName = (varId: string, oldName: string, newName: string) => {
+        if (!promptDataRef.current) return;
+
+        const promptVar = promptDataRef.current.variables.find((item) => item.id === varId);
+        if (!promptVar) throw new ActionFail('');
+        if (promptVar.include_type !== 'form') throw new ActionFail('');
+        if (promptVar.data.type !== 'struct') throw new ActionFail('');
+        if (!promptVar.data.config.struct) throw new ActionFail('');
+
+        const field = promptVar.data.config.struct.fields.find(f => f.name === oldName);
+        const duplicated = promptVar.data.config.struct.fields.find(f => f.name === newName);
+        if (!field) throw new ActionFail('');
+        if (duplicated) throw new ActionFail('');
+        field.name = newName;
+
+        refresh();
+    }
+
+    const setVarFieldDisplayName = (varId: string, fieldName: string, displayName: string) => {
+        setVarField(varId, fieldName, (prev) => ({
+            ...prev,
+            display_name: displayName,
+        }));
+    }
+
+    const setVarFieldType = (varId: string, fieldName: string, type: RTVarConfig.StructField['type']) => {
+        setVarField(varId, fieldName, (prev) => ({
+            ...prev,
+            type,
+        }));
+    }
+
+    const setVarFieldConfig = <T extends RTVarConfig.StructField['type']>(
+        varId: string,
+        fieldName: string,
+        fieldType: T,
+        next: SetStateAction<RTVarConfig.StructField['config'][T]>
+    ) => {
+        setVarField(varId, fieldName, (prev) => {
+            if (prev.type !== fieldType) throw new ActionFail('');
+
+            if (typeof next === 'function') {
+                next = next(prev.config[fieldType]);
+            }
+
+            return {
+                ...prev,
+                config: {
+                    ...prev.config,
+                    [fieldType]: next,
+                }
+            }
+        });
+    }
+
     return {
-        value: promptData as Readonly<PromptEditorData | null>,
+        value: promptData as Readonly<PromptData | null>,
         get: () => {
             if (!promptDataRef.current) throw new Error('Prompt data is not loaded yet.');
-            return { ...promptDataRef.current } as Readonly<PromptEditorData>;
+            return { ...promptDataRef.current } as Readonly<PromptData>;
         },
         action: {
             setName,
@@ -278,8 +396,18 @@ export function usePromptEditorData({
         varAction: {
             setName: setVarName,
             setFormName: setVarFormName,
+
             setData: setVarData,
-            setDataConfig: setVarDataConfig
+            setDataType: setVarDataType,
+            setDataConfig: setVarDataConfig,
+
+            setFieldType: setVarFieldType,
+            setFieldName: setVarFieldName,
+            setFieldDisplayName: setVarFieldDisplayName,
+            setFieldConfig: setVarFieldConfig,
+        },
+        event: {
+            usePromptDataUpdateEvent,
         },
         reset
     }

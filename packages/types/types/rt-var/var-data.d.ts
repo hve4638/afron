@@ -11,6 +11,7 @@ export type RTVarDataNaive = {
     }
 }
 
+export type RTVarDataType = RTVarData['type'];
 
 /**
  * RT 변수 데이터 타입 및 제한 정의

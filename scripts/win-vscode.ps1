@@ -20,6 +20,6 @@ Start-Sleep -Seconds 3
 
 Get-Desktop 4 | Switch-Desktop
 code ".\packages\types"
-Start-Sleep -Seconds 
+Start-Sleep -Seconds 3
 
 Get-Desktop 0 | Switch-Desktop

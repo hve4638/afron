@@ -64,13 +64,13 @@ export function NodeOptionPanel({
         }
 
         if (node.type === 'llm-fetch') {
-            return <LLMOption {...props} />;
+            return <LLMOption {...props as any} />;
         }
         else if (node.type === 'prompt-template') {
-            return <PromptTemplateOption {...props} />;
+            return <PromptTemplateOption {...props as any} />;
         }
         else if (node.type === 'rt-start') {
-            return <StartOption {...props} />;
+            return <StartOption {...props as any} />;
         }
 
         return null;

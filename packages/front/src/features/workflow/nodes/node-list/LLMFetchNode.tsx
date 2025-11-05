@@ -2,7 +2,6 @@ import { NodeProps } from '@xyflow/react';
 import { Column } from '@/components/layout';
 
 import { BaseNode } from '../BaseNode/BaseNode';
-import { HandleTypes } from '../types';
 import { buildNodeData, NodeHandle } from '../utils';
 
 import { NodeOption } from '../components/NodeOption';

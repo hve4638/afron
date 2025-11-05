@@ -7,7 +7,7 @@ type SafetySetting = Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafet
 
 interface SafetyFilterFormProps {
     value: SafetySetting;
-    onChange: (value: SafetySetting) => void;
+    onChange: (key: GeminiSafetySetting.FilterNames, threshold: GeminiSafetySetting.Threshold) => void;
 
     allowEmpty?: boolean;
     disabled?: boolean;
@@ -16,7 +16,7 @@ interface SafetyFilterFormProps {
 function SafetyFilterForm({
     value,
     onChange,
-    
+
     disabled = false,
 }: SafetyFilterFormProps) {
 
@@ -27,8 +27,7 @@ function SafetyFilterForm({
                 name='괴롭힘'
                 value={value.HARM_CATEGORY_HARASSMENT ?? 'OFF'}
                 onChange={(next) => {
-                    const key = 'HARM_CATEGORY_HARASSMENT' as GeminiSafetySetting.FilterNames;
-                    onChange({ [key]: next });
+                    onChange('HARM_CATEGORY_HARASSMENT', next);
                 }}
                 disabled={disabled}
             />
@@ -37,18 +36,16 @@ function SafetyFilterForm({
                 name='증오심 표현'
                 value={value.HARM_CATEGORY_HATE_SPEECH ?? 'OFF'}
                 onChange={(next) => {
-                    const key = 'HARM_CATEGORY_HATE_SPEECH' as GeminiSafetySetting.Threshold;
-                    onChange({ [key]: next });
+                    onChange('HARM_CATEGORY_HATE_SPEECH', next);
                 }}
                 disabled={disabled}
             />
             <SafetyFilterSlider
-                // name='SEXUALLY_EXPLICIT'
+                // name='SEXUALLY_EXPLICIT
                 name='음란물'
                 value={value.HARM_CATEGORY_SEXUALLY_EXPLICIT ?? 'OFF'}
                 onChange={(next) => {
-                    const key = 'HARM_CATEGORY_SEXUALLY_EXPLICIT' as GeminiSafetySetting.FilterNames;
-                    onChange({ [key]: next });
+                    onChange('HARM_CATEGORY_SEXUALLY_EXPLICIT', next);
                 }}
                 disabled={disabled}
             />
@@ -57,8 +54,7 @@ function SafetyFilterForm({
                 name='위험한 콘텐츠'
                 value={value.HARM_CATEGORY_DANGEROUS_CONTENT ?? 'OFF'}
                 onChange={(next) => {
-                    const key = 'HARM_CATEGORY_DANGEROUS_CONTENT' as GeminiSafetySetting.FilterNames;
-                    onChange({ [key]: next });
+                    onChange('HARM_CATEGORY_DANGEROUS_CONTENT', next);
                 }}
                 disabled={disabled}
             />
@@ -67,8 +63,7 @@ function SafetyFilterForm({
                 name='시민의식'
                 value={value.HARM_CATEGORY_CIVIC_INTEGRITY ?? 'OFF'}
                 onChange={(next) => {
-                    const key = 'HARM_CATEGORY_CIVIC_INTEGRITY' as GeminiSafetySetting.FilterNames;
-                    onChange({ [key]: next });
+                    onChange('HARM_CATEGORY_CIVIC_INTEGRITY', next);
                 }}
                 disabled={disabled}
             />

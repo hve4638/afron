@@ -10,11 +10,11 @@ import type { PromptEditorDataAction} from './hooks';
 import { registerPromptTemplateLanguage, PROMPT_THEME, PROMPT_LANGUAGE } from '@/features/monaco-prompt-template-language';
 
 import styles from './styles.module.scss';
-import { PromptEditorData } from '@/types';
+import { PromptData } from '@/types';
 
 
 type EditorSectionProps = {
-    value: PromptEditorData;
+    value: PromptData;
     action: PromptEditorDataAction;
 }
 

@@ -1,42 +1,46 @@
 import { CheckBoxForm, NumberForm, StringForm } from '@/components/forms'
-import FormFieldProps from './types'
+import { FormFieldProps } from './types'
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm'
+import { RTForm, RTVarConfig, RTVarData } from '@afron/types'
 
-export function TextField({ name, promptVar, onChange, value }: FormFieldProps<PromptVarText, string>) {
+export function TextField({ name, onChange, value }: FormFieldProps<'text', string>) {
     return <StringForm
-        name={name ?? promptVar.display_name}
-        value={value ?? promptVar.default_value ?? ''}
+        name={name}
+        value={value}
         onChange={onChange}
         instantChange={false}
     />
 }
 
-export function NumberField({ name, promptVar, onChange, value }: FormFieldProps<PromptVarNumber, number | undefined>) {
+export function NumberField({ name, onChange, value }: FormFieldProps<'number', number | undefined>) {
     return <NumberForm
-        name={name ?? promptVar.display_name}
-        value={value ?? promptVar.default_value ?? 0}
+        name={name}
+        value={value}
         onChange={onChange}
         instantChange={false}
     />
 }
 
-export function CheckBoxField({ name, promptVar, onChange, value }: FormFieldProps<PromptVarCheckbox, boolean>) {
+export function CheckBoxField({ name, onChange, value }: FormFieldProps<'checkbox', boolean>) {
     return <CheckBoxForm
-        name={name ?? promptVar.display_name}
-        checked={value ?? promptVar.default_value ?? false}
+        name={name}
+        checked={value}
         onChange={onChange}
     />
 }
 
-export function SelectField({ name, promptVar, onChange, value }: FormFieldProps<PromptVarSelect, string>) {
+interface SelectFieldForm extends FormFieldProps<'select', string> {
+    options: RTVarConfig.Select['options'];
+}
+
+export function SelectField({ name, onChange, value, options }: SelectFieldForm) {
     return <DropdownForm
-        label={name ?? promptVar.display_name}
-        value={value ?? promptVar.default_value}
-        // items={promptVar.options.map((item) => ({ name: item.name, key: item.value }))}
+        label={name}
+        value={value}
         onChange={(next) => onChange(next)}
     >
         {
-            promptVar.options.map((item, i) => (
+            options.map((item, i) => (
                 <Dropdown.Item
                     key={i}
                     name={item.name}

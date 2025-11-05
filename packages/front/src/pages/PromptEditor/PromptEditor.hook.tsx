@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useBus } from '@/lib/zustbus';
 
 import { emitNavigate } from '@/events/navigate';
 import { useRTStore } from '@/context/RTContext';
@@ -9,13 +10,12 @@ import { ChoiceDialog } from '@/modals/Dialog';
 import { convertPromptVarToRTVar, convertRTVarToPromptVar } from './utils';
 
 import type {
-    PromptEditorData,
+    PromptData,
 } from '@/types';
 import { usePromptEditorData } from './hooks';
-import { useBus } from '@/lib/zustbus';
+import { VarEditModal, PromptOnlyConfigModal } from './modals';
+
 import { PromptEditorEvent } from './types';
-import VarEditModal from './VarEditModal';
-import { PromptOnlyConfigModal } from './modals';
 
 interface usePromptEditorProps {
 }
@@ -30,7 +30,7 @@ function usePromptEditor({
     const promptEditorData = usePromptEditorData({});
     const rtState = useRTStore();
 
-    const [_, emitPromptEditorEvent, usePromptEditorEvent] = useBus<PromptEditorEvent>();
+    const [emitPromptEditorEvent, usePromptEditorEvent] = useBus<PromptEditorEvent>();
 
     const isChanged = () => {
         if (!promptEditorData.value) return false;
@@ -58,8 +58,8 @@ function usePromptEditor({
             if (data.changed.version && data.version) {
                 param.version = data.version;
             }
-            if (data.changed.config) {
-                param.input_type = data.config.inputType;
+            if (data.changed.config && data.promptOnly.enabled) {
+                param.input_type = data.promptOnly.inputType;
             }
             if (Object.keys(param).length > 0) {
                 await rtState.update.metadata(param);
@@ -95,7 +95,7 @@ function usePromptEditor({
         if (data.removedVariables.length > 0) {
             await rtState.remove.promptVars(data.promptId, data.removedVariables);
         }
-        
+
         promptEditorData.action.clearChanged();
         emitPromptEditorEvent('on_save');
     }
@@ -147,14 +147,20 @@ function usePromptEditor({
     }, []);
     usePromptEditorEvent('open_varedit_modal', async ({ varId }) => {
         modal.open(VarEditModal, {
-            get: promptEditorData.get,
-            action: promptEditorData.action,
+            varId,
+            promptEditorData,
         });
     }, []);
     usePromptEditorEvent('open_prompt_only_config_modal', async () => {
-        modal.open(PromptOnlyConfigModal, {
-            data: value,
-        });
+        const data = promptEditorData.get();
+        if (data.promptOnly.enabled === true) {
+            modal.open(PromptOnlyConfigModal, {
+                data: data as any,
+                onChange: (next) => {
+
+                },
+            });
+        }
     }, []);
 
     // 초기 프롬프트 데이터 로드
@@ -165,25 +171,25 @@ function usePromptEditor({
         const { name, model } = await rtState.get.promptMetadata(promptId);
         const contents = await rtState.get.promptContents(promptId);
         const vars = await rtState.get.promptVars(promptId);
+        
+        console.log('loaded', vars);
 
         /// @TODO : 원래 model은 반드시 valid하게 와야하는데 {}만 오는 문제
         // 현재는 처리되는지 확인 필요
-        const data: PromptEditorData = {
+        const data: PromptData = {
             rtId,
             promptId,
             name,
             version,
             contents,
             variables: vars.map(convertRTVarToPromptVar),
-            config: {
-                inputType: input_type,
-            },
+            config: {},
             flags: {
                 syncRTName: true,
             },
-
             promptOnly: {
                 enabled: true,
+                inputType: input_type,
                 model,
             },
 
@@ -201,8 +207,14 @@ function usePromptEditor({
 
     return {
         promptEditorData,
-        emitPromptEditorEvent,
-        usePromptEditorEvent
+        promptEditorEvent: {
+            emitPromptEditorEvent,
+            usePromptEditorEvent
+        },
+        promptEditorUpdateEvent: {
+            emitPromptEditorEvent,
+            usePromptEditorEvent,
+        }
     }
 }
 

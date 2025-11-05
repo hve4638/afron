@@ -5,7 +5,6 @@ import Delimiter from '@/components/Delimiter';
 
 import { useModal } from '@/hooks/useModal';
 import { SelectPromptTemplateModal } from './modals/SelectPromptTemplateModal';
-import { useBus } from '@/lib/zustbus';
 
 import { RTFlowNodeOptions } from '@afron/types';
 import { OptionProps } from './types';

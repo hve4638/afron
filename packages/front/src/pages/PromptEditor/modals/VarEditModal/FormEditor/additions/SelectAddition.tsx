@@ -1,24 +1,23 @@
+import { useLayoutEffect } from 'react';
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
 import { TextInput } from 'components/Input';
 import { Align, Flex, Grid, Row } from 'components/layout';
-import { useLayoutEffect } from 'react';
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
-import { RTVarConfig } from '@afron/types';
-import { AdditionsProps } from './types';
+import { AdditionProps } from './types';
+
 
 export function SelectAddition({
-    target,
     varId,
     varAction,
-}: AdditionsProps) {
-    const selectConfig = target.data.config.select!;
-    const setConfig = (callback: Parameters<typeof varAction.setDataConfig<'select'>>[2]) => varAction.setDataConfig(varId, 'select', callback);
 
+    config,
+    onConfigChange,
+}: AdditionProps<'select'>) {
     useLayoutEffect(() => {
-        if (!selectConfig.options) {
+        if (!config.options) {
             addOption();
         }
-    }, [selectConfig]);
+    }, [config]);
 
     const addOption = () => {
         const makeAlphabetIndex = (num: number) => {
@@ -36,7 +35,7 @@ export function SelectAddition({
             return label;
         }
 
-        const currentOptions = selectConfig.options ?? [];
+        const currentOptions = config.options ?? [];
         const num = currentOptions.length + 1;
 
         const name = `선택 ${num}`;
@@ -49,7 +48,7 @@ export function SelectAddition({
             index++;
         } while (currentOptions.find((item) => item.value === value) != undefined);
 
-        setConfig((prev) => ({
+        onConfigChange((prev) => ({
             ...prev,
             options: [...currentOptions, { name, value }],
         }));
@@ -60,16 +59,16 @@ export function SelectAddition({
             <hr />
             <DropdownForm
                 label='기본값'
-                value={selectConfig.default_value ?? ''}
+                value={config.default_value ?? ''}
                 onChange={(next) => {
-                    setConfig((prev) => ({
+                    onConfigChange((prev) => ({
                         ...prev,
                         default_value: next,
                     }));
                 }}
                 onItemNotFound={(first) => {
                     if (first != null) {
-                        setConfig((prev) => ({
+                        onConfigChange((prev) => ({
                             ...prev,
                             default_value: first,
                         }));
@@ -77,7 +76,7 @@ export function SelectAddition({
                 }}
             >
                 {
-                    (selectConfig.options ?? []).map((option, i) => (
+                    (config.options ?? []).map((option, i) => (
                         <Dropdown.Item
                             name={option.name} value={option.value} key={i}
                         />
@@ -115,23 +114,23 @@ export function SelectAddition({
                 }}
             >
                 {
-                    selectConfig.options != null &&
-                    selectConfig.options.map((option, index) => (
+                    config.options != null &&
+                    config.options.map((option, index) => (
                         <SelectOption
                             key={index}
                             option={option}
                             onChangeName={(name) => {
-                                const currentOptions = selectConfig.options ?? [];
+                                const currentOptions = config.options ?? [];
                                 const updatedOptions = currentOptions.map((opt, idx) =>
                                     idx === index ? { ...opt, name } : opt
                                 );
-                                setConfig((prev) => ({
+                                onConfigChange((prev) => ({
                                     ...prev,
                                     options: updatedOptions,
                                 }));
                             }}
                             onChangeValue={(value) => {
-                                const currentOptions = selectConfig.options ?? [];
+                                const currentOptions = config.options ?? [];
                                 const filtered = currentOptions.filter((item) => item.value === value);
                                 if (
                                     filtered.length === 0
@@ -140,16 +139,16 @@ export function SelectAddition({
                                     const updatedOptions = currentOptions.map((opt, idx) =>
                                         idx === index ? { ...opt, value } : opt
                                     );
-                                    setConfig((prev) => ({
+                                    onConfigChange((prev) => ({
                                         ...prev,
                                         options: updatedOptions,
                                     }));
                                 }
                             }}
                             onDelete={(option) => {
-                                const currentOptions = selectConfig.options ?? [];
+                                const currentOptions = config.options ?? [];
                                 const next = currentOptions.filter((item) => item !== option);
-                                setConfig((prev) => ({
+                                onConfigChange((prev) => ({
                                     ...prev,
                                     options: next,
                                 }));

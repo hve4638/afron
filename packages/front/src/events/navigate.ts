@@ -12,7 +12,7 @@ interface NavigateEvent {
     back: Ping;
 }
 
-const [useNavigateValue, emitNavigate, useNavigateEvent] = createBus<NavigateEvent>();
+const [emitNavigate, useNavigateEvent] = createBus<NavigateEvent>();
 
 export {
     useNavigateEvent,

@@ -14,7 +14,7 @@ interface ChatIOEvent {
     load_more_history: Ping;
 }
 function useChatIO({ refreshTrigger }: useChatIOProps) {
-    const [_, emitChatIO, useChatIOOn] = useBus<ChatIOEvent>();
+    const [emitChatIO, useChatIOOn] = useBus<ChatIOEvent>();
     const { font_size } = useConfigStore();
     const lastSessionId = useSessionStore(state => state.deps.last_session_id);
 

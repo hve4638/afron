@@ -1,60 +1,46 @@
+import { SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { ButtonForm, StringForm } from '@/components/forms';
 
-import useTrigger from '@/hooks/useTrigger';
-import styles from './styles.module.scss';
-import { Column, Row } from '@/components/layout';
+import { Column, Gap, Row } from '@/components/layout';
 import useModalDisappear from '@/hooks/useModalDisappear';
-import useHotkey from '@/hooks/useHotkey';
-import { PromptEditorData, PromptInputType } from '@/types';
-import { use } from 'i18next';
+import { PromptData, PromptInputType } from '@/types';
 import Delimiter from '@/components/Delimiter';
-import CheckBox from '@/components/CheckBox';
 import ModelForm from '@/components/model-ui';
 import { useModal } from '@/hooks/useModal';
 import SafetySettingConfigModal from './SafetySettingConfigModal';
-import Subdescription from '@/components/ui/Description';
 import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
-import { ModelConfiguration } from '@afron/types';
+import { usePromptOnlyConfigModal } from './PromptOnlyConfigModal.hooks';
+import { PromptDataPO } from './types';
 
 type PromptOnlyConfigModalProps = {
-    data: PromptEditorData;
-    onRefresh?: () => void;
+    data: Readonly<PromptDataPO>;
+    onChange: (data: SetStateAction<PromptDataPO>) => void;
 
     isFocused: boolean;
     onClose: () => void;
 }
 
-function PromptOnlyConfigModal({
+export function PromptOnlyConfigModal({
     data,
-    onRefresh = () => { },
+    onChange,
+
     isFocused,
     onClose
 }: PromptOnlyConfigModalProps) {
     const modal = useModal();
     const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
-    const [_, refreshSignal] = useTrigger();
+    const [disappear, closeModal] = useModalDisappear(onClose);
 
-    const refresh = () => {
-        data.changed.config = true;
-        refreshSignal();
-        onRefresh();
-    }
-
-    const changeModelConfig = <T extends keyof ModelConfiguration,>(key: T, value: ModelConfiguration[T]) => {
-        data.model[key] = value;
-        data.changed.model = true;
-        refresh();
-    }
-
-    useHotkey({
-        'Escape': () => {
-            close();
-            return true;
-        }
-    }, isFocused);
+    const {
+        setModelConfig: changeModelConfig,
+    } = usePromptOnlyConfigModal({
+        data,
+        onChange,
+        focused: isFocused,
+        closeModal,
+    });
 
     return (
         <Modal
@@ -63,9 +49,7 @@ function PromptOnlyConfigModal({
                 maxHeight: '80%',
             }}
             headerLabel={
-                <ModalHeader onClose={close}>
-                    설정
-                </ModalHeader>
+                <ModalHeader onClose={closeModal}>설정</ModalHeader>
             }
         >
             <Column
@@ -79,72 +63,90 @@ function PromptOnlyConfigModal({
                     name='템플릿 이름'
                     value={data.name ?? ''}
                     onChange={(value) => {
-                        data.name = value;
-                        data.changed.name = true;
-                        refresh();
+                        onChange(prev => ({
+                            ...prev,
+                            name: value,
+                            changed: {
+                                ...prev.changed,
+                                name: true,
+                            }
+                        }));
                     }}
                 />
                 <StringForm
                     name='버전'
                     value={data.version}
                     onChange={(value) => {
-                        data.version = value;
-                        data.changed.version = true;
-                        refresh();
+                        onChange(prev => ({
+                            ...prev,
+                            version: value,
+                            changed: {
+                                ...prev.changed,
+                                version: true,
+                            }
+                        }));
                     }}
                 />
-                <div style={{ height: '0.5em' }} />
+                <Gap h='0.5em' />
                 <b className='undraggable'>입력</b>
                 <Delimiter />
                 <DropdownForm
                     label='입력 레이아웃'
-                    value={data.config.inputType}
+                    value={data.promptOnly.inputType}
                     onChange={(next) => {
-                        data.config.inputType = next;
-                        refresh();
+                        onChange(prev => ({
+                            ...prev,
+                            promptOnly: {
+                                ...prev.promptOnly,
+                                inputType: next,
+                            },
+                            changed: {
+                                ...prev.changed,
+                                inputType: true,
+                            }
+                        }));
                     }}
                 >
-                    <Dropdown.Item name='일반' value='normal'/>
-                    <Dropdown.Item name='채팅' value='chat'/>
+                    <Dropdown.Item name='일반' value='normal' />
+                    <Dropdown.Item name='채팅' value='chat' />
                 </DropdownForm>
                 <div style={{ height: '0.5em' }} />
                 <b className='undraggable'>모델</b>
                 <Delimiter />
                 <ModelForm.MaxToken
-                    value={data.model.max_tokens}
+                    value={data.promptOnly.model.max_tokens}
                     onChange={(value) => changeModelConfig('max_tokens', value ?? 0)}
                 />
                 <ModelForm.Temperature
-                    value={data.model.temperature}
+                    value={data.promptOnly.model.temperature}
                     onChange={(value) => changeModelConfig('temperature', value ?? 0)}
                     allowEmpty={true}
                 />
                 <ModelForm.TopP
-                    value={data.model.top_p}
+                    value={data.promptOnly.model.top_p}
                     onChange={(value) => changeModelConfig('top_p', value ?? 0)}
                     allowEmpty={true}
                 />
                 <div style={{ height: '1em' }} />
 
                 <ModelForm.ThinkingEnabled
-                    value={data.model.use_thinking ?? false}
+                    value={data.promptOnly.model.use_thinking ?? false}
                     onChange={(checked) => changeModelConfig('use_thinking', checked)}
                 />
                 <ModelForm.ThinkingTokens
-                    value={data.model.thinking_tokens}
+                    value={data.promptOnly.model.thinking_tokens}
                     onChange={(checked) => changeModelConfig('thinking_tokens', checked ?? 0)}
                 />
                 <ModelForm.ReasoningEffort
-                    value={data.model.thinking_effort}
+                    value={data.promptOnly.model.thinking_effort}
                     onChange={(next) => changeModelConfig('thinking_effort', next)}
                 />
                 <ModelForm.Verbosity
-                    value={data.model.verbosity}
+                    value={data.promptOnly.model.verbosity}
                     onChange={(next) => changeModelConfig('verbosity', next)}
                 />
 
                 <div style={{ height: '1em' }} />
-
                 <ButtonForm
                     name='Gemini 안전 필터'
                     text='설정 열기'
@@ -153,12 +155,11 @@ function PromptOnlyConfigModal({
                     }}
                     onClick={() => {
                         modal.open(SafetySettingConfigModal, {
-                            data: data,
-                            onRefresh: refresh,
+                            data,
+                            onChange,
                         });
                     }}
                 />
-                <Row></Row>
 
                 {/* <div style={{ height:'0.5em' }}/>
                 <NumberForm
@@ -180,5 +181,3 @@ function PromptOnlyConfigModal({
         </Modal>
     )
 }
-
-export default PromptOnlyConfigModal;

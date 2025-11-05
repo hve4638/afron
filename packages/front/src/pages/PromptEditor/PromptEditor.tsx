@@ -11,8 +11,10 @@ function PromptEditorInner() {
     const [_, refresh] = useTrigger();
     const {
         promptEditorData,
-        emitPromptEditorEvent,
-        usePromptEditorEvent,
+        promptEditorEvent: {
+            emitPromptEditorEvent,
+            usePromptEditorEvent,
+        }
     } = usePromptEditor({ refresh });
 
     if (promptEditorData.value == null) {

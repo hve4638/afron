@@ -2,10 +2,10 @@ import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
 import useSessionStore from '@/stores/useSessionStore';
 import { RTFormWithLastValue, ProviderName } from '../types';
-import { RTForm } from '@afron/types';
+import { RTFormNaive } from '@afron/types';
 
 class CurrentSessionFormEvent {
-    static async getCurrentSessionForms() {
+    static async getCurrentSessionForms(): Promise<RTFormWithLastValue[]> {
         const { api } = useProfileAPIStore.getState();
         const { rt_id } = useSessionStore.getState();
         const { last_session_id } = useCacheStore.getState();

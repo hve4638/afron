@@ -1,5 +1,5 @@
 import { uuidv7 } from '@/lib/uuid';
-import { BaseRTForm, ProfileStorage, RTForm, RTFormRef, RTVar, RTVarData } from '@afron/types';
+import { BaseRTForm, RTForm, RTFormRef, RTVar, RTVarData } from '@afron/types';
 import { IACSubStorage } from 'ac-storage';
 
 type RTVarFormIncluded = RTVar & { include_type: 'form' };
@@ -30,10 +30,10 @@ export class RTFormControl {
 
         const formId = uuidv7();
         const form: RTForm = {
-            id: formId,
-            refs: [],
             ...baseForm,
             ...varData,
+            id: formId,
+            refs: [],
         }
 
         formAC.setOne(formId, form);

@@ -1,7 +1,7 @@
 import { ChatAIModelData } from '../chatai/chatai-model';
 import { GlobalModelConfiguration, ProfileStorage } from '../storage-struct';
 import { RTMetadata, RTMetadataTree } from '../rt/rt';
-import { RTForm, RTPromptDataEditable, RTPromptMetadata } from '../rt/form';
+import { RTFormNaive, RTPromptDataEditable, RTPromptMetadata } from '../rt/form';
 import { RTFlowData } from '../rt';
 
 import { EResult, ENoResult, } from './result';
@@ -130,7 +130,7 @@ export declare namespace IPCInvokers {
         setMetadata(profileId: string, rtId: string, metadata: KeyValueInput): ENoResult;
         reflectMetadata(profileId: string, rtId: string): ENoResult;
 
-        getForms(profileId: string, rtId: string): EResult<RTForm[]>;
+        getForms(profileId: string, rtId: string): EResult<RTFormNaive[]>;
     }
 
     interface ProfileRTStorage {

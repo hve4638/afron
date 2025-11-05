@@ -1,12 +1,13 @@
 import SliderForm from '@/components/forms/SliderForm';
 import { useMemo } from 'react';
 import { safetyFilterThresholdMap, safetyFilterThresholdMapReverse } from './data';
+import { GeminiSafetySetting } from '@afron/types';
 
 interface SafetyFilterSliderProps {
     name: string;
 
     value: string;
-    onChange: (value: string) => void;
+    onChange: (value: GeminiSafetySetting.Threshold) => void;
 
     disabled?: boolean;
 }
@@ -33,7 +34,7 @@ function SafetyFilterSlider({
             value={current}
             onChange={(next) => {
                 const threshold = safetyFilterThresholdMapReverse[next] ?? 'OFF';
-                onChange(threshold);
+                onChange(threshold as GeminiSafetySetting.Threshold);
             }}
             marks={{
                 '0': 'OFF',

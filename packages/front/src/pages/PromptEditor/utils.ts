@@ -1,9 +1,9 @@
 import type {
-    PromptEditorData,
+    PromptData,
     PromptInputType
 } from '@/types';
 import { PromptVar } from '@/types/prompt-var';
-import { RTVar, RTVarCreate, RTVarFormUpdate, RTVarUpdate } from '@afron/types';
+import { RTVar, RTVarCreate, RTVarData, RTVarDataNaive, RTVarFormUpdate, RTVarUpdate } from '@afron/types';
 
 export function convertRTVarToPromptVar(rtVar: RTVar): PromptVar {
     if (rtVar.include_type === 'external') {
@@ -68,6 +68,11 @@ export function convertPromptVarToRTVar(promptVar: PromptVar): RTVarCreate | RTV
                     value: promptVar.value,
                 };
             case 'form':
+                if (!validateRTVarDataNaive(promptVar.data)) {
+                    /// @TODO: 에러 처리 대신 기본값 넣어주는게 나을수도
+                    throw new Error('Invalid RTVarDataNaive in PromptVar');
+                }
+
                 if (promptVar.form_id) {
                     return {
                         ...base,
@@ -91,7 +96,15 @@ export function convertPromptVarToRTVar(promptVar: PromptVar): RTVarCreate | RTV
     }
 }
 
-export function getDefaultPromptEditorData(): PromptEditorData {
+export function validateRTVarDataNaive(data: RTVarDataNaive): data is RTVarData {
+    return (
+        data.type &&
+        data.config &&
+        data.config[data.type] !== undefined
+    )
+}
+
+export function getDefaultPromptEditorData(): PromptData {
     return {
         rtId: '',
         promptId: '',
@@ -101,6 +114,7 @@ export function getDefaultPromptEditorData(): PromptEditorData {
         variables: [],
         changedVariables: {},
         removedVariables: [],
+        addedVariables: [],
         contents: '',
         config: {
             inputType: 'normal',

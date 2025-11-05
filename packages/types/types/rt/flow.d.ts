@@ -42,7 +42,6 @@ export declare namespace RTFlowNodeOptions {
 
     interface PromptTemplate {
         prompt_id: string | null;
-
     }
 
     interface LLM {

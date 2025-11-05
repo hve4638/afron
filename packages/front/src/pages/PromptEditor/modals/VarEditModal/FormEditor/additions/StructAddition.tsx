@@ -1,35 +1,47 @@
 import classNames from 'classnames';
 import { GoogleFontIcon } from 'components/GoogleFontIcon';
-import { initPromptVar } from '../utils';
 import { Flex } from 'components/layout';
+import { AdditionProps } from './types';
+import { genUntil } from '@/utils/genUntil';
+import { RTVarConfig } from '@afron/types';
 
-type StructAdditionProps = {
-    promptVar: PromptVarStruct;
-    fieldVarRef: React.MutableRefObject<PromptVar | null> | null;
-    onRefresh: () => void;
-}
+export function StructAddition({
+    varId,
+    varAction,
+    config,
+    onConfigChange,
+}: AdditionProps<'struct'>) {
+    // const setConfig = (callback: Parameters<typeof varAction.setDataConfig<'struct'>>[2]) => varAction.setDataConfig(varId, 'struct', callback);
 
-function StructAddition({
-    promptVar,
-    fieldVarRef,
-    onRefresh
-}: StructAdditionProps) {
     const addField = () => {
-        promptVar.fields ??= [];
+        // promptVar.fields ??= [];
+        onConfigChange(prev => {
+            const next = { ...prev }
+            next.fields ??= [];
 
-        let index = 0;
-        while (promptVar.fields.some((f) => f.name === `field${index}`)) {
-            index++;
-        }
-        
-        const field = {
-            name: `field${index}`,
-            display_name: `필드 ${index}`,
-        } as unknown as Exclude<PromptVar, PromptVarStruct | PromptVarArray>;
 
-        initPromptVar(field);
-        promptVar.fields.push(field);
-        onRefresh();
+            const [name, i] = genUntil(
+                (i) => `field${i}`,
+                (name) => !next.fields.some((f) => f.name === name)
+            );
+
+            const field: RTVarConfig.StructField = {
+                type: 'text',
+                name,
+                display_name: `필드 ${i}`,
+                config: {
+                    text: {
+                        placeholder: '',
+                        allow_multiline: false,
+                    }
+                },
+            }
+
+            return {
+                ...prev,
+                fields: (prev.fields ?? []).concat([]),
+            }
+        });
     }
 
     return (
@@ -42,8 +54,8 @@ function StructAddition({
                 }}
             >필드</h2>
             {
-                promptVar.fields != null &&
-                promptVar.fields.map((field, index) => (
+                config.fields != null &&
+                config.fields.map((field, index) => (
                     <div
                         key={index}
                         className={classNames(
@@ -56,11 +68,7 @@ function StructAddition({
                             height: '1.4em',
                         }}
                         onClick={() => {
-                            if (fieldVarRef) {
-                                fieldVarRef.current = field;
-                                console.log(fieldVarRef.current);
-                                onRefresh();
-                            }
+                            // fieldVarRef 설정
                         }}
                     >
                         <span>{field.display_name}</span>
@@ -83,11 +91,13 @@ function StructAddition({
                                 e.preventDefault();
                                 e.stopPropagation();
 
-                                promptVar.fields.splice(index, 1);
-                                if (fieldVarRef && fieldVarRef.current === field) {
-                                    fieldVarRef.current = null;
-                                }
-                                onRefresh();
+                                const fields = config.fields.filter((_, i) => i !== index);
+                                onConfigChange(prev => ({
+                                    ...prev,
+                                    fields
+                                }));
+
+                                // fieldVarRef가 이 필드를 가르킬 경우 초기화
                             }}
                         />
                     </div>
@@ -100,8 +110,8 @@ function StructAddition({
                 )}
                 onClick={() => addField()}
             >
-                <GoogleFontIcon value='add_circle'/>
-                <span style={{ marginLeft: '0.5em'}}> 필드 추가 </span>
+                <GoogleFontIcon value='add_circle' />
+                <span style={{ marginLeft: '0.5em' }}>필드 추가</span>
             </div>
         </>
     );
