@@ -47,4 +47,4 @@ function SafetyOptions({
     )
 }
 
-export default SafetyOptions
+export default SafetyOptions;

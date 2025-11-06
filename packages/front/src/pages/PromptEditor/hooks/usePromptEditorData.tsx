@@ -1,7 +1,7 @@
 import { SetStateAction, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBus } from '@/lib/zustbus';
-import { PromptData } from '@/types';
+import { PromptData, PromptInputType } from '@/types';
 import { ModelConfiguration, RTVar, RTVarConfig, RTVarDataNaive } from '@afron/types';
 import { genUntil } from '@/utils/genUntil';
 import { PromptVar } from '@/types/prompt-var';
@@ -9,20 +9,16 @@ import { PromptDataUpdateEvent } from '../types/events';
 import { ActionFail } from '../errors';
 import { getDefaultConfig } from './utils';
 
-interface usePromptEditorProps {
-}
-export function usePromptEditorData({
-
-}: usePromptEditorProps) {
+export function usePromptEditorData() {
     const { t } = useTranslation();
     const [promptData, setPromptData] = useState<PromptData | null>(null);
     const promptDataRef = useRef<PromptData | null>(null);
 
-    const [emitPromptDataUpdateEvent, usePromptDataUpdateEvent] = useBus<PromptDataUpdateEvent>();
+    const [emitPromptDataUpdateEvent, usePromptDataUpdateOn] = useBus<PromptDataUpdateEvent>();
 
     const refresh = () => {
         emitPromptDataUpdateEvent('updated');
-        setPromptData(promptDataRef.current);
+        setPromptData({ ...promptDataRef.current as any });
     }
 
     useLayoutEffect(() => {
@@ -53,25 +49,38 @@ export function usePromptEditorData({
         refresh();
     }
 
-    const setModelConfig = (model: ModelConfiguration) => {
-        setPromptData((prev) => {
-            if (!prev) return prev;
-
-            const next = { ...prev };
-            if (!next.promptOnly.enabled) return prev;
-
-            next.promptOnly.model = model;
-            next.changed.model = true;
-            return next;
-        });
-    }
-    const setConfig = (config: PromptData['config']) => {
+    /**
+     * (PromptOnly 전용) 모델 설정 변경
+     * @param model 
+     * @returns 
+     */
+    const setModelConfig = (model: SetStateAction<ModelConfiguration>) => {
         if (!promptDataRef.current) return;
-        promptDataRef.current.config = config;
-        promptDataRef.current.changed.config = true;
+        if (!promptDataRef.current.promptOnly.enabled) return;
+
+        if (typeof model === 'function') {
+            model = model(promptDataRef.current.promptOnly.model);
+        }
+
+        promptDataRef.current.changed.model = true;
+        promptDataRef.current.promptOnly.model = model;
 
         refresh();
     }
+    const setInputType = (inputType: SetStateAction<PromptInputType>) => {
+        if (!promptDataRef.current) return;
+        if (!promptDataRef.current.promptOnly.enabled) return;
+
+        if (typeof inputType === 'function') {
+            inputType = inputType(promptDataRef.current.promptOnly.inputType);
+        }
+
+        promptDataRef.current.changed.inputType = true;
+        promptDataRef.current.promptOnly.inputType = inputType;
+
+        refresh();
+    }
+
     const setVar = (varId: string, rtVar: PromptVar | ((prev: PromptVar) => PromptVar)) => {
         if (!promptDataRef.current) return new ActionFail('data not loaded');
 
@@ -92,11 +101,11 @@ export function usePromptEditorData({
         const promptData = promptDataRef.current;
         const [varId] = genUntil(
             (i) => `temporary-${i}`,
-            (vId) => promptData.variables.some((item) => item.id === vId),
+            (vId) => !promptData.variables.some((item) => item.id === vId),
         );
         const [varName, varIndex] = genUntil(
             (i) => `variable_${i}`,
-            (name) => promptData.variables.some((item) => item.name === name),
+            (name) => !promptData.variables.some((item) => item.name === name),
         );
 
         const newRTVar: PromptVar = {
@@ -243,15 +252,14 @@ export function usePromptEditorData({
 
         setVar(varId, (prev) => {
             const prevData = getData(prev);
+            const config = { ...prevData.config };
+            config[configType] ??= getDefaultConfig(configType) as any;
 
             return {
                 ...prev,
                 data: {
                     type: configType,
-                    config: {
-                        [configType]: getDefaultConfig(configType),
-                        ...prevData.config,
-                    }
+                    config,
                 },
             }
         });
@@ -381,8 +389,8 @@ export function usePromptEditorData({
         action: {
             setName,
             setVersion,
+            setInputType,
             setContents,
-            setConfig,
 
             addVar,
             removeVar,
@@ -407,7 +415,7 @@ export function usePromptEditorData({
             setFieldConfig: setVarFieldConfig,
         },
         event: {
-            usePromptDataUpdateEvent,
+            usePromptDataUpdateOn: usePromptDataUpdateOn,
         },
         reset
     }

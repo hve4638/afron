@@ -1,7 +1,6 @@
 import { createBus } from '@/lib/zustbus';
 import { Ping } from '@/lib/zustbus';
 
-
 interface NavigateEvent {
     goto_workflow_editor: { rtId: string; };
     goto_prompt_editor: { rtId: string; promptId: string; };
@@ -12,9 +11,9 @@ interface NavigateEvent {
     back: Ping;
 }
 
-const [emitNavigate, useNavigateEvent] = createBus<NavigateEvent>();
+const [emitNavigate, useNavigateOn] = createBus<NavigateEvent>();
 
 export {
-    useNavigateEvent,
+    useNavigateOn,
     emitNavigate
 }
