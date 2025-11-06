@@ -24,7 +24,7 @@ export function useVarEditModal({
     varId,
     promptEditorData: {
         get,
-        event: { usePromptDataUpdateEvent },
+        event: { usePromptDataUpdateOn: usePromptDataUpdateEvent },
     },
     closeModal,
 }: useVarEditModalProps) {

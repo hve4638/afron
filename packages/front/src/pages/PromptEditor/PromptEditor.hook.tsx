@@ -27,26 +27,38 @@ function usePromptEditor({
     const modal = useModal();
     const { rtId, promptId } = useParams();
 
-    const promptEditorData = usePromptEditorData({});
+    const promptEditorData = usePromptEditorData();
     const rtState = useRTStore();
 
     const [emitPromptEditorEvent, usePromptEditorEvent] = useBus<PromptEditorEvent>();
 
     const isChanged = () => {
-        if (!promptEditorData.value) return false;
+        const data = promptEditorData.value;
+        if (!data) return false;
 
-        const editorData = promptEditorData.value;
-        let changed = Object.entries(editorData.changed).some(([key, value]) => value === true);
-        changed = changed && Object.entries(editorData.changedVariables).some(() => true);
-        changed = changed && editorData.removedVariables.length > 0;
+        let changed = false;
+        changed ||= Object.values(data.changed).some(v => v == true);
+        changed ||= Object.entries(data.changedVariables).some(() => true);
+        changed ||= (data.removedVariables.length > 0);
 
         return changed;
     }
 
     const save = async () => {
-        if (!rtId || !promptId) return;
-        if (!promptEditorData.value) return;
-        if (!isChanged()) return;
+        emitPromptEditorEvent('on_save');
+
+        if (!rtId || !promptId) {
+            console.info('RT ID or Prompt ID is missing');
+            return;
+        }
+        if (!promptEditorData.value) {
+            console.info('Prompt data is not loaded');
+            return;
+        }
+        if (!isChanged()) {
+            console.info('No changes to save');
+            return;
+        }
 
         const data = promptEditorData.value;
         if (data.changed.name && data.name) {
@@ -97,7 +109,6 @@ function usePromptEditor({
         }
 
         promptEditorData.action.clearChanged();
-        emitPromptEditorEvent('on_save');
     }
 
     const back = async () => {
@@ -152,15 +163,9 @@ function usePromptEditor({
         });
     }, []);
     usePromptEditorEvent('open_prompt_only_config_modal', async () => {
-        const data = promptEditorData.get();
-        if (data.promptOnly.enabled === true) {
-            modal.open(PromptOnlyConfigModal, {
-                data: data as any,
-                onChange: (next) => {
-
-                },
-            });
-        }
+        modal.open(PromptOnlyConfigModal, {
+            promptEditorData,
+        });
     }, []);
 
     // 초기 프롬프트 데이터 로드
@@ -171,7 +176,7 @@ function usePromptEditor({
         const { name, model } = await rtState.get.promptMetadata(promptId);
         const contents = await rtState.get.promptContents(promptId);
         const vars = await rtState.get.promptVars(promptId);
-        
+
         console.log('loaded', vars);
 
         /// @TODO : 원래 model은 반드시 valid하게 와야하는데 {}만 오는 문제

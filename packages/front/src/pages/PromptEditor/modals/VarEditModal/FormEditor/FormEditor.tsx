@@ -38,7 +38,7 @@ export function FormEditor({
             ? '변수명이 중복되었습니다'
             : undefined
     ), [warnNameDuplication]);
-    
+
     return (
         <ModalBox
             className={styles['var-editor-modal']}
@@ -77,7 +77,7 @@ export function FormEditor({
             <Form.String
                 name={t('form_editor.name_label')}
                 warn={nameWarnText}
-
+                
                 value={target.name}
                 onChange={(name) => {
                     try {

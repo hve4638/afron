@@ -1,4 +1,4 @@
-import { SetStateAction } from 'react';
+import { SetStateAction, useMemo, useState } from 'react';
 import { GeminiSafetySetting, ModelConfiguration } from '@afron/types';
 import { useTranslation } from 'react-i18next';
 
@@ -12,40 +12,43 @@ import { Column, Row } from '@/components/layout';
 import ModelForm from '@/components/model-ui';
 
 import { PromptDataPO } from './types';
+import { PromptEditorData } from '../../hooks';
 
 type UseSafetySettingConfigModalProps = {
-    data: PromptDataPO;
-    onChange: (data: SetStateAction<PromptDataPO>) => void;
+    promptEditorData: PromptEditorData;
 
     focused: boolean;
     closeModal: () => void;
 }
 
 export function useSafetySettingConfigModal({
-    data,
-    onChange,
+    promptEditorData,
 
     focused,
     closeModal,
 }: UseSafetySettingConfigModalProps) {
     const { t } = useTranslation();
 
+    const { usePromptDataUpdateOn } = promptEditorData.event;
+
+    const buildSafetySetting = () => {
+        const data = promptEditorData.get();
+
+        return (
+            data.promptOnly.enabled
+                ? data.promptOnly.model.safety_settings
+                : null
+        );
+    }
+
+    const [safetySetting, setSafetySetting] = useState(buildSafetySetting);
+
     const setGeminiSafetyFilter = (key: GeminiSafetySetting.FilterNames, value: GeminiSafetySetting.Threshold) => {
-        onChange(prev => ({
+        promptEditorData.action.setModelConfig(prev => ({
             ...prev,
-            promptOnly: {
-                ...prev.promptOnly,
-                model: {
-                    ...prev.promptOnly.model,
-                    safety_settings: {
-                        ...prev.promptOnly.model.safety_settings,
-                        [key]: value,
-                    }
-                }
-            },
-            changed: {
-                ...prev.changed,
-                model: true,
+            safety_settings: {
+                ...prev.safety_settings,
+                [key]: value,
             }
         }))
     }
@@ -54,7 +57,12 @@ export function useSafetySettingConfigModal({
         'Escape': () => closeModal(),
     }, focused);
 
+    usePromptDataUpdateOn('updated', () => {
+        setSafetySetting(buildSafetySetting());
+    }, []);
+
     return {
+        safetySetting,
         setGeminiSafetyFilter,
     }
 }

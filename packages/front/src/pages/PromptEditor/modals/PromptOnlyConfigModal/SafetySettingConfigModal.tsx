@@ -13,19 +13,17 @@ import ModelForm from '@/components/model-ui';
 
 import { PromptDataPO } from './types';
 import { useSafetySettingConfigModal } from './SafetySettingConfigModal.hooks';
+import { PromptEditorData } from '../../hooks';
 
 type SafetySettingConfigModalProps = {
-    data: PromptDataPO;
-    onChange: (data: SetStateAction<PromptDataPO>) => void;
+    promptEditorData: PromptEditorData;
 
     isFocused: boolean;
     onClose: () => void;
 }
 
 function SafetySettingConfigModal({
-    data,
-    onChange,
-
+    promptEditorData,
     isFocused,
     onClose
 }: SafetySettingConfigModalProps) {
@@ -33,12 +31,12 @@ function SafetySettingConfigModal({
     const [disappear, closeModal] = useModalDisappear(onClose);
 
     const {
+        safetySetting,
         setGeminiSafetyFilter,
     } = useSafetySettingConfigModal({
-        data,
-        onChange,
-        closeModal,
+        promptEditorData,
         focused: isFocused,
+        closeModal,
     });
 
     return (
@@ -62,11 +60,14 @@ function SafetySettingConfigModal({
                     <div>Gemini 계열 모델에 적용되는 안전 필터입니다</div>
                     <div>LOW 시 가장 높은 검열이 적용되며, OFF는 안전 필터가 적용되지 않습니다</div>
                 </Subdescription>
-                <ModelForm.SafetyFilter
-                    value={data.promptOnly.model.safety_settings!}
-                    onChange={(key, threshold) => setGeminiSafetyFilter(key, threshold)}
-                />
-            </Column>
+                {
+                    safetySetting != null &&
+                    <ModelForm.SafetyFilter
+                        value={safetySetting}
+                        onChange={(key, threshold) => setGeminiSafetyFilter(key, threshold)}
+                    />
+                }
+            </Column>:width
         </Modal>
     )
 }

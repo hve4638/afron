@@ -33,10 +33,10 @@ function SafetyOptions({
             <Delimiter />
             <ModelForm.SafetyFilter
                 value={safetySettings}
-                onChange={(next) => {
+                onChange={(key, threshold) => {
                     config.safety_settings = {
                         ...safetySettings,
-                        ...next,
+                        [key]: threshold,
                     };
                     refresh();
                 }}

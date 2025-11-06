@@ -1,8 +1,9 @@
 
 /**
  * 조건에 맞는 값을 생성
+ * 
  * @param gen 
- * @param validate 
+ * @param validate
  * @returns 
  */
 export function genUntil<T, K=unknown>(

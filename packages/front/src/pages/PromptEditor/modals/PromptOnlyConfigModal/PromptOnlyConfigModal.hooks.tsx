@@ -1,56 +1,57 @@
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import { ModelConfiguration } from '@afron/types';
 
 import useHotkey from '@/hooks/useHotkey';
-import { ModelConfiguration } from '@afron/types';
-import { SetStateAction } from 'react';
 import { PromptDataPO } from './types';
+import { PromptEditorData } from '../../hooks';
 
 type usePromptOnlyConfigModalProps = {
-    data: PromptDataPO;
-    onChange: (data: SetStateAction<PromptDataPO>) => void;
+    promptEditorData: PromptEditorData;
 
     focused: boolean;
     closeModal: () => void;
 }
 
 export function usePromptOnlyConfigModal({
-    data,
-    onChange,
-
+    promptEditorData,
     focused,
     closeModal,
 }: usePromptOnlyConfigModalProps) {
+    const { usePromptDataUpdateOn } = promptEditorData.event;
+
+    const buildPromptData = () => {
+        const data = promptEditorData.get();
+
+        if (data.promptOnly.enabled) {
+            return data as Readonly<PromptDataPO>;
+        }
+        else {
+            return null;
+        }
+    }
+
+    const [promptData, setPromptData] = useState(buildPromptData);
 
     const setModelConfig = <TKey extends keyof ModelConfiguration,>(
         key: TKey,
         value: ModelConfiguration[TKey]
     ) => {
-        onChange(prev => {
-            // promptonly 모드에서만 모델 설정이 적용됨
-            if (!prev.promptOnly.enabled) return prev;
-
-            return {
-                ...prev,
-                promptOnly: {
-                    ...prev.promptOnly,
-                    model: {
-                        ...prev.promptOnly.model,
-                        [key]: value,
-                    },
-                },
-                changed: {
-                    ...prev.changed,
-                    model: true,
-                }
-            }
-        });
+        promptEditorData.action.setModelConfig(prev => ({
+            ...prev,
+            [key]: value,
+        }));
     }
 
     useHotkey({
         'Escape': () => closeModal()
     }, focused);
 
+    usePromptDataUpdateOn('updated', () => {
+        setPromptData(buildPromptData());
+    }, []);
+
     return {
+        promptData,
         setModelConfig,
     };
 }

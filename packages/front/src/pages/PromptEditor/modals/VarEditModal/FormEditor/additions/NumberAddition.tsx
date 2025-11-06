@@ -23,7 +23,7 @@ export function NumberAddition({
             />
             <NumberForm
                 name='기본값'
-                value={config.default_value ?? -1}
+                value={config.default_value ?? 10}
                 onChange={(value) => {
                     onConfigChange((prev) => ({
                         ...prev,
