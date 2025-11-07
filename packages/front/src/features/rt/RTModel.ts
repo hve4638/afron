@@ -1,7 +1,7 @@
-import { ProfileAPI } from '@/api/profiles';
-import { ITreeDirectoryNode, ITreeLeafNode, ITreeNode } from '@/components/TreeView/types';
-import { useProfileAPIStore } from '@/stores';
 import { RTMetadata } from '@afron/types';
+
+import { ProfileAPI } from '@/api/profiles';
+import { useProfileAPIStore } from '@/stores';
 
 export class RTModel {
     #api: ProfileAPI;

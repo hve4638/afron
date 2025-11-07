@@ -4,7 +4,6 @@ import type {
     ITreeLeafNode,
     ITreeNode
 } from '@/components/TreeView';
-import ProfileEvent from '../profile-event';
 import { RTMetadataDirectory, RTMetadataNode, RTMetadataTree } from '@afron/types';
 import { ProfileAPI } from '@/api/profiles';
 import { RTModel } from './RTModel';
@@ -29,7 +28,12 @@ export class RTTreeModel {
     #nextDirId() {
         return `__dir_${this.#dirIdCounter++}`;
     }
-
+    
+    /**
+     * RT 트리 데이터 원본 반환
+     * @param force 캐시를 무시하고 강제 갱신
+     * @returns 
+     */
     async getRawTree(force: boolean = false): Promise<Readonly<RTMetadataTree>> {
         if (this.#rawTree == null || force) {
             this.#rawTree = await this.#api.rts.getTree();
@@ -37,6 +41,12 @@ export class RTTreeModel {
 
         return this.#rawTree;
     }
+    /**
+     * TreeView 용 트리 데이터 반환
+     * 
+     * @param force 캐시를 무시하고 강제 갱신
+     * @returns 
+     */
     async getTree(force: boolean = false): Promise<Readonly<RTTree>> {
         if (this.#tree == null || force) {
             this.#tree = await this.getRawTree(force)
