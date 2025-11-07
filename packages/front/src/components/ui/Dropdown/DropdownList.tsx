@@ -40,8 +40,6 @@ const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(({
             const innerRect = innerRef.current.getBoundingClientRect();
             setPosition(reposition(innerRect, parentRect));
         }
-
-
     }, []);
 
 

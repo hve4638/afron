@@ -6,7 +6,7 @@ import { GIcon } from '@/components/GoogleFontIcon';
 import { DropdownItem, DropdownItemList, DropdownProps } from './types';
 import Group from './Group';
 import Item from './Item';
-import useDropdown from './Dropdown.hook';
+import useDropdown from './Dropdown.hooks';
 
 import DropdownList from './DropdownList';
 import DropdownOption from './DropdownOption';
@@ -174,9 +174,9 @@ function Dropdown<T>({
                             }
                             else {
                                 return {
-                                    left: headerRect.left,
+                                    left: headerRect.left + pRect.width + 2,
                                     top: headerRect.bottom + 2,
-                                    width,
+                                    width: width,
                                 };
                             }
                         }}
