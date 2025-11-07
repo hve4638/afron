@@ -21,12 +21,14 @@ function RTEditModal({
 }: RTEditModalProps) {
     const {
         action: {
+            tree: treeAction,
+            
             navigatePromptEditor,
             close,
 
-            tree: treeAction,
 
             confirmNodeDeletion,
+            confirmDirectoryDeletion,
             openRTExportModal,
         },
         state: {
@@ -67,7 +69,7 @@ function RTEditModal({
                         }}
                         value='create_new_folder'
                         hoverEffect='square'
-                        onClick={() => treeAction.addDirectoryNode()}
+                        onClick={() => treeAction.addDirectory()}
                     />
                 </Row>
                 <div />
@@ -80,7 +82,7 @@ function RTEditModal({
                             <LeafNode
                                 name={name}
                                 value={value}
-                                onRename={(renamed) => treeAction.renameNode(value, renamed)}
+                                onRename={(renamed) => treeAction.rename(value, renamed)}
                                 onDelete={() => confirmNodeDeletion(name, value)}
                                 onEdit={() => navigatePromptEditor(value)}
                                 onExport={() => openRTExportModal(value)}
@@ -102,13 +104,13 @@ function RTEditModal({
                                     <EditableText
                                         value={name}
                                         onChange={(renamed) => {
-                                            treeAction.renameNode(value, renamed);
+                                            treeAction.rename(value, renamed);
                                         }}
                                     />
                                 </Flex>
                                 <DeleteButton
                                     onClick={(e) => {
-                                        confirmNodeDeletion(name, value);
+                                        confirmDirectoryDeletion(name, value);
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}

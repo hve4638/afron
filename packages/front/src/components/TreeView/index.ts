@@ -1,6 +1,11 @@
 import TreeView from './TreeView';
 import './theme.scss';
 
+export type {
+    ITreeDirectoryNode,
+    ITreeLeafNode,
+    ITreeNode,
+} from './types';
 export {
     default as TreeView,
     type Tree

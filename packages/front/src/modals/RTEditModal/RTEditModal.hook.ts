@@ -1,4 +1,4 @@
-import { Children, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Children, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { t } from 'i18next';
@@ -11,11 +11,8 @@ import { emitEvent } from '@/hooks/useEvent';
 import useModalDisappear from '@/hooks/useModalDisappear';
 
 import { DeleteConfirmDialog } from '@/modals/Dialog';
-
-import ProfileEvent from '@/features/profile-event';
-
 import { RTExportPreviewModal } from '../RTExportModal';
-import { RTMetadataDirectory, RTMetadataNode, RTMetadataTree } from '@afron/types';
+import { RTTreeModel } from '@/features/rt';
 
 type useRTEditModalProps = {
     isFocused: boolean;
@@ -27,84 +24,42 @@ function useRTEditModal({
     onClose
 }: useRTEditModalProps) {
     const modal = useModal();
-    const nextDirIdRef = useRef<number>(0);
+    const rtTreeModel = useMemo(() => new RTTreeModel(), []);
+    const [tree, setTree] = useState<Readonly<ITreeNode<string>[]>>([]);
 
-    const [tree, setTree] = useState<ITreeNode<string>[]>([]);
-
-    const nextDirId = () => `__dir_${nextDirIdRef.current++}`
-
-    const relocateTree = async (nodes: ITreeNode<string>[]) => {
-        setTree(nodes);
-
-        const next: RTMetadataTree = nodes.map((node) => {
-            if (node.type === 'directory') {
-                return {
-                    type: 'directory',
-                    name: node.name,
-                    children: node.children.map(
-                        (child) => ({
-                            type: 'node',
-                            name: child.name,
-                            id: child.value,
-                        } satisfies RTMetadataNode)
-                    ),
-                } satisfies RTMetadataDirectory;
-            }
-            else {
-                return {
-                    type: 'node',
-                    name: node.name,
-                    id: node.value,
-                } satisfies RTMetadataNode;
-            }
-        })
-
-        await ProfileEvent.rt.updateTree(next);
-        emitEvent('refresh_rt_tree');
+    const rerenderTree = async () => {
+        setTree(await rtTreeModel.getTree());
     }
 
-    const addDirectoryNode = async () => {
-        relocateTree([
-            ...tree,
-            {
-                name: t('rt.new_directory'),
-                type: 'directory',
-                value: nextDirId(),
-                children: [],
-            } satisfies ITreeDirectoryNode<string>,
-        ]);
+    const relocate = async (nodes: Readonly<ITreeNode<string>[]>) => {
+        await rtTreeModel.relocate(nodes);
+
+        rerenderTree();
     }
 
-    const renameNode = async (value: string, newName: string) => {
-        const nameTrimmed = newName.trim();
-        if (nameTrimmed.length === 0) {
-            return;
-        }
+    const addDirectory = async () => {
+        const name = t('rt.new_directory');
+        await rtTreeModel.addDirectory(name);
 
-        const findNode: (nodes: ITreeNode<string>[], value: string) => ITreeNode<string> | null = (nodes, value) => {
-            for (const node of nodes) {
-                if (node.value === value) {
-                    return node;
-                }
-                if (node.type === 'directory') {
-                    const found = findNode(node.children, value);
-                    if (found) return found;
-                }
-            }
+        rerenderTree();
+    }
 
-            return null;
-        }
+    const rename = async (value: string, newName: string) => {
+        await rtTreeModel.rename(value, newName);
 
-        const node = findNode(tree, value);
-        if (node) {
-            const next = [...tree];
-            node.name = nameTrimmed;
-            if (node.type === 'node') {
-                await ProfileEvent.rt.rename(value, nameTrimmed);
-            }
+        rerenderTree();
+    }
 
-            relocateTree(next);
-        }
+    const deleteNode = async (value: string) => {
+        await rtTreeModel.deleteNode(value);
+
+        rerenderTree();
+    }
+
+    const deleteDirectory = async (value: string) => {
+        await rtTreeModel.deleteDirectory(value);
+
+        rerenderTree();
     }
 
     const confirmNodeDeletion = (name: string, value: string) => {
@@ -119,26 +74,16 @@ function useRTEditModal({
         });
     }
 
-    const deleteNode = async (value: string) => {
-        const promises: Promise<void>[] = [];
-        const next = tree.flatMap((node) => {
-            if (node.value !== value) return [node];
-            else {
-                if (node.type === 'directory') {
-                    return node.children;
-                }
-                else {
-                    promises.push(
-                        ProfileEvent.rt.remove(node.value)
-                    );
-                    return [];
-                }
-            }
+    const confirmDirectoryDeletion = (name: string, value: string) => {
+        modal.open(DeleteConfirmDialog, {
+            onDelete: async () => {
+                deleteDirectory(value);
+                return true;
+            },
+            onCancel: async () => {
+                return true;
+            },
         });
-
-        await Promise.all(promises);
-
-        relocateTree(next);
     }
 
     const openRTExportModal = (rtId: string) => {
@@ -147,31 +92,9 @@ function useRTEditModal({
         });
     }
 
+    // 초기 트리 로드
     useEffect(() => {
-        ProfileEvent.rt.getTree()
-            .then((tree) => {
-                const tree2 = tree.map((node) => {
-                    if (node.type === 'directory') {
-                        return {
-                            name: node.name,
-                            value: nextDirId(),
-                            type: 'directory',
-                            children: node.children.map((child) => ({
-                                type: 'node',
-                                name: child.name,
-                                value: child.id,
-                            })),
-                        } as ITreeDirectoryNode<string>;
-                    }
-
-                    return {
-                        type: 'node',
-                        name: node.name,
-                        value: node.id,
-                    } as ITreeLeafNode<string>;
-                });
-                setTree(tree2);
-            });
+        rerenderTree();
     }, []);
 
     const [disappear, close] = useModalDisappear(onClose);
@@ -191,13 +114,16 @@ function useRTEditModal({
             close,
 
             tree: {
-                relocate: relocateTree,
+                relocate,
 
-                addDirectoryNode,
-                renameNode,
+                addDirectory,
+                deleteDirectory,
+                deleteNode,
+                rename,
             },
 
             confirmNodeDeletion,
+            confirmDirectoryDeletion,
             openRTExportModal,
         }
     }
