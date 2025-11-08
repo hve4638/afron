@@ -2,7 +2,7 @@ import { NodeProps } from '@xyflow/react';
 import { BaseNode } from '../BaseNode/BaseNode';
 import { HandleTypes } from '../types';
 import { buildNodeData, NodeHandle } from '../utils';
-import { useWorkflowContext } from '../../context';
+import { useWorkflowContext } from '../../../context';
 
 export function OutputNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();

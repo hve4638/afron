@@ -1,6 +1,6 @@
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
-import { HandleColor, WorkflowNodeTypeNames, WorkflowNodeTypes } from './nodes';
-import { HandleColors } from './nodes';
+import { HandleColor, WorkflowNodeTypeNames, WorkflowNodeTypes } from './components/nodes';
+import { HandleColors } from './components/nodes';
 import { DRAG_NODE_TYPE } from './constants';
 
 /**

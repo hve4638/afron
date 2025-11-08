@@ -1,6 +1,7 @@
 import { SetStateAction, useCallback, useMemo } from 'react';
 import FocusLock from 'react-focus-lock';
 import { FlowNode } from '@/lib/xyflow';
+import { RTFlowNodeData } from '@afron/types';
 
 import { Align, Column, Flex, Gap, Row } from '@/components/layout';
 import { GIconButton } from '@/components/GoogleFontIcon';
@@ -11,10 +12,9 @@ import {
     LLMOption,
     StartOption,
 } from './options';
-import { useWorkflowContext } from '../context';
+import { useWorkflowContext } from '../../context';
 
 import styles from './NodeOptionPanel.module.scss';
-import { RTFlowNodeData } from '@afron/types';
 
 interface NodeOptionPanelProps {
     node: FlowNode;

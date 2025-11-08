@@ -4,7 +4,7 @@ import { Column } from '@/components/layout';
 import { buildNodeData, NodeHandle } from '../utils';
 import { BaseNode } from '../BaseNode/BaseNode';
 
-import { useWorkflowContext } from '../../context';
+import { useWorkflowContext } from '../../../context';
 
 export function PromptTemplateNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();

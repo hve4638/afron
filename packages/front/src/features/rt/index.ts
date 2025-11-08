@@ -1,2 +1,1 @@
-export { RTModel } from './RTModel';
-export { RTTreeModel } from './RTTreeModel';
+export { RTModel, RTTreeModel } from './services';

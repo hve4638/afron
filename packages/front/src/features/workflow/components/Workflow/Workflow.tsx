@@ -1,26 +1,26 @@
-import { createContext, Ref, RefObject, SetStateAction, useCallback, useMemo, useState } from 'react';
+import { SetStateAction, useCallback, useState } from 'react';
 import {
     ReactFlow,
     ReactFlowProvider,
     MiniMap,
-    Controls,
     Background,
     BackgroundVariant,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { WorkflowNodeTypes } from './nodes';
-import { useWorkflow } from './Workflow.hooks';
-import { ConnectionLine } from './ConnectionLine';
-import { NodeOptionPanel } from './NodeOptionPanel';
-import { FlowEdge, FlowNode } from '@/lib/xyflow';
-import { WorkflowContext, WorkflowContextProvider } from './context';
-import { NodeLibrary } from './SidePanel/NodeLibrary';
-import styles from './Workflow.module.scss';
-import { ChangeRTFlowDataAction, RemoveRTFlowDataAction } from './types';
-import { Grid } from '@/components/layout';
-import { SidePanel, WorkflowConfig } from './SidePanel';
-import { SidePanelSections } from './SidePanel/types';
 import { RTFlowData } from '@afron/types';
+import { FlowEdge, FlowNode } from '@/lib/xyflow';
+
+import { Grid } from '@/components/layout';
+import { useWorkflow } from './Workflow.hooks';
+
+import { WorkflowContextProvider } from '../../context';
+
+import { SidePanel, WorkflowConfig, SidePanelSections, NodeLibrary } from '../SidePanel';
+import { ConnectionLine } from '../ConnectionLine';
+import { NodeOptionPanel } from '../NodeOptionPanel';
+import { WorkflowNodeTypes } from '../nodes';
+
+import styles from './Workflow.module.scss';
 
 function WorkflowInner({
     children,
@@ -83,7 +83,7 @@ function WorkflowInner({
                 {children}
                 {
                     sideSelected === SidePanelSections.File &&
-                    <WorkflowConfig/>
+                    <WorkflowConfig />
                 }
                 {
                     sideSelected === SidePanelSections.NodeLibrary &&

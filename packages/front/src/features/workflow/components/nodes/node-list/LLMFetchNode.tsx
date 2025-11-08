@@ -5,7 +5,7 @@ import { BaseNode } from '../BaseNode/BaseNode';
 import { buildNodeData, NodeHandle } from '../utils';
 
 import { NodeOption } from '../components/NodeOption';
-import { useWorkflowContext } from '../../context';
+import { useWorkflowContext } from '../../../context';
 
 export function LLMFetchNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();

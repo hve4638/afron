@@ -41,7 +41,7 @@ export function useWorkflowEditor() {
         await api.workflow.setFlowData(rtId, appliedFlowData);
         await rt.update.workflowNodes(appliedFlowData);
     }
-
+    
     const close = async () => {
         await save();
 

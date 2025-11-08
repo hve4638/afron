@@ -64,7 +64,7 @@ export function WorkflowContextProvider({
             if (typeof data === 'function') {
                 data = data(prev[nodeId] ?? {});
             }
-
+            
             return {
                 ...prev,
                 [nodeId]: data,
