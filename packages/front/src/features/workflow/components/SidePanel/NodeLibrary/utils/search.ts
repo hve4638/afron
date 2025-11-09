@@ -54,13 +54,10 @@ export function buildSearchLookup(): NodeSearchLookup {
 
     for (const category of NodeShownOrder) {
         for (const nodeId of category.nodes) {
-            const node = WorkflowNodeTypes[nodeId];
-            for (const a of node.data.alias) {
-                lookup[a.toLowerCase()] = {
-                    value: nodeId,
-                    category: category.categoryName,
-                };
-            }
+            lookup[nodeId] = {
+                value: nodeId,
+                category: category.categoryName,
+            };
         }
     }
 
@@ -76,9 +73,10 @@ export function groupNodesByCategory(nodeNames: string[], lookup: NodeSearchLook
 
     let lastCategory: NodeCategory | null = null;
     for (const n of nodeNames) {
+        console.log(lookup, n);
         const { category, value } = lookup[n];
 
-        if (lastCategory && lastCategory.categoryName !== category) {
+        if (!lastCategory || lastCategory.categoryName !== category) {
             lastCategory = {
                 categoryName: category,
                 nodes: [],

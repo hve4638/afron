@@ -5,11 +5,13 @@ import { NodeCategory, NodeSearchIndex, NodeSearchLookup } from './types';
 import { buildSearchIndex, buildSearchLookup, searchNodes } from './utils';
 import { groupNodesByCategory } from './utils/search';
 
-let SearchIndexCache: NodeSearchIndex | null = null;
-let SearchLookupCache: NodeSearchLookup | null = null;
+let SearchIndexCache: NodeSearchIndex = buildSearchIndex();
+let SearchLookupCache: NodeSearchLookup = buildSearchLookup();
 
 export function useNodeLibrary() {
     const [searchText, setSearchText] = useState('');
+
+
 
     const nodeList: NodeCategory[] = useMemo(() => {
         if (!SearchLookupCache) return [];
@@ -22,22 +24,10 @@ export function useNodeLibrary() {
         else {
             const nodes = searchNodes(searchText, SearchIndexCache);
             const grouped = groupNodesByCategory(nodes, SearchLookupCache);
-            
+
             return grouped;
         }
     }, [searchText]);
-
-    useEffect(() => {
-        // 최초 1회 searchIndex 및 searchLookup 생성
-
-        if (SearchIndexCache == null) {
-            SearchIndexCache = buildSearchIndex();
-        }
-
-        if (SearchLookupCache == null) {
-            SearchLookupCache = buildSearchLookup();
-        }
-    }, []);
 
     return {
         searchText,
