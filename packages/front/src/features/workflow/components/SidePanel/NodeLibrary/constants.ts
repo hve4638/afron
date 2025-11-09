@@ -1,12 +1,27 @@
-import { WorkflowNodeTypes } from '../../nodes';
-
+import { WorkflowNodeTypeNames } from '../../nodes';
+import { NodeCategory } from './types';
 
 /**
- * 노드 라이브러리 패널에 표시될 노드 순서
+ * 사이드패널에 표시할 노드 카테고리 및 노드 순서 정의
  */
-export const NodeTypeNames: Array<keyof typeof WorkflowNodeTypes> = [
-    'rt-start',
-    'prompt-template',
-    'llm-fetch',
-    'rt-end',  
-];
+export const NodeShownOrder: Array<NodeCategory> = [
+    category('기본', [
+        'rt-start',
+    ]),
+    category('프롬프트 처리', [
+        'prompt-template',
+    ]),
+    category('언어 모델', [
+        'llm-fetch',
+    ]),
+    category('응답 반환', [
+        'rt-end',
+    ]),
+] as const;
+
+function category(categoryName: string, nodes: Array<WorkflowNodeTypeNames>): NodeCategory {
+    return {
+        categoryName,
+        nodes,
+    }
+}

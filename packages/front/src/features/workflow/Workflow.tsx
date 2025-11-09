@@ -13,12 +13,12 @@ import { FlowEdge, FlowNode } from '@/lib/xyflow';
 import { Grid } from '@/components/layout';
 import { useWorkflow } from './Workflow.hooks';
 
-import { WorkflowContextProvider } from '../../context';
+import { WorkflowContextProvider } from './context';
 
-import { SidePanel, WorkflowConfig, SidePanelSections, NodeLibrary } from '../SidePanel';
-import { ConnectionLine } from '../ConnectionLine';
-import { NodeOptionPanel } from '../NodeOptionPanel';
-import { WorkflowNodeTypes } from '../nodes';
+import { SidePanel, WorkflowConfig, SidePanelSections, NodeLibrary } from './components/SidePanel';
+import { ConnectionLine } from './components/ConnectionLine';
+import { NodeOptionPanel } from './components/NodeOptionPanel';
+import { WorkflowNodeTypes } from './components/nodes';
 
 import styles from './Workflow.module.scss';
 

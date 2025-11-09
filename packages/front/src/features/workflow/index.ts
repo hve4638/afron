@@ -1,2 +1,2 @@
-export { Workflow } from './components/Workflow';
+export { Workflow } from './Workflow';
 export { buildNode } from './utils';

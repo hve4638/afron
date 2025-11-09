@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames';
 
-import { Align, Column, Flex, Gap, Row } from '@/components/layout';
+import { Align, Column, Gap, Row } from '@/components/layout';
 import { TextInput } from '@/components/Input';
 
 import { useNodeLibrary } from './NodeLibrary.hooks';
@@ -9,6 +9,8 @@ import { WorkflowNodeTypes } from '../../nodes';
 import { DRAG_NODE_TYPE } from '../../../constants';
 
 import styles from '../SidePanel.module.scss';
+import { NodeFold, NodeItem } from './components';
+import Delimiter from '@/components/Delimiter';
 
 interface NodeLibraryProps {
 
@@ -46,7 +48,7 @@ export function NodeLibrary({
                 }}
                 columnAlign={Align.Center}
             >
-                <div>노드 라이브러리</div>
+                <span>노드 라이브러리</span>
             </Row>
             <Gap h='8px' />
             <TextInput
@@ -64,49 +66,20 @@ export function NodeLibrary({
                 }}
             >
                 {
-                    nodeList.map((nodeId) => (
-                        <NodeItem key={nodeId} nodeId={nodeId} />
+                    nodeList.map((category) => (
+                        <NodeFold
+                            key={category.categoryName}
+                            label={category.categoryName}
+                        >
+                            {
+                                category.nodes.map((nodeId) => (
+                                    <NodeItem key={nodeId} nodeId={nodeId} />
+                                ))
+                            }
+                        </NodeFold>
                     ))
                 }
             </Column>
         </Column>
-    )
-}
-
-function NodeItem({
-    nodeId,
-}: {
-    nodeId: keyof typeof WorkflowNodeTypes
-}) {
-    const [isDragging, setIsDragging] = useState(false);
-
-    const onDragStart = (event: React.DragEvent) => {
-        event.dataTransfer.setData(DRAG_NODE_TYPE, nodeId);
-        event.dataTransfer.effectAllowed = 'move';
-        setIsDragging(true);
-    };
-
-    const onDragEnd = () => {
-        setIsDragging(false);
-    };
-
-    return (
-        <div
-            draggable
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-            style={{
-                cursor: isDragging ? 'grabbing' : 'grab',
-                padding: '2px',
-                borderRadius: '4px',
-                background: '#2a2a2a',
-                transition: 'background 0.2s, opacity 0.2s',
-                opacity: isDragging ? 0.5 : 1,
-            }}
-            onMouseOver={(e) => !isDragging && (e.currentTarget.style.background = '#3a3a3a')}
-            onMouseOut={(e) => e.currentTarget.style.background = '#2a2a2a'}
-        >
-            {WorkflowNodeTypes[nodeId].data.alias[0] ?? nodeId}
-        </div>
     )
 }

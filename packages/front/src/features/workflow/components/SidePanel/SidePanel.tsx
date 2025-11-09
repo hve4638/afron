@@ -15,6 +15,9 @@ const SidePanelIcon = {
     [SidePanelSections.NodeLibrary]: 'network_node',
 };
 
+/**
+ * 좌측 사이드 패널
+ */
 export function SidePanel({
     value,
     onChange
@@ -52,12 +55,6 @@ export function PanelButton({ value, currentlySelected, onClick }: PanelButtonPr
             className={classNames(styles['panel-button'], {
                 [styles['enabled']]: enabled,
             })}
-            style={{
-                width: '100%',
-                aspectRatio: '1 / 1',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
             onClick={() => {
                 onClick(
                     value === currentlySelected ? null : value

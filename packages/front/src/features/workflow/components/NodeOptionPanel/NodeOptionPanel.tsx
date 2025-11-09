@@ -14,6 +14,7 @@ import {
 } from './options';
 import { useWorkflowContext } from '../../context';
 
+import { useNodeOptionPanel } from './NodeOptionPanel.hooks';
 import styles from './NodeOptionPanel.module.scss';
 
 interface NodeOptionPanelProps {
@@ -26,55 +27,13 @@ export function NodeOptionPanel({
     onClose,
 }: NodeOptionPanelProps) {
     const {
-        data,
-        getNodeData,
-        setNodeData,
-        removeNodeData,
-    } = useWorkflowContext();
-    const nodeData = useMemo(() => getNodeData(node.id), [data, node]);
-
-    const setSpecificNodeData = useCallback((data: SetStateAction<RTFlowNodeData>) => {
-        setNodeData(node.id, data);
-    }, [setNodeData, node]);
-    const removeSpecificNodeData = useCallback(() => {
-        removeNodeData(node.id);
-    }, [removeNodeData, node]);
-
-    const option = useMemo(() => nodeData.data ?? {}, [nodeData]);
-    const setOption = useCallback((next: SetStateAction<Record<string, any>>) => {
-        if (typeof next === 'function') {
-            next = next(nodeData.data) as Record<string, any>;
-        }
-
-        setNodeData(node.id, (prev) => ({
-            ...prev,
-            data: next,
-        }));
-    }, [nodeData, setNodeData]);
-
-    const title = (node.data['label'] ?? 'Unknown') as string;
-    const optionComponent = useMemo(() => {
-        const props = {
-            nodeData,
-            setNodeData: setSpecificNodeData,
-            removeNodeData: removeSpecificNodeData,
-
-            option,
-            setOption,
-        }
-
-        if (node.type === 'llm-fetch') {
-            return <LLMOption {...props as any} />;
-        }
-        else if (node.type === 'prompt-template') {
-            return <PromptTemplateOption {...props as any} />;
-        }
-        else if (node.type === 'rt-start') {
-            return <StartOption {...props as any} />;
-        }
-
-        return null;
-    }, [nodeData, node]);
+        state: {
+            title,
+            description,
+        },
+        setSpecificNodeData,
+        optionComponent,
+    } = useNodeOptionPanel({ node, onClose });
 
     return (
         <Column
@@ -115,7 +74,7 @@ export function NodeOptionPanel({
                     height: '4em',
                     fontSize: '0.75em',
                 }}
-                value={nodeData.description ?? ''}
+                value={description ?? ''}
                 onChange={(e) => {
                     setSpecificNodeData((prev) => ({
                         ...prev,

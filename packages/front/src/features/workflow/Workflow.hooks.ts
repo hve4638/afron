@@ -7,8 +7,8 @@ import '@xyflow/react/dist/style.css';
 import { FlowNode } from '@/lib/xyflow';
 
 import useHotkey from '@/hooks/useHotkey';
-import { useWorkflowTransaction, useWorkflowHandlers } from '../../hooks';
-import { useWorkflowContext } from '../../context';
+import { useWorkflowTransaction, useWorkflowHandlers } from './hooks';
+import { useWorkflowContext } from './context';
 
 export function useWorkflow() {
     const {

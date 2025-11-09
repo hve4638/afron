@@ -1,4 +1,4 @@
-import { SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { RTFlowNodeData } from '@afron/types';
 
 export interface OptionProps<T = Record<string, any>> {
@@ -7,5 +7,5 @@ export interface OptionProps<T = Record<string, any>> {
     removeNodeData: () => void;
 
     option: T;
-    setOption: (option: SetStateAction<T>) => void;
+    setOption: Dispatch<SetStateAction<T>>;
 }

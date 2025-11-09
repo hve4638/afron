@@ -33,7 +33,6 @@ export declare namespace RTFlowNodeOptions {
 
         include_chat_history: boolean;
 
-
         allow_input_text: boolean;
         allow_input_image: boolean;
         allow_input_pdf: boolean;

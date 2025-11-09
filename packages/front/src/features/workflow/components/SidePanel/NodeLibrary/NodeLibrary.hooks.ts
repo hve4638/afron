@@ -1,52 +1,41 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { WorkflowNodeTypeNames, WorkflowNodeTypes } from '../../nodes';
-import { NodeTypeNames } from './constants';
+import { NodeShownOrder } from './constants';
+import { NodeCategory, NodeSearchIndex, NodeSearchLookup } from './types';
+import { buildSearchIndex, buildSearchLookup, searchNodes } from './utils';
+import { groupNodesByCategory } from './utils/search';
 
-let NodeSearchCache: Array<{
-    keyword: string;
-    value: WorkflowNodeTypeNames;
-}> | null = null;
+let SearchIndexCache: NodeSearchIndex | null = null;
+let SearchLookupCache: NodeSearchLookup | null = null;
 
 export function useNodeLibrary() {
     const [searchText, setSearchText] = useState('');
 
-    const nodeList: Array<WorkflowNodeTypeNames> = useMemo(() => {
-        if (searchText.length === 0) return NodeTypeNames;
-        if (!NodeSearchCache) return [];
-
-        const target = searchText.toLowerCase();
-
-        const searched: WorkflowNodeTypeNames[] = [];
-        const searchDuplicate = new Set<WorkflowNodeTypeNames>();
-        for (const { keyword, value } of NodeSearchCache) {
-            if (!keyword.includes(target)) {
-                continue;
-            }
-            if (searchDuplicate.has(value)) {
-                continue;
-            }
-
-            searched.push(value);
-            searchDuplicate.add(value);
+    const nodeList: NodeCategory[] = useMemo(() => {
+        if (!SearchLookupCache) return [];
+        if (searchText.length === 0) {
+            return NodeShownOrder;
         }
-        return searched;
+        else if (!SearchIndexCache) {
+            return [];
+        }
+        else {
+            const nodes = searchNodes(searchText, SearchIndexCache);
+            const grouped = groupNodesByCategory(nodes, SearchLookupCache);
+            
+            return grouped;
+        }
     }, [searchText]);
 
     useEffect(() => {
-        // 최초 1회 search cache 생성
-        if (NodeSearchCache != null) return;
+        // 최초 1회 searchIndex 및 searchLookup 생성
 
-        NodeSearchCache = [];
-        for (const nodeId of NodeTypeNames) {
-            const node = WorkflowNodeTypes[nodeId];
-            
-            for (const a of node.data.alias) {
-                NodeSearchCache.push({
-                    keyword: a.toLowerCase(),
-                    value: nodeId,
-                });
-            }
+        if (SearchIndexCache == null) {
+            SearchIndexCache = buildSearchIndex();
+        }
+
+        if (SearchLookupCache == null) {
+            SearchLookupCache = buildSearchLookup();
         }
     }, []);
 
