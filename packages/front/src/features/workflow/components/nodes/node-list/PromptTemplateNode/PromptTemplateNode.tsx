@@ -6,6 +6,7 @@ import { BaseNode } from '../../components/BaseNode';
 
 import { useWorkflowContext } from '../../../../context';
 import { PromptTemplateNodeOption } from './PromptTemplateNodeOption';
+import { DEFAULT_PROMPT_TEMPLATE_NODE_DATA } from './constants';
 
 export function PromptTemplateNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
@@ -38,5 +39,6 @@ PromptTemplateNode.data = buildNodeData({
     outputs: [
         NodeHandle.ChatMessages(),
     ],
+    defaultNodeData: DEFAULT_PROMPT_TEMPLATE_NODE_DATA,
 });
 PromptTemplateNode.Option = PromptTemplateNodeOption;

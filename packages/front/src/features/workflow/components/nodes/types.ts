@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
 import { RTFlowNodeData } from '@afron/types';
-import { FlowNode } from '@/lib/xyflow';
 
 export const HandleTypes = {
     LLMResult: 'LLMResult',
@@ -41,7 +40,9 @@ export type EdgeInfo = readonly [
     string,
     typeof HandleTypes[keyof typeof HandleTypes],
 ];
-export interface WorkflowNodeData<TNodeId extends string = string> {
+
+
+export interface WorkflowNodeData<TData extends object, TNodeId extends string = string> {
     type: TNodeId;
     alias: string[];
     
@@ -49,6 +50,8 @@ export interface WorkflowNodeData<TNodeId extends string = string> {
     inputTypes: Record<string, string>;
     outputs: string[];
     outputTypes: Record<string, string>;
+
+    defaultNodeData: TData;
 }
 
 export interface NodeOptionProps<T = Record<string, any>> {

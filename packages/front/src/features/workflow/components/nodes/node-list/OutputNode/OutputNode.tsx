@@ -4,6 +4,7 @@ import { useWorkflowContext } from '@/features/workflow/context';
 import { BaseNode } from '../../components/BaseNode';
 import { buildNodeData, NodeHandle } from '../../utils';
 import { OutputNodeOption } from './OutputNodeOption';
+import { DEFAULT_OUTPUT_NODE_DATA } from './constants';
 
 export function OutputNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
@@ -24,5 +25,6 @@ OutputNode.data = buildNodeData({
     inputs: [
         NodeHandle.Output(),
     ],
+    defaultNodeData: DEFAULT_OUTPUT_NODE_DATA,
 });
 OutputNode.Option = OutputNodeOption;

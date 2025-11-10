@@ -16,22 +16,25 @@ export function isHandleCompatible(from: HandleTypes, to: HandleTypes): boolean 
     return compatible.includes(from);
 }
 
-interface buildNodeDataProps<TNodeId extends string> {
+interface buildNodeDataProps<TData extends object, TNodeId extends string> {
     type: TNodeId;
     alias: string[];
     inputs?: EdgeInfo[],
     outputs?: EdgeInfo[],
+    defaultNodeData: TData;
 }
 
 /**
  * node-list/ 내부적으로 사용하는 WorkflowNodeData 빌드 헬퍼
  */
-export function buildNodeData<TNodeId extends string>({
+export function buildNodeData<TData extends object, TNodeId extends string>({
     type,
     alias = [],
     inputs = [],
     outputs = [],
-}: buildNodeDataProps<TNodeId>): WorkflowNodeData<TNodeId> {
+
+    defaultNodeData,
+}: buildNodeDataProps<TData, TNodeId>): WorkflowNodeData<TData, TNodeId> {
     const inputEdges = inputs.map(([name]) => name);
     const inputTypes = Object.fromEntries(inputs);
     const outputEdges = outputs.map(([name]) => name);
@@ -44,6 +47,7 @@ export function buildNodeData<TNodeId extends string>({
         inputTypes,
         outputs: outputEdges,
         outputTypes,
+        defaultNodeData: defaultNodeData,
     }
 }
 

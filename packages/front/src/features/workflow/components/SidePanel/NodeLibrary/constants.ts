@@ -1,4 +1,4 @@
-import { WorkflowNodeTypeNames } from '../../nodes';
+import { WorkflowNodeNames } from '../../nodes';
 import { NodeCategory } from './types';
 
 /**
@@ -19,7 +19,7 @@ export const NodeShownOrder: Array<NodeCategory> = [
     ]),
 ] as const;
 
-function category(categoryName: string, nodes: Array<WorkflowNodeTypeNames>): NodeCategory {
+function category(categoryName: string, nodes: Array<WorkflowNodeNames>): NodeCategory {
     return {
         categoryName,
         nodes,

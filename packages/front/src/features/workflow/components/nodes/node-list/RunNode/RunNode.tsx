@@ -10,6 +10,7 @@ import { buildNodeData, NodeHandle } from '../../utils';
 
 import { RTFlowNodeOptions } from '@afron/types';
 import { RunNodeOption } from './RunNodeOption';
+import { DEFAULT_RUN_NODE_DATA } from './constant';
 
 export function RunNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
@@ -55,5 +56,6 @@ RunNode.data = buildNodeData({
     outputs: [
         NodeHandle.Input(),
     ],
+    defaultNodeData: DEFAULT_RUN_NODE_DATA,
 });
 RunNode.Option = RunNodeOption;

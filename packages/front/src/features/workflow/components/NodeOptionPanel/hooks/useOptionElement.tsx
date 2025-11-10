@@ -1,5 +1,5 @@
 import { SetStateAction, useCallback, useMemo } from 'react';
-import { NodeOptionProps, WorkflowNodeTypes } from '../../nodes';
+import { NodeOptionProps, WorkflowNodes } from '../../nodes';
 import { useWorkflowContext } from '@/features/workflow/context';
 import { FlowNode } from '@/lib/xyflow';
 import { RTFlowNodeData } from '@afron/types';
@@ -51,7 +51,7 @@ export function useOptionElement({
 
         // @TODO: 현재 any 타입으로 처리됨
         // 추후 타입 안정성 강화 필요
-        const NodeComponent = WorkflowNodeTypes[node.type];
+        const NodeComponent = WorkflowNodes[node.type];
         if (!NodeComponent) return null;
 
         const OptionComponent = NodeComponent.Option;

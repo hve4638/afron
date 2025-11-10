@@ -46,7 +46,7 @@ export function useWorkflow() {
         if (selectedNode?.id !== lastSelectedNode?.id) {
             setLastSelectedNode(selectedNode ?? null);
         }
-    }, [nodes]);    
+    }, [nodes]);
 
     useHotkey({
         'z': (event) => {

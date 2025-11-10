@@ -3,12 +3,12 @@ import classNames from 'classnames';
 
 import { DRAG_NODE_TYPE } from '@/features/workflow/constants';
 
-import { WorkflowNodeTypes } from '../../../../nodes';
+import { WorkflowNodes } from '../../../../nodes';
 
 import styles from './NodeItem.module.scss';
 
 interface NodeItemProps {
-    nodeId: keyof typeof WorkflowNodeTypes;
+    nodeId: keyof typeof WorkflowNodes;
 }
 
 export function NodeItem({
@@ -36,7 +36,7 @@ export function NodeItem({
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
         >
-            {WorkflowNodeTypes[nodeId].data.alias[0] ?? nodeId}
+            {WorkflowNodes[nodeId].data.alias[0] ?? nodeId}
         </div>
     )
 }

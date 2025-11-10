@@ -3,6 +3,7 @@ import { useReactFlow, } from '@xyflow/react';
 import { buildNode, getNodeIdFromDropEvent } from '../utils';
 import { useWorkflowContext } from '../context';
 import { UseWorkflowHandlersProps } from '../types';
+import { WorkflowNodes } from '../components/nodes';
 
 export function useWorkflowDragDrop({
     transaction,
@@ -31,10 +32,16 @@ export function useWorkflowDragDrop({
         const newNodeId = `${nodeId}-${Date.now()}`;
         const next = buildNode(newNodeId, position, nodeId);
 
+        const components = WorkflowNodes[nodeId];
+        if (!components) {
+            console.warn('Drag and drop failed. Invalid node ID:', nodeId);
+            return;
+        }
+
         setNodeData(next.id, {
             connection: [],
             description: '',
-            data: {},
+            data: components.data.defaultNodeData,
             type: nodeId,
             position: next.position,
         });

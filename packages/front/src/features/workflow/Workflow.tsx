@@ -18,7 +18,7 @@ import { WorkflowContextProvider } from './context';
 import { SidePanel, WorkflowConfig, SidePanelSections, NodeLibrary } from './components/SidePanel';
 import { ConnectionLine } from './components/ConnectionLine';
 import { NodeOptionPanel } from './components/NodeOptionPanel';
-import { WorkflowNodeTypes } from './components/nodes';
+import { WorkflowNodes } from './components/nodes';
 
 import styles from './Workflow.module.scss';
 
@@ -67,7 +67,7 @@ function WorkflowInner({
                 onEdgesChange={workflowCallback.onEdgesChange}
                 onConnect={workflowCallback.onConnect}
                 onInit={onInit}
-                nodeTypes={WorkflowNodeTypes}
+                nodeTypes={WorkflowNodes}
                 deleteKeyCode='Delete'
                 edgesReconnectable={true}
                 isValidConnection={workflowCallback.isValidConnection}

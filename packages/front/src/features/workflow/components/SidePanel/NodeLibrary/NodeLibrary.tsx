@@ -5,7 +5,7 @@ import { Align, Column, Gap, Row } from '@/components/layout';
 import { TextInput } from '@/components/Input';
 
 import { useNodeLibrary } from './NodeLibrary.hooks';
-import { WorkflowNodeTypes } from '../../nodes';
+import { WorkflowNodes } from '../../nodes';
 import { DRAG_NODE_TYPE } from '../../../constants';
 
 import styles from '../SidePanel.module.scss';

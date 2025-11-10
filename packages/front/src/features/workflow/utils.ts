@@ -1,5 +1,5 @@
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
-import { HandleColor, WorkflowNodeTypeNames, WorkflowNodeTypes } from './components/nodes';
+import { HandleColor, WorkflowNodeNames, WorkflowNodes } from './components/nodes';
 import { HandleColors } from './components/nodes';
 import { DRAG_NODE_TYPE } from './constants';
 
@@ -9,9 +9,9 @@ import { DRAG_NODE_TYPE } from './constants';
 export function buildNode(
     id: string,
     position: { x: number; y: number },
-    nodeType: keyof typeof WorkflowNodeTypes
+    nodeType: keyof typeof WorkflowNodes
 ): FlowNode {
-    const node = WorkflowNodeTypes[nodeType];
+    const node = WorkflowNodes[nodeType];
 
     return {
         id,
@@ -38,7 +38,7 @@ export function findConnnectionLineColor(nodes: FlowNode[], edge: FlowEdge): Han
     const sourceNode = nodes.find(n => n.id === edge.source);
     if (!sourceNode || !edge.sourceHandle) return null;
 
-    const data = WorkflowNodeTypes[sourceNode.data['type'] as any].data;
+    const data = WorkflowNodes[sourceNode.data['type'] as any].data;
     console.log('data', data, edge.sourceHandle); 
     const handleType = data.outputTypes[edge.sourceHandle];
     return HandleColors[handleType] ?? null;
@@ -50,9 +50,9 @@ export function findConnnectionLineColor(nodes: FlowNode[], edge: FlowEdge): Han
  * @param event 
  * @returns 
  */
-export function getNodeIdFromDropEvent(event: React.DragEvent): WorkflowNodeTypeNames | null {
+export function getNodeIdFromDropEvent(event: React.DragEvent): WorkflowNodeNames | null {
     const nodeId = event.dataTransfer.getData(DRAG_NODE_TYPE);
-    if (!nodeId || !WorkflowNodeTypes[nodeId]) return null;
+    if (!nodeId || !WorkflowNodes[nodeId]) return null;
 
-    return nodeId as WorkflowNodeTypeNames;
+    return nodeId as WorkflowNodeNames;
 }

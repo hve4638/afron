@@ -1,19 +1,19 @@
-import { WorkflowNodeTypeNames, WorkflowNodeTypes } from '../../../nodes';
+import { WorkflowNodeNames, WorkflowNodes } from '../../../nodes';
 
 export type NodeSearchIndex = Array<{
     keyword: string;
-    value: WorkflowNodeTypeNames;
+    value: WorkflowNodeNames;
     category: string;
 }>;
 
 export type NodeSearchLookup = Record<string, NodeCategoryData>;
 
 export type NodeCategoryData = {
-    value: WorkflowNodeTypeNames;
+    value: WorkflowNodeNames;
     category: string;
 }
 
 export interface NodeCategory {
     categoryName: string;
-    nodes: Array<WorkflowNodeTypeNames>;
+    nodes: Array<WorkflowNodeNames>;
 }

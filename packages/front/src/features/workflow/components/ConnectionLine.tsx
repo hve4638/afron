@@ -1,7 +1,7 @@
 import {
     ConnectionLineComponentProps, getBezierPath, Handle, InternalNode, Position,
 } from '@xyflow/react';
-import { WorkflowNodeTypes } from './nodes';
+import { WorkflowNodes } from './nodes';
 import { HandleColors } from './nodes/types';
 import { useMemo } from 'react';
 import { FlowNode } from '@/lib/xyflow';
@@ -45,7 +45,7 @@ function getColor(node: InternalNode<FlowNode>, handle: Handle) {
             // do nothing
         }
         else if (handleType === 'source') {
-            const data = WorkflowNodeTypes[nodeType]?.data;
+            const data = WorkflowNodes[nodeType]?.data;
             if (data?.outputTypes) {
                 const handleType = data.outputTypes[handle.id];
                 if (handleType) {
@@ -54,7 +54,7 @@ function getColor(node: InternalNode<FlowNode>, handle: Handle) {
             }
         }
         else if (handleType === 'target') {
-            const data = WorkflowNodeTypes[nodeType]?.data;
+            const data = WorkflowNodes[nodeType]?.data;
             if (data?.inputTypes) {
                 const handleType = data.inputTypes[handle.id];
                 if (handleType) {

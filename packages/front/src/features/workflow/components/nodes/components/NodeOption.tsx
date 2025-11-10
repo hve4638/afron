@@ -3,7 +3,7 @@ import { Align, Row } from '@/components/layout';
 /**
  * 노드 옵션 표시
  */
-export function NodeOption({ label, value }: { label: string; value?: string }) {
+export function NodeOption({ label, value }: { label: string; value?: string | number }) {
     return (
         <Row
             style={{

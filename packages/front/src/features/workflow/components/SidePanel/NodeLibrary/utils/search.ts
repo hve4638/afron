@@ -1,4 +1,4 @@
-import { WorkflowNodeTypes } from '../../../nodes';
+import { WorkflowNodes } from '../../../nodes';
 import { NodeShownOrder } from '../constants';
 import { NodeCategory, NodeSearchIndex, NodeSearchLookup } from '../types';
 
@@ -30,7 +30,7 @@ export function buildSearchIndex() {
     const searchIndex: NodeSearchIndex = [];
     for (const category of NodeShownOrder) {
         for (const nodeId of category.nodes) {
-            const node = WorkflowNodeTypes[nodeId];
+            const node = WorkflowNodes[nodeId];
 
             for (const a of node.data.alias) {
                 searchIndex.push({

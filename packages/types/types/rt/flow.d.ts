@@ -1,9 +1,7 @@
 import { SupportedVerbosity } from '../chatai';
 
 export type FlowNodeType = (
-    'rt-input'
-    | 'rt-start'
-    | 'rt-end'
+    'rt-run'
     | 'rt-output'
     | 'prompt-template'
     | 'llm-fetch'
