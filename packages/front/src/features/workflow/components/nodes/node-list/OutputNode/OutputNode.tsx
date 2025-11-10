@@ -1,8 +1,9 @@
 import { NodeProps } from '@xyflow/react';
-import { BaseNode } from '../BaseNode/BaseNode';
-import { HandleTypes } from '../types';
-import { buildNodeData, NodeHandle } from '../utils';
-import { useWorkflowContext } from '../../../context';
+import { useWorkflowContext } from '@/features/workflow/context';
+
+import { BaseNode } from '../../components/BaseNode';
+import { buildNodeData, NodeHandle } from '../../utils';
+import { OutputNodeOption } from './OutputNodeOption';
 
 export function OutputNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
@@ -10,7 +11,7 @@ export function OutputNode(props: NodeProps) {
 
     return (
         <BaseNode
-            title='출력'
+            title='종료'
             nodeData={nodeData}
             {...props}
         >
@@ -19,8 +20,9 @@ export function OutputNode(props: NodeProps) {
 }
 OutputNode.data = buildNodeData({
     type: 'rt-output',
-    alias: ['output', '출력'],
+    alias: ['출력', '응답 반환'],
     inputs: [
         NodeHandle.Output(),
     ],
 });
+OutputNode.Option = OutputNodeOption;

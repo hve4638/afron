@@ -11,8 +11,6 @@ let SearchLookupCache: NodeSearchLookup = buildSearchLookup();
 export function useNodeLibrary() {
     const [searchText, setSearchText] = useState('');
 
-
-
     const nodeList: NodeCategory[] = useMemo(() => {
         if (!SearchLookupCache) return [];
         if (searchText.length === 0) {

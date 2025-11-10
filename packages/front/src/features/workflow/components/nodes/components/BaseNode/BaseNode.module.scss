@@ -1,11 +1,13 @@
 .node {
     position: relative;
-    // display: flex;
-    // flex-direction: column;
     background-color: #333333;
     border-radius: 4px;
     border: 1px solid #555;
-    // align-items: center;
+
+    min-width: 130px;
+    max-width: 160px;
+    min-height: 2.5em;
+    font-size: 12px;
     
     &:global(.selected) {
         border-color: #e6e6e6;

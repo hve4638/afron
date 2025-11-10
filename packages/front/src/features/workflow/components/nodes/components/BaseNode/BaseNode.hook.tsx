@@ -4,10 +4,10 @@ import {
     Position,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { WorkflowNodeData } from '../types';
+import { WorkflowNodeData } from '../../types';
 
 import styles from './BaseNode.module.scss';
-import { getHandleColor } from '../utils';
+import { getHandleColor } from '../../utils';
 
 interface useBaseNodeProps {
     data: WorkflowNodeData;

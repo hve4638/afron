@@ -41,18 +41,10 @@ export function BaseNode({
                 classNames(
                     className,
                     styles['node'],
-                    {
-                        selected,
-                    },
+                    { selected },
                 )
             }
-            style={{
-                ...style,
-                minWidth: '130px',
-                maxWidth: '160px',
-                minHeight: '2.5em',
-                fontSize: '12px',
-            }}
+            style={style}
             columnAlign={Align.Center}
         >
             <Row rowAlign={Align.Center}>

@@ -1,10 +1,11 @@
 import { NodeProps } from '@xyflow/react';
 import { Column } from '@/components/layout';
 
-import { buildNodeData, NodeHandle } from '../utils';
-import { BaseNode } from '../BaseNode/BaseNode';
+import { buildNodeData, NodeHandle } from '../../utils';
+import { BaseNode } from '../../components/BaseNode';
 
-import { useWorkflowContext } from '../../../context';
+import { useWorkflowContext } from '../../../../context';
+import { PromptTemplateNodeOption } from './PromptTemplateNodeOption';
 
 export function PromptTemplateNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
@@ -30,7 +31,7 @@ export function PromptTemplateNode(props: NodeProps) {
 }
 PromptTemplateNode.data = buildNodeData({
     type: 'prompt-template',
-    alias: ['prompt', '프롬프트'],
+    alias: ['프롬프트 구성', 'prompt template'],
     inputs: [
         NodeHandle.Input(),
     ],
@@ -38,3 +39,4 @@ PromptTemplateNode.data = buildNodeData({
         NodeHandle.ChatMessages(),
     ],
 });
+PromptTemplateNode.Option = PromptTemplateNodeOption;

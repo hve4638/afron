@@ -5,9 +5,9 @@ import ModelForm from '@/components/model-ui';
 import { Column, Gap } from '@/components/layout';
 import { Form } from '@/components/forms';
 
-import { OptionProps } from './types';
+import { NodeOptionProps } from '../../types';
 
-export function LLMOption({ option, setOption }: OptionProps<RTFlowNodeOptions.LLM>) {
+export function LLMFetchNodeOption({ option, setOption }: NodeOptionProps<RTFlowNodeOptions.LLM>) {
     const changeOption = useCallback((key: keyof RTFlowNodeOptions.LLM, value: any) => {
         setOption((prev) => ({
             ...prev,

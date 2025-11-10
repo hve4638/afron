@@ -1,20 +1,10 @@
-import { SetStateAction, useCallback, useMemo } from 'react';
-import FocusLock from 'react-focus-lock';
 import { FlowNode } from '@/lib/xyflow';
-import { RTFlowNodeData } from '@afron/types';
 
 import { Align, Column, Flex, Gap, Row } from '@/components/layout';
 import { GIconButton } from '@/components/GoogleFontIcon';
 import { Textarea } from '@/components/ui/Textarea';
-
-import {
-    PromptTemplateOption,
-    LLMOption,
-    StartOption,
-} from './options';
-import { useWorkflowContext } from '../../context';
-
 import { useNodeOptionPanel } from './NodeOptionPanel.hooks';
+
 import styles from './NodeOptionPanel.module.scss';
 
 interface NodeOptionPanelProps {
@@ -32,7 +22,7 @@ export function NodeOptionPanel({
             description,
         },
         setSpecificNodeData,
-        optionComponent,
+        optionElement,
     } = useNodeOptionPanel({ node, onClose });
 
     return (
@@ -82,13 +72,7 @@ export function NodeOptionPanel({
                     }));
                 }}
             />
-            {
-                optionComponent != null &&
-                <>
-                    <Gap h='16px' />
-                    {optionComponent}
-                </>
-            }
+            {optionElement}
         </Column>
     )
 }

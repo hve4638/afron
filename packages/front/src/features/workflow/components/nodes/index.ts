@@ -1,16 +1,12 @@
 import {
-    InputNode,
-    OutputNode,
     PromptTemplateNode,
     LLMFetchNode,
-    StartNode,
-    EndNode,
- } from './node-list';
+    RunNode,
+    OutputNode,
+} from './node-list';
 
 export const WorkflowNodeTypes = {
-    [StartNode.data.type]: StartNode,
-    [EndNode.data.type]: EndNode,
-    [InputNode.data.type]: InputNode,
+    [RunNode.data.type]: RunNode,
     [OutputNode.data.type]: OutputNode,
     [PromptTemplateNode.data.type]: PromptTemplateNode,
     [LLMFetchNode.data.type]: LLMFetchNode,
@@ -18,5 +14,10 @@ export const WorkflowNodeTypes = {
 export type WorkflowNodeTypeNames = keyof typeof WorkflowNodeTypes;
 
 export { isHandleCompatible } from './utils';
-
 export * from './types';
+export {
+    PromptTemplateNode,
+    LLMFetchNode,
+    RunNode,
+    OutputNode,
+} from './node-list';

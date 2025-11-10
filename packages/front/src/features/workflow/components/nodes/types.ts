@@ -1,4 +1,6 @@
-import { FlowNode } from "@/lib/xyflow";
+import { Dispatch, SetStateAction } from 'react';
+import { RTFlowNodeData } from '@afron/types';
+import { FlowNode } from '@/lib/xyflow';
 
 export const HandleTypes = {
     LLMResult: 'LLMResult',
@@ -47,4 +49,13 @@ export interface WorkflowNodeData<TNodeId extends string = string> {
     inputTypes: Record<string, string>;
     outputs: string[];
     outputTypes: Record<string, string>;
+}
+
+export interface NodeOptionProps<T = Record<string, any>> {
+    nodeData: RTFlowNodeData;
+    setNodeData: (data: SetStateAction<RTFlowNodeData>) => void;
+    removeNodeData: () => void;
+
+    option: T;
+    setOption: Dispatch<SetStateAction<T>>;
 }

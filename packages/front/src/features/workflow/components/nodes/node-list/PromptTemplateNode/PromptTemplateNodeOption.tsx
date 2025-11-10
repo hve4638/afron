@@ -7,17 +7,17 @@ import { useModal } from '@/hooks/useModal';
 import { SelectPromptTemplateModal } from './modals/SelectPromptTemplateModal';
 
 import { RTFlowNodeOptions } from '@afron/types';
-import { OptionProps } from './types';
-import { usePromptTemplateOption } from './PromptTemplateOption.hooks';
+import { NodeOptionProps } from '../../types';
+import { usePromptTemplateNodeOption } from './PromptTemplateNodeOption.hooks';
 
-export function PromptTemplateOption({
+export function PromptTemplateNodeOption({
     option,
     setOption,
-}: OptionProps<RTFlowNodeOptions.PromptTemplate>) {
+}: NodeOptionProps<RTFlowNodeOptions.PromptTemplate>) {
     const modals = useModal();
     const {
         emitPromptTemplate,
-    } = usePromptTemplateOption({
+    } = usePromptTemplateNodeOption({
         option,
         setOption,
     });

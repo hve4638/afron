@@ -28,7 +28,6 @@ export function searchNodes(query: string, searchIndex: NodeSearchIndex): string
  */
 export function buildSearchIndex() {
     const searchIndex: NodeSearchIndex = [];
-    const a: Record<string, NodeCategory> = {};
     for (const category of NodeShownOrder) {
         for (const nodeId of category.nodes) {
             const node = WorkflowNodeTypes[nodeId];

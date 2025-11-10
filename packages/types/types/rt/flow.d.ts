@@ -56,6 +56,10 @@ export declare namespace RTFlowNodeOptions {
         gpt_reasoning_effort: SupportedVerbosity;
         gpt_verbosity: SupportedVerbosity;
     }
+
+    interface Output {
+        include_history: boolean;
+    }
 }
 
 export { };

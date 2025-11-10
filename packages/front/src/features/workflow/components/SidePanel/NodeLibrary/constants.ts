@@ -6,7 +6,7 @@ import { NodeCategory } from './types';
  */
 export const NodeShownOrder: Array<NodeCategory> = [
     category('기본', [
-        'rt-start',
+        'rt-run',
     ]),
     category('프롬프트 처리', [
         'prompt-template',
@@ -15,7 +15,7 @@ export const NodeShownOrder: Array<NodeCategory> = [
         'llm-fetch',
     ]),
     category('응답 반환', [
-        'rt-end',
+        'rt-output',
     ]),
 ] as const;
 

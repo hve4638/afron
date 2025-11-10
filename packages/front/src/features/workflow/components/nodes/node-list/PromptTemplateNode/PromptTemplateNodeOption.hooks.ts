@@ -18,7 +18,7 @@ interface usePromptTemplateOptionProps {
     setOption: Dispatch<SetStateAction<RTFlowNodeOptions.PromptTemplate>>;
 }
 
-export function usePromptTemplateOption({
+export function usePromptTemplateNodeOption({
     option,
     setOption,
 }: usePromptTemplateOptionProps) {

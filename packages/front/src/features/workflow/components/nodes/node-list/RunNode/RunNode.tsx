@@ -5,19 +5,20 @@ import { Column } from '@/components/layout';
 
 import { useWorkflowContext } from '@/features/workflow/context';
 
-import { BaseNode } from '../BaseNode/BaseNode';
-import { buildNodeData, NodeHandle } from '../utils';
+import { BaseNode } from '../../components/BaseNode';
+import { buildNodeData, NodeHandle } from '../../utils';
 
 import { RTFlowNodeOptions } from '@afron/types';
+import { RunNodeOption } from './RunNodeOption';
 
-export function StartNode(props: NodeProps) {
+export function RunNode(props: NodeProps) {
     const { getNodeData } = useWorkflowContext();
     const nodeData = getNodeData<RTFlowNodeOptions.RTStart>(props.id);
 
     const condition = useMemo(() => {
         switch (nodeData.data.start_trigger) {
             case 'start':
-                return '실행 시';
+                return '실행 버튼 클릭 시';
             case 'press-button':
                 if (nodeData.data.button_label) {
                     return `버튼 클릭 시: ${nodeData.data.button_label}`;
@@ -48,10 +49,11 @@ export function StartNode(props: NodeProps) {
         </BaseNode>
     )
 }
-StartNode.data = buildNodeData({
-    type: 'rt-start',
-    alias: ['start', '시작'],
+RunNode.data = buildNodeData({
+    type: 'rt-run',
+    alias: ['실행', 'start', '시작'],
     outputs: [
         NodeHandle.Input(),
     ],
 });
+RunNode.Option = RunNodeOption;

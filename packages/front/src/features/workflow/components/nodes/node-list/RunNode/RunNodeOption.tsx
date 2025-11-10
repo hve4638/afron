@@ -8,12 +8,12 @@ import { DropdownForm, Form } from '@/components/forms';
 import Delimiter from '@/components/Delimiter';
 import { GIcon } from '@/components/GoogleFontIcon';
 
-import { OptionProps } from './types';
+import { NodeOptionProps } from '../../types';
 
-export function StartOption({
+export function RunNodeOption({
     option,
     setOption,
-}: OptionProps<RTFlowNodeOptions.RTStart>) {
+}: NodeOptionProps<RTFlowNodeOptions.RTStart>) {
     const changeOption = useCallback((key: string, value: any) => {
         setOption((prev) => ({
             ...prev,
