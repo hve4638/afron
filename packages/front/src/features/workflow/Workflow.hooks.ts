@@ -9,6 +9,7 @@ import { FlowNode } from '@/lib/xyflow';
 import useHotkey from '@/hooks/useHotkey';
 import { useWorkflowTransaction, useWorkflowHandlers } from './hooks';
 import { useWorkflowContext } from './context';
+import { useKeyBind } from '@/hooks/useKeyBind';
 
 export function useWorkflow() {
     const {
@@ -39,6 +40,15 @@ export function useWorkflow() {
         onEdgesChange,
     });
     
+    const tryUndo = () => { transaction.canUndo && transaction.undo(); }
+    const tryRedo = () => { transaction.canRedo && transaction.redo(); }
+
+    useKeyBind({
+        'C-z': tryUndo,
+        'C-S-z': tryRedo,
+        'C-y': tryRedo,
+    }, [transaction]);
+
     const [lastSelectedNode, setLastSelectedNode] = useState<FlowNode | null>(null);
     useLayoutEffect(() => {
         const selectedNode = nodes.find(n => n.selected);
@@ -48,39 +58,6 @@ export function useWorkflow() {
         }
     }, [nodes]);
 
-    useHotkey({
-        'z': (event) => {
-            if (!event.ctrlKey) {
-                // do nothing
-            }
-            else if (event.shiftKey) {
-                event.preventDefault();
-
-                if (transaction.canRedo) {
-                    transaction.redo();
-                }
-            }
-            else {
-                event.preventDefault();
-
-                if (transaction.canUndo) {
-                    transaction.undo();
-                }
-            }
-            return false;
-        },
-
-        'y': (event) => {
-            if (event.ctrlKey && !event.shiftKey) {
-                event.preventDefault();
-
-                if (transaction.canRedo) {
-                    transaction.redo();
-                }
-            }
-            return false;
-        }
-    }, true, [transaction]);
 
     return {
         nodes,

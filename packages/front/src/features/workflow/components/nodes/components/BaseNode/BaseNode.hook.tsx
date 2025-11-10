@@ -10,7 +10,7 @@ import styles from './BaseNode.module.scss';
 import { getHandleColor } from '../../utils';
 
 interface useBaseNodeProps {
-    data: WorkflowNodeData;
+    data: WorkflowNodeData<object, string>;
 }
 
 export function useBaseNode({
