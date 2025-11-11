@@ -4,7 +4,7 @@ import Modal from './Modal';
 import Button from '@/components/atoms/Button';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 
 interface ConfirmModalProps {
     title?:string;
@@ -50,7 +50,7 @@ function ConfirmModal({
         setDisappear(true);
         setTimeout(() => {
             onClosed();
-        }, MODAL_DISAPPEAR_DURATION);
+        }, MODAL_DISAPPEAR_DURATION_MS);
     }
 
     return (

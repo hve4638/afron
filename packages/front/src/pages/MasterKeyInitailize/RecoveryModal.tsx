@@ -6,7 +6,7 @@ import Button from "@/components/atoms/Button";
 import classNames from "classnames";
 import ReactLoading from "react-loading";
 import { ConfirmModal } from "components/Modal";
-import { MODAL_DISAPPEAR_DURATION } from "data";
+import { MODAL_DISAPPEAR_DURATION_MS } from "@/constants";
 
 interface RecoveryModalProps {
     onReset: () => void;
@@ -36,7 +36,7 @@ function RecoveryModal({
         setDisappear(true);
         setTimeout(() => {
             onClose();
-        }, MODAL_DISAPPEAR_DURATION);
+        }, MODAL_DISAPPEAR_DURATION_MS);
     }
 
     return (

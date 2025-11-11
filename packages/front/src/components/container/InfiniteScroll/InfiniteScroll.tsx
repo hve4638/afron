@@ -31,7 +31,6 @@ function InfiniteScroll({
     const loadMoreThrottle = useThrottle(()=>{
         loadMore();
     }, 100);
-    
 
     useEffect(() => {
         if (inView && hasMore) {

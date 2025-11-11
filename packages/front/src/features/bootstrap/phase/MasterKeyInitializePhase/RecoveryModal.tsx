@@ -7,7 +7,7 @@ import { Modal, ModalHeader } from '@/components/Modal';
 import { ConfirmModal } from '@/components/Modal';
 import Button from '@/components/atoms/Button';
 
-import { MODAL_DISAPPEAR_DURATION } from '@/data';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 
 import styles from './styles.module.scss';
 
@@ -39,7 +39,7 @@ function RecoveryModal({
         setDisappear(true);
         setTimeout(() => {
             onClose();
-        }, MODAL_DISAPPEAR_DURATION);
+        }, MODAL_DISAPPEAR_DURATION_MS);
     }
 
     return (

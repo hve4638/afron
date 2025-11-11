@@ -1,9 +1,8 @@
 import { Column } from '@/components/layout';
 
 import { useModal } from '@/hooks/useModal';
-import ErrorLogModal from '@/modals/ErrorLogModal';
 
-import { Z_INDEX_TOAST } from '@/data/z';
+import { Z_INDEX } from '@/constants';
 
 import { ToastMessage } from './ToastMessage';
 import useToastRenderer from './ToastRenderer.hook';
@@ -37,7 +36,7 @@ function ToastRenderer({
                 bottom,
                 margin: '6px',
                 gap: '4px',
-                zIndex: Z_INDEX_TOAST,
+                zIndex: Z_INDEX.TOAST,
             }}
         >
             {

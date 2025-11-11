@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { MODAL_DISAPPEAR_DURATION } from 'data';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import { Modal, ModalBackground, ModalHeader } from 'components/Modal';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
@@ -148,7 +148,7 @@ function RTTreeModal({
         setDisappear(true);
         setTimeout(() => {
             onClose();  
-        }, MODAL_DISAPPEAR_DURATION);
+        }, MODAL_DISAPPEAR_DURATION_MS);
     }
     
     // 트리 노드 드래그 해제

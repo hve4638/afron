@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 
 /**
  * Modal fade-in/out 효과를 위한 hook
@@ -26,7 +26,7 @@ function useModalDisappear(onClose:()=>void) {
         setDisappear(true);
         window.setTimeout(()=>{
             onClose();
-        }, MODAL_DISAPPEAR_DURATION);
+        }, MODAL_DISAPPEAR_DURATION_MS);
     }
 
     return [disappear, close] as [boolean, ()=>void];

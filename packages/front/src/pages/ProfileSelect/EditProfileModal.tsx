@@ -7,7 +7,7 @@ import { TextInput } from 'components/Input';
 import classNames from 'classnames';
 
 import styles from './styles.module.scss';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import useModalDisappear from 'hooks/useModalDisappear';
 import { ButtonForm } from '@/components/FormFields';
 import { ProfileNameLayout } from './layout';
