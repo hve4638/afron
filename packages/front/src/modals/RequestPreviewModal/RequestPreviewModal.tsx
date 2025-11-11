@@ -1,7 +1,7 @@
 import Button from '@/components/atoms/Button';
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import CopyIconButton from '@/components/ui/CopyIconButton';
 import Well from '@/components/atoms/Well';
 import useHotkey from '@/hooks/useHotkey';

@@ -1,4 +1,4 @@
-import { Modal, ModalHeader, ModalRequiredProps } from '@/components/Modal';
+import { Modal, ModalHeader, ModalRequiredProps } from '@/components/modal';
 import { useProgressModalEvent } from './events';
 import { Align, Gap, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';

@@ -5,6 +5,7 @@ import ModalBackground, { ModalBackgroundProps } from './ModalBackground';
 import ModalBox from './ModalBox';
 import { CommonProps } from '@/types';
 import useHotkey from '@/hooks/useHotkey';
+import { useKeyBind } from '@/hooks/useKeyBind';
 
 
 interface ModalProps extends CommonProps {
@@ -35,14 +36,11 @@ function Modal({
 
     backgroundProps = {},
 }: ModalProps) {
-    useHotkey({
-        'Escape': (e) => {
-            if (onEscapeAction) {
-                onEscapeAction();
-                return true;
-            }
+    useKeyBind({
+        'Esc': (e) => {
+            if (onEscapeAction) onEscapeAction();
         }
-    }, focused && (onEscapeAction != null), [focused, onEscapeAction]);
+    }, [focused, onEscapeAction], focused && (onEscapeAction != null))
 
     const hasHeader = !!headerLabel;
 

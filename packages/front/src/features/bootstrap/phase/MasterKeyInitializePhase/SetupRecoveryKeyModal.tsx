@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
 import { Align, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import Button from '@/components/atoms/Button';
 import { StringForm } from '@/components/FormFields';
 

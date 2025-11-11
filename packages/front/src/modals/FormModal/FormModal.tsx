@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ProfileEvent from '@/features/profile-event';
 
 import { Column } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
 import useHotkey from '@/hooks/useHotkey';

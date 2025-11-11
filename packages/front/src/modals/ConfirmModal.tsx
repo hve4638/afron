@@ -1,25 +1,27 @@
-import { Align, Row } from 'components/layout';
-import { ModalHeader } from '.';
-import Modal from './Modal';
-import Button from '@/components/atoms/Button';
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import classNames from 'classnames';
+
+import { Button } from '@/components/atoms';
+import { Align, Row } from '@/components/layout';
+import { Modal } from '@/components/modal';
+
 import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
+import useModalDisappear from '@/hooks/useModalDisappear';
 
 interface ConfirmModalProps {
-    title?:string;
-    children?:React.ReactNode;
-    confirmText?:string;
-    cancelText?:string;
-    onConfirm?:()=>boolean;
-    onCancel?:()=>boolean;
-    onClosed:()=>void;
-    enableRoundedBackground?:boolean
+    title?: string;
+    children?: React.ReactNode;
+    confirmText?: string;
+    cancelText?: string;
+    onConfirm?: () => boolean;
+    onCancel?: () => boolean;
+    onClosed: () => void;
+    enableRoundedBackground?: boolean
 
-    className?:string;
-    style?:React.CSSProperties;
-    confirmButtonClassName?:string,
-    cancelButtonClassName?:string,
+    className?: string;
+    style?: React.CSSProperties;
+    confirmButtonClassName?: string,
+    cancelButtonClassName?: string,
 }
 
 function ConfirmModal({
@@ -27,31 +29,18 @@ function ConfirmModal({
     children,
     confirmText = '확인',
     cancelText = '취소',
-    onConfirm = ()=>true,
-    onCancel = ()=>true,
+    onConfirm = () => true,
+    onCancel = () => true,
     onClosed,
-    confirmButtonClassName='',
-    cancelButtonClassName='',
+    confirmButtonClassName = '',
+    cancelButtonClassName = '',
 
     enableRoundedBackground = false,
 
-    className='',
-    style={},
-}:ConfirmModalProps) {
-    const [disappear, setDisappear] = useState(true);
-
-    useEffect(()=>{
-        setTimeout(() => {
-            setDisappear(false);
-        }, 1);
-    }, []);
-
-    const close = () => {
-        setDisappear(true);
-        setTimeout(() => {
-            onClosed();
-        }, MODAL_DISAPPEAR_DURATION_MS);
-    }
+    className = '',
+    style = {},
+}: ConfirmModalProps) {
+    const [disappear, closeModal] = useModalDisappear(onClosed);
 
     return (
         <Modal
@@ -62,9 +51,7 @@ function ConfirmModal({
         >
             {
                 title != null &&
-                <h2>
-                    {title}
-                </h2>
+                <h2>{title}</h2>
             }
             <div
                 className='undraggable'
@@ -91,9 +78,9 @@ function ConfirmModal({
                     style={{
                         width: '90px'
                     }}
-                    onClick={()=>{
+                    onClick={() => {
                         if (onConfirm()) {
-                            close();
+                            closeModal();
                         }
                     }}
                 >{confirmText}</Button>
@@ -107,9 +94,9 @@ function ConfirmModal({
                         width: '90px',
                         marginLeft: '6px',
                     }}
-                    onClick={()=>{
+                    onClick={() => {
                         if (onCancel()) {
-                            close();
+                            closeModal();
                         }
                     }}
                 >{cancelText}</Button>

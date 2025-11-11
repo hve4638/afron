@@ -1,5 +1,5 @@
 import { ButtonForm, StringForm, StringLongForm } from '@/components/FormFields';
-import { Modal, ModalHeader } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
 import { useModal } from '@/hooks/useModal';
 import useModalDisappear from '@/hooks/useModalDisappear';

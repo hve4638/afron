@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { Modal, ModalHeader } from 'components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';

@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
 import { Align, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import { ConfirmModal } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
+import { ConfirmModal } from '@/components/modal';
 import Button from '@/components/atoms/Button';
 
 import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';

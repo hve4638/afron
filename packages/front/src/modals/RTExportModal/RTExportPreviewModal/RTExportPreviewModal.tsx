@@ -1,7 +1,7 @@
 import Button from '@/components/atoms/Button';
 import { TextForm } from '@/components/FormFields';
 import { Align, Gap, Row } from '@/components/layout';
-import { Modal, ModalHeader, ModalRequiredProps } from '@/components/Modal';
+import { Modal, ModalHeader, ModalRequiredProps } from '@/components/modal';
 import { emitEvent } from '@/hooks/useEvent';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';

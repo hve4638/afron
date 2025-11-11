@@ -1,6 +1,6 @@
 import { SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalHeader } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import { ButtonForm, StringForm } from '@/components/FormFields';
 
 import { Column, Gap, Row } from '@/components/layout';

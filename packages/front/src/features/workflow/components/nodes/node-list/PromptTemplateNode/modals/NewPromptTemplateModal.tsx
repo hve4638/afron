@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import classNames from 'classnames';
 
-import { Modal, ModalHeader } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import TreeView, { directory, node, Tree } from '@/components/TreeView';
 
 import { Emit } from '@/lib/zustbus';
