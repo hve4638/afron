@@ -7,7 +7,7 @@ import { FormFieldProps } from './types';
 import { CheckBoxField, NumberField, SelectField, TextField } from './primary-fields';
 
 import styles from './styles.module.scss';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { useCallback } from 'react';
 import StructField from './StructField';
 import { getRTVarConfigDefaultValue } from '../utils';

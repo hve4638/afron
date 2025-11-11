@@ -1,7 +1,7 @@
 import { Modal, ModalHeader, ModalRequiredProps } from '@/components/Modal';
 import { useProgressModalEvent } from './events';
 import { Align, Gap, Row } from '@/components/layout';
-import Button from '@/components/Button';
+import Button from '@/components/atoms/Button';
 import { useState } from 'react';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';

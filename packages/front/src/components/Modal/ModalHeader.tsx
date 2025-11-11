@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { GIconButton, GoogleFontIcon } from "components/GoogleFontIcon";
+import { GIconButton, GoogleFontIcon } from "@/components/atoms/GoogleFontIcon";
 import { Flex, Row } from "components/layout";
 import { useMemo } from "react";
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Align, Center, Column, Flex, Row } from 'components/layout';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { SpinnerCircular } from 'spinners-react';
 import { TabRender } from './types';
 import classNames from 'classnames';

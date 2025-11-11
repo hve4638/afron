@@ -4,7 +4,7 @@ import { Align, Center, Column, Flex, Grid, Row } from '@/components/layout';
 import type { HistoryData } from '@/features/session-history';
 
 import styles from './styles.module.scss';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '../Dialog';
 

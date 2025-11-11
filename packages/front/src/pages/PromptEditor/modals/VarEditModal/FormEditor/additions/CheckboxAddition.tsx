@@ -1,5 +1,5 @@
 import { RTVarConfig } from '@afron/types';
-import { CheckBoxForm } from '@/components/forms';
+import { CheckBoxForm } from '@/components/FormFields';
 import { AdditionProps } from './types';
 
 export function CheckboxAddition({

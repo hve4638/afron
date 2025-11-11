@@ -1,4 +1,4 @@
-import { CheckBoxForm } from "../forms";
+import { CheckBoxForm } from "../FormFields";
 
 interface ThinkingEnabledProps {
     value: boolean | undefined;

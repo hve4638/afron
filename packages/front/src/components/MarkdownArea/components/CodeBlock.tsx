@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { CommonProps } from "@/types";
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 import style from './CodeBlock.module.scss';
 import { Align, Flex, Row } from '@/components/layout';

@@ -6,9 +6,9 @@ import styles from './styles.module.scss';
 
 import { MODAL_DISAPPEAR_DURATION } from 'data';
 import { Modal, ModalBackground, ModalHeader } from 'components/Modal';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 
 import { TreeDirectory, TreeNode } from './TreeNode';
 import { relocateTree } from './utils';

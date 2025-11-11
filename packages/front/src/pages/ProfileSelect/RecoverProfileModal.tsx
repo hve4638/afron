@@ -1,21 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'components/Modal';
 import { Align, Column, Flex, Row } from 'components/layout';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 import { ModalHeader } from 'components/Modal';
 import { TextInput } from 'components/Input';
 import classNames from 'classnames';
 
 import useModalDisappear from 'hooks/useModalDisappear';
-import { ButtonForm } from '@/components/forms';
+import { ButtonForm } from '@/components/FormFields';
 import { ProfileNameLayout } from './layout';
 import { useModal } from '@/hooks/useModal';
 import { ConfirmDialog, DeleteConfirmDialog } from '@/modals/Dialog';
 import useHotkey from '@/hooks/useHotkey';
 
 import styles from './styles.module.scss';
-import ListView from '@/components/ListView/ListView';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import ListView from '@/components/container/ListView/ListView';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 interface RecoverProfileModalProps {
     isFocused: boolean;

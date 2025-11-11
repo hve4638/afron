@@ -36,8 +36,8 @@ const HandleTooltip = ({
     </div>
 );
 
-const TooltipSlider = (props: SliderProps) => (
-    <Slider
+function TooltipSlider(props: SliderProps) {
+    return <Slider
         {...props}
         handleRender={(node, handleProps) => (
             <HandleTooltip
@@ -47,6 +47,6 @@ const TooltipSlider = (props: SliderProps) => (
             </HandleTooltip>
         )}
     />
-);
+}
 
 export default TooltipSlider;

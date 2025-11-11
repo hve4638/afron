@@ -3,15 +3,15 @@ import classNames from 'classnames';
 
 import { Modal, ModalHeader } from '@/components/Modal';
 import TreeView, { directory, node, Tree } from '@/components/TreeView';
-import { GIcon } from '@/components/GoogleFontIcon';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Gap, Row } from '@/components/layout';
-import { EditableText } from '@/components/EditableText';
+import { EditableText } from '@/components/atoms/EditableText';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
 import useHotkey from '@/hooks/useHotkey';
 
 import styles from './SelectPromptTemplateModal.module.scss';
-import Button from '@/components/Button';
+import Button from '@/components/atoms/Button';
 import { Emit } from '@/lib/zustbus';
 import { PromptTemplateEvent } from '../PromptTemplateOption.hooks';
 import { useModal } from '@/hooks/useModal';

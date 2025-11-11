@@ -1,10 +1,10 @@
-import Dropdown from '@/components/ui/Dropdown';
+import Dropdown from '@/components/atoms/Dropdown';
 import { Align, Flex, Row } from '@/components/layout';
 import { ReactNodeProps } from '@/types';
 import type {
     ItemProps,
     DropdownProps
-} from '@/components/ui/Dropdown/types';
+} from '@/components/atoms/Dropdown/types';
 import classNames from 'classnames';
 
 interface DropdownFormProps<T> extends ReactNodeProps.Common {
@@ -88,5 +88,5 @@ function DropdownForm<T,>({
 DropdownForm.Item = Dropdown.Item;
 DropdownForm.Group = Dropdown.Group;
 
-export { default as Dropdown } from '@/components/ui/Dropdown';
+export { default as Dropdown } from '@/components/atoms/Dropdown';
 export default DropdownForm;

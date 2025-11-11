@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { Align, Center, Column, Grid, Row } from '@/components/layout';
 

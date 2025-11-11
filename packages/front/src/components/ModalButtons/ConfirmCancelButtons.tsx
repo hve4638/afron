@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 import { Align, Row } from 'components/layout';
 import { useTranslation } from 'react-i18next';
 

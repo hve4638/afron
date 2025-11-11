@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { Align, Column, Grid, Row } from '@/components/layout';
 
 import styles from './styles.module.scss';
-import { GIcon } from '@/components/GoogleFontIcon';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 
 type POTemplateListProps = {
     value: string;

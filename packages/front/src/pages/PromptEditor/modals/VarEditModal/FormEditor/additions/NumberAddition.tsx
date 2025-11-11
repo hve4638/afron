@@ -1,4 +1,4 @@
-import { CheckBoxForm, NumberForm } from '@/components/forms';
+import { CheckBoxForm, NumberForm } from '@/components/FormFields';
 import { AdditionProps } from './types';
 
 export function NumberAddition({

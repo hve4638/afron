@@ -7,7 +7,7 @@ import { useConfigStore } from '@/stores';
 import useTrigger from '@/hooks/useTrigger';
 
 import styles from './styles.module.scss';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import ProfileEvent from '@/features/profile-event';
 import { ChatAIModel, ChatAIModelGroup, ChatAIModelCategory } from '@afron/types';
 

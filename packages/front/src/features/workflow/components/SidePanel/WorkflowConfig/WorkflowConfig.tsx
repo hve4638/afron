@@ -2,7 +2,7 @@
 
 import { Column, Gap } from '@/components/layout';
 import styles from '../SidePanel.module.scss';
-import { Form } from '@/components/forms';
+import { Field } from '@/components/FormFields';
 import { TextInput } from '@/components/Input';
 
 export function WorkflowConfig() {

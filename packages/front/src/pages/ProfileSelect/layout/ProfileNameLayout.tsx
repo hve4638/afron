@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from '@/components/Modal';
-import Button from '@/components/Button';
+import Button from '@/components/atoms/Button';
 import { ModalHeader } from '@/components/Modal';
 import { CommonProps } from '@/types';
 

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Center, Flex, Row } from 'components/layout';
 import classNames from 'classnames';
-import CheckBox from '../CheckBox';
+import CheckBox from '../atoms/CheckBox';
 
 interface CheckBoxFormProps {
     name?: string;

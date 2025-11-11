@@ -8,7 +8,7 @@ interface UploadFormProps {
     onUpload: (files: FileList) => void;
 }
 
-function UploadForm({ name = '', onUpload }: UploadFormProps) {
+export function UploadForm({ name = '', onUpload }: UploadFormProps) {
     const [hovered, setOnHover] = useState(false);
 
     return (

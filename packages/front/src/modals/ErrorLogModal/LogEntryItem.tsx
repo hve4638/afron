@@ -2,7 +2,7 @@ import { forwardRef, useMemo, useState } from 'react';
 import classNames from 'classnames';
 
 import { Align, Column, Flex, Grid, Row } from '@/components/layout';
-import { GIcon } from '@/components/GoogleFontIcon';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 
 import { LogEntry } from '@/stores/useErrorLogStore';
 

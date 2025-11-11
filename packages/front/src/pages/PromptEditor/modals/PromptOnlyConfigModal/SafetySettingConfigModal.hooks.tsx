@@ -7,7 +7,7 @@ import useHotkey from '@/hooks/useHotkey';
 import useTrigger from '@/hooks/useTrigger';
 
 import { Modal, ModalHeader } from '@/components/Modal';
-import Subdescription from '@/components/ui/Description';
+import Subdescription from '@/components/atoms/Description';
 import { Column, Row } from '@/components/layout';
 import ModelForm from '@/components/model-ui';
 

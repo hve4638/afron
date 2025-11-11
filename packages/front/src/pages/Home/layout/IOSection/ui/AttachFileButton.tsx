@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import classNames from 'classnames';
 
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 import styles from './ui.module.scss';
 import Latch from '@/lib/Latch';

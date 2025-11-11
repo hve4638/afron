@@ -1,4 +1,4 @@
-import Delimiter from '@/components/Delimiter';
+import Delimiter from '@/components/atoms/Delimiter';
 import { Gap } from '@/components/layout';
 
 interface NodeFoldProps {

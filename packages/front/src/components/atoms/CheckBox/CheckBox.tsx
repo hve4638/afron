@@ -1,5 +1,5 @@
 import React from 'react'
-import { Center } from '../layout';
+import { Center } from '../../layout';
 import styles from './styles.module.scss';
 
 interface CheckboxProps {

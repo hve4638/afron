@@ -1,6 +1,6 @@
-import { CheckBoxForm, NumberForm, StringForm } from '@/components/forms'
+import { CheckBoxForm, NumberForm, StringForm } from '@/components/FormFields'
 import { FormFieldProps } from './types'
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm'
+import DropdownForm, { Dropdown } from '@/components/FormFields/DropdownForm'
 import { RTForm, RTVarConfig, RTVarData } from '@afron/types'
 
 export function TextField({ name, onChange, value }: FormFieldProps<'text', string>) {

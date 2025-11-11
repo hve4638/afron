@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import InputField from './InputField';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
 import { useConfigStore, useSessionStore } from '@/stores';

@@ -1,8 +1,8 @@
-import Button from '@/components/Button';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import Button from '@/components/atoms/Button';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
-import { EditableText } from '@/components/EditableText';
+import { EditableText } from '@/components/atoms/EditableText';
 import TreeView from '@/components/TreeView';
 
 import { LeafNode } from './nodes';

@@ -3,14 +3,14 @@ import { useTranslation } from "react-i18next";
 import styles from './styles.module.scss';
 
 import { Align, Column, Flex, Row } from "@/components/layout";
-import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
-import Button from '@/components/Button';
+import { GIconButton, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
+import Button from '@/components/atoms/Button';
 
 import { useModal } from '@/hooks/useModal';
 import useHotkey from '@/hooks/useHotkey';
 
 import type { PromptData } from '@/types';
-import { EditableText } from '@/components/EditableText';
+import { EditableText } from '@/components/atoms/EditableText';
 import { PromptEditorDataAction } from './hooks';
 import { Emit, UseOn } from '@/lib/zustbus';
 import { PromptEditorEvent } from './types';

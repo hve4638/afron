@@ -1,4 +1,4 @@
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { useModal } from '@/hooks/useModal';
 import FormModal from '@/modals/FormModal';
 import { useProfileAPIStore, useSessionStore } from '@/stores';

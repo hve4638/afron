@@ -1,4 +1,4 @@
-import { CheckBoxForm } from '@/components/forms';
+import { CheckBoxForm } from '@/components/FormFields';
 import { Column, Flex, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
 import useHotkey from '@/hooks/useHotkey';

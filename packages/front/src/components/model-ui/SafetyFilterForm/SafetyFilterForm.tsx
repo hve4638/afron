@@ -1,5 +1,5 @@
-import Delimiter from '@/components/Delimiter';
-import { CheckBoxForm } from '@/components/forms';
+import Delimiter from '@/components/atoms/Delimiter';
+import { CheckBoxForm } from '@/components/FormFields';
 import SafetyFilterSlider from './SafetyFilterSlider';
 import { GeminiSafetySetting } from '@afron/types';
 

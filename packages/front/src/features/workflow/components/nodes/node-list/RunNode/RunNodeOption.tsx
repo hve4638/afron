@@ -2,11 +2,11 @@ import { useCallback, useLayoutEffect } from 'react';
 import { RTFlowNodeOptions } from '@afron/types';
 
 import { Column, Gap } from '@/components/layout';
-import { DropdownForm, Form } from '@/components/forms';
+import { DropdownForm, Field } from '@/components/FormFields';
 
 
-import Delimiter from '@/components/Delimiter';
-import { GIcon } from '@/components/GoogleFontIcon';
+import Delimiter from '@/components/atoms/Delimiter';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 
 import { NodeOptionProps } from '../../types';
 
@@ -79,7 +79,7 @@ export function RunNodeOption({
                 <>
                     <strong className='undraggable'>버튼</strong>
                     <Delimiter />
-                    <Form.String
+                    <Field.String
                         name='버튼 이름'
                         value={option.button_label}
                         onChange={(next) => changeOption('button_label', next)}
@@ -90,7 +90,7 @@ export function RunNodeOption({
 
             <strong className='undraggable'>입력 설정</strong>
             <Delimiter />
-            <Form.CheckBox
+            <Field.CheckBox
                 name='채팅 기록 보존'
                 checked={option.include_chat_history}
                 onChange={(next) => changeOption('include_chat_history', next)}
@@ -99,22 +99,22 @@ export function RunNodeOption({
             <Gap h='1em' />
             <strong className='undraggable'>입력 허용</strong>
             <Delimiter />
-            <Form.CheckBox
+            <Field.CheckBox
                 name='텍스트'
                 checked={option.allow_input_text}
                 onChange={(next) => changeOption('allow_input_text', next)}
             />
-            <Form.CheckBox
+            <Field.CheckBox
                 name='이미지'
                 checked={option.allow_input_image}
                 onChange={(next) => changeOption('allow_input_image', next)}
             />
-            <Form.CheckBox
+            <Field.CheckBox
                 name='PDF'
                 checked={option.allow_input_pdf}
                 onChange={(next) => changeOption('allow_input_pdf', next)}
             />
-            <Form.CheckBox
+            <Field.CheckBox
                 name='그외 파일'
                 checked={option.allow_input_files}
                 onChange={(next) => changeOption('allow_input_files', next)}

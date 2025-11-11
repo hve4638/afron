@@ -1,5 +1,5 @@
-import Button from '@/components/Button';
-import { CheckBoxForm } from '@/components/forms';
+import Button from '@/components/atoms/Button';
+import { CheckBoxForm } from '@/components/FormFields';
 import { Column, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
 import useHotkey from '@/hooks/useHotkey';

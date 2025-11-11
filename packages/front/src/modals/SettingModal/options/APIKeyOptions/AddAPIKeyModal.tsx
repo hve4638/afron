@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 import { Modal, ModalHeader } from 'components/Modal';
 import { Align, Center, Column, Flex, Grid, Row } from 'components/layout';
 import useModalDisappear from 'hooks/useModalDisappear';
 import { useTranslation } from 'react-i18next';
 import useHotkey from 'hooks/useHotkey';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
-import UploadForm from '@/components/UploadForm';
-import { StringForm, StringLongForm } from '@/components/forms';
+import UploadForm from '@/components/FormFields/UploadForm';
+import { StringForm, StringLongForm } from '@/components/FormFields';
 
 type StringInputModalProps = {
     title: string;

@@ -1,8 +1,8 @@
 import { Align, Flex, Row } from '@/components/layout';
 import { APIKeyMetadata } from '@/types/apikey-metadata';
 
-import DivButton from '@/components/DivButton';
-import { GIcon } from '@/components/GoogleFontIcon';
+import DivButton from '@/components/atoms/DivButton';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 import { useModal } from '@/hooks/useModal';
 
 import APIItem from './APIItem';

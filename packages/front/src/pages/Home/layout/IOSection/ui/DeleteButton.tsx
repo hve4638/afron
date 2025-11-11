@@ -1,4 +1,4 @@
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { HistoryData } from '@/features/session-history';
 import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '@/modals/Dialog';

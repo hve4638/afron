@@ -1,7 +1,7 @@
 import { Align, Column, Flex, Gap, Row } from '@/components/layout';
-import Button from '@/components/Button';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
-import Delimiter from '@/components/Delimiter';
+import Button from '@/components/atoms/Button';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
+import Delimiter from '@/components/atoms/Delimiter';
 
 import { useModal } from '@/hooks/useModal';
 import { SelectPromptTemplateModal } from './modals/SelectPromptTemplateModal';

@@ -1,6 +1,6 @@
 import { Flex, Row } from '@/components/layout';
 import { CommonProps } from '@/types';
-import Button from '../Button';
+import Button from '../atoms/Button';
 import classNames from 'classnames';
 
 interface ButtonFormProps extends CommonProps {

@@ -1,6 +1,6 @@
 import { Column } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
-import Well from '@/components/ui/Well';
+import Well from '@/components/atoms/Well';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 

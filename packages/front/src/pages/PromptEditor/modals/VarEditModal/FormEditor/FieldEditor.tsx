@@ -7,9 +7,9 @@ import { PromptVarForm } from '@/types/prompt-var';
 
 import { PromptEditorDataVarAction } from '../../../hooks';
 import styles from './styles.module.scss';
-import { DropdownForm, Form, StringForm } from '@/components/forms';
+import { DropdownForm, Field, StringForm } from '@/components/FormFields';
 import { FIELD_DROPDOWN_ITEMS, VAR_DROPDOWN_ITEMS } from '../constants';
-import Dropdown from '@/components/ui/Dropdown';
+import Dropdown from '@/components/atoms/Dropdown';
 import { Additions } from './additions';
 import { Emit } from '@/lib/zustbus';
 import { VarEditModalControlEvent } from '../types';

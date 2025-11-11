@@ -10,7 +10,7 @@ import { DRAG_NODE_TYPE } from '../../../constants';
 
 import styles from '../SidePanel.module.scss';
 import { NodeFold, NodeItem } from './components';
-import Delimiter from '@/components/Delimiter';
+import Delimiter from '@/components/atoms/Delimiter';
 
 interface NodeLibraryProps {
 

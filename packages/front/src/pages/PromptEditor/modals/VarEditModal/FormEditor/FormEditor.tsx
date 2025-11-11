@@ -4,9 +4,9 @@ import { ModalBox, ModalHeader } from '@/components/Modal';
 import { PromptVarForm } from '@/types/prompt-var';
 
 import { PromptEditorDataVarAction } from '../../../hooks';
-import { DropdownForm, Form } from '@/components/forms';
+import { DropdownForm, Field } from '@/components/FormFields';
 import { VAR_DROPDOWN_ITEMS } from '../constants';
-import Dropdown from '@/components/ui/Dropdown';
+import Dropdown from '@/components/atoms/Dropdown';
 import { Additions } from './additions';
 import { Emit } from '@/lib/zustbus';
 import { VarEditModalControlEvent } from '../types';
@@ -74,7 +74,7 @@ export function FormEditor({
                     ))
                 }
             </DropdownForm>
-            <Form.String
+            <Field.String
                 name={t('form_editor.name_label')}
                 warn={nameWarnText}
                 
@@ -90,7 +90,7 @@ export function FormEditor({
                 }}
                 width='10em'
             />
-            <Form.String
+            <Field.String
                 style={{ marginTop: '0px' }}
 
                 name={t('form_editor.display_name_label')}

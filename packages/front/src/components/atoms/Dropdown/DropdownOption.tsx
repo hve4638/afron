@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { DropdownItem, DropdownItemList, GroupRenderProps, ItemRenderProps } from './types';
 
 import styles from './Dropdown.module.scss';
-import { GIcon } from '@/components/GoogleFontIcon';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Row } from '@/components/layout';
 
 interface DropdownItemProps<T> {

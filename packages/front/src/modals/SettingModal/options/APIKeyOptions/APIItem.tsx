@@ -1,4 +1,4 @@
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Row } from '@/components/layout';
 import ProfileEvent from '@/features/profile-event';
 import { useModal } from '@/hooks/useModal';

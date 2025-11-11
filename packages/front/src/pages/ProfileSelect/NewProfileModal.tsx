@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'components/Modal';
 import { Align, Column, Flex, Row } from 'components/layout';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 import { ModalHeader } from 'components/Modal';
 import { TextInput } from 'components/Input';
 import classNames from 'classnames';

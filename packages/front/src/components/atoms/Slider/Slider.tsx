@@ -12,7 +12,7 @@ const HandleTooltip = ({ value, dragging, children }: { value: number; dragging:
     </Tooltip>
 );
 
-const TooltipSlider = (props: SliderProps) => {
+function TooltipSlider(props: SliderProps) {
     const handleRender: SliderProps['handleRender'] = (node, handleProps) => (
         <HandleTooltip value={handleProps.value} dragging={handleProps.dragging}>
             {node}

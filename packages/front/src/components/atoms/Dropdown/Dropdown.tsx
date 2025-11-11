@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
-import { GIcon } from '@/components/GoogleFontIcon';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 
 import { DropdownItem, DropdownItemList, DropdownProps } from './types';
 import Group from './Group';

@@ -1,5 +1,5 @@
 import { Align, Flex, Row } from '@/components/layout';
-import { RCSlider, TooltipSlider } from '@/components/Slider';
+import { RCSlider, TooltipSlider } from '@/components/atoms/Slider';
 import classNames from 'classnames';
 
 interface SliderFormProps {

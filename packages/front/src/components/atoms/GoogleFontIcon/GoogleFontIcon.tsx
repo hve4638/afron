@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import HoverEffect from 'components/HoverEffect';
+import HoverEffect from '@/components/atoms/HoverEffect';
 import React from 'react';
 
 interface GoogleFontIconProps {
@@ -12,7 +12,7 @@ interface GoogleFontIconProps {
     onMouseDown?:(e:React.MouseEvent<HTMLLabelElement, MouseEvent>)=>void;
 }
 
-function GoogleFontIcon({
+export function GoogleFontIcon({
     className='',
     enableHoverEffect=false,
     style,

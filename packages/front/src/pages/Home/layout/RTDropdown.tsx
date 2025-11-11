@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
-import { GIcon, GoogleFontIcon } from '@/components/GoogleFontIcon';
-import DivButton from '@/components/DivButton';
-import Dropdown from '@/components/ui/Dropdown';
+import { GIcon, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
+import DivButton from '@/components/atoms/DivButton';
+import Dropdown from '@/components/atoms/Dropdown';
 import useRTDropdown from './RTDropdown.hook';
 import { emitEvent } from '@/hooks/useEvent';
 

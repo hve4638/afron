@@ -3,7 +3,7 @@ import { useWorkflowEditor } from './WorkflowEditor.hook';
 
 import styles from './WorkflowEditor.module.scss';
 import { Align, Column, Flex, Gap, Grid, Row } from '@/components/layout';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { ModalProvider } from '@/hooks/useModal';
 
 function WorkflowEditorInner() {

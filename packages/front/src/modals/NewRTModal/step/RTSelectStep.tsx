@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
-import { GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Center, Grid, Row } from '@/components/layout';
 
 import style from './RTSelectStep.module.scss';

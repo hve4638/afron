@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import LocalAPI from 'api/local';
-import Dropdown from '@/components/ui/Dropdown';
+import Dropdown from '@/components/atoms/Dropdown';
 // import DropdownOld, { DropdownItem, DropdownItemList } from '@/components/DropdownOld';
 import {
     OpenAIIcon,
@@ -9,7 +9,7 @@ import {
     AnthropicIcon,
     GoogleVertexAIIcon,
     GeminiIcon,
-} from 'components/Icons'
+} from '@/components/atoms/Icons'
 import { useConfigStore, useDataStore, useSessionStore } from '@/stores';
 import useMemoryStore from '@/stores/useMemoryStore';
 import ProfileEvent from '@/features/profile-event';

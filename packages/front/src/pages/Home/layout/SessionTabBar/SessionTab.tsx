@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { SpinnerCircular } from 'spinners-react';
 import { Align, Center, Column, Flex, Row } from '@/components/layout';
-import { GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { ProfileSessionMetadata } from '@/types';
 import classNames from 'classnames';
 import SessionMenuPopover from './SessionMenuPopover';

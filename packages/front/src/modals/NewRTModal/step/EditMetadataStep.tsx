@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import { StringLongForm } from '@/components/forms';
+import Button from '@/components/atoms/Button';
+import { StringLongForm } from '@/components/FormFields';
 import { Align, Column, Grid, Row } from '@/components/layout';
 import ProfileEvent from '@/features/profile-event';
 import { POTemplateList } from './POTemplateList';

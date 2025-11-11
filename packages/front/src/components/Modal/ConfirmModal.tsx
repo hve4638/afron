@@ -1,7 +1,7 @@
 import { Align, Row } from 'components/layout';
 import { ModalHeader } from '.';
 import Modal from './Modal';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { MODAL_DISAPPEAR_DURATION } from 'data';

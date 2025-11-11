@@ -2,11 +2,11 @@ import { useCallback, useLayoutEffect } from 'react';
 import { RTFlowNodeOptions } from '@afron/types';
 
 import { Column, Gap } from '@/components/layout';
-import { DropdownForm, Form } from '@/components/forms';
+import { DropdownForm, Field } from '@/components/FormFields';
 
 
-import Delimiter from '@/components/Delimiter';
-import { GIcon } from '@/components/GoogleFontIcon';
+import Delimiter from '@/components/atoms/Delimiter';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 
 import { NodeOptionProps } from '../../types';
 
@@ -28,7 +28,7 @@ export function OutputNodeOption({
                 width: '100%',
             }}
         >
-            <Form.CheckBox
+            <Field.CheckBox
                 label='히스토리에 추가'
                 checked={option.include_history}
             />

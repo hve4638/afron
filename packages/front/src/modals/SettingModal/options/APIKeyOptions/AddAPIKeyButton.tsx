@@ -1,5 +1,5 @@
-import DivButton from '@/components/DivButton';
-import { GIcon } from '@/components/GoogleFontIcon';
+import DivButton from '@/components/atoms/DivButton';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 import { useModal } from '@/hooks/useModal';
 import StringInputModal from '@/modals/StringInputModal';
 import AddAPIKeyModal from './AddAPIKeyModal';

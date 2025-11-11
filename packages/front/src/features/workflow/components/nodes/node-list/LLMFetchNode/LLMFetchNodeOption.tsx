@@ -3,7 +3,7 @@ import { RTFlowNodeOptions } from '@afron/types';
 
 import ModelForm from '@/components/model-ui';
 import { Column, Gap } from '@/components/layout';
-import { Form } from '@/components/forms';
+import { Field } from '@/components/FormFields';
 
 import { NodeOptionProps } from '../../types';
 
@@ -27,22 +27,22 @@ export function LLMFetchNodeOption({ option, setOption }: NodeOptionProps<RTFlow
         >
             <strong>모델 지정</strong>
             <hr />
-            <Form.CheckBox
+            <Field.CheckBox
                 label='사용자 설정을 사용'
                 checked={option.model_selection}
                 onChange={(checked) => changeOption('model_selection', checked)}
             />
             {
                 option.model_selection == true &&
-                <Form.Dropdown
+                <Field.Dropdown
                     label='모델'
                     align='right'
                     value={option.model}
                     onChange={(value) => changeOption('model', value)}
                     onItemNotFound={(value) => changeOption('model', value)}
                 >
-                    <Form.Dropdown.Item name='GPT-4' value='openai:gpt-4' />
-                </Form.Dropdown>
+                    <Field.Dropdown.Item name='GPT-4' value='openai:gpt-4' />
+                </Field.Dropdown>
             }
 
             <Gap h='8px' />

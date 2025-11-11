@@ -4,9 +4,9 @@ import classNames from 'classnames';
 import styles from './styles.module.scss';
 
 import { Modal, ModalHeader } from 'components/Modal';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 
 import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
 import RTTreeView from 'features/rtTreeView';

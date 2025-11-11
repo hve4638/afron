@@ -7,9 +7,9 @@ import TreeView, { directory, node, Tree } from '@/components/TreeView';
 import { Emit } from '@/lib/zustbus';
 import { PromptTemplateEvent } from '../PromptTemplateOption.hooks';
 import useModalDisappear from '@/hooks/useModalDisappear';
-import { Form } from '@/components/forms';
+import { Field } from '@/components/FormFields';
 import { Flex, Gap, Row } from '@/components/layout';
-import Button from '@/components/Button';
+import Button from '@/components/atoms/Button';
 import ProfileEvent from '@/features/profile-event';
 
 interface NewPromptTemplateModalProps {
@@ -42,7 +42,7 @@ export function NewPromptTemplateModal({
                 >새 프롬프트 템플릿</ModalHeader>
             }
         >
-            <Form.String
+            <Field.String
                 name='이름'
                 value={name}
                 onChange={(v) => setName(v)}

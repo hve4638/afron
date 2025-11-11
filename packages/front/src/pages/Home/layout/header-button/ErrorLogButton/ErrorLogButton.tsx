@@ -1,4 +1,4 @@
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 import { emitEvent } from '@/hooks/useEvent';
 

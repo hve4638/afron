@@ -1,5 +1,5 @@
-import Button from '@/components/Button';
-import { TextForm } from '@/components/forms';
+import Button from '@/components/atoms/Button';
+import { TextForm } from '@/components/FormFields';
 import { Align, Gap, Row } from '@/components/layout';
 import { Modal, ModalHeader, ModalRequiredProps } from '@/components/Modal';
 import { emitEvent } from '@/hooks/useEvent';

@@ -1,8 +1,8 @@
 import { FlowNode } from '@/lib/xyflow';
 
 import { Align, Column, Flex, Gap, Row } from '@/components/layout';
-import { GIconButton } from '@/components/GoogleFontIcon';
-import { Textarea } from '@/components/ui/Textarea';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import { Textarea } from '@/components/atoms/Textarea';
 import { useNodeOptionPanel } from './NodeOptionPanel.hooks';
 
 import styles from './NodeOptionPanel.module.scss';

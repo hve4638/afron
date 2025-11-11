@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import ProfileAddIcon from '@/assets/img/profile-add.svg';
 
 import { Flex } from '@/components/layout';
-import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GIconButton, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 

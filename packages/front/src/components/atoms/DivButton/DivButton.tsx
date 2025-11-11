@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import styles from './styles.module.scss';
-import { KeyboardEventHandler } from 'react';
 
 type DivButtonProps = {
     className?: string;
@@ -10,7 +9,7 @@ type DivButtonProps = {
     onClick?: (e: React.KeyboardEvent<HTMLDivElement>|React.MouseEvent<HTMLDivElement>) => void;
 }
 
-function DivButton({
+export function DivButton({
     className='',
     style={},
     onClick=(e)=>{},

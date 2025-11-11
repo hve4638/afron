@@ -1,5 +1,5 @@
-import { EditableText } from '@/components/EditableText';
-import { GIcon } from '@/components/GoogleFontIcon';
+import { EditableText } from '@/components/atoms/EditableText';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 import { Flex } from '@/components/layout';
 import TreeView, { directory, node } from '@/components/TreeView';
 

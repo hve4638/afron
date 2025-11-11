@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Flex } from 'components/layout';
 import { AdditionProps } from './types';
 import { genUntil } from '@/utils/genUntil';

@@ -5,7 +5,7 @@ import ReactLoading from 'react-loading';
 import { Align, Flex, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/Modal';
 import { ConfirmModal } from '@/components/Modal';
-import Button from '@/components/Button';
+import Button from '@/components/atoms/Button';
 
 import { MODAL_DISAPPEAR_DURATION } from '@/data';
 

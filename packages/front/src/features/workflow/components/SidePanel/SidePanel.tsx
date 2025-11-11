@@ -1,4 +1,4 @@
-import { GIconButton } from '@/components/GoogleFontIcon'
+import { GIconButton } from '@/components/atoms/GoogleFontIcon'
 import { Align, Column } from '@/components/layout'
 import classNames from 'classnames';
 
