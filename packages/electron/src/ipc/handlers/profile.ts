@@ -1,6 +1,7 @@
 import runtime from '@/runtime';
+import { CustomModel, GlobalModelConfiguration, IPCInvokers } from '@afron/types';
 
-function handler(): IPCInvokerProfile {
+function handler(): IPCInvokers.Profile {
     return {
         async getCustomModels(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);

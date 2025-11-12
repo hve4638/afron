@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPCListenerPing } from '../data';
 import { createListenerManager } from './listener-utils';
+import { IPCInvokerInterface, IPCListenerInterface } from '@afron/types';
 
 type IPCInvokerKeys = keyof IPCInvokerInterface;
 type IPCInvokerPath = {
@@ -105,12 +106,6 @@ const ipcInvokerPath = {
         reflectMetadata: 0,
 
         getForms: 0,
-
-        addNode: 0,
-        removeNode: 0,
-        updateNodeOption: 0,
-        connectNode: 0,
-        disconnectNode: 0,
     },
     profileRTStorage: {
         get: 0,
@@ -127,6 +122,15 @@ const ipcInvokerPath = {
         removeVariables: 0,
         getContents: 0,
         setContents: 0,
+    },
+    profileRTFlow: {
+        getFlowData: 0,
+        setFlowData: 0,
+        
+        getPrompts: 0,
+        setPrompts: 0,
+        addPrompt: 0,
+        removePrompt: 0,
     },
     request: {
         requestRT: 0,
@@ -150,7 +154,7 @@ const ipcInvokers: IPCInvokerInterface = Object.fromEntries(
             ) as Record<string, (...args: any) => Promise<any>>
         ] as [IPCInvokerKeys, Record<string, (...args: any) => Promise<any>>]
     ) as [IPCInvokerKeys, Record<string, (...args: any) => Promise<any>>][]
-) as IPCInvokerInterface;
+) as unknown as IPCInvokerInterface;
 
 const listenerManager = createListenerManager();
 

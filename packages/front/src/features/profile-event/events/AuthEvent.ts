@@ -5,6 +5,7 @@ import useCacheStore from '@/stores/useCacheStore';
 import useDataStore from '@/stores/useDataStore';
 import { ProfileSessionMetadata } from '@/types';
 import { ProviderName } from '../types';
+import { VertexAIAuth } from '@afron/types';
 
 class AuthEvent {
     static async addAuth(provider: ProviderName, apiKey: string, memo: string = '') {

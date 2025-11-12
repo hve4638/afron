@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron';
 import { IPCListenerPing } from '@/data';
 import ThrottleAction from '@/features/throttle-action';
 import runtime from '@/runtime';
+import { IPCInvokers } from '@afron/types';
 
 
 // 이건 정상 작동
@@ -13,9 +14,9 @@ import runtime from '@/runtime';
 //         ? ENoResult
 //         : Promise<readonly [EError] | readonly [null, T]>;
 
-function handler():IPCInvokerProfiles {
+function handler(): IPCInvokers.Profiles {
     const throttle = ThrottleAction.getInstance();
-    
+
     return {
         /* 프로필 */
         async create() {
@@ -37,7 +38,7 @@ function handler():IPCInvokerProfiles {
         },
         async getLast() {
             const id = runtime.profiles.getLastProfileId();
-            
+
             return [null, id];
         },
         async setLast(id: string | null) {

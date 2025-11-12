@@ -1,0 +1,33 @@
+.node {
+    position: relative;
+    background-color: #333333;
+    border-radius: 4px;
+    border: 1px solid #555;
+
+    min-width: 130px;
+    max-width: 160px;
+    min-height: 2.5em;
+    font-size: 12px;
+    padding-bottom: 4px;
+    
+    &:global(.selected) {
+        border-color: #e6e6e6;
+    }
+
+    hr {
+        margin: 1px 0;
+        border-color: #555;
+    }
+
+    .description {
+        font-size: 0.75em;
+        color: grey;
+        margin-top: 4px;
+        padding: 0 4px;
+        word-break: break-word;
+    }
+}
+
+.handle-name {
+    color: rgb(153, 153, 153);
+}

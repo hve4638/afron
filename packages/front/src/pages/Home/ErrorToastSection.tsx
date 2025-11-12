@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { Align, Column, Row } from '@/components/layout';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 import { useModal } from '@/hooks/useModal';
 import ErrorLogModal from '@/modals/ErrorLogModal';

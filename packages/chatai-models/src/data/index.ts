@@ -1,3 +1,5 @@
+import { ChatAIConfig, ChatAIFlags } from '@afron/types';
+
 export const configFlags = {
     supportThinkingBudget: true,
     supportThinkingEffort: true,
@@ -5,7 +7,7 @@ export const configFlags = {
     supportVerbosity: true
 } satisfies Partial<ChatAIConfig>;
 
-export const flags:Required<ChatAIFlags> = {
+export const flags: Required<ChatAIFlags> = {
     featured: true,
     stable: true,
     latest: true,

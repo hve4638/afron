@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NumberForm, ToggleSwitchForm } from '@/components/forms';
+import { NumberForm, ToggleSwitchForm } from '@/components/FormFields';
 
 function ServerOptions() {
     const [enabled, setEnabled] = useState(false);

@@ -3,6 +3,7 @@ import { RefetchMethods, UpdateMethods } from './types';
 import { profileStoreTool } from './utils';
 import { APIKeyMetadata } from '@/types/apikey-metadata';
 import ProfilesAPI, { ProfileAPI } from '@/api/profiles';
+import { CustomModel } from '@afron/types';
 
 interface DataFields {
     custom_models : CustomModel[];

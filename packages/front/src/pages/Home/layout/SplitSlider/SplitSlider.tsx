@@ -4,7 +4,7 @@ import { Center } from '@/components/layout';
 import styles from './styles.module.scss';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useConfigStore } from '@/stores';
-import { GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 
 import useMouseDelta from '@/hooks/useMouseDelta';
 

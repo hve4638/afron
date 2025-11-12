@@ -48,7 +48,7 @@ const ARRAY_CONFIG = {
     },
 }
 
-const FORM_JSON_TREE = {
+export const FORM_JSON_TREE = {
     'type' : JSONType.Union('text', 'number', 'checkbox', 'select', 'array', 'struct'),
     'id' : JSONType.String(),
     'display_name' : JSONType.String(),
@@ -61,8 +61,12 @@ const FORM_JSON_TREE = {
         'select' : SELECT_CONFIG,
         'array' : ARRAY_CONFIG,
         'struct' : STRUCT_CONFIG,
-    }
-}
+    },
 
-export default FORM_JSON_TREE;
-                    
+    // 프롬프트 변수 및 전역 변수 참조 여부
+    'refs' : JSONType.Array({
+        'type' : JSONType.Union('prompt', 'global'),
+        'prompt_id' : JSONType.String().nullable(),
+        'variable_name' : JSONType.String(),
+    }),
+}

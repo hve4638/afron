@@ -7,16 +7,19 @@ code ".\"
 Start-Sleep -Seconds 3
 
 Get-Desktop 1 | Switch-Desktop
-code ".\packages\front"
+code ".\packages\core"
 Start-Sleep -Seconds 3
 
 Get-Desktop 2 | Switch-Desktop
-code ".\packages\core"
+code ".\packages\front"
 Start-Sleep -Seconds 3
 
 Get-Desktop 3 | Switch-Desktop
 code ".\packages\electron"
 Start-Sleep -Seconds 3
 
+Get-Desktop 4 | Switch-Desktop
+code ".\packages\types"
+Start-Sleep -Seconds 3
 
 Get-Desktop 0 | Switch-Desktop

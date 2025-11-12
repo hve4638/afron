@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
-import { Column, Flex, Grid, Row } from 'components/layout';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
-import classNames from 'classnames';
+import FocusLock from 'react-focus-lock';
+
 import ModalBackground, { ModalBackgroundProps } from './ModalBackground';
 import ModalBox from './ModalBox';
-import FocusLock from 'react-focus-lock';
 import { CommonProps } from '@/types';
 import useHotkey from '@/hooks/useHotkey';
+import { useKeyBind } from '@/hooks/useKeyBind';
 
 
 interface ModalProps extends CommonProps {
@@ -37,14 +36,11 @@ function Modal({
 
     backgroundProps = {},
 }: ModalProps) {
-    useHotkey({
-        'Escape': (e) => {
-            if (onEscapeAction) {
-                onEscapeAction();
-                return true;
-            }
+    useKeyBind({
+        'Esc': (e) => {
+            if (onEscapeAction) onEscapeAction();
         }
-    }, focused && (onEscapeAction != null), [focused, onEscapeAction]);
+    }, [focused, onEscapeAction], focused && (onEscapeAction != null))
 
     const hasHeader = !!headerLabel;
 

@@ -1,12 +1,13 @@
 import { MasterKeyInitResult } from '@afron/core';
 import runtime from '@/runtime';
 import { IPCInvokerName } from 'types';
+import { IPCInvokers } from '@afron/types';
 
-function handler():IPCInvokerMasterKey {
+function handler(): IPCInvokers.MasterKey {
     return {
         async init() {
             const result = await runtime.masterKeyManager.init();
-            switch(result) {
+            switch (result) {
                 case MasterKeyInitResult.InvalidData:
                     runtime.logger.warn('Master key initialization failed: Invalid data');
                     return [null, 'invalid-data'];
@@ -20,16 +21,16 @@ function handler():IPCInvokerMasterKey {
                     runtime.logger.info('Master key initialized successfully');
                     return [null, 'normal'] as const;
                 default:
-                    const err = { name : 'InitializeFail', message: '', value: 'other' };
+                    const err = { name: 'InitializeFail', message: '', value: 'other' };
                     return [err] as const;
             }
         },
-        async reset(recoveryKey:string) {
+        async reset(recoveryKey: string) {
             runtime.logger.info(`Resetting master key`);
             await runtime.masterKeyManager.resetKey(recoveryKey);
             return [null] as const;
-        }, 
-        async recover(recoveryKey:string) {
+        },
+        async recover(recoveryKey: string) {
             runtime.logger.info(`Try to recover master key with recovery key`);
             const configAC = await runtime.globalStorage.accessAsJSON('config.json');
             const sharedMode = configAC.getOne('shared_mode');

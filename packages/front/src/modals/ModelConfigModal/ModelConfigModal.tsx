@@ -1,6 +1,6 @@
-import { CheckBoxForm } from '@/components/forms';
+import { CheckBoxForm } from '@/components/FormFields';
 import { Column, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import { useProfileAPIStore } from '@/stores';
@@ -10,6 +10,7 @@ import ProfileEvent from '@/features/profile-event';
 import useTrigger from '@/hooks/useTrigger';
 import { CommonOptions, GPT5Options, SafetyOptions, ThinkingOptions } from './options';
 import useMemoryStore from '@/stores/useMemoryStore';
+import { ChatAIModel, GlobalModelConfiguration } from '@afron/types';
 
 type ModelConfigModalProps = {
     modelId: string;

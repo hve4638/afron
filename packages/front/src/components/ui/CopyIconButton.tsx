@@ -1,5 +1,5 @@
 import { CommonProps } from "@/types";
-import { GIconButton } from "../GoogleFontIcon";
+import { GIconButton } from "../atoms/GoogleFontIcon";
 import { EventNames, useEvent } from "@/hooks/useEvent";
 import { useRef, useState } from "react";
 

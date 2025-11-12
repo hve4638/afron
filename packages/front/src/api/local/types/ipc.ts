@@ -1,3 +1,5 @@
+import { IPCInvokerInterface, IPCListenerInterface } from "@afron/types";
+
 export type IIPCAPI = {
     [KEY in keyof IPCInvokerInterface]: {
         [KEY2 in keyof IPCInvokerInterface[KEY]]: Function

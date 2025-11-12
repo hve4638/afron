@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
-import { Shortcut } from '@/types/shortcut';
+
+import { emitNavigate } from '@/events/navigate';
 import useShortcutStore from '@/stores/useShortcutStore';
+
 import { emitEvent, EventNames } from '@/hooks/useEvent';
 import useHotkey from '@/hooks/useHotkey';
-import { useNavigate } from 'react-router';
+
+import { Shortcut } from '@/types/shortcut';
 
 function useShortcutEmitter() {
-    const navigate = useNavigate();
     const shortcuts = useShortcutStore();
 
     useShortcut(shortcuts.font_size_up, 'font_size_up');
@@ -31,11 +33,10 @@ function useShortcutEmitter() {
     useHotkey({
         'F12': (e) => {
             if (e.altKey && e.ctrlKey) {
-                console.log('F12 + Alt');
-                navigate('/test');
+                emitNavigate('goto_test');
             }
         }
-    }, true)
+    }, import.meta.env['VITE_DEV'] === 'TRUE');
 }
 
 function useShortcut(shortcut: Shortcut, eventName: EventNames) {

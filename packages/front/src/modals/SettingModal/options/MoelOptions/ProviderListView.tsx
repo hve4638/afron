@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Column } from '@/components/layout';
 
 import styles from './styles.module.scss';
+import { ChatAIModelCategory } from '@afron/types';
 
 interface ProviderListViewProps {
     modelCategories: ChatAIModelCategory[];

@@ -1,12 +1,12 @@
 import { Align, Flex, Row } from "components/layout";
-import { Modal, ModalHeader } from "components/Modal";
+import { Modal, ModalHeader } from "@/components/modal";
 import { useEffect, useMemo, useState } from "react";
 import styles from './styles.module.scss';
-import Button from "components/Button";
+import Button from "@/components/atoms/Button";
 import classNames from "classnames";
 import ReactLoading from "react-loading";
-import { ConfirmModal } from "components/Modal";
-import { MODAL_DISAPPEAR_DURATION } from "data";
+import { ConfirmModal } from "@/components/modal";
+import { MODAL_DISAPPEAR_DURATION_MS } from "@/constants";
 
 interface RecoveryModalProps {
     onReset: () => void;
@@ -36,7 +36,7 @@ function RecoveryModal({
         setDisappear(true);
         setTimeout(() => {
             onClose();
-        }, MODAL_DISAPPEAR_DURATION);
+        }, MODAL_DISAPPEAR_DURATION_MS);
     }
 
     return (

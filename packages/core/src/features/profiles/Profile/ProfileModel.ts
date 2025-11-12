@@ -1,6 +1,7 @@
 import { IACSubStorage } from 'ac-storage';
 import { ProfileError } from './errors';
 import { v7 as uuidv7 } from 'uuid';
+import { CustomModel, GlobalModelConfiguration } from '@afron/types';
 
 class ProfileModel {
     #storage: IACSubStorage;

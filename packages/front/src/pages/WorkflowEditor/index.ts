@@ -1,3 +1,1 @@
-import WorkflowEditor from './WorkflowEditor';
-
-export default WorkflowEditor;
+export { WorkflowEditor } from './WorkflowEditor';

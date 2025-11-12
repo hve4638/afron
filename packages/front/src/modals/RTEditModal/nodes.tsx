@@ -1,5 +1,5 @@
-import { EditableText } from '@/components/EditableText';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import { EditableText } from '@/components/atoms/EditableText';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Flex } from '@/components/layout';
 import { useNavigate } from 'react-router';
 

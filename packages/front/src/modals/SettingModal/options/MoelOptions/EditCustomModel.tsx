@@ -1,5 +1,5 @@
-import { ButtonForm, StringForm, StringLongForm } from '@/components/forms';
-import { Modal, ModalHeader } from '@/components/Modal';
+import { ButtonForm, StringForm, StringLongForm } from '@/components/FormFields';
+import { Modal, ModalHeader } from '@/components/modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
 import { useModal } from '@/hooks/useModal';
 import useModalDisappear from '@/hooks/useModalDisappear';
@@ -7,8 +7,9 @@ import { useState } from 'react';
 import SelectAuthKeyModal from './SelectAuthKeyModal';
 import useHotkey from '@/hooks/useHotkey';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
-import { GIconButton } from '@/components/GoogleFontIcon';
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import DropdownForm, { Dropdown } from '@/components/FormFields/DropdownForm';
+import { CustomModelCreate } from '@afron/types';
 
 interface EditCustomModelModalProps {
     value?: CustomModelCreate;

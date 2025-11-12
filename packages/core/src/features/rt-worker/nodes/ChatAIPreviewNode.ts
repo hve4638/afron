@@ -2,6 +2,7 @@ import type { ChatAIResult, ChatMessages } from '@hve/chatai';
 import ChatAIFetcher from '@/features/chatai-fetcher';
 
 import ChatAIFetchNode from './ChatAIFetchNode';
+import { ChatAIModel, CustomModel, ModelConfiguration } from '@afron/types';
 
 class ChatAIPreviewNode extends ChatAIFetchNode {
     override async fetch({

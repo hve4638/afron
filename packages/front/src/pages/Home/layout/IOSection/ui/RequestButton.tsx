@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { emitEvent } from '@/hooks/useEvent';
 import { useSessionStore } from '@/stores';
 
@@ -20,7 +20,10 @@ function RequestButton() {
                 height: '40px',
             }}
             onClick={() => {
-                emitEvent('send_request');
+                if (sessionState.state === 'idle') {
+                    emitEvent('send_request');
+                }
+                
             }}
         />
     )

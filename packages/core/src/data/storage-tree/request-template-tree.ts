@@ -1,5 +1,5 @@
 import { JSONType, StorageAccess } from "ac-storage";
-import FORM_JSON_TREE from "./form-json-tree";
+import { FORM_JSON_TREE } from "./form-json-tree";
 import { MODEL_SETTINGS } from "./model-config";
 
 const REQUEST_TEMPLATE_TREE = {
@@ -17,48 +17,48 @@ const REQUEST_TEMPLATE_TREE = {
             'input_type': JSONType.Union('normal', 'chat').default_value('normal'),
             'forms': JSONType.Array(JSONType.String()), // form 순서
             'entrypoint_node': JSONType.Number(),
+            'prompts': JSONType.Array({ // workflow 내에서 보여줄 prompt 순서대로
+                'id': JSONType.String(),
+                'name': JSONType.String(),
+            }).strict(),
         }),
         'form.json': StorageAccess.JSON({
-            // key : formId
+            // key: form_id
             '*': FORM_JSON_TREE,
         }),
-        'node.json': StorageAccess.JSON({
+        'flow.json': StorageAccess.JSON({
+            // key: node_id
             '*': {
-                'id': JSONType.Number(),
-                'node': JSONType.Union(
-                    'input', 'output',
-                    'prompt', 'chatai-fetch',
-                    'stringify-chatml',
-                ),
-                'option': JSONType.Struct(),
-                'forms': JSONType.Array({
-                    'id': JSONType.String(),
-                    'external_id': JSONType.String().nullable(),
+                'type': JSONType.String(),
+                'description': JSONType.String(),
+                'data': JSONType.Struct(),
+                'connection': JSONType.Array({
+                    'from_handle': JSONType.String(),
+                    'to_node': JSONType.String(),
+                    'to_handle': JSONType.String(),
                 }),
-                'link_to': {
-                    // key : output interface nmae
-                    '*': JSONType.Array({
-                        'node_id': JSONType.Number(),
-                        'input': JSONType.String(),
-                    }),
-                },
-                'addition': {
+                'position': {
                     'x': JSONType.Number().default_value(0),
                     'y': JSONType.Number().default_value(0),
                 },
             },
         }),
         'prompts': {
-            // key : promptId
+            // key: prompt_id
             '*': StorageAccess.JSON({
                 'id': JSONType.String(),
                 'name': JSONType.String(),
 
                 'model': MODEL_SETTINGS,
                 'variables': JSONType.Array({
+                    'id': JSONType.String(),
+                    'type': JSONType.Union('constant', 'form', 'external').default_value('form'),
                     'name': JSONType.String(),
-                    'form_id': JSONType.String(),
                     'weak': JSONType.Bool().default_value(false),
+
+                    'form_id': JSONType.String(),
+                    'external_id': JSONType.String(),
+                    'value': JSONType.Any(),
                 }),
                 'constants': JSONType.Array({
                     'name': JSONType.String(),

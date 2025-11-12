@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import { Modal, ModalHeader } from '@/components/Modal';
-import ListView from '@/components/ListView/ListView';
+import { Modal, ModalHeader } from '@/components/modal';
+import ListView from '@/components/container/ListView/ListView';
 
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';

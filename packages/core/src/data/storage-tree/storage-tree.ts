@@ -17,9 +17,9 @@ export const PROFILE_STORAGE_TREE = {
         '*': {
             'data.json': StorageAccess.JSON({
                 'forms': {
-                    // key : rt id
+                    // key: rt id
                     '*': {
-                        // key : form id
+                        // key: form id
                         '*': JSONType.Any(),
                     }
                 },
@@ -29,6 +29,13 @@ export const PROFILE_STORAGE_TREE = {
                     api_format: JSONType.Union('chat_completions', 'anthropic_claude', 'generative_language'),
                     secret_key: JSONType.String().nullable(),
                 }).strict(),
+                'running_rt': {
+                    '*': { // key: token
+                        token: JSONType.String(),
+                        createdAt: JSONType.Number(),
+                        state: JSONType.String(),
+                    }
+                },
             }),
             'config.json': StorageAccess.JSON({
                 'name': JSONType.String(),
@@ -123,7 +130,7 @@ export const PROFILE_STORAGE_TREE = {
         'prompt_preview_enabled': JSONType.Bool().default_value(false),
         'global_model_config_enabled': JSONType.Bool().default_value(false),
         'show_token_count': JSONType.Bool().default_value(false),
-        
+
         'preview_prettify_header': JSONType.Bool().default_value(true),
         'preview_prettify_body': JSONType.Bool().default_value(true),
     }),

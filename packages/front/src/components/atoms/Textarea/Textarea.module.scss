@@ -1,0 +1,9 @@
+textarea.textarea {
+    &:focus,
+    &:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+
+    padding: 0.2em;
+}

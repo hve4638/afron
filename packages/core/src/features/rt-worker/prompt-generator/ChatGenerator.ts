@@ -1,4 +1,4 @@
-import { CBFResult, PromptGenerator } from '@hve/prompt-template';
+import { TemplateOutput, PromptGenerator } from 'advanced-prompt-template-lang';
 import { ChatContents } from '../nodes/types';
 
 class ChatGenerator extends PromptGenerator {
@@ -14,9 +14,9 @@ class ChatGenerator extends PromptGenerator {
                 yield {
                     type: 'TEXT',
                     text: c.contents.map((c) => c.value).join(''),
-                } satisfies CBFResult;
+                } satisfies TemplateOutput;
             }
-        })
+        });
 
         this.chat = chat;
     }

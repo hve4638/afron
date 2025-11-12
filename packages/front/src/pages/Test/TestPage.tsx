@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Grid, Row, Align } from '@/components/layout';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
-import Dropdown from '@/components/ui/Dropdown';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
+import Dropdown from '@/components/atoms/Dropdown';
 import MarkdownTest from './MarkdownTest';
+import FlowTest from './FlowTest';
+import { emitNavigate } from '@/events/navigate';
 
 function TestPage() {
-    const navigate = useNavigate();
     const [option, setOption] = useState<string>('');
 
     const handleExit = () => {
-        navigate('/');
+        emitNavigate('back');
     };
 
     const renderMainContent = () => {
@@ -31,7 +31,10 @@ function TestPage() {
         if (option === 'md-test') {
             return <MarkdownTest />;
         }
-        
+        if (option === 'flow-test') {
+            return <FlowTest />;
+        }
+
         return (
             <div
                 style={{
@@ -73,6 +76,7 @@ function TestPage() {
                     onItemNotFound={() => { }}
                 >
                     <Dropdown.Item name="Markdown Test" value="md-test" />
+                    <Dropdown.Item name="Flow Test" value="flow-test" />
                 </Dropdown>
 
                 <div style={{ flex: 1 }} />
@@ -100,7 +104,7 @@ function TestPage() {
             <main
                 style={{
                     display: 'block',
-                    overflow: 'hidden',
+                    overflow: 'auto',
                 }}
             >
                 {renderMainContent()}

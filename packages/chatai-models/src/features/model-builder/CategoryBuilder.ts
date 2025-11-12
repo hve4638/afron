@@ -1,3 +1,4 @@
+import { ChatAIConfig, ChatAIFlags, ChatAIModelCategory } from '@afron/types';
 import { DEFAULT_CHATAI_CONFIG } from './data';
 import GroupBuilder from './GroupBuilder';
 

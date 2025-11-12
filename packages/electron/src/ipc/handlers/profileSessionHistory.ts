@@ -1,7 +1,8 @@
 import runtime from '@/runtime';
+import { HistoryMessage, HistoryMetadata, HistorySearch, IPCInvokers } from '@afron/types';
 import { IPCInvokerName } from 'types';
 
-function handler(): IPCInvokerProfileSessionHistory {
+function handler(): IPCInvokers.ProfileSessionHistory {
     const throttles = {};
 
     return {

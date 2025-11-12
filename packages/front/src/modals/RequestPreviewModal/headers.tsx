@@ -1,4 +1,4 @@
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Row } from '@/components/layout';
 import CopyIconButton from '@/components/ui/CopyIconButton';
 

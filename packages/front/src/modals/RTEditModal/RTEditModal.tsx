@@ -1,8 +1,8 @@
-import Button from '@/components/Button';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import Button from '@/components/atoms/Button';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import { EditableText } from '@/components/EditableText';
+import { Modal, ModalHeader } from '@/components/modal';
+import { EditableText } from '@/components/atoms/EditableText';
 import TreeView from '@/components/TreeView';
 
 import { LeafNode } from './nodes';
@@ -21,13 +21,14 @@ function RTEditModal({
 }: RTEditModalProps) {
     const {
         action: {
+            tree: treeAction,
+            
             navigatePromptEditor,
             close,
 
-            tree: treeAction,
 
             confirmNodeDeletion,
-            openRTCreateModal,
+            confirmDirectoryDeletion,
             openRTExportModal,
         },
         state: {
@@ -68,7 +69,7 @@ function RTEditModal({
                         }}
                         value='create_new_folder'
                         hoverEffect='square'
-                        onClick={() => treeAction.addDirectoryNode()}
+                        onClick={() => treeAction.addDirectory()}
                     />
                 </Row>
                 <div />
@@ -81,7 +82,7 @@ function RTEditModal({
                             <LeafNode
                                 name={name}
                                 value={value}
-                                onRename={(renamed) => treeAction.renameNode(value, renamed)}
+                                onRename={(renamed) => treeAction.rename(value, renamed)}
                                 onDelete={() => confirmNodeDeletion(name, value)}
                                 onEdit={() => navigatePromptEditor(value)}
                                 onExport={() => openRTExportModal(value)}
@@ -103,13 +104,13 @@ function RTEditModal({
                                     <EditableText
                                         value={name}
                                         onChange={(renamed) => {
-                                            treeAction.renameNode(value, renamed);
+                                            treeAction.rename(value, renamed);
                                         }}
                                     />
                                 </Flex>
                                 <DeleteButton
                                     onClick={(e) => {
-                                        confirmNodeDeletion(name, value);
+                                        confirmDirectoryDeletion(name, value);
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}
@@ -143,7 +144,7 @@ function RTEditModal({
                     </Button>
                     <Button
                         onClick={() => {
-                            openRTCreateModal();
+                            emitEvent('open_new_rt_modal');
                             close();
                         }}
                         style={{

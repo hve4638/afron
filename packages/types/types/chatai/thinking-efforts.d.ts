@@ -1,6 +1,4 @@
-declare global {
-    type SupportedThinkingEfforts = 'minimal' | 'low' | 'medium' | 'high';
-    type SupportedVerbosity = 'low' | 'medium' | 'high';
-}
+export type SupportedThinkingEfforts = 'minimal' | 'low' | 'medium' | 'high';
+export type SupportedVerbosity = 'low' | 'medium' | 'high';
 
 export { };

@@ -17,3 +17,9 @@ export type UseOn<TField extends EventMap> = <TKey extends keyof TField>(
     deps?: React.DependencyList,
     enabled?: boolean
 ) => void;
+
+export type BusReturn<TField extends EventMap> = readonly [
+    Emit<TField>,
+    UseOn<TField>,
+    UseValue<TField>
+];

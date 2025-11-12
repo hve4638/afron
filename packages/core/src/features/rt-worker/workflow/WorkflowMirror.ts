@@ -1,3 +1,4 @@
+import { RTInput } from '@afron/types';
 import RTWorkflow from './RTWorkflow';
 
 class WorkflowMirror extends RTWorkflow {

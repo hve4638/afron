@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { emitEvent, useEvent } from '@/hooks/useEvent';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 function CopyButton() {
     const [copySuccessed, setCopySuccessed] = useState(false);

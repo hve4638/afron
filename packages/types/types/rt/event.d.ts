@@ -52,24 +52,20 @@ type RTEventDataOthers = {
     type: 'close';
 }
 
-declare global {
-    type RTEventPreviewData = {
-        url: string;
-        headers: object;
-        data: object;
-    };
+export type RTEventPreviewData = {
+    url: string;
+    headers: object;
+    data: object;
+};
 
-    type RTEventDataWithoutId = (
-        RTEventDataError
-        | RTEventDataSend
-        | RTEventDataUpdate
-        | RTEventDataOutput
-        | RTEventDataOthers
-    );
+export type RTEventDataWithoutId = (
+    RTEventDataError
+    | RTEventDataSend
+    | RTEventDataUpdate
+    | RTEventDataOutput
+    | RTEventDataOthers
+);
 
-    type RTEventData = {
-        id: string;
-    } & RTEventDataWithoutId;
-}
-
-export { };
+export type RTEventData = {
+    id: string;
+} & RTEventDataWithoutId;

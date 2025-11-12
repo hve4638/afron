@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { CommonProps } from '@/types';
 
 import styles from './MarkdownButton.module.scss'

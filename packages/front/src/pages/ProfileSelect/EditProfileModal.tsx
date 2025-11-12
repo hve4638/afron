@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Modal } from 'components/Modal';
+import { Modal } from '@/components/modal';
 import { Align, Column, Flex, Row } from 'components/layout';
-import Button from 'components/Button';
-import { ModalHeader } from 'components/Modal';
+import Button from '@/components/atoms/Button';
+import { ModalHeader } from '@/components/modal';
 import { TextInput } from 'components/Input';
 import classNames from 'classnames';
 
 import styles from './styles.module.scss';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import useModalDisappear from 'hooks/useModalDisappear';
-import { ButtonForm } from '@/components/forms';
+import { ButtonForm } from '@/components/FormFields';
 import { ProfileNameLayout } from './layout';
 import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '@/modals/Dialog';

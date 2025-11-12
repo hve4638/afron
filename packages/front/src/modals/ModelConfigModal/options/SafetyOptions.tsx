@@ -1,5 +1,5 @@
-import Delimiter from '@/components/Delimiter';
-import { CheckBoxForm } from '@/components/forms';
+import Delimiter from '@/components/atoms/Delimiter';
+import { CheckBoxForm } from '@/components/FormFields';
 import SafetyFilterSlider from './SafetyFilterSlider';
 import { OptionsProps } from './types';
 import ModelForm from '@/components/model-ui';
@@ -33,10 +33,10 @@ function SafetyOptions({
             <Delimiter />
             <ModelForm.SafetyFilter
                 value={safetySettings}
-                onChange={(next) => {
+                onChange={(key, threshold) => {
                     config.safety_settings = {
                         ...safetySettings,
-                        ...next,
+                        [key]: threshold,
                     };
                     refresh();
                 }}
@@ -47,4 +47,4 @@ function SafetyOptions({
     )
 }
 
-export default SafetyOptions
+export default SafetyOptions;

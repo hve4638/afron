@@ -4,17 +4,18 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { MODAL_DISAPPEAR_DURATION } from 'data';
-import { Modal, ModalBackground, ModalHeader } from 'components/Modal';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
+import { Modal, ModalBackground, ModalHeader } from '@/components/modal';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 
 import { TreeDirectory, TreeNode } from './TreeNode';
 import { relocateTree } from './utils';
 import { Tree, TreeDirectoryData, TreeNodeData, TreeOffsets, } from './types';
 import { Regions } from './TreeNode/types';
 import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
+import { RTMetadataTree } from '@afron/types';
 
 type PromptTreeModalProps = {
     item:RTNodeTree;
@@ -147,7 +148,7 @@ function RTTreeModal({
         setDisappear(true);
         setTimeout(() => {
             onClose();  
-        }, MODAL_DISAPPEAR_DURATION);
+        }, MODAL_DISAPPEAR_DURATION_MS);
     }
     
     // 트리 노드 드래그 해제

@@ -9,7 +9,7 @@ import { useConfigStore, useSessionStore } from '@/stores';
 
 import ChatDiv from './ChatDiv';
 import { useHistoryStore } from '@/stores/useHistoryStore';
-import InfiniteScroll from '@/components/InfiniteScroll';
+import InfiniteScroll from '@/components/container/InfiniteScroll';
 import { HistoryData } from '@/features/session-history';
 import useCache from '@/hooks/useCache';
 import { useEvent } from '@/hooks/useEvent';

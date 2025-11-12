@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Modal, ModalHeader } from 'components/Modal';
+import { Modal, ModalHeader } from '@/components/modal';
 import {
     GeneralOptions,
     APIKeyOptions,
@@ -9,7 +9,7 @@ import {
     ModelOptions,
     ShortcutOptions,
 } from './options';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
+import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import useHotkey from 'hooks/useHotkey';
 import useModalDisappear from 'hooks/useModalDisappear';
 import { Column, Flex } from '@/components/layout';

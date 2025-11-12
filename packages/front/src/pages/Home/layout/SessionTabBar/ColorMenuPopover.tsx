@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Align, Center, Column, Grid, } from '@/components/layout';
 import { ProfileSessionMetadata } from '@/types';
 import classNames from 'classnames';
-import Popover from '@/components/Popover';
+import Popover from '@/components/atoms/Popover';
 import { useProfileAPIStore, useSessionStore } from '@/stores';
 import styles from './styles.module.scss';
 import { emitEvent } from '@/hooks/useEvent';

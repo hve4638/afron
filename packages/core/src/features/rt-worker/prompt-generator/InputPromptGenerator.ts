@@ -1,7 +1,7 @@
-import { CBFResult, PromptGenerator } from '@hve/prompt-template';
-import { ChatContents } from '../nodes/types';
+import { PromptGenerator } from 'advanced-prompt-template-lang';
 import FilesPromptGenerator from './FilesPromptGenerator';
 import { parseInputFileToCBFResult } from './utils';
+import { InputFile } from '@afron/types';
 
 interface InputPromptGeneratorProps {
     text: string;

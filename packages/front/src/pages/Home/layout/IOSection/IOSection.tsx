@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { Z_INDEX } from '@/data/z';
+import { Z_INDEX } from '@/constants/z-index';
 
 import SingleIO from './SingleIO';
 import ChatIO from './ChatIO';

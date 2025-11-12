@@ -1,3 +1,4 @@
+import { ChatAIModel, ChatAIModelData, CustomModel, VersionInfo } from '@afron/types';
 import { create } from 'zustand';
 
 type MemoryStates = {

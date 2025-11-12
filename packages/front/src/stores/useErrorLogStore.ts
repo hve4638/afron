@@ -16,7 +16,7 @@ export interface LogEntry {
     };
 }
 
-type LogData = {
+export type LogData = {
     message: string;
     detail: string[];
     occurredAt: {

@@ -1,1 +1,0 @@
-export const MODAL_DISAPPEAR_DURATION = 150;

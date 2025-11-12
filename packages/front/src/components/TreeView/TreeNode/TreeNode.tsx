@@ -1,6 +1,6 @@
 import { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { GIconButton, GoogleFontIcon } from 'components/GoogleFontIcon';
+import { GIconButton, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { TreeNodeProps, Regions } from './types';
 import styles from './styles.module.scss';
 import { Align, Flex, Row } from '@/components/layout';

@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 
-import Popover from '@/components/Popover';
+import Popover from '@/components/atoms/Popover';
 import { Column } from '@/components/layout';
-import DivButton from '@/components/DivButton';
-import { GoogleFontIcon } from '@/components/GoogleFontIcon';
+import DivButton from '@/components/atoms/DivButton';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 
 import { useModal } from '@/hooks/useModal';
 

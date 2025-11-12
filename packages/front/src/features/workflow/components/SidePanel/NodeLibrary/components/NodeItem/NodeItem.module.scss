@@ -1,0 +1,18 @@
+.node-item {
+    padding: 2px;
+    padding-left: 0.25em;
+    border-radius: 4px;
+    background-color: rgba(58, 60, 65, 0.2);
+    transition: 'background-color 0.2s, opacity 0.2s';
+    opacity: 1;
+    cursor: grab;
+
+    &.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+    }
+
+    &:hover:not(.dragging) {
+        background-color: rgba(58, 60, 65, 0.377);
+    }
+}

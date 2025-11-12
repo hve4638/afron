@@ -7,11 +7,12 @@ import { useDataStore } from '@/stores';
 import useTrigger from '@/hooks/useTrigger';
 
 import styles from './styles.module.scss';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
-import DivButton from '@/components/DivButton';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
+import DivButton from '@/components/atoms/DivButton';
 import { useModal } from '@/hooks/useModal';
 import EditCustomModelModal from './EditCustomModel';
 import ProfileEvent from '@/features/profile-event';
+import { CustomModel } from '@afron/types';
 
 interface ModelListViewProps {
     onClick: (model: CustomModel) => Promise<void>;

@@ -1,4 +1,4 @@
-import '@shared/types.d.ts';
+import { IPCInterface } from '@afron/types';
 
 declare global {
     interface Window {

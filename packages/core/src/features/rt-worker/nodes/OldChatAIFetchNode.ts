@@ -4,6 +4,7 @@ import type { ChatAIResult, ChatMessages } from '@hve/chatai';
 import { ChatAIModels } from '@afron/chatai-models';
 import { WorkNodeStop } from './errors';
 import { ProfileAPIKeyControl } from '@/features/profiles/ProfileControl';
+import { ChatAIModel, CustomModel, VertexAIAuth } from '@afron/types';
 
 type ChatAIFetchNodeInput = {
     messages: ChatMessages;

@@ -1,12 +1,12 @@
 import { SpinnerCircular } from 'spinners-react';
 import { Align, Center, Column, Flex, Row } from '@/components/layout';
-import { GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { ProfileSessionMetadata } from '@/types';
 import styles from './styles.module.scss';
 import classNames from 'classnames';
 import { useMemo, useRef, useState } from 'react';
-import Popover from '@/components/Popover';
-import DivButton from '@/components/DivButton';
+import Popover from '@/components/atoms/Popover';
+import DivButton from '@/components/atoms/DivButton';
 import { useProfileAPIStore } from '@/stores';
 import { emitEvent } from '@/hooks/useEvent';
 

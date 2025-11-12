@@ -4,6 +4,7 @@ import NoLogger from '@/features/nologger';
 import { LevelLogger } from '@/types';
 
 import { RTClosed } from './errors';
+import { RTEventData, RTEventDataWithoutId, RTEventPreviewData } from '@afron/types';
 
 export type RTEventListener = (data: RTEventData) => unknown;
 

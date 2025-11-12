@@ -1,2 +1,3 @@
-export { default as PromptOnlyTemplateFactory } from './PromptOnlyTemplateFactory';
-export { RTPromptOnlyTemplateTool } from './tool';
+export { PromptOnlyTemplateFactory } from './PromptOnlyTemplateFactory';
+export { FlowTemplateFactory } from './FlowTemplateFactory';
+export { RTPromptOnlyTemplateTool } from './tool/prompt-only';

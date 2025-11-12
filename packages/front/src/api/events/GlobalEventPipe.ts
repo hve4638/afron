@@ -1,6 +1,7 @@
 import LocalAPI from '@/api/local';
 
 import EventPipe from './EventPipe';
+import { GlobalEventData } from '@afron/types';
 
 class GlobalEventPipeSingleton extends EventPipe<GlobalEventData> {
     static instance?: GlobalEventPipeSingleton;

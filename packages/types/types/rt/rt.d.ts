@@ -1,52 +1,61 @@
 import '../prompt-form';
 
-declare global {
-    type RTTemplate = 'basic'|'chat';
+export type RTMetadata = {
+    name: string;
+    id: string;
+    mode: RTMode;
+}
 
-    type RTMetadata = {
-        name : string;
-        id : string;
-        mode : RTMode;
-    }
-    
-    /**
-     * RT 트리 구조
-     */
-    type RTMetadataTree = (
-        RTMetadataNode | RTMetadataDirectory
-    )[];
-    type RTMetadataNode = {
-        type : 'node';
-        name : string;
-        id : string;
-    }
-    type RTMetadataDirectory = {
-        type : 'directory';
-        name : string;
-        children : RTMetadataNode[];
-    }
+/** RT 트리 구조 */
+export type RTMetadataTree = (
+    RTMetadataNode | RTMetadataDirectory
+)[];
+export type RTMetadataNode = {
+    type: 'node';
+    name: string;
+    id: string;
+}
+export type RTMetadataDirectory = {
+    type: 'directory';
+    name: string;
+    children: RTMetadataNode[];
+}
 
 
-    type RTMode = 'prompt_only' | 'flow';
-
-    type RTInput = {
-        input : string;
-        inputFiles: InputFile[];
-        chat? : RTInputMessage[];
-
-        form: Record<string, any>;
-        modelId: string;
-        rtId: string;
-        sessionId: string;
+export declare namespace RTMetadatas {
+    type Tree = (Node | Directory)[]
+    type Node = {
+        type: 'node';
+        name: string;
+        id: string;
     }
-    type RTInputMessage = {
-        type : 'chat';
-        message : RTInputMessagePart[];
-    }
-    type RTInputMessagePart = {
-        type : 'text'|'image';
-        value : string;
+    type Directory = {
+        type: 'directory';
+        name: string;
+        children: Node[];
     }
 }
 
-export {};
+
+export type RTMode = 'prompt_only' | 'flow';
+
+export type RTInput = {
+    input: string;
+    inputFiles: InputFile[];
+    chat?: RTInputMessage[];
+
+    form: Record<string, any>;
+    modelId: string;
+    rtId: string;
+    sessionId: string;
+}
+export type RTInputMessage = {
+    type: 'chat';
+    message: RTInputMessagePart[];
+}
+export type RTInputMessagePart = {
+    type: 'text' | 'image';
+    value: string;
+}
+
+export { };

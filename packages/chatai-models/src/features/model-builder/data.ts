@@ -1,3 +1,5 @@
+import { ChatAIConfig, SupportedThinkingEfforts, SupportedVerbosity } from "@afron/types";
+
 export const DEFAULT_CHATAI_CONFIG = {
     allowStream: false,
     allowFunctionCall: false,

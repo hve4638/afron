@@ -1,11 +1,11 @@
-import Dropdown from '@/components/ui/Dropdown';
+import Dropdown from '@/components/atoms/Dropdown';
 import {
     OpenAIIcon,
     GoogleIcon,
     AnthropicIcon,
     GoogleVertexAIIcon,
     GeminiIcon,
-} from 'components/Icons'
+} from '@/components/atoms/Icons'
 import useModelDropdown from './ModelDropdown.hook';
 import { it } from 'node:test';
 

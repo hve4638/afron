@@ -7,6 +7,7 @@ import { useGlobalConfigStore, useProfileAPIStore } from '@/stores';
 import useBootStore from '../useBootStore';
 import useMemoryStore from '@/stores/useMemoryStore';
 import LocalAPI from '@/api/local';
+import { ChatAIModel } from '@afron/types';
 
 function LoadGlobalDataPhase() {
     const apiState = useProfileAPIStore();

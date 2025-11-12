@@ -2,6 +2,7 @@ import { useEvent } from '@/hooks/useEvent';
 import useSessionStore from '@/stores/useSessionStore';
 
 import { readFileAsDataURI } from '@/utils/file';
+import { InputFilePreview } from '@afron/types';
 
 
 function useFileUploadHandler() {

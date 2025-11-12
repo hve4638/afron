@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { useEvent } from '@/hooks/useEvent';
 
 function ChatCopyButton({ text }: { text: string }) {

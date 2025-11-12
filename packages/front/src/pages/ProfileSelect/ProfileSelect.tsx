@@ -9,11 +9,11 @@ import useMemoryStore from '@/stores/useMemoryStore';
 
 import NewProfileModal from './NewProfileModal';
 import { ProfileMetadata } from './types';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import styles from './styles.module.scss';
 import { useModal } from '@/hooks/useModal';
 import GlobalSettingModal from './GlobalSettingModal';
-import DivButton from '@/components/DivButton';
+import DivButton from '@/components/atoms/DivButton';
 import classNames from 'classnames';
 import RecoverProfileModal from './RecoverProfileModal';
 import { InfoDialog } from '@/modals/Dialog';

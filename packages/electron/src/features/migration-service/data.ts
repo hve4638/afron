@@ -1,6 +1,5 @@
+import path from 'node:path';
 import { app } from 'electron';
-import fs from 'fs';
-import path from 'path';
 
 export const DOCUMENT_PATH = app.getPath('documents');
 export const AIFRONT_PATH = path.join(DOCUMENT_PATH, 'AIFront');

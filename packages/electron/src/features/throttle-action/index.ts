@@ -1,4 +1,4 @@
-import type { Profile } from '@afron/core';
+import type { Profile, Profiles } from '@afron/core';
 import runtime from '@/runtime';
 import * as utils from '@/utils';
 

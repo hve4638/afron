@@ -1,5 +1,6 @@
 import { ChatMessages } from '@hve/chatai';
 import { FormBuilderProps } from './types';
+import { ChatAIConfig, ModelConfiguration } from '@afron/types';
 
 /**
  * '@hve/chatai' 라이브러리의 ChatAI 인자에 들어가는 form 빌더

@@ -1,37 +1,39 @@
-import { Modal, ModalHeader } from 'components/Modal';
-import useHotkey from 'hooks/useHotkey';
-import useModalDisappear from 'hooks/useModalDisappear';
-import { useTranslation } from 'react-i18next';
-import RTSelectWidget from './RTSelectWidget';
 import { useState } from 'react';
-import EditMetadataLayout from './layout/EditMetadataLayout';
+import { useTranslation } from 'react-i18next';
+
+import { Modal, ModalHeader } from '@/components/modal';
+import useHotkey from '@/hooks/useHotkey';
+import useModalDisappear from '@/hooks/useModalDisappear';
 import ProfileEvent from '@/features/profile-event';
 
-const enum NewRTModalStep {
+import { RTSelectStep, EditMetadataStep } from './step';
+import { RTMode } from '@afron/types';
+
+const enum NewRTModalSteps {
     SelectRTType = 0,
     EditMetadata = 1,
 }
 
 type NewRTModalProps = {
-    onAddRT: (rtId: string, rtMode:RTMode) => void;
+    onAddRT: (rtId: string, rtMode: RTMode) => void;
 
     isFocused: boolean;
     onClose: () => void;
 }
 
-function NewRTModal({
-    onAddRT = ()=>{},
+export function NewRTModal({
+    onAddRT = () => { },
 
     isFocused,
-    onClose = ()=>{},
-}:NewRTModalProps) {
+    onClose = () => { },
+}: NewRTModalProps) {
     const { t } = useTranslation();
     const [disappear, close] = useModalDisappear(onClose);
-    const [step, setStep] = useState<NewRTModalStep>(NewRTModalStep.SelectRTType);
+    const [step, setStep] = useState<NewRTModalSteps>(NewRTModalSteps.SelectRTType);
     const [rtMode, setRTMode] = useState<RTMode>('prompt_only');
 
     useHotkey({
-        'Escape' : close,
+        'Escape': close,
     }, isFocused, []);
 
     return (
@@ -44,28 +46,29 @@ function NewRTModal({
         >
             <ModalHeader onClose={close}>{t('rt.new_rt_title')}</ModalHeader>
             {
-                step === NewRTModalStep.SelectRTType &&
-                <RTSelectWidget
+                step === NewRTModalSteps.SelectRTType &&
+                <RTSelectStep
                     onPrev={close}
-                    onSelectRTType={(selected)=>{
+                    onSelectRTType={(selected) => {
                         setRTMode(selected);
-                        setStep(NewRTModalStep.EditMetadata);
+                        setStep(NewRTModalSteps.EditMetadata);
                     }}
                 />
             }
             {
-                step === NewRTModalStep.EditMetadata &&
-                <EditMetadataLayout
-                    onPrev={()=>{
-                        setStep(NewRTModalStep.SelectRTType);
+                step === NewRTModalSteps.EditMetadata &&
+                <EditMetadataStep
+                    rtMode={rtMode}
+                    onPrev={() => {
+                        setStep(NewRTModalSteps.SelectRTType);
                     }}
-                    onConfirm={async (metadata)=>{
+                    onConfirm={async (metadata) => {
                         await ProfileEvent.rt.create({
                             name: metadata.name,
                             id: metadata.id,
                             mode: rtMode,
                         }, metadata.templateId);
-                        
+
                         onAddRT(metadata.id, rtMode);
                     }}
                 />
@@ -73,5 +76,3 @@ function NewRTModal({
         </Modal>
     )
 }
-
-export default NewRTModal;

@@ -6,7 +6,7 @@ import { useSessionStore } from '@/stores';
 import { AvatarButton, ErrorLogButton, FormButton, HistoryButton, ModelConfigButton } from './header-button';
 import RTDropdown from './RTDropdown';
 import ModelDropdown from './ModelDropdown';
-import { Z_INDEX } from '@/data/z';
+import { Z_INDEX } from '@/constants/z-index';
 
 function Header() {
     const color = useSessionStore(state => state.color);

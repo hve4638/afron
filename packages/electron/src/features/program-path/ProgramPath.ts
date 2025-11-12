@@ -27,7 +27,6 @@ class ProgramPath {
         fs.mkdirSync(this.basePath, { recursive: true });
         fs.mkdirSync(this.profilePath, { recursive: true });
         fs.mkdirSync(this.logPath, { recursive: true });
-        // fs.mkdirSync(this.testPath, { recursive: true });
     }
 }
 

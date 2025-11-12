@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
 import { Align, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import Button from '@/components/Button';
-import { StringForm } from '@/components/forms';
+import { Modal, ModalHeader } from '@/components/modal';
+import Button from '@/components/atoms/Button';
+import { StringForm } from '@/components/FormFields';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
 
