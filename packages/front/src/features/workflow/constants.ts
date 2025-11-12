@@ -1,1 +1,0 @@
-export const DRAG_NODE_TYPE = 'application/reactflow';

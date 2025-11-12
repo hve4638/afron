@@ -1,111 +1,35 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import classNames from 'classnames';
-
-import ProfilesAPI from '@/api/profiles';
-import { useProfileAPIStore } from '@/stores';
+import { BrowserRouter, Routes, Route } from 'react-router';
 import { ModalProvider } from '@/hooks/useModal';
 
-import ProfileSelectPage from '@/pages/ProfileSelect';
-import Hub from '@/pages/Hub';
+import Home from '@/pages/Home';
+import ComponentsDemo from '@/pages/ComponentsDemo';
+import FormsDemo from '@/pages/FormsDemo';
+import ModalsDemo from '@/pages/ModalsDemo';
 
-import useMemoryStore from './stores/useMemoryStore';
-import {
-    Bootstrap,
-    useBootStore,
-    useInitialize
-} from './features/bootstrap';
-
-const LoadPhase = {
-    Boot: 'boot',
-    ProfileSelect: 'ProfileSelect',
-    Login: 'login',
-    Main: 'main',
-};
-type LoadPhase = typeof LoadPhase[keyof typeof LoadPhase];
+import './assets/index.scss';
 
 function App() {
-    const booted = useBootStore(state => state.booted);
-    const memoryStore = useMemoryStore();
-    const [profileInitialized, setProfileInitialized] = useState(false);
-
-    const phase = useMemo<LoadPhase>(() => {
-        if (!booted) {
-            return LoadPhase.Boot;
-        }
-        else if (memoryStore.profileId == null) {
-            return LoadPhase.ProfileSelect;
-        }
-        else if (!profileInitialized) {
-            return LoadPhase.Login;
-        }
-        else {
-            return LoadPhase.Main;
-        }
-    }, [booted, memoryStore.profileId, profileInitialized]);
-
-    useInitialize();
-    useLayoutEffect(() => {
-        if (phase === LoadPhase.ProfileSelect) {
-            setProfileInitialized(false);
-            ProfilesAPI.setLast(null);
-        }
-        else if (phase === LoadPhase.Login) {
-            if (memoryStore.profileId == null) {
-                console.warn('logic error: profileId is null in Login phase');
-                return;
-            }
-            ProfilesAPI.setLast(memoryStore.profileId);
-
-            useProfileAPIStore.getState().setAPI(memoryStore.profileId);
-            const { api } = useProfileAPIStore.getState();
-
-            // @TODO
-            // 앞으로 더 많은 작업이 추가되면
-            // LoadGlobalDataPhase 처럼 작업 분리 필요
-            const promises = [
-                // api.getChatAIModels()
-                //     .then((models) => {
-                //         useMemoryStore.setState({ allModels: models })
-                //     }),
-            ];
-            Promise.all(promises)
-                .then(() => {
-                    setProfileInitialized(true);
-                })
-        }
-    }, [phase, memoryStore.profileId]);
-
     return (
-        <div
-            id='app'
-            className={
-                classNames(
-                    'theme-dark',
-                    'fill',
-                )
-            }
-            style={{
-                fontSize: '18px'
-            }}
-        >
-            {
-                phase === LoadPhase.Boot &&
-                <ModalProvider>
-                    <Bootstrap />
-                </ModalProvider>
-            }
-            {
-                phase === LoadPhase.ProfileSelect &&
-                <ModalProvider>
-                    <ProfileSelectPage />
-                </ModalProvider>
-            }
-            {
-                phase === LoadPhase.Main &&
-                <Hub />
-            }
-        </div>
-    )
+        <BrowserRouter>
+            <ModalProvider>
+                <div
+                    id="app"
+                    style={{
+                        minHeight: '100vh',
+                        background: '#ffffff',
+                        color: '#333333',
+                    }}
+                >
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/components" element={<ComponentsDemo />} />
+                        <Route path="/forms" element={<FormsDemo />} />
+                        <Route path="/modals" element={<ModalsDemo />} />
+                    </Routes>
+                </div>
+            </ModalProvider>
+        </BrowserRouter>
+    );
 }
 
 export default App;
