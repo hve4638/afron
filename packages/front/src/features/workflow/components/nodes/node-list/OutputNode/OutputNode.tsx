@@ -12,7 +12,7 @@ export function OutputNode(props: NodeProps) {
 
     return (
         <BaseNode
-            title='종료'
+            title={OutputNode.data.name}
             nodeData={nodeData}
             {...props}
         >
@@ -21,7 +21,8 @@ export function OutputNode(props: NodeProps) {
 }
 OutputNode.data = buildNodeData({
     type: 'rt-output',
-    alias: ['출력', '응답 반환'],
+    name: '출력',
+    alias: ['응답 반환'],
     inputs: [
         NodeHandle.Output(),
     ],

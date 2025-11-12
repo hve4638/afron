@@ -14,7 +14,7 @@ export function PromptTemplateNode(props: NodeProps) {
 
     return (
         <BaseNode
-            title='프롬프트 템플릿'
+            title={PromptTemplateNode.data.name}
             nodeData={nodeData}
             {...props}
         >
@@ -32,7 +32,8 @@ export function PromptTemplateNode(props: NodeProps) {
 }
 PromptTemplateNode.data = buildNodeData({
     type: 'prompt-template',
-    alias: ['프롬프트 구성', 'prompt template'],
+    name: '프롬프트 구성',
+    alias: ['prompt template'],
     inputs: [
         NodeHandle.Input(),
     ],

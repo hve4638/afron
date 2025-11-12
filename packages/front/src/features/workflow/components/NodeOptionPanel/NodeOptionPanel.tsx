@@ -29,11 +29,7 @@ export function NodeOptionPanel({
         <Column
             className={styles['sidebar']}
             style={{
-                position: 'absolute',
                 zIndex: 1001,
-                right: '8px',
-                top: '8px',
-                width: '350px',
             }}
         >
             <Row
@@ -72,7 +68,9 @@ export function NodeOptionPanel({
                     }));
                 }}
             />
+            <Gap h='0.5em' />
             {optionElement}
+            <Gap h='0.1em' />
         </Column>
     )
 }

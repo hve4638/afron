@@ -18,6 +18,7 @@ export function isHandleCompatible(from: HandleTypes, to: HandleTypes): boolean 
 
 interface buildNodeDataProps<TData extends object, TNodeId extends string> {
     type: TNodeId;
+    name: string;
     alias: string[];
     inputs?: EdgeInfo[],
     outputs?: EdgeInfo[],
@@ -29,6 +30,7 @@ interface buildNodeDataProps<TData extends object, TNodeId extends string> {
  */
 export function buildNodeData<TData extends object, TNodeId extends string>({
     type,
+    name,
     alias = [],
     inputs = [],
     outputs = [],
@@ -42,6 +44,7 @@ export function buildNodeData<TData extends object, TNodeId extends string>({
 
     return {
         type,
+        name,
         alias,
         inputs: inputEdges,
         inputTypes,

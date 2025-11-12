@@ -44,6 +44,8 @@ export type EdgeInfo = readonly [
 
 export interface WorkflowNodeData<TData extends object, TNodeId extends string = string> {
     type: TNodeId;
+
+    name: string;
     alias: string[];
     
     inputs: string[];

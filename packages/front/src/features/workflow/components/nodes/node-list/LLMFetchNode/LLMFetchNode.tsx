@@ -16,7 +16,7 @@ export function LLMFetchNode(props: NodeProps) {
 
     return (
         <BaseNode
-            title='LLM'
+            title={LLMFetchNode.data.name}
             nodeData={nodeData}
             {...props}
         >
@@ -40,7 +40,8 @@ export function LLMFetchNode(props: NodeProps) {
 
 LLMFetchNode.data = buildNodeData({
     type: 'llm-fetch',
-    alias: ['LLM 요청'],
+    name: 'LLM 요청',
+    alias: [],
     inputs: [
         NodeHandle.ChatMessages(),
     ],

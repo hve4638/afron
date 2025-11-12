@@ -55,8 +55,6 @@ export function NewPromptTemplateModal({
                 <Flex/>
                 <Button
                     onClick={async ()=>{
-                        
-
                         // emitPromptTemplate('create_and_navigate_prompt_id', )
                     }}
                 >

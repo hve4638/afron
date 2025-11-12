@@ -17,7 +17,7 @@ export class FlowTemplateFactory {
         const tool = await this.createTool(profile, rtId, name);
         const pos = (x: number, y: number) => ({ x, y });
 
-        const inputNode = await tool.addNode('rt-input', pos(0, 0));
+        const inputNode = await tool.addNode('rt-run', pos(0, 0));
         const promptNode = await tool.addNode('prompt-template', {
             prompt_id: 'prompt_0',
         }, pos(100, 0));

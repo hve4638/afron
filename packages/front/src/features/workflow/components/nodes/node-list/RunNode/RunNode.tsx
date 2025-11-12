@@ -34,7 +34,7 @@ export function RunNode(props: NodeProps) {
 
     return (
         <BaseNode
-            title='시작'
+            title={RunNode.data.name}
             nodeData={nodeData}
             {...props}
         >
@@ -52,7 +52,8 @@ export function RunNode(props: NodeProps) {
 }
 RunNode.data = buildNodeData({
     type: 'rt-run',
-    alias: ['실행', 'start', '시작'],
+    name: '실행',
+    alias: ['start', '시작'],
     outputs: [
         NodeHandle.Input(),
     ],
