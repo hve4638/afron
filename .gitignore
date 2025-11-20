@@ -25,7 +25,6 @@ coverage/
 .report
 .claude
 GEMINI.md
-CLAUDE.md
 .DS_Store
 .env.local
 .env.development.local
