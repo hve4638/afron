@@ -1,14 +1,14 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useBus } from '@/lib/zustbus';
 
 import { useRTStore } from '@/context/RTContext';
 import { RTFlowNodeOptions } from '@afron/types';
 import { useNavigate } from 'react-router';
 import { emitNavigate } from '@/events/navigate';
+import { RTWorkflowModel } from '@/features/workflow/models/RTWorkflowModel';
 export interface PromptTemplateEvent {
-    select_prompt_id: { promptId: string };
-
-    select_and_navigate_prompt_id: { promptId: string; name: string; };
+    select_prompt: { promptId: string };
+    select_and_open_prompt_editor: { promptId: string; };
 
     open_prompt_editor: { promptId: string };
 }
@@ -22,29 +22,36 @@ export function usePromptTemplateNodeOption({
     option,
     setOption,
 }: usePromptTemplateOptionProps) {
-    const navigate = useNavigate();
     const rt = useRTStore();
-    const [emitPromptTemplate, usePromptTemplateEvent] = useBus<PromptTemplateEvent>();
+    const [emitPromptTemplate, usePromptTemplateOn] = useBus<PromptTemplateEvent>();
+    const workflowModel = useMemo(() => RTWorkflowModel.From(rt.id), [rt.id]);
 
-    usePromptTemplateEvent('select_prompt_id', ({ promptId }) => {
+    usePromptTemplateOn('select_prompt', ({ promptId }) => {
         setOption((prev) => ({
             ...prev,
             prompt_id: promptId,
         }));
     });
 
-    usePromptTemplateEvent('select_and_navigate_prompt_id', async ({ promptId, name }) => {
+    usePromptTemplateOn('select_and_open_prompt_editor', async ({ promptId }) => {
         setOption((prev) => ({
             ...prev,
             prompt_id: promptId,
         }));
-        await rt.update.promptName(promptId, name);
+        
         emitNavigate('goto_prompt_editor', { rtId: rt.id, promptId });
     });
 
-    usePromptTemplateEvent('open_prompt_editor', async ({ promptId }) => {
+    usePromptTemplateOn('open_prompt_editor', async ({ promptId }) => {
         emitNavigate('goto_prompt_editor', { rtId: rt.id, promptId });
     });
+
+    useEffect(() => {
+        workflowModel.getPromptTree()
+            .then((prompts) => {
+                console.log('Fetched prompts:', prompts);
+            });
+    }, [workflowModel]);
 
     return {
         emitPromptTemplate,

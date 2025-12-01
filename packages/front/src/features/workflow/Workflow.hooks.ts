@@ -3,18 +3,18 @@ import {
     useNodesState,
     useEdgesState,
 } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
 import { FlowNode } from '@/lib/xyflow';
 
-import useHotkey from '@/hooks/useHotkey';
 import { useWorkflowTransaction, useWorkflowHandlers } from './hooks';
 import { useWorkflowContext } from './context';
 import { useKeyBind } from '@/hooks/useKeyBind';
 
 export function useWorkflow() {
     const {
-        nodes: initialNodes,
-        edges: initialEdges,
+        initialStates: {
+            nodes: initialNodes,
+            edges: initialEdges,
+        },
 
         onNodesChange: onExternalNodesChange,
         onEdgesChange: onExternalEdgesChange,
@@ -39,7 +39,7 @@ export function useWorkflow() {
         setEdges,
         onEdgesChange,
     });
-    
+
     const tryUndo = () => { transaction.canUndo && transaction.undo(); }
     const tryRedo = () => { transaction.canRedo && transaction.redo(); }
 
@@ -57,7 +57,6 @@ export function useWorkflow() {
             setLastSelectedNode(selectedNode ?? null);
         }
     }, [nodes]);
-
 
     return {
         nodes,

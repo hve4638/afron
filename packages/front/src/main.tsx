@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import '@xyflow/react/dist/style.css'; // XYFlow 기본 스타일
 import App from './App.tsx'
 import DebugApp from './DebugApp.tsx'
 import './index.css'

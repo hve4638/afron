@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { TransactionAction } from './types';
+import { useCallback, useMemo, useState } from 'react';
 import { FlowNode, FlowEdge } from '@/lib/xyflow';
-import { TransactionExecutor, TransactionExecutorCallbacks } from './executor';
+
+import { TransactionAction } from './types';
+import { TransactionExecutor } from './executor';
 import { useWorkflowContext } from '../../context';
 import { RTFlowNodeData } from '@afron/types';
 
@@ -17,8 +18,10 @@ export function useWorkflowTransaction({
     setEdges,
 }: UseWorkflowTransactionProps) {
     const {
-        setNodeData,
-        removeNodeData,
+        actions: {
+            setNodeData,
+            removeNodeData,
+        }
     } = useWorkflowContext();
     const [undoStack, setUndoStack] = useState<TransactionAction[]>([]);
     const [redoStack, setRedoStack] = useState<TransactionAction[]>([]);

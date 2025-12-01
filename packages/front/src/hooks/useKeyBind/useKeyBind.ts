@@ -33,8 +33,8 @@ type ParsedCallback = {
  * - 규칙 위반 시 console.warn 출력 후 무시됨
  *
  * @param hotkey Record<string, hook> 형식, hook 반환값이 true라면 stopPropagation 및 preventDefault 호출됨
- * @param enabled {boolean} false 일 경우 hotkey가 비활성화 됨
  * @param deps 값 제공 시, deps가 변경될 때마다 hotkey가 재설정됨
+ * @param enabled {boolean} false 일 경우 hotkey가 비활성화 됨
  */
 export function useKeyBind(hotkey: HotkeyCallbacks, deps?: DependencyList, enabled: boolean = true) {
     const parsedCallbacks = useMemo(() => {

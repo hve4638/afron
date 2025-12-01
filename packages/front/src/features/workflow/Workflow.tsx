@@ -6,7 +6,6 @@ import {
     Background,
     BackgroundVariant,
 } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
 import { RTFlowData } from '@afron/types';
 import { FlowEdge, FlowNode } from '@/lib/xyflow';
 
@@ -124,6 +123,7 @@ export interface WorkflowProps {
     onNodesChange: (changes: SetStateAction<FlowNode[]>) => void;
     onEdgesChange: (changes: SetStateAction<FlowEdge[]>) => void;
     onDataChange: (data: SetStateAction<RTFlowData>) => void;
+    onSave: () => void;
 
     children?: React.ReactNode;
 }
@@ -135,6 +135,7 @@ export function Workflow({
     onNodesChange,
     onEdgesChange,
     onDataChange,
+    onSave,
 
     children,
 }: WorkflowProps) {
@@ -148,6 +149,8 @@ export function Workflow({
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onDataChange={onDataChange}
+
+                onSave={onSave}
             >
                 <WorkflowInner>
                     {children}

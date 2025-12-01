@@ -12,6 +12,8 @@ export function useOptionElement({
     node
 }: UseOptionComponentProps) {
     const {
+        initialStates: {},
+        actions: {},
         data,
         getNodeData,
         setNodeData,
@@ -23,7 +25,7 @@ export function useOptionElement({
         if (typeof next === 'function') {
             next = next(nodeData.data) as Record<string, any>;
         }
-
+        
         setNodeData(node.id, (prev) => ({
             ...prev,
             data: next,

@@ -2,7 +2,7 @@ import { Workflow } from '@/features/workflow';
 import { useWorkflowEditor } from './WorkflowEditor.hook';
 
 import styles from './WorkflowEditor.module.scss';
-import { Align, Column, Flex, Gap, Grid, Row } from '@/components/layout';
+import { Align, Flex, Grid, Row } from '@/components/layout';
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { ModalProvider } from '@/hooks/useModal';
 
@@ -53,6 +53,7 @@ function WorkflowEditorInner() {
                     onNodesChange={setFlowNode}
                     onEdgesChange={setFlowEdges}
                     onDataChange={setFlowData}
+                    onSave={save}
                 ></Workflow>
             }
         </Grid >

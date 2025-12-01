@@ -1,6 +1,6 @@
 import { IPCError } from 'api/error'
 import LocalAPI from '@/api/local'
-import { KeyValueInput, RTFlowData, RTPromptDataEditable, RTVar, RTVarCreate, RTVarUpdate } from '@afron/types';
+import { KeyValueInput, ProfileStorage, RTFlowData, RTPromptDataEditable, RTVar, RTVarCreate, RTVarUpdate } from '@afron/types';
 
 class RTAPI {
     #profileId: string;
@@ -21,6 +21,12 @@ class RTAPI {
     workflow = {
         getNodes: async () => await LocalAPI.profileRTFlow.getFlowData(this.#profileId, this.#rtId),
         setNodes: async (flowData: RTFlowData) => await LocalAPI.profileRTFlow.setFlowData(this.#profileId, this.#rtId, flowData),
+
+        getPrompts: async () => await LocalAPI.profileRTFlow.getPrompts(this.#profileId, this.#rtId),
+        setPrompts: async (order: ProfileStorage.RT.PromptOrder) => await LocalAPI.profileRTFlow.setPrompts(this.#profileId, this.#rtId, order),
+
+        addPrompt: async (promptId: string, promptName: string) => await LocalAPI.profileRTFlow.addPrompt(this.#profileId, this.#rtId, promptId, promptName),
+        removePrompt: async (promptId: string) => await LocalAPI.profileRTFlow.removePrompt(this.#profileId, this.#rtId, promptId),
     };
 
     prompt = {

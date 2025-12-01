@@ -1,3 +1,5 @@
+import { RTFlowNodeOptions } from '@afron/types';
+
 import { Align, Column, Flex, Gap, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';
 import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
@@ -6,14 +8,16 @@ import Delimiter from '@/components/atoms/Delimiter';
 import { useModal } from '@/hooks/useModal';
 import { SelectPromptTemplateModal } from './modals/SelectPromptTemplateModal';
 
-import { RTFlowNodeOptions } from '@afron/types';
+
 import { NodeOptionProps } from '../../types';
 import { usePromptTemplateNodeOption } from './PromptTemplateNodeOption.hooks';
+import { useParams } from 'react-router';
 
 export function PromptTemplateNodeOption({
     option,
     setOption,
 }: NodeOptionProps<RTFlowNodeOptions.PromptTemplate>) {
+    const { rtId } = useParams();
     const modals = useModal();
     const {
         emitPromptTemplate,
@@ -30,7 +34,7 @@ export function PromptTemplateNodeOption({
             }}
         >
             <Row>
-                <strong>프롬프트</strong>
+                <strong>프롬프트 템플릿</strong>
                 <Flex />
                 <Button
                     className='transparent row'
@@ -40,7 +44,8 @@ export function PromptTemplateNodeOption({
                     onClick={() => {
                         modals.open(SelectPromptTemplateModal,
                             {
-                                promptId: option.prompt_id,
+                                rtId: rtId as string,
+                                initPromptId: option.prompt_id,
                                 emitPromptTemplate
                             }
                         )
@@ -69,7 +74,7 @@ export function PromptTemplateNodeOption({
                         columnAlign={Align.Center}
                     >
                         <GIcon value='add' />
-                        <span>프롬프트 변경</span>
+                        <span>새 프롬프트 템플릿</span>
                     </Row>
                 </Button>
             }

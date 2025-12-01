@@ -143,8 +143,7 @@ class ElectronIPCAPI implements IIPCAPI {
             const [err] = await electron.profile.removeCustomModel(profileId, customId);
             if (err) throw new IPCError(err.message);
         },
-
-
+        
         async getGlobalModelConfig(profileId: string, modelId: string) {
             const [err, config] = await electron.profile.getGlobalModelConfig(profileId, modelId);
             if (err) throw new IPCError(err.message);

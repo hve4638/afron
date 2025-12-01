@@ -8,20 +8,19 @@ import { Align, Flex, Gap, Row } from '@/components/layout';
 import { EditableText } from '@/components/atoms/EditableText';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
-import useHotkey from '@/hooks/useHotkey';
 
 import styles from './SelectPromptTemplateModal.module.scss';
 import Button from '@/components/atoms/Button';
 import { Emit } from '@/lib/zustbus';
-import { PromptTemplateEvent } from '../PromptTemplateOption.hooks';
-import { useModal } from '@/hooks/useModal';
-import { NewPromptTemplateModal } from './NewPromptTemplateModal';
+import { useSelectPromptTemplateModal } from './SelectPromptTemplateModal.hooks';
+import type { PromptTemplateEvent } from '../../types';
 
 interface SelectPromptTemplateModalProps {
     onClose: () => void;
     isFocused: boolean;
 
-    promptId: string | null;
+    rtId: string;
+    initPromptId: string | null;
     emitPromptTemplate: Emit<PromptTemplateEvent>;
 }
 
@@ -29,33 +28,45 @@ export function SelectPromptTemplateModal({
     onClose = () => { },
     isFocused,
 
-    promptId,
+    rtId,
+    initPromptId,
     emitPromptTemplate
 }: SelectPromptTemplateModalProps) {
-    const modals = useModal();
-    const [disappear, close] = useModalDisappear(onClose);
+    const [disappear, closeModal] = useModalDisappear(onClose);
 
-    const [tree, setTree] = useState<Tree<string | Symbol>>([
-        node('File 1', 'file1 content'),
-        node('File 2', 'file2 content'),
-        node('File 1', 'file3 content'),
-        node('File 2', 'file4 content'),
-        node('File 1', 'file5 content'),
-    ]);
-    const [selected, setSelected] = useState<string | null>(promptId);
+    const {
+        states: {
+            tree,
+            selected,
+        },
+        actions: {
+            selectPrompt,
+            renamePrompt,
+            relocateTree,
+
+            openNewPromptTemplateModal,
+
+        }
+    } = useSelectPromptTemplateModal({
+        closeModal,
+        focused: isFocused,
+
+        initPromptId,
+        rtId,
+        emitPromptTemplate,
+    });
 
     return (
         <Modal
             style={{
                 maxWidth: '400px',
-                // paddingBottom: ''
             }}
             focused={isFocused}
-            onEscapeAction={() => close()}
+            onEscapeAction={() => closeModal()}
             disappear={disappear}
             headerLabel={
                 <ModalHeader
-                    onClose={close}
+                    onClose={closeModal}
                 >
                     프롬프트 템플릿 선택
                 </ModalHeader>
@@ -67,25 +78,25 @@ export function SelectPromptTemplateModal({
                     minHeight: '1.6em',
                 }}
                 tree={tree}
-                onChange={(next) => setTree(next)}
+                onChange={relocateTree}
                 relocatable={true}
                 renderLeafNode={({ name, value: valueOrSymbol }) => {
                     if (typeof valueOrSymbol === 'symbol') {
+                        return null;
                     }
                     else {
-                        const value = valueOrSymbol as string;
+                        const promptId = valueOrSymbol as string;
 
                         return (
                             <Row
                                 className='wfill'
                                 onClick={() => {
-                                    emitPromptTemplate('select_prompt_id', { promptId: value });
-                                    setSelected(value);
+                                    selectPrompt(promptId);
                                 }}
                             >
                                 <GIcon
                                     className={classNames({
-                                        [styles['selected']]: selected === value,
+                                        [styles['selected']]: selected === promptId,
                                     })}
                                     style={{
                                         fontSize: '22px',
@@ -98,19 +109,12 @@ export function SelectPromptTemplateModal({
                                 <Flex style={{ paddingLeft: '0.25em' }}>
                                     <EditableText
                                         className={classNames({
-                                            [styles['selected']]: selected === value,
+                                            [styles['selected']]: selected === promptId,
                                         })}
 
                                         value={name}
                                         onChange={(renamed) => {
-                                            setTree((prev) => {
-                                                const next = [...prev];
-                                                const index = next.findIndex((item) => item.name === name);
-                                                if (index !== -1) {
-                                                    next[index] = { ...next[index], name: renamed };
-                                                }
-                                                return next;
-                                            });
+                                            renamePrompt(promptId, renamed);
                                         }}
                                     />
                                 </Flex>
@@ -124,15 +128,10 @@ export function SelectPromptTemplateModal({
                 <Flex />
                 <Button
                     className='row'
-                    onClick={() => {
-                        modals.open(NewPromptTemplateModal, {
-                            emitPromptTemplate,
-                        });
-                    }}
+                    onClick={openNewPromptTemplateModal}
                 >
                     <GIcon
-                        className={classNames({
-                        })}
+                        className={classNames({})}
                         style={{
                             fontSize: '22px',
                             width: '22px',

@@ -13,7 +13,6 @@ export function useWorkflowEditor() {
     const [flowNode, setFlowNode] = useState<FlowNode[] | null>(null);
     const [flowEdges, setFlowEdges] = useState<FlowEdge[] | null>(null);
     const [flowData, setFlowData] = useState<RTFlowData>({});
-    const [isChanged, setIsChanged] = useState<boolean>(false);
 
     const rt = useRTStore();
 
@@ -27,13 +26,9 @@ export function useWorkflowEditor() {
             setFlowNode(nodes);
             setFlowEdges(edges);
             setFlowData(flowData);
-            setIsChanged(false);
         })();
     }, []);
-
-    /// @TODO: isChanged 체크 여부 개선 필요
-    // 현재는 Workflow 로드 시 최초 1회 반드시 setter 호출되므로
-    // isChanged가 항상 true
+    
     const save = async () => {
         if (!rtId) return;
 
@@ -48,27 +43,14 @@ export function useWorkflowEditor() {
         emitNavigate('back');
     }
 
-    const setFlowNodeWrap: Dispatch<SetStateAction<FlowNode[]>> = useCallback((next) => {
-        setIsChanged(true);
-        setFlowNode(next as SetStateAction<FlowNode[] | null>);
-    }, [setFlowNode]);
-    const setFlowEdgesWrap: Dispatch<SetStateAction<FlowEdge[]>> = useCallback((next) => {
-        setIsChanged(true);
-        setFlowEdges(next as SetStateAction<FlowEdge[] | null>);
-    }, [setFlowEdges]);
-    const setFlowDataWrap: Dispatch<SetStateAction<RTFlowData>> = useCallback((next) => {
-        setIsChanged(true);
-        setFlowData(next);
-    }, [setFlowData]);
-
     return {
         workflow: {
             nodes: flowNode,
             edges: flowEdges,
             flowData,
-            setFlowNode: setFlowNodeWrap,
-            setFlowEdges: setFlowEdgesWrap,
-            setFlowData: setFlowDataWrap,
+            setFlowNode: setFlowNode as Dispatch<SetStateAction<FlowNode[]>>,
+            setFlowEdges: setFlowEdges as Dispatch<SetStateAction<FlowEdge[]>>,
+            setFlowData: setFlowData as Dispatch<SetStateAction<RTFlowData>>,
         },
 
         save,

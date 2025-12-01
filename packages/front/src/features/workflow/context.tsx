@@ -5,6 +5,29 @@ import { FlowEdge, FlowNode } from '@/lib/xyflow';
 import { RTFlowData, RTFlowNodeData } from '@afron/types';
 
 export interface WorkflowState {
+    initialStates: {
+        nodes: FlowNode[];
+        edges: FlowEdge[];
+        data: RTFlowData;
+    }
+
+    handles: {
+        onNodesChange: (changes: SetStateAction<FlowNode[]>) => void;
+        onEdgesChange: (changes: SetStateAction<FlowEdge[]>) => void;
+        onDataChange: (data: RTFlowData) => void;
+    }
+
+    actions: {
+        /** nodeId에서 NodeData 리턴 */
+        getNodeData: <TData = Record<string, unknown>>(nodeId: string) => RTFlowNodeData<TData>;
+        /** nodeId에 해당하는 NodeData 변경 */
+        setNodeData: (nodeId: string, data: SetStateAction<RTFlowNodeData>) => void;
+        /** nodeId에 해당하는 NodeData 제거 */
+        removeNodeData: (nodeId: string) => void;
+        save: () => void;
+    }
+
+
     nodes: FlowNode[];
     edges: FlowEdge[];
     data: RTFlowData;
@@ -30,6 +53,8 @@ interface WorkflowContextProps {
     onEdgesChange: (changes: SetStateAction<FlowEdge[]>) => void;
     onDataChange: (data: SetStateAction<RTFlowData>) => void;
 
+    onSave: () => void;
+
     children?: React.ReactNode;
 }
 
@@ -42,6 +67,8 @@ export function WorkflowContextProvider({
     onNodesChange,
     onEdgesChange,
     onDataChange,
+
+    onSave,
 }: WorkflowContextProps) {
     const getNodeData: <TData>(nodeId: string) => RTFlowNodeData<TData> = useCallback((nodeId: string) => {
         // 존재하지 않는 nodeId일 경우 기본값 반환
@@ -64,7 +91,7 @@ export function WorkflowContextProvider({
             if (typeof data === 'function') {
                 data = data(prev[nodeId] ?? {});
             }
-            
+
             return {
                 ...prev,
                 [nodeId]: data,
@@ -82,6 +109,23 @@ export function WorkflowContextProvider({
     return (
         <WorkflowContext.Provider
             value={{
+                initialStates: {
+                    nodes,
+                    edges,
+                    data,
+                },
+                handles: {
+                    onNodesChange,
+                    onEdgesChange,
+                    onDataChange,
+                },
+                actions: {
+                    getNodeData,
+                    setNodeData,
+                    removeNodeData,
+                    save: onSave,
+                },
+
                 nodes,
                 edges,
                 data,
