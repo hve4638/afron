@@ -4,7 +4,7 @@ import { useWorkflowEditor } from './WorkflowEditor.hook';
 import styles from './WorkflowEditor.module.scss';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
-import { ModalProvider } from '@/hooks/useModal';
+import { ModalProvider } from '@/features/modal';
 
 function WorkflowEditorInner() {
     const {

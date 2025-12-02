@@ -6,7 +6,6 @@ import { Align, Column, Flex, Row } from "@/components/layout";
 import { GIconButton, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import Button from '@/components/atoms/Button';
 
-import { useModal } from '@/hooks/useModal';
 import useHotkey from '@/hooks/useHotkey';
 
 import type { PromptData } from '@/types';
@@ -15,6 +14,8 @@ import { PromptEditorDataAction } from './hooks';
 import { Emit, UseOn } from '@/lib/zustbus';
 import { PromptEditorEvent } from './types';
 import { useEffect, useState } from 'react';
+import { useModal } from '@/features/modal';
+import { useKeyBind } from '@/hooks/useKeyBind';
 
 type SidePanelProps = {
     value: Readonly<PromptData>;
@@ -34,15 +35,9 @@ function SidePanel({
     const modal = useModal();
     const [saved, setSaved] = useState(false);
 
-    useHotkey({
-        's': (e) => {
-            if (e.ctrlKey) {
-                emitPromptEditorEvent('save');
-
-                return true;
-            }
-        }
-    }, modal.count === 0);
+    useKeyBind({
+        'C-s': (e) => emitPromptEditorEvent('save'),
+    }, [], modal.count === 0);
 
     usePromptEditorEvent('on_save', () => setSaved(true), []);
 

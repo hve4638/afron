@@ -4,12 +4,12 @@ import classNames from 'classnames';
 import { Align, Column, Row } from '@/components/layout';
 import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 
-import { useModal } from '@/hooks/useModal';
 import ErrorLogModal from '@/modals/ErrorLogModal';
 
 import styles from './styles.module.scss';
 import useErrorLogStore, { LogEntry } from '@/stores/useErrorLogStore';
 import useModalDisappear from '@/hooks/useModalDisappear';
+import { useModal } from '@/features/modal';
 
 function ErrorToastSection() {
     const modal = useModal();
@@ -65,9 +65,7 @@ function ErrorToastSection() {
                         description={description}
 
                         onClick={() => {
-                            modal.open(ErrorLogModal, {
-                                errorId: null,
-                            });
+                            modal.open(<ErrorLogModal errorId={null}/>);
                         }}
                         onDispose={() => removeToast(id)}
                     />

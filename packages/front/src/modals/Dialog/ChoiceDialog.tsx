@@ -9,6 +9,8 @@ import useModalDisappear from '@/hooks/useModalDisappear';
 import { CommonDialogProps } from './types';
 import styles from './styles.module.scss';
 import useHotkey from '@/hooks/useHotkey';
+import { useModalInstance } from '@/features/modal';
+import { useKeyBind } from '@/hooks/useKeyBind';
 
 type ChoiceTone = 'default'|'highlight'|'dimmed'|'warn';
 type ChoiceDetail = {
@@ -37,7 +39,6 @@ function ChoiceDialog({
     children,
     choices,
     onSelect = async (choice:string, index:number)=>true,
-    onClose,
 
     onEnter = async ()=>false,
     onEscape = async ()=>true,
@@ -47,12 +48,12 @@ function ChoiceDialog({
     className='',
     style={},
 }:ChoiceDialogProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal, disappear, focused } = useModalInstance(); 
 
-    useHotkey({
+    useKeyBind({
         'Enter' : (e)=>{
             onEnter().then((b)=>{
-                if (b) close();
+                if (b) closeModal();
             });
 
             return true;
@@ -64,7 +65,7 @@ function ChoiceDialog({
             
             return true;
         }
-    })
+    }, [], focused);
 
     return (
         <Modal
@@ -74,8 +75,9 @@ function ChoiceDialog({
                 minWidth: '40%',
                 width : 'auto',
             }}
-            disappear={disappear}
-            enableRoundedBackground={enableRoundedBackground}
+            backgroundProps={{
+                enableRoundedBackground
+            }}
         >
             <ModalHeader
                 hideCloseButton={true}

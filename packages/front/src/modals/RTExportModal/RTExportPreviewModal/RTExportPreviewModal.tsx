@@ -2,25 +2,23 @@ import Button from '@/components/atoms/Button';
 import { TextForm } from '@/components/FormFields';
 import { Align, Gap, Row } from '@/components/layout';
 import { Modal, ModalHeader, ModalRequiredProps } from '@/components/modal';
+import { useModalInstance } from '@/features/modal';
 import { emitEvent } from '@/hooks/useEvent';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { useKeyBind } from '@/hooks/useKeyBind';
 import { useProfileAPIStore } from '@/stores';
 import { ProfileStorage } from '@afron/types';
 import { useEffect, useState } from 'react';
 
 type RTMetadata = ProfileStorage.RT.Index;
 
-interface RTExportModalProps extends ModalRequiredProps {
+interface RTExportModalProps {
     rtId: string;
 }
 
 function RTExportModal({
     rtId,
-    isFocused,
-    onClose
 }: RTExportModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal, disappear, focused } = useModalInstance();
     const { api } = useProfileAPIStore();
 
     const [rtMetadata, setRTMetadata] = useState<RTMetadata>();
@@ -34,9 +32,9 @@ function RTExportModal({
         loadRTMetadata();
     }, [rtId, api]);
 
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
+    useKeyBind({
+        'Escape': closeModal,
+    }, [], focused);
 
     return (
         <Modal

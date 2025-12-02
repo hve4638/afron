@@ -1,4 +1,3 @@
-import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
 
 import { Align, Flex, Row } from '@/components/layout';
@@ -9,10 +8,10 @@ import useTrigger from '@/hooks/useTrigger';
 import styles from './styles.module.scss';
 import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import DivButton from '@/components/atoms/DivButton';
-import { useModal } from '@/hooks/useModal';
 import EditCustomModelModal from './EditCustomModel';
 import ProfileEvent from '@/features/profile-event';
 import { CustomModel } from '@afron/types';
+import { useModal } from '@/features/modal';
 
 interface ModelListViewProps {
     onClick: (model: CustomModel) => Promise<void>;
@@ -36,7 +35,7 @@ function CustomModelListView({
                     )
                 })
             }
-            <AddButton/>
+            <AddButton />
         </div>
     )
 }
@@ -90,17 +89,18 @@ function CustomModelItem({ model, onClick }: ModelItemProps) {
                     marginRight: '2px',
                 }}
                 onClick={async (e) => {
-                    modal.open(EditCustomModelModal, {
-                        value: model,
-                        onConfirm: async (updatedModel) => {
-                            await ProfileEvent.model.setCustom(updatedModel);
-                            return true;
-                        },
-                        onDelete: async (customId) => {
-                            await ProfileEvent.model.removeCustom(customId);
-                            return true;
-                        }
-                    });
+                    modal.open(
+                        <EditCustomModelModal
+                            value={model}
+                            onConfirm={async (updatedModel) => {
+                                await ProfileEvent.model.setCustom(updatedModel);
+                                return true;
+                            }}
+                            onDelete={async (customId) => {
+                                await ProfileEvent.model.removeCustom(customId);
+                                return true;
+                            }}
+                        />);
                     refresh();
                     e.stopPropagation();
                 }}
@@ -135,12 +135,14 @@ function AddButton() {
             className={styles['model-add-button']}
             center={true}
             onClick={() => {
-                modal.open(EditCustomModelModal, {
-                    onConfirm: async (modelData) => {
-                        await ProfileEvent.model.setCustom(modelData);
-                        return true; // Close the modal after adding
-                    },
-                });
+                modal.open(
+                    <EditCustomModelModal
+                        onConfirm={async (modelData) => {
+                            await ProfileEvent.model.setCustom(modelData);
+                            return true; // Close the modal after adding
+                        }}
+                    />
+                );
             }}
         >
             <GIcon

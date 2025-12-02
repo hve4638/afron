@@ -21,8 +21,6 @@ type VarFormEditModalProps = {
     varAction: PromptEditorDataVarAction;
 
     emitVarFormEditModalControl: Emit<VarEditModalControlEvent>;
-
-    disappear: boolean;
 }
 
 export function FieldEditor({
@@ -32,8 +30,6 @@ export function FieldEditor({
     varAction,
 
     emitVarFormEditModalControl,
-
-    disappear,
 }: VarFormEditModalProps) {
     const structConfig = target.data.config.struct ?? { fields: [] };
     const field = useMemo(() => {
@@ -48,7 +44,6 @@ export function FieldEditor({
                 flexDirection: 'column',
                 gap: '0.25em',
             }}
-            disappear={disappear}
         >
             <ModalHeader
                 onClose={() => {

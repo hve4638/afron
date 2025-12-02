@@ -1,54 +1,31 @@
-import { useEffect, useRef, useState } from 'react';
 import { Modal } from '@/components/modal';
-import { Align, Column, Flex, Row } from 'components/layout';
+import { Align, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';
-import { ModalHeader } from '@/components/modal';
-import { TextInput } from 'components/Input';
-import classNames from 'classnames';
 
-import useModalDisappear from 'hooks/useModalDisappear';
-import { ButtonForm } from '@/components/FormFields';
-import { ProfileNameLayout } from './layout';
-import { useModal } from '@/hooks/useModal';
 import { ConfirmDialog, DeleteConfirmDialog } from '@/modals/Dialog';
-import useHotkey from '@/hooks/useHotkey';
 
 import styles from './styles.module.scss';
 import ListView from '@/components/container/ListView/ListView';
-import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import { useModal } from '@/features/modal';
 
 interface RecoverProfileModalProps {
-    isFocused: boolean;
     orphanIds: string[];
     onRecovery: () => Promise<void>;
-    onClose: () => void;
 }
 
 function RecoverProfileModal({
-    isFocused,
     orphanIds,
     onRecovery,
-    onClose,
 }: RecoverProfileModalProps) {
     const modal = useModal();
-    const [disappear, close] = useModalDisappear(onClose);
-
-    useHotkey({
-        'Escape': (e) => {
-            e.stopPropagation();
-            close();
-        }
-    });
 
     return (
         <Modal
-            disappear={disappear}
-
-            onEscapeAction={close}
-            focused={isFocused}
-            headerLabel={
-                <ModalHeader onClose={close}>프로필 복구</ModalHeader>
-            }
+            header={{
+                label: '프로필 복구',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <small>예기치 못한 오류로 문제가 생긴 프로필을 복구합니다</small>
             <div style={{ height: '0.25em' }} />
@@ -85,15 +62,18 @@ function RecoverProfileModal({
                         height: '100%'
                     }}
                     onClick={async () => {
-                        modal.open(ConfirmDialog, {
-                            title: '프로필 복구',
-                            children: <div>복구하시겠습니까?</div>,
-                            onConfirm: () => {
-                                onRecovery();
-                                close();
-                                return true;
-                            },
-                        });
+                        modal.open(
+                            <ConfirmDialog
+                                title='프로필 복구'
+                                onConfirm={() => {
+                                    onRecovery();
+                                    close();
+                                    return true;
+                                }}
+                            >
+                                <div>복구하시겠습니까?</div>
+                            </ConfirmDialog>
+                        );
                     }}
                     disabled={orphanIds.length === 0}
                 >복구</Button>

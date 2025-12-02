@@ -13,7 +13,6 @@ type VarEditModalProps = {
     varId: string;
 
     promptEditorData: PromptEditorData;
-    onClose: () => void;
 }
 
 /**
@@ -25,23 +24,20 @@ type VarEditModalProps = {
 export function VarEditModal({
     varId,
     promptEditorData,
-
-    onClose
 }: VarEditModalProps) {
     const { t } = useTranslation();
-    const [disappear, closeModal] = useModalDisappear(onClose);
     const {
         promptVar,
         emitVarEditModalControl,
 
         secondEditorData,
     } = useVarEditModal({
-        varId, promptEditorData, closeModal
+        varId, promptEditorData
     });
 
     return (
         <ModalBackground
-            disappear={disappear}
+        
         >
             {
                 // @TODO : 원래 ModalProvider에서 FocusLock을 제공해야 하지만 작동하지 않아 직접 추가
@@ -64,8 +60,6 @@ export function VarEditModal({
                             target={promptVar}
                             varAction={promptEditorData.varAction}
                             emitVarFormEditModalControl={emitVarEditModalControl}
-
-                            disappear={disappear}
                         />
                     }
                     {
@@ -78,8 +72,6 @@ export function VarEditModal({
                             target={promptVar}
                             varAction={promptEditorData.varAction}
                             emitVarFormEditModalControl={emitVarEditModalControl}
-
-                            disappear={disappear}
                         />
                     }
                 </Row>

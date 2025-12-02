@@ -4,6 +4,7 @@ import { PromptEditorData } from '../../hooks';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import useHotkey from '@/hooks/useHotkey';
 import { VarEditModalControlEvent } from './types';
+import { useModalInstance } from '@/features/modal';
 
 type SecondEditorData = {
     type: 'array'
@@ -16,8 +17,6 @@ interface useVarEditModalProps {
     varId: string;
 
     promptEditorData: PromptEditorData;
-
-    closeModal: () => void;
 }
 
 export function useVarEditModal({
@@ -26,8 +25,8 @@ export function useVarEditModal({
         get,
         event: { usePromptDataUpdateOn: usePromptDataUpdateEvent },
     },
-    closeModal,
 }: useVarEditModalProps) {
+    const { closeModal, useCloseKeyBind } = useModalInstance();
     const [promptData, setPromptData] = useState(() => get());
     const promptVar = useMemo(() => promptData.variables.find(v => v.id === varId)!, [varId, promptData]);
 
@@ -51,13 +50,11 @@ export function useVarEditModal({
         closeModal();
     }, [closeModal]);
 
-    useHotkey({
-        'Escape': () => closeModal(),
-    });
-
     usePromptDataUpdateEvent('updated', () => {
         setPromptData(get());
     }, [get]);
+
+    useCloseKeyBind();
 
     return {
         promptVar,

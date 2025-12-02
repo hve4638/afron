@@ -11,19 +11,15 @@ import useTrigger from '@/hooks/useTrigger';
 import { CommonOptions, GPT5Options, SafetyOptions, ThinkingOptions } from './options';
 import useMemoryStore from '@/stores/useMemoryStore';
 import { ChatAIModel, GlobalModelConfiguration } from '@afron/types';
+import { useModalInstance } from '@/features/modal';
 
 type ModelConfigModalProps = {
     modelId: string;
-    isFocused: boolean;
-    onClose: () => void;
 }
 
 function ModelConfigModal({
     modelId,
-    isFocused,
-    onClose = () => { },
 }: ModelConfigModalProps) {
-    const [disappear, closed] = useModalDisappear(onClose);
     const configRef = useRef<Partial<GlobalModelConfiguration>>({});
     const [refreshPing, refresh] = useTrigger();
     const modelMap = useMemoryStore(state => state.modelsMap);
@@ -38,10 +34,8 @@ function ModelConfigModal({
         return ProfileEvent.model.getName(modelId);
     }, [modelId]);
 
-    const close = () => {
+    const onClose = () => {
         api.globalModelConfig.set(modelId, configRef.current);
-        
-        closed();
     }
 
     useEffect(() => {
@@ -52,28 +46,23 @@ function ModelConfigModal({
             });
     }, [modelId]);
 
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
-
     const config = configRef.current;
-    const thinkingEnabled = (model.config.thinking ?? 'disabled') !== 'disabled';5
+    const thinkingEnabled = (model.config.thinking ?? 'disabled') !== 'disabled';
     const safetyEnabled = (model.config.supportGeminiSafetyFilter);
     const gpt5Enabled = (model.config.supportVerbosity === true);
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
                 overflowY: 'auto',
             }}
-            headerLabel={
-                <ModalHeader
-                    onClose={close}
-                    children={'모델 설정: ' + modelName}
-                />
-            }
+            header={{
+                label: '모델 설정: ' + modelName,
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
+            onClose={onClose}
         >
             <Column
                 style={{

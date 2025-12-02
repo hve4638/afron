@@ -1,52 +1,30 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-
-import ProfileEvent from '@/features/profile-event';
-
 import { Column } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/modal';
-
-import useModalDisappear from '@/hooks/useModalDisappear';
-import useHotkey from '@/hooks/useHotkey';
-import useTrigger from '@/hooks/useTrigger';
+import { Modal } from '@/components/modal';
 
 import { ArrayField, CheckBoxField, NumberField, SelectField, StructField, TextField } from './form-fields';
-import { getRTVarDefaultValue } from './utils';
-import { RTVar } from '@afron/types';
 import { useFormModal } from './FormModal.hooks';
 
-type FormModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function FormModal({
-    isFocused,
-    onClose
-}: FormModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
-
+function FormModal() {
     const {
         forms,
         variables,
         setVariables,
-    } = useFormModal({
-        focused: isFocused,
-        close,
-    });
+    } = useFormModal();
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
                 overflowY: 'auto',
             }}
-            headerLabel={
-                <ModalHeader onClose={close}>변수</ModalHeader>
-            }
+            header = {{
+                label: '변수',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <Column
-                style={{ gap: '0.5em', }}
+                style={{ gap: '0.5em' }}
             >
                 {
                     forms.map((form, i) => {

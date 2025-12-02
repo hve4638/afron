@@ -1,4 +1,3 @@
-import { ModalProvider } from '@/hooks/useModal';
 import useTrigger from '@/hooks/useTrigger';
 
 import EditorSection from './EditorSection';
@@ -6,6 +5,7 @@ import SidePanel from './SidePanel';
 import usePromptEditor from './PromptEditor.hook';
 
 import styles from './styles.module.scss';
+import { ModalProvider } from '@/features/modal';
 
 function PromptEditorInner() {
     const [_, refresh] = useTrigger();

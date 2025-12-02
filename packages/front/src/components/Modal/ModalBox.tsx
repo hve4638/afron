@@ -3,26 +3,26 @@ import classNames from 'classnames';
 
 import styles from './style.module.scss';
 import { CommonProps } from '@/types';
+import { useModalInstance } from '@/features/modal';
 
 interface ModalDivProps extends CommonProps {
     children?: React.ReactNode;
-    disappear?: boolean,
 }
 
 function ModalBox({
     children,
-    className='',
-    style={},
-
-    disappear=false,
+    className = '',
+    style = {},
 }: ModalDivProps) {
+    const { disappear } = useModalInstance();
+
     return (
         <div
             className={
                 classNames(
                     styles['modal'],
                     className,
-                    { [styles['disappear']] : disappear },
+                    { [styles['disappear']]: disappear },
                 )
             }
             style={{
@@ -30,10 +30,7 @@ function ModalBox({
                 ...style,
             }}
         >
-            {
-                children != null &&
-                children
-            }
+            {children}
         </div>
     );
 }

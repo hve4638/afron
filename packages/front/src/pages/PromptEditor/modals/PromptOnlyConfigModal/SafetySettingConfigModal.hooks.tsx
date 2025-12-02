@@ -16,16 +16,10 @@ import { PromptEditorData } from '../../hooks';
 
 type UseSafetySettingConfigModalProps = {
     promptEditorData: PromptEditorData;
-
-    focused: boolean;
-    closeModal: () => void;
 }
 
 export function useSafetySettingConfigModal({
     promptEditorData,
-
-    focused,
-    closeModal,
 }: UseSafetySettingConfigModalProps) {
     const { t } = useTranslation();
 
@@ -52,10 +46,6 @@ export function useSafetySettingConfigModal({
             }
         }))
     }
-
-    useHotkey({
-        'Escape': () => closeModal(),
-    }, focused);
 
     usePromptDataUpdateOn('updated', () => {
         setSafetySetting(buildSafetySetting());

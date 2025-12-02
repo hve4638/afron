@@ -7,7 +7,7 @@ interface ModalHeaderProps {
     className?: string;
     style?: React.CSSProperties;
     onClose?: () => void;
-    buttonRenderer?: () => React.ReactNode;
+    renderButton?: () => React.ReactNode;
     hideCloseButton?: boolean;
     children?: React.ReactNode;
 }
@@ -16,12 +16,12 @@ function ModalHeader({
     className,
     onClose = () => { },
     hideCloseButton = false,
-    buttonRenderer,
+    renderButton,
     children,
 }: ModalHeaderProps) {
     const button = useMemo(() => {
-        if (buttonRenderer) {
-            return buttonRenderer();
+        if (renderButton) {
+            return renderButton();
         }
         else if (!hideCloseButton) {
             return <GIconButton
@@ -33,7 +33,7 @@ function ModalHeader({
         else {
             return <></>
         }
-    }, [buttonRenderer, hideCloseButton])
+    }, [renderButton, hideCloseButton])
 
     return (
         <Row
@@ -62,8 +62,7 @@ function ModalHeader({
                     lineHeight: '1',
                 }}
             >
-            {button}
-
+                {button}
             </div>
         </Row>
     )

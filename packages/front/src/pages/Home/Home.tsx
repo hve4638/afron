@@ -1,4 +1,4 @@
-import { ModalProvider } from '@/hooks/useModal';
+import { ModalProvider } from '@/features/modal';
 import { Grid } from '@/components/layout';
 import ToastRenderer from '@/components/ToastAnchor/ToastRenderer';
 

@@ -1,5 +1,5 @@
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
+import { useModal } from '@/features/modal';
 import ModelConfigModal from '@/modals/ModelConfigModal';
 import { useConfigStore, useSessionStore } from '@/stores';
 
@@ -22,9 +22,7 @@ function ModelConfigButton() {
             value='tune'
             hoverEffect='square'
             onClick={() => {
-                modal.open(ModelConfigModal, {
-                    modelId: modelId,
-                })
+                modal.open(<ModelConfigModal modelId={modelId} />)
 
             }}
         />

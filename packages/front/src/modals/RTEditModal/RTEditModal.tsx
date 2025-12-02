@@ -9,36 +9,24 @@ import { LeafNode } from './nodes';
 import useRTEditModal from './RTEditModal.hook';
 import { t } from 'i18next';
 import { emitEvent } from '@/hooks/useEvent';
+import { useModalInstance } from '@/features/modal';
 
-type RTEditModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function RTEditModal({
-    isFocused,
-    onClose
-}: RTEditModalProps) {
+function RTEditModal() {
+    const { closeModal, disappear } = useModalInstance();
     const {
+        state: {
+            tree,
+        },
         action: {
             tree: treeAction,
-            
-            navigatePromptEditor,
-            close,
 
+            navigatePromptEditor,
 
             confirmNodeDeletion,
             confirmDirectoryDeletion,
             openRTExportModal,
         },
-        state: {
-            tree,
-            disappear,
-        }
-    } = useRTEditModal({
-        isFocused,
-        onClose,
-    });
+    } = useRTEditModal();
 
     return (
         <Modal
@@ -54,7 +42,7 @@ function RTEditModal({
                     height: '100%',
                 }}
             >
-                <ModalHeader onClose={close}>{t('rt.rt_edit')}</ModalHeader>
+                <ModalHeader onClose={closeModal}>{t('rt.rt_edit')}</ModalHeader>
                 <Row
                     style={{
                         padding: '0px 4px',

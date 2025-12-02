@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useSessionStore } from '@/stores';
 import ProfileEvent from '@/features/profile-event';
 
 import { emitEvent, useEventState } from '@/hooks/useEvent';
-import { useModal } from '@/hooks/useModal';
 import { RTMetadataTree } from '@afron/types';
 
 function useRTDropdown() {

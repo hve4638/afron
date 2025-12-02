@@ -2,34 +2,28 @@ import { useEffect, useRef, useState } from 'react';
 import { Modal } from '@/components/modal';
 import { Align, Column, Flex, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
-import { ModalHeader } from '@/components/modal';
 import { TextInput } from 'components/Input';
 import classNames from 'classnames';
 
 import styles from './styles.module.scss';
-import useModalDisappear from 'hooks/useModalDisappear';
+import { useModalInstance } from '@/features/modal';
 
 function NewProfileModal({
     onSubmit,
-    onClose,
 }: {
     onSubmit: (metadata) => void
-    onClose: () => void
 }) {
+    const { closeModal } = useModalInstance();
     const [name, setName] = useState('');
-    const [disappear, close] = useModalDisappear(onClose);
     const inputRef = useRef<HTMLInputElement>(null);
 
     return (
         <Modal
-            disappear={disappear}
-
-            onEscapeAction={close}
-            focused={true}
-
-            headerLabel={
-                <ModalHeader onClose={close}>프로필 추가</ModalHeader>
-            }
+            header={{
+                label: '프로필 추가',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <Row
                 rowAlign={Align.Center}
@@ -97,7 +91,7 @@ function NewProfileModal({
                             color: 'lightgray'
                         }
                         onSubmit(metadata);
-                        close();
+                        closeModal();
                     }}
                     disabled={name.length === 0}
                 >생성</Button>
@@ -107,7 +101,7 @@ function NewProfileModal({
                         width: '128px',
                         height: '100%'
                     }}
-                    onClick={() => close()}
+                    onClick={closeModal}
                 >취소</Button>
             </Row>
         </Modal>

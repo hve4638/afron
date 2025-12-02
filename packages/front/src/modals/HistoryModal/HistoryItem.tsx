@@ -5,8 +5,8 @@ import type { HistoryData } from '@/features/session-history';
 
 import styles from './styles.module.scss';
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '../Dialog';
+import { useModal } from '@/features/modal';
 
 type HistoryItemProps = {
     value: HistoryData;
@@ -26,9 +26,9 @@ function HistoryItem({
             key={value.id}
             className={classNames(styles['history-list-item'])}
             style={{
-                gap : '2em',
+                gap: '2em',
             }}
-            
+
             rows='1fr'
             columns='1fr 1.5em'
             onClick={() => onClick(value)}
@@ -62,12 +62,14 @@ function HistoryItem({
                     className={classNames(styles['delete-button'])}
                     onClick={(e) => {
                         e.stopPropagation();
-                        modal.open(DeleteConfirmDialog, {
-                            onDelete: async () => {
-                                await onDelete(value);
-                                return true;
-                            }
-                        });
+                        modal.open(
+                            <DeleteConfirmDialog
+                                onDelete={async () => {
+                                    await onDelete(value);
+                                    return true;
+                                }}
+                            />
+                        );
                     }}
                     hoverEffect='square'
                 />

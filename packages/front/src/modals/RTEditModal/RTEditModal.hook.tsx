@@ -1,28 +1,19 @@
-import { Children, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useMemo, useState } from 'react';
 import { t } from 'i18next';
 
-import { ITreeDirectoryNode, ITreeLeafNode, ITreeNode } from '@/components/TreeView/types';
+import { ITreeNode } from '@/components/TreeView/types';
 
-import useHotkey from '@/hooks/useHotkey';
-import { useModal } from '@/hooks/useModal';
+
 import { emitEvent } from '@/hooks/useEvent';
-import useModalDisappear from '@/hooks/useModalDisappear';
 
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { RTExportPreviewModal } from '../RTExportModal';
 import { RTTreeModel } from '@/features/rt';
+import { useModal, useModalInstance } from '@/features/modal';
+import { useKeyBind } from '@/hooks/useKeyBind';
 
-type useRTEditModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function useRTEditModal({
-    isFocused,
-    onClose
-}: useRTEditModalProps) {
+function useRTEditModal() {
+    const { closeModal, disappear, focused, useCloseKeyBind } = useModalInstance();
     const modal = useModal();
     const rtTreeModel = useMemo(() => new RTTreeModel(), []);
     const [tree, setTree] = useState<Readonly<ITreeNode<string>[]>>([]);
@@ -63,33 +54,29 @@ function useRTEditModal({
     }
 
     const confirmNodeDeletion = (name: string, value: string) => {
-        modal.open(DeleteConfirmDialog, {
-            onDelete: async () => {
-                deleteNode(value);
+        modal.open(<DeleteConfirmDialog
+            onDelete={async () => {
+                await deleteNode(value);
                 return true;
-            },
-            onCancel: async () => {
-                return true;
-            },
-        });
+            }}
+            onCancel={async () => true}
+        />);
     }
 
     const confirmDirectoryDeletion = (name: string, value: string) => {
-        modal.open(DeleteConfirmDialog, {
-            onDelete: async () => {
+        modal.open(<DeleteConfirmDialog
+            onDelete={async () => {
                 deleteDirectory(value);
                 return true;
-            },
-            onCancel: async () => {
+            }}
+            onCancel={async () => {
                 return true;
-            },
-        });
+            }}
+        />);
     }
 
     const openRTExportModal = (rtId: string) => {
-        modal.open(RTExportPreviewModal, {
-            rtId,
-        });
+        modal.open(<RTExportPreviewModal rtId={rtId }/>);
     }
 
     // 초기 트리 로드
@@ -97,10 +84,7 @@ function useRTEditModal({
         rerenderTree();
     }, []);
 
-    const [disappear, close] = useModalDisappear(onClose);
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
+    useCloseKeyBind();
 
     return {
         state: {
@@ -111,7 +95,6 @@ function useRTEditModal({
             navigatePromptEditor: (rtId: string) => {
                 emitEvent('goto_rt_editor', { rtId });
             },
-            close,
 
             tree: {
                 relocate,

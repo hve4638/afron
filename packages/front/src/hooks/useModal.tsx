@@ -17,7 +17,7 @@ type ModalData = {
 
 const ModalContext = createContext<ModalContextType|null>(null);
 
-export function useModal() {
+export function useModalLegacy() {
     const modalContext = useContext(ModalContext);
 
     if (!modalContext) {
@@ -26,7 +26,7 @@ export function useModal() {
     return modalContext;
 }
 
-export function ModalProvider({children}: {children:React.ReactNode}) {
+export function ModalLegacyProvider({children}: {children:React.ReactNode}) {
     const counter = useRef(0);
     const [modals, setModals] = useState<ModalData[]>([]);
 

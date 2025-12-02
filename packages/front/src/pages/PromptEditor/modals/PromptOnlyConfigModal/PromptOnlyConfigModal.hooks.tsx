@@ -7,15 +7,10 @@ import { PromptEditorData } from '../../hooks';
 
 type usePromptOnlyConfigModalProps = {
     promptEditorData: PromptEditorData;
-
-    focused: boolean;
-    closeModal: () => void;
 }
 
 export function usePromptOnlyConfigModal({
     promptEditorData,
-    focused,
-    closeModal,
 }: usePromptOnlyConfigModalProps) {
     const { usePromptDataUpdateOn } = promptEditorData.event;
 
@@ -41,10 +36,6 @@ export function usePromptOnlyConfigModal({
             [key]: value,
         }));
     }
-
-    useHotkey({
-        'Escape': () => closeModal()
-    }, focused);
 
     usePromptDataUpdateOn('updated', () => {
         setPromptData(buildPromptData());

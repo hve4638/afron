@@ -18,8 +18,6 @@ type VarFormEditModalProps = {
     varAction: PromptEditorDataVarAction;
 
     emitVarFormEditModalControl: Emit<VarEditModalControlEvent>;
-
-    disappear: boolean;
 }
 
 export function FormEditor({
@@ -28,8 +26,6 @@ export function FormEditor({
     varAction,
 
     emitVarFormEditModalControl,
-
-    disappear,
 }: VarFormEditModalProps) {
     const { t } = useTranslation();
     const [warnNameDuplication, setWarnNameDuplication] = useState(false);
@@ -47,8 +43,6 @@ export function FormEditor({
                 flexDirection: 'column',
                 gap: '0.25em',
             }}
-
-            disappear={disappear}
         >
             <ModalHeader onClose={() => {
                 emitVarFormEditModalControl('close_modal');

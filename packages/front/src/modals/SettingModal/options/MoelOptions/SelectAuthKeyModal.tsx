@@ -1,26 +1,23 @@
 import { Column } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal } from '@/components/modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import styles from './styles.module.scss';
 import { useDataStore } from '@/stores';
 import { APIKeyMetadata } from '@/types/apikey-metadata';
+import { useModalInstance } from '@/features/modal';
 
 interface SelectAuthKeyModalProps {
     value?: string;
     onChange?: (key: string) => void;
-    onClose?: () => void;
 }
 
 function SelectAuthKeyModal({
     value = '',
     onChange = () => { },
-    onClose = () => { },
 }: SelectAuthKeyModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal } = useModalInstance();
     const { api_keys } = useDataStore();
     const [selected, setSelected] = useState<string>(value);
 
@@ -40,21 +37,19 @@ function SelectAuthKeyModal({
         };
     }, [api_keys]);
 
-    useHotkey({
-        'Escape': () => close(),
-    })
-
     return (
         <Modal
             className='relative'
-            disappear={disappear}
             style={{
                 width: 'auto',
                 minWidth: '400px',
             }}
+            allowEscapeKey={true}
+            header={{
+                label: 'API 키 선택',
+                showCloseButton: true,
+            }}
         >
-            <ModalHeader hideCloseButton={false} onClose={close}>API 키 선택</ModalHeader>
-            <div style={{ height: '0.25em' }} />
             <Column
                 className={classNames(styles['select-auth-key-container'], 'undraggable')}
                 style={{
@@ -77,9 +72,9 @@ function SelectAuthKeyModal({
             <ConfirmCancelButtons
                 onConfirm={async () => {
                     onChange(selected);
-                    close();
+                    closeModal();
                 }}
-                onCancel={() => close()}
+                onCancel={closeModal}
                 enableConfirmButton={selected !== value}
             />
         </Modal>

@@ -3,26 +3,18 @@ import { Modal, ModalHeader } from '@/components/modal';
 import Well from '@/components/atoms/Well';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
+import { useModalInstance } from '@/features/modal';
 
 type InfoModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-
     item: Array<{ name?: string; value: string; }>;
 }
 
 function InfoModal({
-    isFocused,
-    onClose,
     item
 }: InfoModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { disappear, useCloseKeyBind, closeModal } = useModalInstance();
 
-    useHotkey({
-        'Escape': () => {
-            close();
-        }
-    }, isFocused, []);
+    useCloseKeyBind();
     
     return (
         <Modal
@@ -33,7 +25,7 @@ function InfoModal({
             }}
             headerLabel={
                 <ModalHeader
-                    onClose={close}
+                    onClose={closeModal}
                 >정보</ModalHeader>
             }
         >

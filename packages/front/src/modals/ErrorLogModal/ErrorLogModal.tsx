@@ -13,23 +13,14 @@ import LogEntryItem from './LogEntryItem';
 
 type ErrorLogModalProps = {
     errorId: string | null;
-    isFocused: boolean;
-    onClose: () => void;
 }
 
 function ErrorLogModal({
     errorId,
-    isFocused,
-    onClose
 }: ErrorLogModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
     const scrollAnchorRef = useRef<HTMLDivElement>(null);
     const initOpenRef = useRef<HTMLDivElement>(null);
     const { log: errorLog, markAsRead, hasUnread } = useErrorLogStore();
-
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
 
     if (hasUnread) {
         markAsRead();
@@ -41,15 +32,14 @@ function ErrorLogModal({
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 height: '60%'
-                // minHeight: '60%',
-                // maxHeight: '80%',
             }}
-            headerLabel={
-                <ModalHeader onClose={close}>에러</ModalHeader>
-            }
+            header={{
+                label: '에러',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <ListView
                 style={{

@@ -2,11 +2,11 @@ import React from 'react';
 import styles from './style.module.scss';
 import classNames from 'classnames';
 import { CommonProps } from '@/types';
+import { useModalInstance } from '@/features/modal';
 
 export interface ModalBackgroundProps extends CommonProps {
     children?: React.ReactNode;
 
-    disappear?: boolean;
     enableRoundedBackground?: boolean;
 }
 
@@ -15,9 +15,9 @@ function ModalBackground({
     style = {},
     children,
 
-    disappear = false,
     enableRoundedBackground = false,
 }: ModalBackgroundProps) {
+    const { disappear } = useModalInstance();
 
     return (
         <div className={
@@ -30,10 +30,7 @@ function ModalBackground({
                 borderRadius: enableRoundedBackground ? '5px' : '0px',
             }}
         >
-            {
-                children != null &&
-                children
-            }
+            {children}
         </div>
     );
 }

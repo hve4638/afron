@@ -7,24 +7,17 @@ import { Flex, Gap, Row } from '@/components/layout';
 import { Button } from '@/components/atoms';
 import { PromptTemplateEvent } from '../../PromptTemplateNodeOption.hooks';
 import { useNewPromptTemplateModal } from './NewPromptTemplateModal.hooks';
+import { useModalInstance } from '@/features/modal';
 
 interface NewPromptTemplateModalProps {
-    onClose: () => void;
-    isFocused: boolean;
-
     rtId: string;
     emitPromptTemplate: Emit<PromptTemplateEvent>;
 }
 
 export function NewPromptTemplateModal({
-    onClose = () => { },
-    isFocused,
-    
     rtId,
     emitPromptTemplate,
 }: NewPromptTemplateModalProps) {
-    const [disappear, closeModal] = useModalDisappear(onClose);
-    
     const {
         states: {
             name,
@@ -38,15 +31,12 @@ export function NewPromptTemplateModal({
 
     return (
         <Modal
-            focused={isFocused}
-            disappear={disappear}
             style={{ maxWidth: '350px' }}
-            onEscapeAction={closeModal}
-            headerLabel={
-                <ModalHeader
-                    onClose={closeModal}
-                >새 프롬프트 템플릿</ModalHeader>
-            }
+            header={{
+                label: '새 프롬프트 템플릿 만들기',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <Field.String
                 name='이름'

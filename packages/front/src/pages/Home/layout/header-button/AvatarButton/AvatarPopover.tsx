@@ -5,8 +5,6 @@ import { Column } from '@/components/layout';
 import DivButton from '@/components/atoms/DivButton';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 
-import { useModal } from '@/hooks/useModal';
-
 import RTEditModal from '@/modals/RTEditModal';
 import SettingModal from '@/modals/SettingModal';
 
@@ -14,6 +12,7 @@ import styles from './styles.module.scss';
 import LocalAPI from '@/api/local';
 import useMemoryStore from '@/stores/useMemoryStore';
 import { emitEvent } from '@/hooks/useEvent';
+import { useModal } from '@/features/modal';
 
 type AvatarPopoverProps = {
     onClose: () => void;
@@ -26,12 +25,12 @@ function AvatarPopover({
     const { availableVersion } = useMemoryStore();
 
     const clickEditRTButton = () => {
-        modal.open(RTEditModal, {});
+        modal.open(<RTEditModal/>);
         onClose();
     }
     
     const clickSettingButton = () => {
-        modal.open(SettingModal, {});
+        modal.open(<SettingModal/>);
         onClose();
     }
 

@@ -3,11 +3,10 @@ import ProfileAddIcon from '@/assets/img/profile-add.svg';
 
 import { Flex } from '@/components/layout';
 import { GIconButton, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
-import { DeleteConfirmDialog } from '@/modals/Dialog';
 
 import styles from './styles.module.scss';
 import EditProfileModal from './EditProfileModal';
+import { useModal } from '@/features/modal';
 
 type ProfileButtonProps = {
     name:string;
@@ -85,15 +84,15 @@ export function ProfileButton({
                     }}
                     hoverEffect='square'
                     onClick={(e)=>{
-                        modal.open(EditProfileModal, {
-                            name: name,
-                            onDelete: async () => {
+                        modal.open(<EditProfileModal 
+                            name={name}
+                            onDelete={async () => {
                                 await onDelete(identifier);
-                            },
-                            onRename: async (name) => {
+                            }}
+                            onRename={async (name) => {
                                 await onRename(name);
-                            }
-                        });
+                            }}
+                        />);
 
                         e.stopPropagation();
                         e.preventDefault();

@@ -1,5 +1,5 @@
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
+import { useModal } from '@/features/modal';
 import FormModal from '@/modals/FormModal';
 import { useProfileAPIStore, useSessionStore } from '@/stores';
 import { useEffect, useState } from 'react';
@@ -31,7 +31,7 @@ function FormButton() {
                 }}
                 hoverEffect='square'
                 onClick={() => {
-                    modal.open(FormModal, {})
+                    modal.open(<FormModal/>)
                 }}
             />
         );

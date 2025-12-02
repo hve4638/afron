@@ -1,62 +1,48 @@
-import { SetStateAction } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal } from '@/components/modal';
 import { ButtonForm, StringForm } from '@/components/FormFields';
 
 import { Column, Gap, Row } from '@/components/layout';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import Delimiter from '@/components/atoms/Delimiter';
 import ModelForm from '@/components/model-ui';
-import { useModal } from '@/hooks/useModal';
 import SafetySettingConfigModal from './SafetySettingConfigModal';
 import DropdownForm, { Dropdown } from '@/components/FormFields/DropdownForm';
 import { usePromptOnlyConfigModal } from './PromptOnlyConfigModal.hooks';
 import { PromptEditorData } from '../../hooks';
+import { useModal } from '@/features/modal';
 
 type PromptOnlyConfigModalProps = {
     promptEditorData: PromptEditorData;
-
-    isFocused: boolean;
-    onClose: () => void;
 }
 
 export function PromptOnlyConfigModal({
     promptEditorData,
-
-    isFocused,
-    onClose
 }: PromptOnlyConfigModalProps) {
     const modal = useModal();
-    const { t } = useTranslation();
-    const [disappear, closeModal] = useModalDisappear(onClose);
 
     const {
         promptData,
         setModelConfig,
     } = usePromptOnlyConfigModal({
         promptEditorData,
-        focused: isFocused,
-        closeModal,
     });
 
     const { action } = promptEditorData;
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
             }}
-            headerLabel={
-                <ModalHeader onClose={closeModal}>설정</ModalHeader>
-            }
+            header={{
+                label: '설정',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             {
                 promptData != null &&
                 <Column
-                    style={{
-                        gap: '0.3em',
-                    }}
+                    style={{ gap: '0.3em' }}
                 >
                     <b className='undraggable'>메타데이터</b>
                     <Delimiter />
@@ -129,29 +115,13 @@ export function PromptOnlyConfigModal({
                             width: '100%',
                         }}
                         onClick={() => {
-                            modal.open(SafetySettingConfigModal, {
-                                promptEditorData,
-                            });
+                            modal.open(<SafetySettingConfigModal
+                                promptEditorData={promptEditorData}
+                            />);
                         }}
                     />
-
-                    {/* <div style={{ height:'0.5em' }}/>
-                <NumberForm
-                    name='이전 대화 컨텍스트 크기'
-                    value={0}
-                    onChange={(value)=>{
-                        console.log(value);
-                        refresh();
-                    }}
-                /> */}
                 </Column>
             }
-            {/* <hr/>
-            <b>모델 제한</b>
-            <div>제한 없음</div>
-            <div>프로바이더 제한</div>
-            <div>특정 모델만</div>
-             */}
         </Modal>
     )
 }

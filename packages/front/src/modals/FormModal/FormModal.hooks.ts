@@ -4,15 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { RTFormWithLastValue } from '@/features/profile-event/types';
 import { getRTVarConfigDefaultValue } from './utils';
 
-interface useFormModalProps {
-    focused: boolean;
-    close: () => void;
-}
-
-export function useFormModal({
-    focused,
-    close
-}: useFormModalProps) {
+export function useFormModal() {
     const [forms, setForms] = useState<RTFormWithLastValue[]>([]);
     const latestVariablesRef = useRef<Record<string, any>>({});
     const [variables, setVariables] = useState<Record<string, any>>({});
@@ -42,10 +34,6 @@ export function useFormModal({
     useEffect(() => {
         latestVariablesRef.current = variables;
     }, [variables]);
-
-    useHotkey({
-        'Escape': close,
-    }, focused, []);
 
     return {
         forms,

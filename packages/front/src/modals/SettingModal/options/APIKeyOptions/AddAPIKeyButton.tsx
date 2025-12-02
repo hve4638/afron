@@ -1,8 +1,7 @@
 import DivButton from '@/components/atoms/DivButton';
 import { GIcon } from '@/components/atoms/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
-import StringInputModal from '@/modals/StringInputModal';
 import AddAPIKeyModal from './AddAPIKeyModal';
+import { useModal } from '@/features/modal';
 
 interface AddAPIKeyButtonProps {
     title: string;
@@ -19,11 +18,13 @@ function AddAPIKeyButton({
         <DivButton
             center={true}
             onClick={() => {
-                modal.open(AddAPIKeyModal, {
-                    title,
-                    onSubmit: onAddAPIKey,
-                    apiKeyName: 'API 키',
-                });
+                modal.open(
+                    <AddAPIKeyModal
+                        title={title}
+                        onSubmit={onAddAPIKey}
+                        apiKeyName='API 키'
+                    />
+                );
             }}
         >
             <GIcon

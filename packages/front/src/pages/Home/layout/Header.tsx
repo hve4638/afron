@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { Align, Flex, Grid, Row } from '@/components/layout';
-import { useModal } from '@/hooks/useModal';
 import { useSessionStore } from '@/stores';
 
 import { AvatarButton, ErrorLogButton, FormButton, HistoryButton, ModelConfigButton } from './header-button';

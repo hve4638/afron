@@ -14,18 +14,10 @@ import HistoryItem from './HistoryItem';
 import { HistoryData } from '@/features/session-history';
 import useTrigger from '@/hooks/useTrigger';
 import { emitEvent } from '@/hooks/useEvent';
+import { useModalInstance } from '@/features/modal';
 
-type NewRTModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function HistoryModal({
-    isFocused,
-    onClose = ()=>{},
-}:NewRTModalProps) {
+function HistoryModal() {
     const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
     const historyState = useHistoryStore();
     const updateSessionState = useSessionStore(state=>state.update);
     const [refreshHistoryPing, refreshHistory] = useTrigger();
@@ -65,17 +57,13 @@ function HistoryModal({
         }
     }, [last_session_id, searchText, history_search_scope, refreshHistoryPing])
 
-    useHotkey({
-        'Escape' : close,
-    }, isFocused, []);
-
     return (
         <Modal
-            disappear={disappear}
             style={{
                 minWidth: '80%',
                 height: '80%',
             }}
+            allowEscapeKey={true}
         >
             <Grid
                 className={styles['history-container']}

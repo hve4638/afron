@@ -11,12 +11,12 @@ import NewProfileModal from './NewProfileModal';
 import { ProfileMetadata } from './types';
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import styles from './styles.module.scss';
-import { useModal } from '@/hooks/useModal';
 import GlobalSettingModal from './GlobalSettingModal';
 import DivButton from '@/components/atoms/DivButton';
 import classNames from 'classnames';
 import RecoverProfileModal from './RecoverProfileModal';
 import { InfoDialog } from '@/modals/Dialog';
+import { useModal } from '@/features/modal';
 
 function ProfileSelectPage() {
     const modal = useModal();
@@ -96,8 +96,8 @@ function ProfileSelectPage() {
             }
             <ProfileAddButton
                 onClick={() => {
-                    modal.open(NewProfileModal, {
-                        onSubmit: async (metadata) => {
+                    modal.open(<NewProfileModal 
+                        onSubmit={async (metadata) => {
                             const id = await ProfilesAPI.create();
                             const profile = ProfilesAPI.profile(id);
                             await profile.set('config.json', {
@@ -106,8 +106,8 @@ function ProfileSelectPage() {
                             });
 
                             reloadProfiles();
-                        }
-                    })
+                        }}
+                    />)
                 }}
             />
             <ProfileOptionButton onClick={() => setEditMode(prev => !prev)} />
@@ -120,7 +120,7 @@ function ProfileSelectPage() {
                 }}
                 value='settings'
                 onClick={() => {
-                    modal.open(GlobalSettingModal, {})
+                    modal.open(<GlobalSettingModal />)
                 }}
             />
             <DivButton
@@ -138,37 +138,37 @@ function ProfileSelectPage() {
                     right: '0.5rem',
                 }}
                 onClick={() => {
-                    modal.open(RecoverProfileModal, {
-                        orphanIds: orphenProfileIds,
-                        onRecovery: async () => {
+                    modal.open(<RecoverProfileModal 
+                        orphanIds={orphenProfileIds}
+                        onRecovery={async () => {
                             const promises = orphenProfileIds
                                 .map(async (id) => await ProfilesAPI.recoverOrphan(id));
 
                             const result = await Promise.all(promises);
                             if (result.every((res) => res)) {
-                                modal.open(InfoDialog, {
-                                    title: '프로필 복구',
-                                    children: '프로필을 복구했습니다',
-                                })
+                                modal.open(<InfoDialog 
+                                    title='프로필 복구'
+                                    children='프로필을 복구했습니다'
+                                />)
                             }
                             else if (result.some((res) => res)) {
                                 const successCount = result.filter((res) => res).length;
                                 const failCount = result.filter((res) => !res).length;
-                                modal.open(InfoDialog, {
-                                    title: '프로필 복구',
-                                    children: `일부 프로필을 복구했습니다 (${failCount}개 실패)`,
-                                })
+                                modal.open(<InfoDialog 
+                                    title='프로필 복구'
+                                    children={`일부 프로필을 복구했습니다 (${failCount}개 실패)`}
+                                />)
                             }
                             else {
-                                modal.open(InfoDialog, {
-                                    title: '프로필 복구',
-                                    children: '프로필 복구에 실패했습니다',
-                                });
+                                modal.open(<InfoDialog 
+                                    title='프로필 복구'
+                                    children='프로필 복구에 실패했습니다'
+                                />);
                             }
                             reloadProfiles();
                             reloadOrphanProfiles();
-                        }
-                    });
+                        }}
+                    />);
                 }}
             >프로필 복구</DivButton>
         </div>

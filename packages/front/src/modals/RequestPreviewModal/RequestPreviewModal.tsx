@@ -1,33 +1,16 @@
-import Button from '@/components/atoms/Button';
-import { GIconButton } from '@/components/atoms/GoogleFontIcon';
-import { Align, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/modal';
-import CopyIconButton from '@/components/ui/CopyIconButton';
+import { Modal} from '@/components/modal';
 import Well from '@/components/atoms/Well';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
-import { useMemo } from 'react';
 import useRequestPreviewModal from './RequestPreviewModal.hook';
 import { HeaderLine, HeaderLineWithJSON } from './headers';
 import { RTEventPreviewData } from '@afron/types';
 
 type RequestPreviewModalProps = {
     previewData: RTEventPreviewData;
-    isFocused: boolean;
-    onClose: () => void;
 }
 
 function RequestPreviewModal({
     previewData,
-    isFocused,
-    onClose
 }: RequestPreviewModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
-
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
-
     const {
         previewText,
         state
@@ -44,21 +27,18 @@ function RequestPreviewModal({
 
     return (
         <Modal
-            disappear={disappear}
-            // onClose={close}
             style={{
                 maxHeight: '95%',
                 overflowY: 'auto',
             }}
-            headerLabel={
-                <ModalHeader
-                    onClose={close}
-                    children={'요청 미리보기'}
-                />
-            }
+            header={{
+                label: '요청 미리보기',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <HeaderLine
-                label="URL"
+                label='URL'
                 content={previewData.url}
             />
             <Well>

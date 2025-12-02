@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useBus } from '@/lib/zustbus';
 
 import { emitNavigate } from '@/events/navigate';
 import { useRTStore } from '@/context/RTContext';
-import { useModal } from '@/hooks/useModal';
 import { ChoiceDialog } from '@/modals/Dialog';
 import { convertPromptVarToRTVar, convertRTVarToPromptVar } from './utils';
 
@@ -16,6 +15,7 @@ import { usePromptEditorData } from './hooks';
 import { VarEditModal, PromptOnlyConfigModal } from './modals';
 
 import { PromptEditorEvent } from './types';
+import { useModal } from '@/features/modal';
 
 interface usePromptEditorProps {
 }
@@ -23,7 +23,6 @@ interface usePromptEditorProps {
 function usePromptEditor({
 
 }: usePromptEditorProps) {
-    const { t } = useTranslation();
     const modal = useModal();
     const { rtId, promptId } = useParams();
 
@@ -113,14 +112,14 @@ function usePromptEditor({
 
     const back = async () => {
         if (isChanged()) {
-            modal.open(ChoiceDialog, {
-                title: '작업을 저장하겠습니까?',
-                choices: [
+            modal.open(<ChoiceDialog 
+                title='작업을 저장하겠습니까?'
+                choices={[
                     { text: '저장', tone: 'highlight' },
                     { text: '저장하지 않음' },
                     { text: '취소', tone: 'dimmed' },
-                ],
-                onSelect: async (choice: string, index: number) => {
+                ]}
+                onSelect={async (choice: string, index: number) => {
                     if (index === 0) { // 저장
                         await save();
                         emitPromptEditorEvent('save');
@@ -133,16 +132,15 @@ function usePromptEditor({
                         return true;
                     }
                     return true;
-                },
-                onEnter: async () => {
+                }}
+                onEnter={async () => {
                     await save();
                     emitNavigate('back');
                     return true;
-                },
-                onEscape: async () => true,
-
-                children: <span>저장되지 않은 변경사항이 있습니다</span>,
-            });
+                }}
+                onEscape={async () => true}
+                children={<span>저장되지 않은 변경사항이 있습니다</span>}
+            />);
         }
         else {
             emitNavigate('back');
@@ -157,15 +155,15 @@ function usePromptEditor({
         back();
     }, []);
     usePromptEditorEvent('open_varedit_modal', async ({ varId }) => {
-        modal.open(VarEditModal, {
-            varId,
-            promptEditorData,
-        });
+        modal.open(<VarEditModal 
+            varId={varId}
+            promptEditorData={promptEditorData}
+        />);
     }, []);
     usePromptEditorEvent('open_prompt_only_config_modal', async () => {
-        modal.open(PromptOnlyConfigModal, {
-            promptEditorData,
-        });
+        modal.open(<PromptOnlyConfigModal 
+            promptEditorData={promptEditorData}
+        />);
     }, []);
 
     // 초기 프롬프트 데이터 로드

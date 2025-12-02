@@ -5,20 +5,20 @@ import Button from '@/components/atoms/Button';
 import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import Delimiter from '@/components/atoms/Delimiter';
 
-import { useModal } from '@/hooks/useModal';
 import { SelectPromptTemplateModal } from './modals/SelectPromptTemplateModal';
 
 
 import { NodeOptionProps } from '../../types';
 import { usePromptTemplateNodeOption } from './PromptTemplateNodeOption.hooks';
 import { useParams } from 'react-router';
+import { useModal } from '@/features/modal';
 
 export function PromptTemplateNodeOption({
     option,
     setOption,
 }: NodeOptionProps<RTFlowNodeOptions.PromptTemplate>) {
     const { rtId } = useParams();
-    const modals = useModal();
+    const modal = useModal();
     const {
         emitPromptTemplate,
     } = usePromptTemplateNodeOption({
@@ -42,12 +42,12 @@ export function PromptTemplateNodeOption({
                         fontSize: '1em',
                     }}
                     onClick={() => {
-                        modals.open(SelectPromptTemplateModal,
-                            {
-                                rtId: rtId as string,
-                                initPromptId: option.prompt_id,
-                                emitPromptTemplate
-                            }
+                        modal.open(
+                        <SelectPromptTemplateModal
+                            rtId={rtId as string}
+                            initPromptId={option.prompt_id}
+                            emitPromptTemplate={emitPromptTemplate}
+                        />
                         )
                     }}
                 >

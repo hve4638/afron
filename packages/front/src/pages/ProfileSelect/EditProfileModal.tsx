@@ -3,52 +3,43 @@ import { Modal } from '@/components/modal';
 import { Align, Column, Flex, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
 import { ModalHeader } from '@/components/modal';
-import { TextInput } from 'components/Input';
 import classNames from 'classnames';
 
-import styles from './styles.module.scss';
-import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import useModalDisappear from 'hooks/useModalDisappear';
 import { ButtonForm } from '@/components/FormFields';
 import { ProfileNameLayout } from './layout';
-import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import useHotkey from '@/hooks/useHotkey';
+import { useModal, useModalInstance } from '@/features/modal';
 
 interface EditProfileModalProps {
     name: string;
     onRename: (name: string) => void;
     onDelete: () => Promise<void>;
-    onClose: () => void;
 }
 
 function EditProfileModal({
     name,
     onRename,
     onDelete,
-    onClose,
 }: EditProfileModalProps) {
     const modal = useModal();
+    const { closeModal } = useModalInstance();
     const [renamed, setRenamed] = useState(name);
-    const [disappear, close] = useModalDisappear(onClose);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         inputRef.current?.focus();
     }, []);
 
-    useHotkey({
-        'Escape': (e) => {
-            e.stopPropagation();
-            close();
-        }
-    });
-
     return (
         <Modal
-            disappear={disappear}
+            header={{
+                label: '프로필 편집',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
-            <ModalHeader onClose={close}>프로필 편집</ModalHeader>
             <div style={{ height: '16px' }} />
             <ProfileNameLayout
                 style={{
@@ -65,13 +56,11 @@ function EditProfileModal({
                 name='프로필 삭제'
                 text='삭제'
                 onClick={() => {
-                    modal.open(DeleteConfirmDialog, {
-                        onDelete: async () => {
-                            await onDelete();
-                            close();
-                            return true;
-                        }
-                    });
+                    modal.open(<DeleteConfirmDialog onDelete={async () => {
+                        await onDelete();
+                        closeModal();
+                        return true;
+                    }} />);
                 }}
             />
             <Row
@@ -92,7 +81,7 @@ function EditProfileModal({
                             onRename(renamed);
                         }
 
-                        close();
+                        closeModal();
                     }}
                 >수정</Button>
                 <Button
@@ -101,7 +90,7 @@ function EditProfileModal({
                         width: '128px',
                         height: '100%'
                     }}
-                    onClick={() => close()}
+                    onClick={() => closeModal()}
                 >취소</Button>
             </Row>
         </Modal>

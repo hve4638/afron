@@ -2,38 +2,28 @@ import { useEffect, useMemo, useState } from 'react';
 
 import TreeView, { directory, node, Tree } from '@/components/TreeView';
 import { Emit } from '@/lib/zustbus';
-import { useModal } from '@/hooks/useModal';
 import { NewPromptTemplateModal } from '../NewPromptTemplateModal/NewPromptTemplateModal';
 import { RTWorkflowModel } from '@/features/workflow/models/RTWorkflowModel';
-import { useKeyBind } from '@/hooks/useKeyBind';
 import { PromptTemplateEvent } from '../../PromptTemplateNodeOption.hooks';
+import { useModal, useModalInstance } from '@/features/modal';
 
 interface SelectPromptTemplateModalProps {
-    closeModal: () => void;
-    focused: boolean;
-
     initPromptId: string | null;
     rtId: string;
     emitPromptTemplate: Emit<PromptTemplateEvent>;
 }
 
 export function useSelectPromptTemplateModal({
-    closeModal = () => { },
-    focused,
-
     rtId,
     initPromptId,
     emitPromptTemplate
 }: SelectPromptTemplateModalProps) {
-    const modals = useModal();
+    const modal = useModal();
+    const {} = useModalInstance();
     const workflowModel = useMemo(() => RTWorkflowModel.From(rtId), [rtId]);
 
     const [tree, setTree] = useState<Tree<string | Symbol>>([]);
     const [selected, setSelected] = useState<string | null>(initPromptId);
-
-    useKeyBind({
-        'Esc': () => closeModal(),
-    }, [focused], focused);
 
     useEffect(() => {
         workflowModel
@@ -62,7 +52,11 @@ export function useSelectPromptTemplateModal({
     }
 
     const openNewPromptTemplateModal = async () => {
-        modals.open(NewPromptTemplateModal, { emitPromptTemplate, rtId, });
+        modal.open(
+            <NewPromptTemplateModal
+                emitPromptTemplate={emitPromptTemplate}
+                rtId={rtId}
+            />);
     }
 
     return {

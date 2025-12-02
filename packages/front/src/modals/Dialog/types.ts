@@ -6,7 +6,4 @@ export interface CommonDialogProps {
 
     className?:string;
     style?:React.CSSProperties;
-
-    onClose:()=>void;
-    isFocused:()=>boolean;
 }

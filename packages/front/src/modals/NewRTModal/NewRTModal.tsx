@@ -16,33 +16,22 @@ const enum NewRTModalSteps {
 
 type NewRTModalProps = {
     onAddRT: (rtId: string, rtMode: RTMode) => void;
-
-    isFocused: boolean;
-    onClose: () => void;
 }
 
 export function NewRTModal({
     onAddRT = () => { },
-
-    isFocused,
-    onClose = () => { },
 }: NewRTModalProps) {
     const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
     const [step, setStep] = useState<NewRTModalSteps>(NewRTModalSteps.SelectRTType);
     const [rtMode, setRTMode] = useState<RTMode>('prompt_only');
 
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
-
     return (
         <Modal
-            disappear={disappear}
             style={{
                 width: 'auto',
                 maxWidth: '80%',
             }}
+            allowEscapeKey={true}
         >
             <ModalHeader onClose={close}>{t('rt.new_rt_title')}</ModalHeader>
             {

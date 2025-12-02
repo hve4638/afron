@@ -29,16 +29,7 @@ const SETTING_CATEGORY = {
 }
 type SETTING_CATEGORY = typeof SETTING_CATEGORY[keyof typeof SETTING_CATEGORY];
 
-
-type SettingModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function SettingModal({
-    isFocused,
-    onClose,
-}: SettingModalProps) {
+function SettingModal() {
     const categories = [
         SETTING_CATEGORY.GENERAL,
         SETTING_CATEGORY.MODELS,
@@ -49,21 +40,16 @@ function SettingModal({
         // SETTING_CATEGORY.DATA,
         SETTING_CATEGORY.ADVANCED,
     ]
-    const [disappear, close] = useModalDisappear(onClose);
     const [currentCategory, setCurrentCategory] = useState<SETTING_CATEGORY>(SETTING_CATEGORY.GENERAL);
     const version = useMemoryStore(state => state.version);
 
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
-
     return (
         <Modal
-            disappear={disappear}
             style={{
                 height: '80%',
                 maxHeight: '80%',
             }}
+            allowEscapeKey={true}            
         >
             <div
                 style={{

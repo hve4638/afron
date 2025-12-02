@@ -1,29 +1,18 @@
-import Button from '@/components/atoms/Button';
 import { CheckBoxForm } from '@/components/FormFields';
 import { Column, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/components/modal';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { useGlobalConfigStore } from '@/stores';
 
-function GlobalSettingModal({
-    onClose,
-}: {
-    onClose: () => void;
-}) {
+function GlobalSettingModal() {
     const globalConfigState = useGlobalConfigStore();
-    const [disappear, close] = useModalDisappear(onClose);
-    
+
     return (
         <Modal
-            disappear={disappear}
-
-            onEscapeAction={close}
-            focused={true}
-
-            headerLabel={
-                <ModalHeader onClose={close}>설정</ModalHeader>
-            }
+            allowEscapeKey={true}
+            header={{
+                label: '설정',
+                showCloseButton: true,
+            }}
         >
             <Column>
                 <CheckBoxForm
