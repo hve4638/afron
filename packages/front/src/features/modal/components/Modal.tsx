@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
 import FocusLock from 'react-focus-lock';
 
-import ModalBackground, { ModalBackgroundProps } from './ModalBackground';
-import ModalBox from './ModalBox';
-import { CommonProps } from '@/types';
-import useHotkey from '@/hooks/useHotkey';
 import { useKeyBind } from '@/hooks/useKeyBind';
+import { CommonProps } from '@/types';
 
+import { ModalBackground, ModalBackgroundProps } from './ModalBackground';
+import { ModalBox } from './ModalBox';
 
 interface ModalProps extends CommonProps {
     children?: React.ReactNode;
@@ -29,7 +28,7 @@ interface ModalProps extends CommonProps {
     backgroundProps?: Partial<Omit<ModalBackgroundProps, 'children'>>;
 }
 
-function Modal({
+export function Modal({
     className = '',
     style = {},
     children,
