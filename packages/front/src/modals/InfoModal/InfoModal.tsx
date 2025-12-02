@@ -12,22 +12,20 @@ type InfoModalProps = {
 function InfoModal({
     item
 }: InfoModalProps) {
-    const { disappear, useCloseKeyBind, closeModal } = useModalInstance();
+    const { useCloseKeyBind } = useModalInstance();
 
     useCloseKeyBind();
-    
+
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
                 overflowY: 'auto',
             }}
-            headerLabel={
-                <ModalHeader
-                    onClose={closeModal}
-                >정보</ModalHeader>
-            }
+            header={{
+                label: '정보',
+                showCloseButton: true,
+            }}
         >
             {
                 item.map((data, i) => {
@@ -53,8 +51,6 @@ function InfoModal({
                     );
                 })
             }
-            {/* <ModalHeader ="정보" onClose={() => {}} /> */}
-            {/* {item.toString()} */}
         </Modal>
     );
 }
