@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
 import FocusLock from 'react-focus-lock';
 
-import ModalBackground, { ModalBackgroundProps } from '../ModalBackground';
-import ModalBox from '../ModalBox';
 import { CommonProps } from '@/types';
-import { useModalHook } from './Modal.hooks';
-import ModalHeader from '../ModalHeader';
 
+import { ModalBackground, ModalBackgroundProps } from '../ModalBackground';
+import { ModalBox } from '../ModalBox';
+import { useModalHook } from './Modal.hooks';
 
 interface ModalProps extends CommonProps {
     children?: React.ReactNode;
@@ -20,7 +19,7 @@ interface ModalProps extends CommonProps {
 
     allowEscapeKey?: boolean;
     onClose?: () => void;
-    
+
     /** @deprecated use backgroundProps.enableRoundedBackground instead. */
     enableRoundedBackground?: boolean;
 
@@ -79,9 +78,5 @@ export function Modal({
         </FocusLock>
     );
 }
-
-Modal.Background = ModalBackground;
-Modal.Box = ModalBox;
-Modal.Header = ModalHeader;
 
 export default Modal;

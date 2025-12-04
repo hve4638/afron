@@ -1,4 +1,4 @@
-import { Modal } from '@/components/modal';
+import { Modal } from '@/features/modal';
 import { ButtonForm, StringForm } from '@/components/FormFields';
 
 import { Column, Gap, Row } from '@/components/layout';

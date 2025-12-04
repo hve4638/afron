@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import TreeView from '@/components/TreeView';
 import { GIcon } from '@/components/atoms/GoogleFontIcon';
 import { Flex, Gap, Row } from '@/components/layout';

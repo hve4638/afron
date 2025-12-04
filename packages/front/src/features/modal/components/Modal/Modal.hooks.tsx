@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useMemo } from "react";
-import ModalHeader from "../ModalHeader";
+import { ModalHeader } from "../ModalHeader";
 import { useModalInstance } from "@/features/modal";
 import { useKeyBind } from "@/hooks/useKeyBind";
 
@@ -10,7 +10,7 @@ interface UseModalProps {
         label?: ReactNode;
         showCloseButton?: boolean;
     }
-    
+
     allowEscapeKey: boolean;
     onClose?: () => void;
 }
@@ -43,7 +43,7 @@ export function useModalHook({
             return (
                 <ModalHeader
                     onClose={closed}
-                    hideCloseButton={showCloseButton}
+                    showCloseButton={showCloseButton}
                 >{label}</ModalHeader>
             )
         }

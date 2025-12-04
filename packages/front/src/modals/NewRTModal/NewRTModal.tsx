@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import ProfileEvent from '@/features/profile-event';

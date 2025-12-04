@@ -1,29 +1,28 @@
-import classNames from "classnames";
-import { GIconButton, GoogleFontIcon } from "@/components/atoms/GoogleFontIcon";
-import { Flex, Row } from "components/layout";
-import { useMemo } from "react";
+import { useMemo } from 'react';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import { Flex, Row } from "@/components/layout";
 
 interface ModalHeaderProps {
     className?: string;
     style?: React.CSSProperties;
     onClose?: () => void;
-    buttonRenderer?: () => React.ReactNode;
-    hideCloseButton?: boolean;
+    renderButton?: () => React.ReactNode;
+    showCloseButton?: boolean;
     children?: React.ReactNode;
 }
 
 export function ModalHeader({
     className,
     onClose = () => { },
-    hideCloseButton = false,
-    buttonRenderer,
+    showCloseButton = false,
+    renderButton,
     children,
 }: ModalHeaderProps) {
     const button = useMemo(() => {
-        if (buttonRenderer) {
-            return buttonRenderer();
+        if (renderButton) {
+            return renderButton();
         }
-        else if (!hideCloseButton) {
+        else if (showCloseButton) {
             return <GIconButton
                 value='close'
                 hoverEffect='square'
@@ -33,7 +32,7 @@ export function ModalHeader({
         else {
             return <></>
         }
-    }, [buttonRenderer, hideCloseButton])
+    }, [renderButton, showCloseButton])
 
     return (
         <Row
@@ -62,9 +61,10 @@ export function ModalHeader({
                     lineHeight: '1',
                 }}
             >
-            {button}
-
+                {button}
             </div>
         </Row>
     )
 }
+
+export default ModalHeader;

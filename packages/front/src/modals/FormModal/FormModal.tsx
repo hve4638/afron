@@ -1,5 +1,5 @@
 import { Column } from '@/components/layout';
-import { Modal } from '@/components/modal';
+import { Modal } from '@/features/modal';
 
 import { ArrayField, CheckBoxField, NumberField, SelectField, StructField, TextField } from './form-fields';
 import { useFormModal } from './FormModal.hooks';

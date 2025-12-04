@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Row } from '@/components/layout';
-import { ModalBox, ModalHeader } from '@/components/modal';
+import { ModalBox, ModalHeader } from '@/features/modal';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import { PromptVarForm } from '@/types/prompt-var';
 

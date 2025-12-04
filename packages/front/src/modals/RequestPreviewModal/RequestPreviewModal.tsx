@@ -1,4 +1,4 @@
-import { Modal} from '@/components/modal';
+import { Modal} from '@/features/modal';
 import Well from '@/components/atoms/Well';
 import useRequestPreviewModal from './RequestPreviewModal.hook';
 import { HeaderLine, HeaderLineWithJSON } from './headers';

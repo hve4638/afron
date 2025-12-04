@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import {
     GeneralOptions,
     APIKeyOptions,

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { Button } from '@/components/atoms';
 import { Align, Row } from '@/components/layout';
-import { Modal } from '@/components/modal';
+import { Modal } from '@/features/modal';
 
 import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import useModalDisappear from '@/hooks/useModalDisappear';

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import { Align, Center, Column, Grid, Row } from '@/components/layout';
 
 import useModalDisappear from '@/hooks/useModalDisappear';

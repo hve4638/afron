@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCacheStore, useSessionStore } from '@/stores';
 import { useHistoryStore } from '@/stores/useHistoryStore';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import { Align, Column, Flex, Grid, Row } from '@/components/layout';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import useLazyThrottle from '@/hooks/useLazyThrottle';

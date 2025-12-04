@@ -2,7 +2,7 @@ import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import classNames from 'classnames';
 import Button from '@/components/atoms/Button';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import { Align, Center, Column, Flex, Grid, Row } from 'components/layout';
 import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import { useEffect, useMemo, useRef, useState } from 'react';

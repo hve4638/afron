@@ -1,4 +1,4 @@
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 
 import { Emit } from '@/lib/zustbus';
 import useModalDisappear from '@/hooks/useModalDisappear';

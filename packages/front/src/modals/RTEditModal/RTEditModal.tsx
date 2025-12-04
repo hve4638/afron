@@ -1,7 +1,7 @@
 import Button from '@/components/atoms/Button';
 import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import { EditableText } from '@/components/atoms/EditableText';
 import TreeView from '@/components/TreeView';
 

@@ -1,5 +1,5 @@
 import { Column } from '@/components/layout';
-import { Modal } from '@/components/modal';
+import { Modal } from '@/features/modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import { Align, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import Button from '@/components/atoms/Button';
 
 import useModalDisappear from '@/hooks/useModalDisappear';

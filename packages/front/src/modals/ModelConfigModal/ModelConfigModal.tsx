@@ -1,6 +1,6 @@
 import { CheckBoxForm } from '@/components/FormFields';
 import { Column, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import useHotkey from '@/hooks/useHotkey';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import { useProfileAPIStore } from '@/stores';

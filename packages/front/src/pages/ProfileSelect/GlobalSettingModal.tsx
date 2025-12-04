@@ -1,6 +1,6 @@
 import { CheckBoxForm } from '@/components/FormFields';
 import { Column, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import { useGlobalConfigStore } from '@/stores';
 
 function GlobalSettingModal() {

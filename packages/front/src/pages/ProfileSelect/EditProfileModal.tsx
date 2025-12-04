@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Modal } from '@/components/modal';
+import { Modal } from '@/features/modal';
 import { Align, Column, Flex, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
-import { ModalHeader } from '@/components/modal';
+import { ModalHeader } from '@/features/modal';
 import classNames from 'classnames';
 
 import useModalDisappear from 'hooks/useModalDisappear';

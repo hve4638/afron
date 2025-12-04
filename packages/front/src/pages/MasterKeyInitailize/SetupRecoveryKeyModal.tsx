@@ -1,5 +1,5 @@
 import { Align, Flex, Row } from "components/layout";
-import { Modal, ModalHeader } from "@/components/modal";
+import { Modal, ModalHeader } from "@/features/modal";
 import { useEffect, useMemo, useState } from "react";
 import styles from './styles.module.scss';
 import Button from "@/components/atoms/Button";

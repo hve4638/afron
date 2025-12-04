@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
 import UploadForm from '@/components/FormFields/UploadForm';
 import { VertexAIAuth } from '@afron/types';

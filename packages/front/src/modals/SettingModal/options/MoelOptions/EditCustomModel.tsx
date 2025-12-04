@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ButtonForm, StringForm, StringLongForm } from '@/components/FormFields';
-import { Modal, ModalHeader } from '@/components/modal';
+import { Modal, ModalHeader } from '@/features/modal';
 import { ConfirmCancelButtons } from '@/components/ModalButtons';
 
 import SelectAuthKeyModal from './SelectAuthKeyModal';

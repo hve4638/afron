@@ -1,5 +1,5 @@
 import FocusLock from 'react-focus-lock';
-import { ModalBackground, ModalBox, ModalHeader } from '@/components/modal';
+import { ModalBackground, ModalBox, ModalHeader } from '@/features/modal';
 
 import styles from './styles.module.scss';
 import { Row } from 'components/layout';

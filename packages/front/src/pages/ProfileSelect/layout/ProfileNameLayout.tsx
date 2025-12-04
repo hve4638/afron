@@ -3,9 +3,9 @@ import { Align, Flex, Row } from '@/components/layout';
 import classNames from 'classnames';
 
 import { useEffect, useRef, useState } from 'react';
-import { Modal } from '@/components/modal';
+import { Modal } from '@/features/modal';
 import Button from '@/components/atoms/Button';
-import { ModalHeader } from '@/components/modal';
+import { ModalHeader } from '@/features/modal';
 import { CommonProps } from '@/types';
 
 import styles from './styles.module.scss';
