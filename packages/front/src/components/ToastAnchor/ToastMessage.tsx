@@ -31,14 +31,6 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
         }
     }, [value.type])
 
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         close();
-    //     }, 3000);
-
-    //     return () => clearTimeout(timer);
-    // }, []);
-
     return (
         <Row
             className={classNames(

@@ -45,13 +45,15 @@ function RecoveryModal({
     return (
         <Modal
             className='relative'
-            disappear={disappear}
             style={{
                 width : 'auto',
                 minWidth: '400px',
             }}
+            header={{
+                label: '복구 키 입력',
+                showCloseButton: false,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>복구 키 입력</ModalHeader>
             <Row
                 style={{
                     height: '1.4em',

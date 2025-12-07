@@ -1,11 +1,8 @@
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import classNames from 'classnames';
 import Button from '@/components/atoms/Button';
-import { Modal, ModalHeader } from '@/features/modal';
-import { Align, Center, Column, Flex, Grid, Row } from 'components/layout';
-import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Modal } from '@/features/modal';
+import { Align, Column, Flex, Grid, Row } from 'components/layout';
+import { useEffect, useMemo, useState } from 'react';
 import { Shortcut } from 'types/shortcut';
 import { getKeyType, isKeyCodeChar, KEY_TYPE, mapKeyCode } from 'utils/keycode-map';
 import { shortcutToText } from 'utils/shortcut';

@@ -1,10 +1,8 @@
-import { Modal, ModalHeader, ModalRequiredProps } from '@/features/modal';
+import { Modal } from '@/features/modal';
 import { useProgressModalEvent } from './events';
 import { Align, Gap, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';
 import { useState } from 'react';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { useModalInstance } from '@/features/modal';
 
 interface ProgressModalProps {

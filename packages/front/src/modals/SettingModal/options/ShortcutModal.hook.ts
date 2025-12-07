@@ -1,5 +1,4 @@
 import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Shortcut } from 'types/shortcut';
 import { getKeyType, isKeyCodeChar, KEY_TYPE, mapKeyCode } from 'utils/keycode-map';
@@ -22,7 +21,6 @@ function useShortcutModal({
     onChange = () => { },
     onClose = () => { },
 }: ShortcutModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
     const [focus, setFocus] = useState(false);
     const [shortcut, setShortcut] = useState<Shortcut>(initValue);
     const shortcutText = useMemo(() => shortcutToText(shortcut), [shortcut]);

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { Button } from '@/components/atoms';
 import { Align, Row } from '@/components/layout';
-import { Modal } from '@/features/modal';
+import { Modal, useModalInstance } from '@/features/modal';
 
 import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
 import useModalDisappear from '@/hooks/useModalDisappear';
@@ -40,13 +40,12 @@ function ConfirmModal({
     className = '',
     style = {},
 }: ConfirmModalProps) {
-    const [disappear, closeModal] = useModalDisappear(onClosed);
+    const { closeModal } = useModalInstance();
 
     return (
         <Modal
             className={className}
             style={style}
-            disappear={disappear}
             enableRoundedBackground={enableRoundedBackground}
         >
             {

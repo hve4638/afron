@@ -3,19 +3,18 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
 
 import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
 import RTTreeView from 'features/rtTreeView';
-import useModalDisappear from 'hooks/useModalDisappear';
 import { RTMetadataTree } from '@afron/types';
 
 type RTSaveModalProps = {
-    item:RTNodeTree;
-    onConfirm: (item:RTMetadataTree) => void;
+    item: RTNodeTree;
+    onConfirm: (item: RTMetadataTree) => void;
     onCancel: () => void;
     onClose: () => void;
 }
@@ -25,35 +24,37 @@ function RTSaveModal({
     onConfirm,
     onCancel,
     onClose,
-}:RTSaveModalProps) {
+}: RTSaveModalProps) {
     const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal } = useModalInstance();
     const [tree, setTree] = useState<RTMetadataTree>(item);
 
     const submit = () => {
         onConfirm(tree);
-        close();
+        closeModal();
     }
     const cancel = () => {
         onCancel();
-        close();
+        closeModal();
     }
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
+            }}
+            header={{
+                label: t('prompt_editor.save'),
+                showCloseButton: false,
             }}
         >
             <Grid
                 columns='1fr'
-                rows='48px 24px 1fr 6px 32px'
+                rows='24px 1fr 6px 32px'
                 style={{
                     height: '100%',
                 }}
             >
-                <ModalHeader hideCloseButton={true}>{t('prompt_editor.save')}</ModalHeader>
                 <Row
                     rowAlign={Align.End}
                 >
@@ -70,10 +71,10 @@ function RTSaveModal({
                 <RTTreeView
                     className={classNames(styles['tree-view'])}
                     tree={tree}
-                    onChange={(next)=>setTree(next)}
+                    onChange={(next) => setTree(next)}
                     relocatable
                 />
-                <div/>
+                <div />
                 <Row
                     rowAlign={Align.End}
                     style={{

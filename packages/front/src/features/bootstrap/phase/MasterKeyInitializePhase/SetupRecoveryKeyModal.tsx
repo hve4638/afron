@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
-import { Align, Flex, Row } from '@/components/layout';
+import { Align, Flex, Gap, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/features/modal';
 import Button from '@/components/atoms/Button';
 import { StringForm } from '@/components/FormFields';
@@ -12,23 +12,23 @@ import useModalDisappear from '@/hooks/useModalDisappear';
 import styles from './styles.module.scss';
 
 interface RecoveryKeySetupModalProps {
-    onSubmit: (recoveryKey:string) => Promise<boolean>;
+    onSubmit: (recoveryKey: string) => Promise<boolean>;
     onClose: () => void;
 }
 
 function RecoveryKeySetupModal({
     onSubmit,
     onClose,
-}:RecoveryKeySetupModalProps) {
+}: RecoveryKeySetupModalProps) {
     const [disappear, close] = useModalDisappear(onClose);
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
-    const valid = useMemo(()=>recoveryKey.length >= 4, [recoveryKey]);
+    const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey]);
 
-    const submit = async ()=>{
+    const submit = async () => {
         if (!valid || loading) return;
         setLoading(true);
-        
+
         const b = await onSubmit(recoveryKey);
         setLoading(false);
         if (b) {
@@ -38,14 +38,16 @@ function RecoveryKeySetupModal({
 
     return (
         <Modal
-            disappear={disappear}
             style={{
-                width : 'auto',
+                width: 'auto',
                 minWidth: '400px',
             }}
+            header={{
+                label: '복구 키 설정',
+                showCloseButton: false,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>복구 키 설정</ModalHeader>
-            <div style={{ height:'0.25em' }}/>
+            <Gap h='0.25em' />
             <StringForm
                 name='복구 키'
                 value={recoveryKey}
@@ -92,7 +94,7 @@ function RecoveryKeySetupModal({
                     className={
                         classNames(
                             'green',
-                            {disabled: (!valid || loading)}
+                            { disabled: (!valid || loading) }
                         )
                     }
                     style={{

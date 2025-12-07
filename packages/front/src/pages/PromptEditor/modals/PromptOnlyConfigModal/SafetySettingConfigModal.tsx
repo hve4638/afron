@@ -48,7 +48,7 @@ function SafetySettingConfigModal({
                         onChange={(key, threshold) => setGeminiSafetyFilter(key, threshold)}
                     />
                 }
-            </Column>:width
+            </Column>
         </Modal>
     )
 }

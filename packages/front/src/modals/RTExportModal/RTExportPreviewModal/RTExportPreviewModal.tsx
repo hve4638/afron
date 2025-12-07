@@ -1,7 +1,7 @@
 import Button from '@/components/atoms/Button';
 import { TextForm } from '@/components/FormFields';
 import { Align, Gap, Row } from '@/components/layout';
-import { Modal, ModalHeader, ModalRequiredProps } from '@/features/modal';
+import { Modal } from '@/features/modal';
 import { useModalInstance } from '@/features/modal';
 import { emitEvent } from '@/hooks/useEvent';
 import { useKeyBind } from '@/hooks/useKeyBind';
@@ -18,36 +18,31 @@ interface RTExportModalProps {
 function RTExportModal({
     rtId,
 }: RTExportModalProps) {
-    const { closeModal, disappear, focused } = useModalInstance();
+    const { closeModal } = useModalInstance();
     const { api } = useProfileAPIStore();
 
     const [rtMetadata, setRTMetadata] = useState<RTMetadata>();
 
-    const loadRTMetadata = async () => {
-        const metadata = await api.rt(rtId).getMetadata();
-        setRTMetadata(metadata);
-    }
-
     useEffect(() => {
+        const loadRTMetadata = async () => {
+            const metadata = await api.rt(rtId).getMetadata();
+            setRTMetadata(metadata);
+        }
+
         loadRTMetadata();
     }, [rtId, api]);
 
-    useKeyBind({
-        'Escape': closeModal,
-    }, [], focused);
-
     return (
         <Modal
-            disappear={disappear}
-            headerLabel={
-                <ModalHeader
-                    onClose={close}
-                >내보내기</ModalHeader>
-            }
             style={{
                 height: 'auto',
                 maxWidth: '30%',
             }}
+            header={{
+                label: '내보내기',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <TextForm
                 name='이름'
@@ -73,7 +68,7 @@ function RTExportModal({
                 <Button
                     onClick={() => {
                         emitEvent('export_rt_to_file', { rtId });
-                        close();
+                        closeModal();
                     }}
                     style={{
                         minWidth: '80px',

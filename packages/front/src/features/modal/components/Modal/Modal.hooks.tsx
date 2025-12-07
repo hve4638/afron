@@ -50,7 +50,7 @@ export function useModalHook({
         else if (!showCloseButton) {
             return null;
         }
-    }, []);
+    }, [renderOverride, label, showCloseButton, closed]);
 
     return {
         header,

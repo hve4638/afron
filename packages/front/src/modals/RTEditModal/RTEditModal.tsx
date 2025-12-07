@@ -30,19 +30,18 @@ function RTEditModal() {
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
+            }}
+            header={{
+                label: t('rt.rt_edit'),
+                showCloseButton: true,
             }}
         >
             <Grid
                 columns='1fr'
-                rows='2em 24px 2px 1fr 6px 32px'
-                style={{
-                    height: '100%',
-                }}
+                rows='24px 2px 1fr 6px 32px'
             >
-                <ModalHeader onClose={closeModal}>{t('rt.rt_edit')}</ModalHeader>
                 <Row
                     style={{
                         padding: '0px 4px',

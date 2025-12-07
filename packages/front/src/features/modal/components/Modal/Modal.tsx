@@ -17,6 +17,7 @@ interface ModalProps extends CommonProps {
         showCloseButton?: boolean;
     }
 
+    /** Whether to allow closing the modal with the Escape key. (default: false) */
     allowEscapeKey?: boolean;
     onClose?: () => void;
 

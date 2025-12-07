@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import { Align, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
 import Button from '@/components/atoms/Button';
 
 import useModalDisappear from '@/hooks/useModalDisappear';
@@ -9,38 +9,42 @@ import useModalDisappear from '@/hooks/useModalDisappear';
 import { CommonDialogProps } from './types';
 
 interface InfoDialogProps extends CommonDialogProps {
-    buttonText?:string;
-    cancelText?:string;
-    onConfirm?:()=>boolean;
-    onCancel?:()=>boolean;
-    enableRoundedBackground?:boolean
+    buttonText?: string;
+    cancelText?: string;
+    onConfirm?: () => boolean;
+    onCancel?: () => boolean;
+    enableRoundedBackground?: boolean
 
-    buttonClassName?:string,
+    buttonClassName?: string,
 }
 
 function InfoDialog({
     title,
     children,
     buttonText = '확인',
-    onConfirm = ()=>true,
-    onClose,
-    buttonClassName='',
+    onConfirm = () => true,
+    buttonClassName = '',
 
     enableRoundedBackground = false,
 
-    className='',
-    style={},
-}:InfoDialogProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    className = '',
+    style = {},
+}: InfoDialogProps) {
+    const { closeModal } = useModalInstance();
 
     return (
         <Modal
             className={className}
             style={style}
-            disappear={disappear}
-            enableRoundedBackground={enableRoundedBackground}
+
+            header={{
+                label: title,
+                showCloseButton: false,
+            }}
+            backgroundProps={{
+                enableRoundedBackground: enableRoundedBackground,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>{title}</ModalHeader>
             <div
                 className='undraggable'
                 style={{
@@ -49,23 +53,20 @@ function InfoDialog({
                     display: 'block'
                 }}
             >
-            {
-                children != null &&
-                children
-            }
+                {children}
             </div>
             <Row
                 rowAlign={Align.End}
                 style={{
-                    gap : '6px',
+                    gap: '6px',
                 }}
             >
                 <Button
                     className={classNames(buttonClassName)}
                     style={{ minWidth: '6em' }}
-                    onClick={()=>{
+                    onClick={() => {
                         if (onConfirm()) {
-                            close();
+                            closeModal();
                         }
                     }}
                 >{buttonText}</Button>

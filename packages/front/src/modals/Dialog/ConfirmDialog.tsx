@@ -26,7 +26,6 @@ function ConfirmDialog({
     cancelText = '취소',
     onConfirm = ()=>true,
     onCancel = ()=>true,
-    onClose,
     confirmButtonClassName='',
     cancelButtonClassName='',
 
@@ -35,20 +34,19 @@ function ConfirmDialog({
     className='',
     style={},
 }:ConfirmDialogProps) {
-    const [disappear, close] = useModalDisappear(onClose);
-
     return (
         <Modal
             className={className}
             style={style}
-            disappear={disappear}
-            enableRoundedBackground={enableRoundedBackground}
+            header={{
+                label: title,
+                showCloseButton: false,
+            }}
+            allowEscapeKey={false}
+            backgroundProps={{
+                enableRoundedBackground: enableRoundedBackground,
+            }}
         >
-            <ModalHeader
-                hideCloseButton={true}
-            >
-                {title}
-            </ModalHeader>
             <div
                 className='undraggable'
                 style={{

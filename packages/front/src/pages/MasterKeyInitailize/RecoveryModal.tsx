@@ -1,5 +1,5 @@
 import { Align, Flex, Row } from "components/layout";
-import { Modal, ModalHeader } from "@/features/modal";
+import { Modal, ModalHeader, useModalInstance } from "@/features/modal";
 import { useEffect, useMemo, useState } from "react";
 import styles from './styles.module.scss';
 import Button from "@/components/atoms/Button";
@@ -10,7 +10,7 @@ import { MODAL_DISAPPEAR_DURATION_MS } from "@/constants";
 
 interface RecoveryModalProps {
     onReset: () => void;
-    onRecovery: (recoveryKey:string) => Promise<boolean>;
+    onRecovery: (recoveryKey: string) => Promise<boolean>;
     onClose: () => void;
 }
 
@@ -18,37 +18,27 @@ function RecoveryModal({
     onReset,
     onRecovery,
     onClose,
-}:RecoveryModalProps) {
-    const [disappear, setDisappear] = useState(true);
+}: RecoveryModalProps) {
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
-    const valid = useMemo(()=>recoveryKey.length >= 5, [recoveryKey]);
+    const valid = useMemo(() => recoveryKey.length >= 5, [recoveryKey]);
     const [errorMessage, setErrorMessage] = useState('');
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-    useEffect(()=>{
-        setTimeout(() => {
-            setDisappear(false);
-        }, 1);
-    }, []);
-
-    const close = () => {
-        setDisappear(true);
-        setTimeout(() => {
-            onClose();
-        }, MODAL_DISAPPEAR_DURATION_MS);
-    }
+    const { closeModal } = useModalInstance();
 
     return (
         <Modal
             className='relative'
-            disappear={disappear}
             style={{
-                width : 'auto',
+                width: 'auto',
                 minWidth: '400px',
             }}
+            header={{
+                label: '복구 키 입력',
+                showCloseButton: false,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>복구 키 입력</ModalHeader>
             <Row
                 style={{
                     height: '1.4em',
@@ -67,7 +57,7 @@ function RecoveryModal({
                     type='text'
                     className='input-number flex'
                     value={recoveryKey}
-                    onChange={(e)=>setRecoveryKey(e.target.value)}
+                    onChange={(e) => setRecoveryKey(e.target.value)}
                 />
             </Row>
             <div className={classNames(styles['description'], 'undraggable')}>
@@ -76,7 +66,7 @@ function RecoveryModal({
                 <div
                     className={styles['error']}
                     style={{
-                        height : '1em',
+                        height: '1em',
                     }}
                 >
                     {errorMessage}
@@ -89,7 +79,7 @@ function RecoveryModal({
                 }}
                 rowAlign={Align.End}
             >
-                
+
                 {
                     loading &&
                     <div
@@ -108,14 +98,14 @@ function RecoveryModal({
                     className={
                         classNames(
                             'green',
-                            {disabled: !valid || loading}
+                            { disabled: !valid || loading }
                         )
                     }
                     style={{
                         width: '96px',
                         height: '100%',
                     }}
-                    onClick={async ()=>{
+                    onClick={async () => {
                         if (!valid || loading) return;
                         setLoading(true);
 
@@ -123,9 +113,9 @@ function RecoveryModal({
                             const success = await onRecovery(recoveryKey);
                             if (success) {
                                 setErrorMessage('');
-                                close();
+                                closeModal();
                             }
-                            else{
+                            else {
                                 setErrorMessage('복구할 수 없습니다.');
                             }
                         }
@@ -134,19 +124,19 @@ function RecoveryModal({
                         }
                     }}
                 >복구</Button>
-                <div style={{width:'8px'}}/>
+                <div style={{ width: '8px' }} />
                 <Button
                     className={
                         classNames(
                             'red',
-                            {disabled: loading}
+                            { disabled: loading }
                         )
                     }
                     style={{
                         width: '96px',
                         height: '100%',
                     }}
-                    onClick={()=>{
+                    onClick={() => {
                         setShowConfirmModal(true);
                     }}
                 >초기화</Button>
@@ -159,12 +149,12 @@ function RecoveryModal({
                         width: 'auto',
                     }}
                     title='키 초기화'
-                    onConfirm={()=>{
+                    onConfirm={() => {
                         onReset();
-                        close();
+                        closeModal();
                         return true;
                     }}
-                    onClosed={()=>{
+                    onClosed={() => {
                         setShowConfirmModal(false);
                     }}
                 >
