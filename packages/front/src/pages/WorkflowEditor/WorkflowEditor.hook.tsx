@@ -37,7 +37,7 @@ export function useWorkflowEditor() {
         await rt.update.workflowNodes(appliedFlowData);
     }
     
-    const close = async () => {
+    const closeModal = async () => {
         await save();
 
         emitNavigate('back');
@@ -54,6 +54,6 @@ export function useWorkflowEditor() {
         },
 
         save,
-        close,
+        closeModal,
     };
 }

@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Modal, ModalHeader } from '@/features/modal';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
 import ProfileEvent from '@/features/profile-event';
 
 import { RTSelectStep, EditMetadataStep } from './step';
@@ -22,6 +20,7 @@ export function NewRTModal({
     onAddRT = () => { },
 }: NewRTModalProps) {
     const { t } = useTranslation();
+    const { closeModal } = useModalInstance();
     const [step, setStep] = useState<NewRTModalSteps>(NewRTModalSteps.SelectRTType);
     const [rtMode, setRTMode] = useState<RTMode>('prompt_only');
 
@@ -33,11 +32,11 @@ export function NewRTModal({
             }}
             allowEscapeKey={true}
         >
-            <ModalHeader onClose={close}>{t('rt.new_rt_title')}</ModalHeader>
+            <ModalHeader onClose={closeModal}>{t('rt.new_rt_title')}</ModalHeader>
             {
                 step === NewRTModalSteps.SelectRTType &&
                 <RTSelectStep
-                    onPrev={close}
+                    onPrev={closeModal}
                     onSelectRTType={(selected) => {
                         setRTMode(selected);
                         setStep(NewRTModalSteps.EditMetadata);

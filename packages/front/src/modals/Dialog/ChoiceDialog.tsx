@@ -4,8 +4,6 @@ import { Align, Row } from '@/components/layout';
 import { Modal, ModalHeader } from '@/features/modal';
 import Button from '@/components/atoms/Button';
 
-import useModalDisappear from '@/hooks/useModalDisappear';
-
 import { CommonDialogProps } from './types';
 import styles from './styles.module.scss';
 import useHotkey from '@/hooks/useHotkey';
@@ -60,7 +58,7 @@ function ChoiceDialog({
         },
         'Escape' : (e)=>{
             onEscape().then((b)=>{
-                if (b) close();
+                if (b) closeModal();
             });
             
             return true;
@@ -80,7 +78,7 @@ function ChoiceDialog({
             }}
         >
             <ModalHeader
-                hideCloseButton={true}
+                showCloseButton={false}
             >
                 {title}
             </ModalHeader>
@@ -120,7 +118,7 @@ function ChoiceDialog({
                             style={{ minWidth: '6em' }}
                             onClick={async ()=>{
                                 if (await onSelect(text, index)) {
-                                    close();
+                                    closeModal();
                                 }
                             }}
                         >{text}</Button>

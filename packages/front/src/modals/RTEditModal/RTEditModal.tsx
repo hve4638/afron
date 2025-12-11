@@ -117,7 +117,7 @@ function RTEditModal() {
                     <Button
                         onClick={() => {
                             emitEvent('import_rt_from_file');
-                            close();
+                            closeModal();
                         }}
                         style={{
                             minWidth: '80px',
@@ -132,7 +132,7 @@ function RTEditModal() {
                     <Button
                         onClick={() => {
                             emitEvent('open_new_rt_modal');
-                            close();
+                            closeModal();
                         }}
                         style={{
                             minWidth: '80px',

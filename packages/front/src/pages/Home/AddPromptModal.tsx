@@ -3,9 +3,6 @@ import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Modal, ModalHeader } from '@/features/modal';
 import { Align, Center, Column, Grid, Row } from '@/components/layout';
 
-import useModalDisappear from '@/hooks/useModalDisappear';
-import useHotkey from '@/hooks/useHotkey';
-
 type AddPromptModalProps = {
     onAddPrompt: (type: 'simple' | 'node') => void;
 }

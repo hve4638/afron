@@ -1,10 +1,8 @@
 import classNames from 'classnames';
 
 import { Align, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
 import Button from '@/components/atoms/Button';
-
-import useModalDisappear from '@/hooks/useModalDisappear';
 
 import { CommonDialogProps } from './types';
 
@@ -34,6 +32,8 @@ function ConfirmDialog({
     className='',
     style={},
 }:ConfirmDialogProps) {
+    const { closeModal } = useModalInstance();
+
     return (
         <Modal
             className={className}
@@ -71,7 +71,7 @@ function ConfirmDialog({
                     style={{ minWidth: '6em' }}
                     onClick={()=>{
                         if (onConfirm()) {
-                            close();
+                            closeModal();
                         }
                     }}
                 >{confirmText}</Button>
@@ -80,7 +80,7 @@ function ConfirmDialog({
                     style={{ minWidth: '6em' }}
                     onClick={()=>{
                         if (onCancel()) {
-                            close();
+                            closeModal();
                         }
                     }}
                 >{cancelText}</Button>

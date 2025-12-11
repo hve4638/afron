@@ -1,13 +1,11 @@
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal } from '@/features/modal';
 
 import { Emit } from '@/lib/zustbus';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { Field } from '@/components/FormFields';
 import { Flex, Gap, Row } from '@/components/layout';
 import { Button } from '@/components/atoms';
 import { PromptTemplateEvent } from '../../PromptTemplateNodeOption.hooks';
 import { useNewPromptTemplateModal } from './NewPromptTemplateModal.hooks';
-import { useModalInstance } from '@/features/modal';
 
 interface NewPromptTemplateModalProps {
     rtId: string;

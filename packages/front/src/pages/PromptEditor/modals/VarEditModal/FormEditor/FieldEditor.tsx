@@ -1,14 +1,11 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Row } from '@/components/layout';
+import { useMemo } from 'react';
 import { ModalBox, ModalHeader } from '@/features/modal';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { PromptVarForm } from '@/types/prompt-var';
 
 import { PromptEditorDataVarAction } from '../../../hooks';
 import styles from './styles.module.scss';
-import { DropdownForm, Field, StringForm } from '@/components/FormFields';
-import { FIELD_DROPDOWN_ITEMS, VAR_DROPDOWN_ITEMS } from '../constants';
+import { DropdownForm, StringForm } from '@/components/FormFields';
+import { FIELD_DROPDOWN_ITEMS } from '../constants';
 import Dropdown from '@/components/atoms/Dropdown';
 import { Additions } from './additions';
 import { Emit } from '@/lib/zustbus';

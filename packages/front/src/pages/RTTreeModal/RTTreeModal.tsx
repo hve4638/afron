@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import styles from './styles.module.scss';
 
 import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
-import { Modal, ModalBackground, ModalHeader } from '@/features/modal';
+import { Modal, ModalBackground, ModalHeader, useModalInstance } from '@/features/modal';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
@@ -21,17 +21,16 @@ type PromptTreeModalProps = {
     item: RTNodeTree;
     onConfirm: (item: RTMetadataTree) => void;
     onCancel: () => void;
-    onClose: () => void;
 }
 
 function RTTreeModal({
     item,
     onConfirm,
     onCancel,
-    onClose,
 }: PromptTreeModalProps) {
     const { t } = useTranslation();
-    const [disappear, setDisappear] = useState(true);
+    const { closeModal } = useModalInstance();
+
     // 드래그 인디케이터 위치지정
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [draggingNode, setDraggingNode] = useState<{
@@ -137,18 +136,11 @@ function RTTreeModal({
 
     const submit = () => {
         onConfirm(tree);
-        close();
+        closeModal();
     }
     const cancel = () => {
         onCancel();
-        close();
-    }
-
-    const close = () => {
-        setDisappear(true);
-        setTimeout(() => {
-            onClose();
-        }, MODAL_DISAPPEAR_DURATION_MS);
+        closeModal();
     }
 
     // 트리 노드 드래그 해제
@@ -215,10 +207,6 @@ function RTTreeModal({
         };
     }, []);
 
-    useEffect(() => {
-        setTimeout(() => setDisappear(false), 1);
-    }, []);
-
     return (
         <Modal
             style={{
@@ -232,7 +220,7 @@ function RTTreeModal({
                     height: '100%',
                 }}
             >
-                <ModalHeader hideCloseButton={true}>{t('prompt.save')}</ModalHeader>
+                <ModalHeader showCloseButton={false}>{t('prompt.save')}</ModalHeader>
                 <Row rowAlign={Align.End}>
                     <GoogleFontIcon
                         value='create_new_folder'

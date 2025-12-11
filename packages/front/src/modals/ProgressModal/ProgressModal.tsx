@@ -70,9 +70,7 @@ function ProgressModal({
                 >
                     <Button
                         style={{ minWidth: '5em' }}
-                        onClick={() => {
-                            close();
-                        }}
+                        onClick={closeModal}
                     >닫기</Button>
                 </Row>
             }

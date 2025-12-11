@@ -25,7 +25,6 @@ function ShortcutModal({
 }: ShortcutModalProps) {
     const { closeModal } = useModalInstance();
 
-
     const [focus, setFocus] = useState(false);
     const [shortcut, setShortcut] = useState<Shortcut>(initValue);
     const shortcutText = useMemo(() => shortcutToText(shortcut), [shortcut]);
@@ -225,7 +224,7 @@ function ShortcutModal({
                                 if (!validShortcut) return;
 
                                 onChange(shortcut);
-                                close();
+                                closeModal();
                             }}
                         >확인</Button>
                         <div style={{ width: '8px' }} />
@@ -235,7 +234,7 @@ function ShortcutModal({
                                 width: '96px',
                                 height: '100%',
                             }}
-                            onClick={() => close()}
+                            onClick={closeModal}
                         >취소</Button>
                     </Row>
                 </Column>

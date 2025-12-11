@@ -1,8 +1,6 @@
 import { Column } from '@/components/layout';
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal } from '@/features/modal';
 import Well from '@/components/atoms/Well';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { useModalInstance } from '@/features/modal';
 
 type InfoModalProps = {

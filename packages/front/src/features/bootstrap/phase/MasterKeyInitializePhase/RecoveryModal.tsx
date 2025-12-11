@@ -1,46 +1,29 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
-import { Align, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/features/modal';
-import { ConfirmModal } from '@/features/modal';
+import { Align, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';
-
-import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
+import { Modal, useModalInstance } from '@/features/modal';
+import { ConfirmModal } from '@/features/modal';
 
 import styles from './styles.module.scss';
 
 interface RecoveryModalProps {
     onReset: () => void;
     onRecovery: (recoveryKey:string) => Promise<boolean>;
-    onClose: () => void;
 }
 
 function RecoveryModal({
     onReset,
     onRecovery,
-    onClose,
 }:RecoveryModalProps) {
-    const [disappear, setDisappear] = useState(true);
+    const { closeModal } = useModalInstance();
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
     const valid = useMemo(()=>recoveryKey.length >= 4, [recoveryKey]);
     const [errorMessage, setErrorMessage] = useState('');
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-
-    useEffect(()=>{
-        setTimeout(() => {
-            setDisappear(false);
-        }, 1);
-    }, []);
-
-    const close = () => {
-        setDisappear(true);
-        setTimeout(() => {
-            onClose();
-        }, MODAL_DISAPPEAR_DURATION_MS);
-    }
 
     return (
         <Modal
@@ -128,7 +111,7 @@ function RecoveryModal({
                             const success = await onRecovery(recoveryKey);
                             if (success) {
                                 setErrorMessage('');
-                                close();
+                                closeModal();
                             }
                             else{
                                 setErrorMessage('복구할 수 없습니다.');
@@ -166,7 +149,7 @@ function RecoveryModal({
                     title='키 초기화'
                     onConfirm={()=>{
                         onReset();
-                        close();
+                        closeModal();
                         return true;
                     }}
                     onClosed={()=>{

@@ -18,7 +18,7 @@ function WorkflowEditorInner() {
         },
 
         save,
-        close,
+        closeModal,
     } = useWorkflowEditor();
 
     return (
@@ -40,7 +40,7 @@ function WorkflowEditorInner() {
                     style={{ fontSize: '30px' }}
                     value='close'
                     hoverEffect='square'
-                    onClick={close}
+                    onClick={closeModal}
                 />
             </Row>
             {

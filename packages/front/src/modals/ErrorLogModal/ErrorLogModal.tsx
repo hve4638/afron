@@ -1,13 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import classNames from 'classnames';
+import { useEffect, useRef} from 'react';
 
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal} from '@/features/modal';
 import ListView from '@/components/container/ListView/ListView';
 
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
-
-import useErrorLogStore, { LogEntry } from '@/stores/useErrorLogStore';
+import useErrorLogStore from '@/stores/useErrorLogStore';
 
 import LogEntryItem from './LogEntryItem';
 

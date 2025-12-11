@@ -1,26 +1,22 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
-import { Align, Flex, Gap, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/features/modal';
+import { Align, Gap, Row } from '@/components/layout';
+import { Modal, useModalInstance } from '@/features/modal';
 import Button from '@/components/atoms/Button';
 import { StringForm } from '@/components/FormFields';
-
-import useModalDisappear from '@/hooks/useModalDisappear';
 
 import styles from './styles.module.scss';
 
 interface RecoveryKeySetupModalProps {
     onSubmit: (recoveryKey: string) => Promise<boolean>;
-    onClose: () => void;
 }
 
 function RecoveryKeySetupModal({
     onSubmit,
-    onClose,
 }: RecoveryKeySetupModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal } = useModalInstance();
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
     const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey]);
@@ -32,7 +28,7 @@ function RecoveryKeySetupModal({
         const b = await onSubmit(recoveryKey);
         setLoading(false);
         if (b) {
-            close();
+            closeModal();
         }
     }
 
@@ -55,9 +51,7 @@ function RecoveryKeySetupModal({
                 className={classNames(styles['recovery-key-input'], 'undraggable')}
                 style={{
                     width: '100%',
-                    // height: '2.5em',
                     margin: '0.5em 0px',
-                    // fontSize: '1.15em',
                 }}
                 instantChange={true}
             />

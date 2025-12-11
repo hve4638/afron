@@ -83,16 +83,16 @@ interface ErrorToastProps {
 }
 
 function ErrorToast({ title, description, onClick, onDispose }: ErrorToastProps) {
-    const [disappear, close] = useModalDisappear(onDispose);
+    const [disappear, closeModal] = useModalDisappear(onDispose);
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            close();
+            closeModal();
         }, 3000);
 
         return () => clearTimeout(timer);
     }, []);
-
+    
     return (
         <Row
             className={classNames(
@@ -103,7 +103,7 @@ function ErrorToast({ title, description, onClick, onDispose }: ErrorToastProps)
             columnAlign={Align.Center}
             onClick={(e) => {
                 onClick();
-                close();
+                closeModal();
                 e.stopPropagation();
             }}
         >
@@ -119,7 +119,7 @@ function ErrorToast({ title, description, onClick, onDispose }: ErrorToastProps)
                 className={styles['close-button']}
                 value='close'
                 onClick={(e) => {
-                    close();
+                    closeModal();
                     e.stopPropagation();
                 }}
             />

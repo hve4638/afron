@@ -1,23 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
+
+import { Align, Column, Flex, Grid, Row } from '@/components/layout';
 import { useCacheStore, useSessionStore } from '@/stores';
 import { useHistoryStore } from '@/stores/useHistoryStore';
-import { Modal, ModalHeader } from '@/features/modal';
-import { Align, Column, Flex, Grid, Row } from '@/components/layout';
-import useModalDisappear from '@/hooks/useModalDisappear';
+
 import useLazyThrottle from '@/hooks/useLazyThrottle';
-import useHotkey from '@/hooks/useHotkey';
+import { emitEvent } from '@/hooks/useEvent';
+import useTrigger from '@/hooks/useTrigger';
+
+import { Modal, ModalHeader } from '@/features/modal';
+import { useModalInstance } from '@/features/modal';
+import { HistoryData } from '@/features/session-history';
+
+import HistoryItem from './HistoryItem';
 
 import styles from './styles.module.scss';
-import classNames from 'classnames';
-import HistoryItem from './HistoryItem';
-import { HistoryData } from '@/features/session-history';
-import useTrigger from '@/hooks/useTrigger';
-import { emitEvent } from '@/hooks/useEvent';
-import { useModalInstance } from '@/features/modal';
 
 function HistoryModal() {
     const { t } = useTranslation();
+    const { closeModal } = useModalInstance();
     const historyState = useHistoryStore();
     const updateSessionState = useSessionStore(state=>state.update);
     const [refreshHistoryPing, refreshHistory] = useTrigger();
@@ -73,7 +76,7 @@ function HistoryModal() {
                     height: '100%',
                 }}
             >
-                <ModalHeader onClose={close}>
+                <ModalHeader onClose={closeModal}>
                     {t('history.title')}
                 </ModalHeader>
                 <div/>
@@ -130,7 +133,7 @@ function HistoryModal() {
                                     await Promise.all(promises);
 
                                     emitEvent('refresh_input');
-                                    close();
+                                    closeModal();
                                 }}
                                 onDelete={async ()=>{
                                     await historyState.actions.deleteMessage(item.id, 'both');

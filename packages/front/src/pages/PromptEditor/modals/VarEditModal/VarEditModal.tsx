@@ -1,13 +1,13 @@
 import FocusLock from 'react-focus-lock';
-import { ModalBackground, ModalBox, ModalHeader } from '@/features/modal';
-
-import styles from './styles.module.scss';
-import { Row } from 'components/layout';
 import { useTranslation } from 'react-i18next';
-import { PromptEditorData, PromptEditorDataAction, PromptEditorDataGetter } from '../../hooks';
+import { ModalBackground } from '@/features/modal';
+import { Row } from '@/components/layout';
+
+import { PromptEditorData } from '../../hooks';
 import { useVarEditModal } from './VarEditModal.hooks';
 import { FieldEditor, FormEditor } from './FormEditor';
-import useModalDisappear from '@/hooks/useModalDisappear';
+
+import styles from './styles.module.scss';
 
 type VarEditModalProps = {
     varId: string;
@@ -37,7 +37,7 @@ export function VarEditModal({
 
     return (
         <ModalBackground
-        
+
         >
             {
                 // @TODO : 원래 ModalProvider에서 FocusLock을 제공해야 하지만 작동하지 않아 직접 추가

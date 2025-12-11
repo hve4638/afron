@@ -15,7 +15,7 @@ interface ToastMessageProps {
 }
 
 export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
-    const [disappear, close] = useModalDisappear(onDispose);
+    const [disappear, closeToast] = useModalDisappear(onDispose);
     const icon = useMemo(()=>{
         switch (value.type) {
             case 'fatal':
@@ -47,7 +47,7 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
             columnAlign={Align.Center}
             onClick={(e) => {
                 onClick();
-                close();
+                closeToast();
                 e.stopPropagation();
             }}
         >
@@ -61,7 +61,7 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
                 className={styles['close-button']}
                 value='close'
                 onClick={(e) => {
-                    close();
+                    closeToast();
                     e.stopPropagation();
                 }}
             />

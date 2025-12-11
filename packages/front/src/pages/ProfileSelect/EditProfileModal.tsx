@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from '@/features/modal';
-import { Align, Column, Flex, Row } from 'components/layout';
+import { Align, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
-import { ModalHeader } from '@/features/modal';
 import classNames from 'classnames';
 
-import useModalDisappear from 'hooks/useModalDisappear';
 import { ButtonForm } from '@/components/FormFields';
 import { ProfileNameLayout } from './layout';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
-import useHotkey from '@/hooks/useHotkey';
 import { useModal, useModalInstance } from '@/features/modal';
 
 interface EditProfileModalProps {

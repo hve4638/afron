@@ -1,10 +1,8 @@
 import classNames from 'classnames';
 
 import { Align, Row } from '@/components/layout';
-import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
+import { Modal, useModalInstance } from '@/features/modal';
 import Button from '@/components/atoms/Button';
-
-import useModalDisappear from '@/hooks/useModalDisappear';
 
 import { CommonDialogProps } from './types';
 

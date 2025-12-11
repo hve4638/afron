@@ -1,17 +1,7 @@
-import { SetStateAction, useMemo, useState } from 'react';
-import { GeminiSafetySetting, ModelConfiguration } from '@afron/types';
+import { useState } from 'react';
+import { GeminiSafetySetting } from '@afron/types';
 import { useTranslation } from 'react-i18next';
 
-import useModalDisappear from '@/hooks/useModalDisappear';
-import useHotkey from '@/hooks/useHotkey';
-import useTrigger from '@/hooks/useTrigger';
-
-import { Modal, ModalHeader } from '@/features/modal';
-import Subdescription from '@/components/atoms/Description';
-import { Column, Row } from '@/components/layout';
-import ModelForm from '@/components/model-ui';
-
-import { PromptDataPO } from './types';
 import { PromptEditorData } from '../../hooks';
 
 type UseSafetySettingConfigModalProps = {

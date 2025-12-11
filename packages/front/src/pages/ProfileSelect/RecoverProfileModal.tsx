@@ -1,4 +1,4 @@
-import { Modal } from '@/features/modal';
+import { Modal, useModalInstance } from '@/features/modal';
 import { Align, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';
 
@@ -18,6 +18,7 @@ function RecoverProfileModal({
     onRecovery,
 }: RecoverProfileModalProps) {
     const modal = useModal();
+    const { closeModal } = useModalInstance();
 
     return (
         <Modal
@@ -67,7 +68,7 @@ function RecoverProfileModal({
                                 title='프로필 복구'
                                 onConfirm={() => {
                                     onRecovery();
-                                    close();
+                                    closeModal();
                                     return true;
                                 }}
                             >
@@ -83,7 +84,7 @@ function RecoverProfileModal({
                         width: '128px',
                         height: '100%'
                     }}
-                    onClick={() => close()}
+                    onClick={() => closeModal()}
                 >취소</Button>
             </Row>
         </Modal>

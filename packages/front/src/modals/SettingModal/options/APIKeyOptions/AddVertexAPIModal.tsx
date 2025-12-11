@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
 import UploadForm from '@/components/FormFields/UploadForm';
 import { VertexAIAuth } from '@afron/types';
@@ -15,6 +15,7 @@ type StringInputModalProps = {
 function AddVertexAIAPIKeyModal({
     onSubmit = () => { return; },
 }: StringInputModalProps) {
+    const { closeModal } = useModalInstance();
     const [status, setStatus] = useState<'idle' | 'success' | 'fail'>('idle');
     const [vertexAIAPI, setVertexAIAPI] = useState<VertexAIAuth>();
 
@@ -27,7 +28,7 @@ function AddVertexAIAPIKeyModal({
             }}
             allowEscapeKey={true}
         >
-            <ModalHeader hideCloseButton={true}>VertexAI API 키</ModalHeader>
+            <ModalHeader showCloseButton={false}>VertexAI API 키</ModalHeader>
             <div style={{ height: '0.25em' }} />
             <div style={{ fontSize: '0.9rem' }}>비공개 키 (JSON)</div>
             <div style={{ height: '0.25em' }} />
@@ -72,16 +73,16 @@ function AddVertexAIAPIKeyModal({
                 onConfirm={async () => {
                     if (!vertexAIAPI) return;
                     let result = onSubmit(vertexAIAPI);
-                    if (result == undefined) close();
+                    if (result == undefined) closeModal();
 
                     if (result && typeof result['then'] === 'function') {
                         result = await result;
                     }
                     if (result || result == undefined) {
-                        close();
+                        closeModal();
                     }
                 }}
-                onCancel={() => close()}
+                onCancel={closeModal}
                 enableConfirmButton={status === 'success'}
             />
         </Modal>

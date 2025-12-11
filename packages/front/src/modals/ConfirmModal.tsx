@@ -1,12 +1,8 @@
-import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 import { Button } from '@/components/atoms';
 import { Align, Row } from '@/components/layout';
 import { Modal, useModalInstance } from '@/features/modal';
-
-import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
-import useModalDisappear from '@/hooks/useModalDisappear';
 
 interface ConfirmModalProps {
     title?: string;

@@ -1,17 +1,13 @@
 import { CheckBoxForm } from '@/components/FormFields';
-import { Column, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/features/modal';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { Column } from '@/components/layout';
+import { Modal} from '@/features/modal';
 import { useProfileAPIStore } from '@/stores';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useMemo, useRef} from 'react';
 import ProfileEvent from '@/features/profile-event';
 import useTrigger from '@/hooks/useTrigger';
 import { CommonOptions, GPT5Options, SafetyOptions, ThinkingOptions } from './options';
 import useMemoryStore from '@/stores/useMemoryStore';
 import { ChatAIModel, GlobalModelConfiguration } from '@afron/types';
-import { useModalInstance } from '@/features/modal';
 
 type ModelConfigModalProps = {
     modelId: string;

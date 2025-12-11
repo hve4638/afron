@@ -1,6 +1,4 @@
-import { useTranslation } from 'react-i18next';
-import { Row } from 'components/layout';
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { Row } from '@/components/layout';
 import { PromptVarForm } from '@/types/prompt-var';
 
 import styles from './styles.module.scss';
@@ -10,8 +8,6 @@ type VarFormEditModalProps = {
     varId: string;
     target: PromptVarForm;
     varAction: PromptEditorDataVarAction;
-
-    onClose: () => void;
 }
 
 /**
@@ -24,12 +20,7 @@ export function VarFormEdit({
     varId,
     target,
     varAction,
-
-    onClose
 }: VarFormEditModalProps) {
-    const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
-    
     return (
         <Row
             className={styles['modal-wrapper']}
