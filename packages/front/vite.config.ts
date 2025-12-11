@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import react from '@vitejs/plugin-react'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -16,7 +16,13 @@ export default defineConfig({
         port : 3600,
     },
     plugins: [
-        react(),
+        react({
+            babel: {
+                plugins: [
+                    ['babel-plugin-react-compiler'],
+                ],
+            },
+        }),
         tailwindcss(),
     ],
     css: {
