@@ -63,7 +63,7 @@
     "@hve/channel": "^1.0.1",
     "@hve/chatai": "^0.12.0",
     "@hve/mime": "^1.0.0",
-    "ac-storage": "^0.12.0",
+    "ac-storage": "^0.15.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.5.0",
