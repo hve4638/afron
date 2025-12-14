@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
-import { Align, Column, Flex, Grid, Row } from '@/components/layout';
+import { Align, Column, Flex, Gap, Grid, Row } from '@/components/layout';
 import { useCacheStore, useSessionStore } from '@/stores';
 import { useHistoryStore } from '@/stores/useHistoryStore';
 
@@ -65,21 +65,28 @@ function HistoryModal() {
             style={{
                 minWidth: '80%',
                 height: '80%',
+                // paddingTop: '0.5em'
             }}
             allowEscapeKey={true}
+            header={{
+                label: t('history.title'),
+                showCloseButton: true,
+            }}
         >
             <Grid
                 className={styles['history-container']}
                 columns='1fr'
-                rows='2.5em 0.5em 1.5em 0.75em 1fr 1.5em'
+                rows='0.5em 1.5em 0.75em 1fr 1.5em'
+                // rows='2.5em 0.5em 1.5em 0.75em 1fr 1.5em'
                 style={{
                     height: '100%',
                 }}
             >
-                <ModalHeader onClose={closeModal}>
+                {/* <ModalHeader onClose={closeModal}>
                     {t('history.title')}
                 </ModalHeader>
-                <div/>
+                <div/> */}
+                <Gap/>
                 <Row
                     style={{
                         gap: '0.5em',

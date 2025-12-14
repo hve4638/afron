@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { Activity, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
+import { Modal, useModalInstance } from '@/features/modal';
 import ProfileEvent from '@/features/profile-event';
 
-import { RTSelectStep, EditMetadataStep } from './step';
+import { SelectStep, EditMetadataStep } from './components';
 import { RTMode } from '@afron/types';
 
 const enum NewRTModalSteps {
@@ -24,6 +24,9 @@ export function NewRTModal({
     const [step, setStep] = useState<NewRTModalSteps>(NewRTModalSteps.SelectRTType);
     const [rtMode, setRTMode] = useState<RTMode>('prompt_only');
 
+    const selectStep = step === NewRTModalSteps.SelectRTType;
+    const editStep = step === NewRTModalSteps.EditMetadata;
+
     return (
         <Modal
             style={{
@@ -31,20 +34,25 @@ export function NewRTModal({
                 maxWidth: '80%',
             }}
             allowEscapeKey={true}
+            header={{
+                label: t('rt.new_rt_title'),
+                showCloseButton: true,
+            }}
         >
-            <ModalHeader onClose={closeModal}>{t('rt.new_rt_title')}</ModalHeader>
-            {
-                step === NewRTModalSteps.SelectRTType &&
-                <RTSelectStep
+            <Activity
+                mode={selectStep ? 'visible' : 'hidden'}
+            >
+                <SelectStep
                     onPrev={closeModal}
                     onSelectRTType={(selected) => {
                         setRTMode(selected);
                         setStep(NewRTModalSteps.EditMetadata);
                     }}
                 />
-            }
-            {
-                step === NewRTModalSteps.EditMetadata &&
+            </Activity>
+            <Activity
+                mode={editStep ? 'visible' : 'hidden'}
+            >
                 <EditMetadataStep
                     rtMode={rtMode}
                     onPrev={() => {
@@ -60,7 +68,7 @@ export function NewRTModal({
                         onAddRT(metadata.id, rtMode);
                     }}
                 />
-            }
+            </Activity>
         </Modal>
     )
 }

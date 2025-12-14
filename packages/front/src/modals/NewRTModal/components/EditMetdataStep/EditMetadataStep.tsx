@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Activity, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/atoms/Button';
@@ -8,6 +8,7 @@ import ProfileEvent from '@/features/profile-event';
 import { POTemplateList } from './POTemplateList';
 import { FlowTemplateList } from './FlowTemplateList';
 import { RTMode } from '@afron/types';
+import { visibility } from '@/utils';
 
 type Metadata = {
     name: string;
@@ -83,26 +84,19 @@ export function EditMetadataStep({
                         onChange={(next) => setName(next)}
                         instantChange={true}
                     />
-                    {/* <StringLongForm
-                        name={t('rt.identifier')}
-                        value={id}
-                        onChange={(next)=>setId(next)}
-                    /> */}
                 </Column>
-                {
-                    rtMode === 'prompt_only' &&
+                <Activity mode={visibility(rtMode === 'prompt_only')}>
                     <POTemplateList
                         value={templateId}
                         onChange={(next) => setTemplateId(next)}
                     />
-                }
-                {
-                    rtMode === 'flow' &&
+                </Activity>
+                <Activity mode={visibility(rtMode === 'flow')}>
                     <FlowTemplateList
                         value={templateId}
                         onChange={(next) => setTemplateId(next)}
                     />
-                }
+                </Activity>
             </Grid>
             <Row
                 className='wfill'
