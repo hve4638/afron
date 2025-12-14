@@ -3,6 +3,7 @@ import { Align, Column, Grid, Row } from '@/components/layout';
 
 import styles from './styles.module.scss';
 import { GIcon } from '@/components/atoms/GoogleFontIcon';
+import { TemplateList } from '../TemplateList';
 
 type POTemplateListProps = {
     value: string;
@@ -49,8 +50,7 @@ export function POTemplateList({
             <Row>
                 <div>템플릿</div>
             </Row>
-            <Column
-                className={classNames(styles['rt-template-container'], 'undraggable')}
+            <TemplateList
                 style={{
                     width: '100%',
                     height: '12em',
@@ -59,18 +59,14 @@ export function POTemplateList({
             >
                 {
                     templates.map((template) => (
-                        <TemplateDiv
-                            key={template.value}
-                            title={template.title}
-                            icon={template.icon}
-                            description={template.description}
-                            selected={value === template.value}
+                        <TemplateList.Item
+                            value={template}
                             onClick={() => onChange(template.value)}
-                            value={template.value}
+                            selected={value === template.value}
                         />
                     ))
                 }
-            </Column>
+            </TemplateList>
         </Grid>
     )
 }
