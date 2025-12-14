@@ -3,7 +3,7 @@ interface GroupProps {
     children: React.ReactNode;
 }
 
-function Group(props: GroupProps) {
+export function Group(props: GroupProps) {
     return null;
 }
 

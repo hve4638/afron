@@ -1,20 +1,20 @@
+import { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 import { GIcon } from '@/components/atoms/GoogleFontIcon';
 
-import { DropdownItem, DropdownItemList, DropdownProps } from './types';
+import type { DropdownItem, DropdownItemList, DropdownProps } from './types';
 import Group from './Group';
 import Item from './Item';
-import useDropdown from './Dropdown.hooks';
+import { useDropdown } from './Dropdown.hooks';
 
-import DropdownList from './DropdownList';
-import DropdownOption from './DropdownOption';
+import { DropdownList } from './components/DropdownList';
+import { DropdownOption } from './components/DropdownOption';
 
 import styles from './Dropdown.module.scss';
-import { useMemo } from 'react';
 
-function Dropdown<T>({
+export function Dropdown<T>({
     className = '',
     style = {},
 
@@ -32,6 +32,7 @@ function Dropdown<T>({
 }: DropdownProps<T>) {
     const {
         state: {
+            resizeKey,
             options,
             selectedItem,
             selectedItemList,
@@ -57,16 +58,14 @@ function Dropdown<T>({
         onChange,
     });
 
-    const headerRect = useMemo(() => {
-        return headerRef.current?.getBoundingClientRect() ?? (
-            {
-                left: 0, right: 0,
-                top: 0, bottom: 0,
-                width: 0, height: 0,
-                x: 0, y: 0,
-            } as DOMRect
-        );
-    }, [headerRef.current]);
+    const headerRect = headerRef.current?.getBoundingClientRect() ?? (
+        {
+            left: 0, right: 0,
+            top: 0, bottom: 0,
+            width: 0, height: 0,
+            x: 0, y: 0,
+        } as DOMRect
+    );
 
     const Renderer = renderSelectedItem;
 

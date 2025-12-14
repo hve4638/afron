@@ -1,12 +1,12 @@
-import React, { useMemo, useRef, useCallback, forwardRef, useLayoutEffect, useState } from 'react';
+import React, { forwardRef, useLayoutEffect, useState } from 'react';
 import classNames from 'classnames';
 
-import styles from './Dropdown.module.scss';
+import styles from './DropdownList.module.scss';
 
 interface DropdownListProps {
     className?: string;
     style?: React.CSSProperties;
-    parentRef: React.RefObject<HTMLDivElement>;
+    parentRef: React.RefObject<HTMLDivElement | null>;
     reposition?: (inner: DOMRect, parent: DOMRect) => { left?: number; top: number; width: number };
 
     children?: React.ReactNode;
@@ -18,7 +18,7 @@ interface Position {
     width: number;
 }
 
-const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(({
+export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(({
     className = '',
     style = {},
     reposition = ({ left, top, width }: DOMRect) => ({ left, top, width }),

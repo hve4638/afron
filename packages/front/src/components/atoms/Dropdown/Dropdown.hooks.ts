@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef, useMemo, useLayoutEffect } from 're
 
 import { DropdownItem, DropdownItemList } from './types';
 import { convertDropdownItem } from './utils';
+import { useDropdownItems } from './hooks/useDropdownItems';
+import useRerender from '@/hooks/useTrigger';
+import useTrigger from '@/hooks/useTrigger';
 
 interface UseDropdownProps<T> {
     children: React.ReactNode;
@@ -13,24 +16,7 @@ interface UseDropdownProps<T> {
 
 type DropdownItems<T> = (DropdownItem<T> | DropdownItemList<T>)[];
 
-function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdownProps<T>) {
-    const options: DropdownItems<T> = useMemo(() => {
-        const target: React.ReactNode[] = (
-            Array.isArray(children) ? children : [children]
-        );
-
-        const result = target.flatMap((item, i) => {
-            const result = convertDropdownItem<T>(item, i);
-            return (
-                result == null ? []
-                    : Array.isArray(result) ? result
-                        : [result]
-            );
-        });
-
-        return result;
-    }, [children]);
-
+export function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdownProps<T>) {
     const headerRef: React.Ref<HTMLDivElement> = useRef(null);
     const layer1ListRef: React.Ref<HTMLDivElement> = useRef(null);
     const layer2ListRef: React.Ref<HTMLDivElement> = useRef(null);
@@ -38,6 +24,9 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
     const [isOpen, setIsOpen] = useState(false);
     // 1계층에서 어디에 포커스를 두는지 키로 저장, Group일 경우 2계층을 보여주기 위해 사용됨
     const [focusedLayer1ItemKey, setFocusedLayer1ItemKey] = useState<string | null>(null);
+
+    const options = useDropdownItems<T>({ children });
+
     const layer2ItemsCache = useMemo(() => {
         if (focusedLayer1ItemKey == null) return null;
 
@@ -111,6 +100,18 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
         };
     }, [isOpen]);
 
+    const [resizeKey, triggerResize] = useTrigger();
+    useEffect(() => {
+        const handleResize = () => {
+            triggerResize();
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     const focusLayer1 = (item: DropdownItem<T> | DropdownItemList<T>, rect?: DOMRect) => {
         setFocusedLayer1ItemRect(rect ?? {
             top: 0,
@@ -131,6 +132,7 @@ function useDropdown<T>({ children, onItemNotFound, value, onChange }: UseDropdo
 
     return {
         state: {
+            resizeKey,
             options,
             selectedItem,
             selectedItemList,

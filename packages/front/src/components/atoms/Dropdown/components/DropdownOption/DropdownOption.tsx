@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import type { DropdownItem, DropdownItemList, GroupRenderProps, ItemRenderProps } from './types';
 
-import styles from './Dropdown.module.scss';
-import { GIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Row } from '@/components/layout';
+
+import type { DropdownItem, DropdownItemList, GroupRenderProps, ItemRenderProps } from '../../types';
+
+import styles from './DropdownOption.module.scss';
 
 interface DropdownItemProps<T> {
     className?: string;
@@ -21,7 +22,7 @@ interface DropdownItemProps<T> {
     renderGroup?: (props: GroupRenderProps<T>) => React.ReactNode;
 }
 
-function DropdownOption<T>({
+export function DropdownOption<T>({
     className = '',
     style = {},
     item,
