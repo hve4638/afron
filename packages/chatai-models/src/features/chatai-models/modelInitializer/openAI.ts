@@ -14,11 +14,42 @@ const {
     snapshot,
 } = flags;
 
+// OpenAI Models 목록
+// https://platform.openai.com/docs/models
 function initProvider(builder: CategoryBuilder) {
     const completionsAPI: Partial<ChatAIConfig> = { endpoint: 'chat_completions' };
     const resAPI: Partial<ChatAIConfig> = { endpoint: 'responses' };
 
     const gpt5ExcludeParameter: ExcludeParamter[] = ['top_p', 'temperature'];
+    const gpt5ParamConfig = { excludeParameter: gpt5ExcludeParameter };
+    builder.group('GPT-5.2', {
+        endpoint: 'chat_completions',
+        thinking: 'enabled',
+        supportThinkingEffort,
+        supportVerbosity,
+
+        supportedThinkingEfforts: ['minimal', 'low', 'medium', 'high'],
+        supportedVerbosity: ['low', 'medium', 'high'],
+    }, {})
+        .model('gpt-5.2', 'GPT-5.2', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5.2-2025-12-11', 'GPT-5.2 (2025-12-11)', gpt5ParamConfig, { snapshot })
+        // .model('gpt-5.2-pro', 'GPT-5.2 Pro', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
+        // .model('gpt-5.2-pro-2025-12-11', 'GPT-5.2 Pro (2025-12-11)', { ...gpt5ParamConfig, endpoint: 'responses' }, { snapshot })
+
+    builder.group('GPT-5.1', {
+        endpoint: 'chat_completions',
+        thinking: 'enabled',
+        supportThinkingEffort,
+        supportVerbosity,
+
+        supportedThinkingEfforts: ['minimal', 'low', 'medium', 'high'],
+        supportedVerbosity: ['low', 'medium', 'high'],
+    }, {})
+        .model('gpt-5.1', 'GPT-5.1', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5.1-2025-11-13', 'GPT-5.1 (2025-11-13)', gpt5ParamConfig, { snapshot })
+        // .model('gpt-5.1-codex-max', 'GPT-5.1 Codex Max', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
+        // .model('gpt-5.1-codex-mini', 'GPT-5.1 Codex Mini', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
+
     builder.group('GPT-5', {
         endpoint: 'chat_completions',
         thinking: 'enabled',
@@ -32,12 +63,18 @@ function initProvider(builder: CategoryBuilder) {
             thinking: 'disabled',
             supportVerbosity: false,
         }, { latest, featured })
-        .model('gpt-5', 'GPT-5', { excludeParameter: gpt5ExcludeParameter }, { latest, featured })
-        .model('gpt-5-2025-08-07', 'GPT-5 (2025-08-07)', { excludeParameter: gpt5ExcludeParameter }, { snapshot })
-        .model('gpt-5-mini', 'GPT-5 mini', { excludeParameter: gpt5ExcludeParameter }, { latest, featured })
-        .model('gpt-5-mini-2025-08-07', 'GPT-5 mini (2025-08-07)', { excludeParameter: gpt5ExcludeParameter }, { snapshot })
-        .model('gpt-5-nano', 'GPT-5 nano', { excludeParameter: gpt5ExcludeParameter }, { latest, featured })
-        .model('gpt-5-nano-2025-08-07', 'GPT-5 nano (2025-08-07)', { excludeParameter: gpt5ExcludeParameter }, { snapshot })
+        .model('gpt-5', 'GPT-5', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5-2025-08-07', 'GPT-5 (2025-08-07)', gpt5ParamConfig, { snapshot })
+
+        // .model('gpt-5-codex', 'GPT-5 Codex', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
+
+        // .model('gpt-5-pro', 'GPT-5 pro', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
+        // .model('gpt-5-pro-2025-10-06', 'GPT-5 pro (2025-10-06)', { ...gpt5ParamConfig, endpoint: 'responses' }, { snapshot })
+
+        .model('gpt-5-mini', 'GPT-5 mini', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5-mini-2025-08-07', 'GPT-5 mini (2025-08-07)', gpt5ParamConfig, { snapshot })
+        .model('gpt-5-nano', 'GPT-5 nano', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5-nano-2025-08-07', 'GPT-5 nano (2025-08-07)', gpt5ParamConfig, { snapshot })
 
     builder.group('GPT-4o', completionsAPI, {})
         .model('chatgpt-4o-latest', 'ChatGPT 4o', {}, { latest, featured })
