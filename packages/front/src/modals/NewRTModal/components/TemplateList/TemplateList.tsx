@@ -5,21 +5,23 @@ import { ReactNodeProps } from '@/types';
 
 import { TemplateItem } from './TemplateItem';
 
-import styles from './styles.module.scss';
+import { Well } from '@/components/atoms';
 
 interface TemplateListProps extends ReactNodeProps.Common {
     children?: React.ReactNode;
 }
 
-export function TemplateList({ className, style, children }: TemplateListProps) {
+export function TemplateListView({ className, style, children }: TemplateListProps) {
     return (
-        <Column
-            className={classNames(styles['rt-template-list'], 'undraggable', className)}
+        <Well
+            className={classNames(className)}
             style={style}
         >
-            {children}
-        </Column>
+            <Column className='wfill'>
+                {children}
+            </Column>
+        </Well>
     );
 }
 
-TemplateList.Item = TemplateItem;
+TemplateListView.Item = TemplateItem;

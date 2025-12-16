@@ -1,3 +1,4 @@
-import Well from './Well';
+import { Well } from './Well';
+export { Well } from './Well';
 
 export default Well;

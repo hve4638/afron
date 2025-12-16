@@ -6,6 +6,7 @@ import MarkdownTest from './MarkdownTest';
 import FlowTest from './FlowTest';
 import { emitNavigate } from '@/events/navigate';
 import { ReactCompilerTestPage } from './pages/ReactCompilerTestPage';
+import { StylePage } from './pages/StylePage';
 
 function TestPage() {
     const [option, setOption] = useState<string>('');
@@ -37,6 +38,9 @@ function TestPage() {
         }
         if (option === 'compiler-test') {
             return <ReactCompilerTestPage />;
+        }
+        if (option === 'style-test') {
+            return <StylePage />;
         }
 
         return (
@@ -82,6 +86,7 @@ function TestPage() {
                     <Dropdown.Item name="Markdown Test" value="md-test" />
                     <Dropdown.Item name="Flow Test" value="flow-test" />
                     <Dropdown.Item name="Compiler Test" value="compiler-test" />
+                    <Dropdown.Item name="Style Test" value="style-test" />
                 </Dropdown>
 
                 <div style={{ flex: 1 }} />

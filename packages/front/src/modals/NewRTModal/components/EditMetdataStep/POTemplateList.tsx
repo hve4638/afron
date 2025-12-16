@@ -44,7 +44,7 @@ export function POTemplateList({
 
     return (
         <Grid
-            rows='2em auto'
+            rows='2em 1fr'
             columns='1fr'
         >
             <Row>

@@ -31,10 +31,10 @@ export function FlowTemplateList({
 
     return (
         <Grid
-            rows='2em auto'
+            rows='2em 1fr'
             columns='1fr'
         >
-            <Row>
+            <Row className='undraggable'>
                 <div>템플릿</div>
             </Row>
             <TemplateList

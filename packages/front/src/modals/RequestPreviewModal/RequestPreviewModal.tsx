@@ -1,5 +1,5 @@
-import { Modal} from '@/features/modal';
-import Well from '@/components/atoms/Well';
+import { Modal } from '@/features/modal';
+import { Well } from '@/components/atoms';
 import useRequestPreviewModal from './RequestPreviewModal.hook';
 import { HeaderLine, HeaderLineWithJSON } from './headers';
 import { RTEventPreviewData } from '@afron/types';
@@ -41,7 +41,11 @@ function RequestPreviewModal({
                 label='URL'
                 content={previewData.url}
             />
-            <Well>
+            <Well
+                style={{
+                    padding: '0em 0.25em',
+                }}
+            >
                 <small>
                     {previewText.url}
                 </small>
@@ -59,6 +63,7 @@ function RequestPreviewModal({
                 style={{
                     overflowY: 'auto',
                     overflowX: 'auto',
+                    padding: '0em 0.25em',
                 }}
             >
                 <small
@@ -79,6 +84,7 @@ function RequestPreviewModal({
                 style={{
                     overflowY: 'auto',
                     overflowX: 'auto',
+                    padding: '0em 0.25em',
                 }}
             >
                 <small style={{

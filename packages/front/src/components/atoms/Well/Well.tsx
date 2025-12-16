@@ -1,15 +1,15 @@
 import classNames from 'classnames';
-import FocusLock from 'react-focus-lock';
 
 import styles from './Well.module.scss';
-import { CommonProps } from '@/types';
+import { ReactNodeProps } from '@/types';
 import { useEffect, useRef } from 'react';
+import { WellItem } from './WelIItem';
 
-interface WellProps extends CommonProps {
+interface WellProps extends ReactNodeProps.Common {
     children?: React.ReactNode;
 }
 
-function Well({
+export function Well({
     className,
     style,
     children,
@@ -30,7 +30,7 @@ function Well({
         return () => {
             document.removeEventListener('click', handleClick);
         };
-    }, [])
+    }, []);
 
     return (
         <div
@@ -43,4 +43,4 @@ function Well({
     )
 }
 
-export default Well;
+Well.Item = WellItem;

@@ -8,5 +8,5 @@ export { RCSlider, TooltipSlider } from './Slider';
 export { DivButton } from './DivButton';
 export { default as Popover } from './Popover';
 export { default as Subdescription } from './Description';
-export { default as Well } from './Well';
+export { Well } from './Well';
 export { Textarea } from './Textarea';

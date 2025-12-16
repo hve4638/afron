@@ -1,6 +1,6 @@
 import { Column } from '@/components/layout';
 import { Modal } from '@/features/modal';
-import Well from '@/components/atoms/Well';
+import { Well } from '@/components/atoms';
 import { useModalInstance } from '@/features/modal';
 
 type InfoModalProps = {
@@ -39,6 +39,7 @@ function InfoModal({
                             <Well
                                 style={{
                                     whiteSpace: 'pre',
+                                    padding: '0em 0.25em',
                                     // fontSize: '0.75em',
                                 }}
                             >

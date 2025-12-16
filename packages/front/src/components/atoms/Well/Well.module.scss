@@ -1,9 +1,8 @@
 .well {
     width: 100%;
-    background-color: var(--secondary-bgcolor);
+    background-color: var(--bgcolor-well);
     border-radius: 4px;
-    
-    padding: 0em 0.25em;
+    overflow: hidden;
 
     white-space: pre-line;
     word-break: break-all;
