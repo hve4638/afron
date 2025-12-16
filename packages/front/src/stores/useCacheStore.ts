@@ -39,7 +39,7 @@ interface ProfileState extends CacheFields {
 
 const ACCESSOR_ID = 'cache.json';
 
-const useCacheStore = create<ProfileState, [['zustand/subscribeWithSelector', never]]>(
+const useCacheStore = create<ProfileState>()(
     subscribeWithSelector((set, get)=>{
         const {
             update,

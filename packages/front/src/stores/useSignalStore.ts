@@ -23,7 +23,7 @@ interface SignalState extends SignalFields {
     signal : ActionMethods<SignalFields>;
 }
 
-export const useSignalStore = create<SignalState, [['zustand/subscribeWithSelector', never]]>(
+export const useSignalStore = create<SignalState>()(
     subscribeWithSelector((set)=>{
         const updater = Object.fromEntries(
             Object.entries(signalFields).map(

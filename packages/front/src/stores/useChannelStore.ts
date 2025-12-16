@@ -20,7 +20,7 @@ interface ChannelState {
     reset: ChannelReset;
 }
 
-export const useChannelStore = create<ChannelState, [['zustand/subscribeWithSelector', never]]>(
+export const useChannelStore = create<ChannelState>()(
     subscribeWithSelector((set)=>{
         const instances = Object.fromEntries(
             Object.entries(channels).map(([key])=>{

@@ -43,7 +43,7 @@ interface ErrorLogState {
     add: (entry:  LogData) => string;
 }
 
-const useErrorLogStore = create<ErrorLogState, [['zustand/subscribeWithSelector', never]]>(
+const useErrorLogStore = create<ErrorLogState>()(
     subscribeWithSelector((set, get) => ({
         nextErrorId: 1,
         hasUnread: false,
