@@ -1,12 +1,11 @@
-import { Align, Flex, Row } from "components/layout";
-import { Modal, ModalHeader, useModalInstance } from "@/features/modal";
-import { useEffect, useMemo, useState } from "react";
+import { Align, Row } from "components/layout";
+import { Modal, useModalInstance } from "@/features/modal";
+import { useMemo, useState } from "react";
 import styles from './styles.module.scss';
 import Button from "@/components/atoms/Button";
 import classNames from "classnames";
 import ReactLoading from "react-loading";
 import { ConfirmModal } from "@/features/modal";
-import { MODAL_DISAPPEAR_DURATION_MS } from "@/constants";
 
 interface RecoveryModalProps {
     onReset: () => void;

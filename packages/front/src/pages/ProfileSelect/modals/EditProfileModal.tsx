@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Modal } from '@/features/modal';
-import { Align, Row } from 'components/layout';
-import Button from '@/components/atoms/Button';
 import classNames from 'classnames';
 
+import { Align, Row } from '@/components/layout';
+import { Button } from '@/components/atoms';
 import { ButtonForm } from '@/components/FormFields';
-import { ProfileNameLayout } from './layout';
+
 import { DeleteConfirmDialog } from '@/modals/Dialog';
-import { useModal, useModalInstance } from '@/features/modal';
+
+import { Modal, useModal, useModalInstance } from '@/features/modal';
+
+import { ProfileNameLayout } from '../layout';
 
 interface EditProfileModalProps {
     name: string;
@@ -15,7 +17,7 @@ interface EditProfileModalProps {
     onDelete: () => Promise<void>;
 }
 
-function EditProfileModal({
+export function EditProfileModal({
     name,
     onRename,
     onDelete,

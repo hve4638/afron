@@ -37,6 +37,7 @@ export async function initRegistryWithEnv({ programPath, logger, env }: InitRegi
         'profiles': StorageAccess.Custom('profiles'),
         'config.json': StorageAccess.JSON({
             'shared_mode': JSONType.Bool().default_value(false),
+            'hardware_acceleration': JSONType.Bool().default_value(true),
         }),
         'cache.json': StorageAccess.JSON({
             'lastsize': JSONType.Array(),

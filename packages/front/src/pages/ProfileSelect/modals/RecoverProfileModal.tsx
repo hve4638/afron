@@ -4,7 +4,6 @@ import Button from '@/components/atoms/Button';
 
 import { ConfirmDialog, DeleteConfirmDialog } from '@/modals/Dialog';
 
-import styles from './styles.module.scss';
 import ListView from '@/components/container/ListView/ListView';
 import { useModal } from '@/features/modal';
 
@@ -13,7 +12,7 @@ interface RecoverProfileModalProps {
     onRecovery: () => Promise<void>;
 }
 
-function RecoverProfileModal({
+export function RecoverProfileModal({
     orphanIds,
     onRecovery,
 }: RecoverProfileModalProps) {

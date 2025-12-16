@@ -1,20 +1,18 @@
 import { useEffect, useState } from 'react';
+import classNames from 'classnames';
 
 import ProfilesAPI from '@/api/profiles';
-import { ProfileAddButton, ProfileButton, ProfileOptionButton } from '@/pages/ProfileSelect/ProfileButton';
+import { ProfileAddButton, ProfileButton, ProfileOptionButton } from './components/ProfileButton';
 
 import RedIcon from '@/assets/img/red.png'
 import useTrigger from '@/hooks/useTrigger';
 import useMemoryStore from '@/stores/useMemoryStore';
 
-import NewProfileModal from './NewProfileModal';
+import { EditProfileModal, GlobalSettingModal, NewProfileModal, RecoverProfileModal } from './modals';
 import { ProfileMetadata } from './types';
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import styles from './styles.module.scss';
-import GlobalSettingModal from './GlobalSettingModal';
 import DivButton from '@/components/atoms/DivButton';
-import classNames from 'classnames';
-import RecoverProfileModal from './RecoverProfileModal';
 import { InfoDialog } from '@/modals/Dialog';
 import { useModal } from '@/features/modal';
 
@@ -96,7 +94,7 @@ function ProfileSelectPage() {
             }
             <ProfileAddButton
                 onClick={() => {
-                    modal.open(<NewProfileModal 
+                    modal.open(<NewProfileModal
                         onSubmit={async (metadata) => {
                             const id = await ProfilesAPI.create();
                             const profile = ProfilesAPI.profile(id);
@@ -138,7 +136,7 @@ function ProfileSelectPage() {
                     right: '0.5rem',
                 }}
                 onClick={() => {
-                    modal.open(<RecoverProfileModal 
+                    modal.open(<RecoverProfileModal
                         orphanIds={orphenProfileIds}
                         onRecovery={async () => {
                             const promises = orphenProfileIds
@@ -146,7 +144,7 @@ function ProfileSelectPage() {
 
                             const result = await Promise.all(promises);
                             if (result.every((res) => res)) {
-                                modal.open(<InfoDialog 
+                                modal.open(<InfoDialog
                                     title='프로필 복구'
                                     children='프로필을 복구했습니다'
                                 />)
@@ -154,13 +152,13 @@ function ProfileSelectPage() {
                             else if (result.some((res) => res)) {
                                 const successCount = result.filter((res) => res).length;
                                 const failCount = result.filter((res) => !res).length;
-                                modal.open(<InfoDialog 
+                                modal.open(<InfoDialog
                                     title='프로필 복구'
                                     children={`일부 프로필을 복구했습니다 (${failCount}개 실패)`}
                                 />)
                             }
                             else {
-                                modal.open(<InfoDialog 
+                                modal.open(<InfoDialog
                                     title='프로필 복구'
                                     children='프로필 복구에 실패했습니다'
                                 />);

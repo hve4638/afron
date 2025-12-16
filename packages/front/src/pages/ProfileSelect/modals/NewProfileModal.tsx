@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { Modal } from '@/features/modal';
-import { Align, Column, Flex, Row } from 'components/layout';
-import Button from '@/components/atoms/Button';
-import { TextInput } from 'components/Input';
+import { useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import styles from './styles.module.scss';
+import { Modal } from '@/features/modal';
 import { useModalInstance } from '@/features/modal';
 
-function NewProfileModal({
+import { Button } from '@/components/atoms';
+import { Align, Flex, Row } from '@/components/layout';
+import { TextInput } from '@/components/Input';
+
+import styles from './styles.module.scss';
+
+export function NewProfileModal({
     onSubmit,
 }: {
     onSubmit: (metadata) => void

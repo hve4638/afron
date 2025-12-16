@@ -9,10 +9,12 @@ import { StringForm } from "@/components/FormFields";
 
 interface RecoveryKeySetupModalProps {
     onSubmit: (recoveryKey: string) => Promise<boolean>;
+    onClose: () => void;
 }
 
 function RecoveryKeySetupModal({
     onSubmit,
+    onClose,
 }: RecoveryKeySetupModalProps) {
     const { closeModal } = useModalInstance();
     const [loading, setLoading] = useState(false);

@@ -4,19 +4,20 @@ import ProfileAddIcon from '@/assets/img/profile-add.svg';
 import { Flex } from '@/components/layout';
 import { GIconButton, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 
-import styles from './styles.module.scss';
-import EditProfileModal from './EditProfileModal';
+import EditProfileModal from '../modals/EditProfileModal';
 import { useModal } from '@/features/modal';
 
-type ProfileButtonProps = {
-    name:string;
-    identifier:string;
-    image:any;
-    onClick:(name:string, identifier:string)=>void;
-    onRename?:(name:string)=>Promise<void>;
-    onDelete?:(id:string)=>Promise<void>;
+import styles from './styles.module.scss';
 
-    editMode?:boolean;
+type ProfileButtonProps = {
+    name: string;
+    identifier: string;
+    image: any;
+    onClick: (name: string, identifier: string) => void;
+    onRename?: (name: string) => Promise<void>;
+    onDelete?: (id: string) => Promise<void>;
+
+    editMode?: boolean;
 }
 
 export function ProfileButton({
@@ -24,11 +25,11 @@ export function ProfileButton({
     identifier,
     image,
     onClick,
-    onRename = async () => {},
-    onDelete = async () => {},
+    onRename = async () => { },
+    onDelete = async () => { },
 
     editMode = false,
-}:ProfileButtonProps) {
+}: ProfileButtonProps) {
     const modal = useModal();
 
     return (
@@ -40,15 +41,15 @@ export function ProfileButton({
                 )
             }
             style={{
-                width : '200px',
-                height : '48px',
+                width: '200px',
+                height: '48px',
                 padding: '4px 4px',
                 margin: '2px 0',
                 cursor: 'pointer',
             }}
-            onClick={(e)=>onClick(name, identifier)}
+            onClick={(e) => onClick(name, identifier)}
             tabIndex={0}
-            onKeyDown={(e)=>{
+            onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                     onClick(name, identifier);
                 }
@@ -58,7 +59,7 @@ export function ProfileButton({
                 className='center'
                 style={{
                     width: '48px',
-                    marginRight : '6px',
+                    marginRight: '6px',
                 }}
             >
                 <img
@@ -71,7 +72,7 @@ export function ProfileButton({
                 />
             </div>
             <span className={classNames(styles['profile-name'])}>{name}</span>
-            <Flex/>
+            <Flex />
             {
                 editMode &&
                 <GIconButton
@@ -83,8 +84,8 @@ export function ProfileButton({
                         aspectRatio: '1',
                     }}
                     hoverEffect='square'
-                    onClick={(e)=>{
-                        modal.open(<EditProfileModal 
+                    onClick={(e) => {
+                        modal.open(<EditProfileModal
                             name={name}
                             onDelete={async () => {
                                 await onDelete(identifier);
@@ -105,8 +106,8 @@ export function ProfileButton({
 
 export function ProfileAddButton({
     onClick
-}:{
-    onClick:()=>void
+}: {
+    onClick: () => void
 }) {
     return (
         <ProfileButton
