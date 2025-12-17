@@ -1,5 +1,5 @@
 import { ModalBox, ModalHeader } from '@/features/modal';
-import { ModalInstanceContextProvider } from '@/features/modal/context/ModalInstance';
+import { ModalInstanceContextProvider } from '@/features/modal/context/ModalInstance/ModalInstanceProvider';
 import { Column } from '@/components/layout';
 
 interface MockModalProps {

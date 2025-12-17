@@ -5,8 +5,8 @@ import { NodeCategory, NodeSearchIndex, NodeSearchLookup } from './types';
 import { buildSearchIndex, buildSearchLookup, searchNodes } from './utils';
 import { groupNodesByCategory } from './utils/search';
 
-let SearchIndexCache: NodeSearchIndex = buildSearchIndex();
-let SearchLookupCache: NodeSearchLookup = buildSearchLookup();
+const SearchIndexCache: NodeSearchIndex = buildSearchIndex();
+const SearchLookupCache: NodeSearchLookup = buildSearchLookup();
 
 export function useNodeLibrary() {
     const [searchText, setSearchText] = useState('');

@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react';
 import FocusLock from 'react-focus-lock';
 
-import { CommonProps } from '@/types';
+import { ReactNodeProps } from '@/types';
 
 import { ModalBackground, ModalBackgroundProps } from '../ModalBackground';
 import { ModalBox } from '../ModalBox';
 import { useModalHook } from './Modal.hooks';
 
-interface ModalProps extends CommonProps {
+interface ModalProps extends ReactNodeProps.Common {
     children?: React.ReactNode;
 
     header?: {

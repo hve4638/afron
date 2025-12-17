@@ -16,22 +16,6 @@ export function Well({
 }: WellProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const handleClick = (event) => {
-            if (containerRef.current?.contains(event.target)) {
-                
-            }
-            else {
-                
-            }
-        }
-
-        document.addEventListener('click', handleClick);
-        return () => {
-            document.removeEventListener('click', handleClick);
-        };
-    }, []);
-
     return (
         <div
             ref={containerRef}

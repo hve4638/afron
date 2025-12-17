@@ -104,7 +104,7 @@ function ChoiceDialog({
             {
                 choices?.map((choice, index)=>{
                     const text = typeof choice === 'string' ? choice : choice.text;
-                    let choiceTone:ChoiceTone = typeof choice === 'string' ? 'default' : (choice.tone ?? 'default');
+                    const choiceTone:ChoiceTone = typeof choice === 'string' ? 'default' : (choice.tone ?? 'default');
 
                     return (
                         <Button

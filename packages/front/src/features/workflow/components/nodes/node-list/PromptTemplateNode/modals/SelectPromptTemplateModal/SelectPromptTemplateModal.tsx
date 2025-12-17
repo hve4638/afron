@@ -52,7 +52,7 @@ export function SelectPromptTemplateModal({
                 showCloseButton: true,
             }}
         >
-            <TreeView<string | Symbol>
+            <TreeView<string | symbol>
                 style={{
                     height: 'auto',
                     minHeight: '1.6em',

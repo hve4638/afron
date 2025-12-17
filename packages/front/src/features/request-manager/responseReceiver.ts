@@ -95,7 +95,7 @@ export async function responseReceiver(chId: string, sessionAPI: SessionAPI) {
             emitEvent('refresh_session_metadata');
         }
         else if (data.type === 'stream_output') {
-
+            // nothing to do
         }
         else if (data.type === 'send_info') {
             // emitEvent('show_toast_message', {

@@ -12,8 +12,6 @@ export function useOptionElement({
     node
 }: UseOptionComponentProps) {
     const {
-        initialStates: {},
-        actions: {},
         data,
         getNodeData,
         setNodeData,

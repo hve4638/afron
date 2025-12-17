@@ -4,11 +4,11 @@ import { useSessionStore } from '@/stores';
 import { SessionState } from '@/stores/useSessionStore';
 
 export class SessionTool {
-    #token: string;
+    // #token: string;
     #sessionAPI: SessionAPI;
 
     constructor(token: string, sessionAPI: SessionAPI) {
-        this.#token = token;
+        // this.#token = token;
         this.#sessionAPI = sessionAPI;
     }
 

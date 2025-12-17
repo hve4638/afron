@@ -40,8 +40,16 @@ export function useWorkflow() {
         onEdgesChange,
     });
 
-    const tryUndo = () => { transaction.canUndo && transaction.undo(); }
-    const tryRedo = () => { transaction.canRedo && transaction.redo(); }
+    const tryUndo = () => {
+        if (transaction.canUndo) {
+            transaction.undo();
+        }
+    };
+    const tryRedo = () => {
+        if (transaction.canRedo) {
+            transaction.redo();
+        }
+    };
 
     useKeyBind({
         'C-z': tryUndo,

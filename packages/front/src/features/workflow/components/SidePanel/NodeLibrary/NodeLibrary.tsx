@@ -1,24 +1,14 @@
-import { useState } from 'react';
 import classNames from 'classnames';
 
 import { Align, Column, Gap, Row } from '@/components/layout';
 import { TextInput } from '@/components/Input';
 
 import { useNodeLibrary } from './NodeLibrary.hooks';
-import { WorkflowNodes } from '../../nodes';
-import { DRAG_NODE_TYPE } from '../../../constants';
 
 import styles from '../SidePanel.module.scss';
 import { NodeFold, NodeItem } from './components';
-import Delimiter from '@/components/atoms/Delimiter';
 
-interface NodeLibraryProps {
-
-}
-
-export function NodeLibrary({
-
-}: NodeLibraryProps) {
+export function NodeLibrary() {
     const {
         searchText,
         setSearchText,

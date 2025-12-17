@@ -73,7 +73,7 @@ class RequestAPI {
     }
 
     async response(chId:string) {
-        let ch = this.#getCh(chId);
+        const ch = this.#getCh(chId);
         const result = await ch.consume();
 
         /// @TODO: result null인 경우 처리 필요

@@ -11,7 +11,6 @@ interface DropdownListProps {
 
     children?: React.ReactNode;
 }
-1
 interface Position {
     left?: number;
     top?: number;

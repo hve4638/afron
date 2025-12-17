@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useBus } from '@/lib/zustbus';
 
 import { emitNavigate } from '@/events/navigate';
@@ -17,12 +16,7 @@ import { VarEditModal, PromptOnlyConfigModal } from './modals';
 import { PromptEditorEvent } from './types';
 import { useModal } from '@/features/modal';
 
-interface usePromptEditorProps {
-}
-
-function usePromptEditor({
-
-}: usePromptEditorProps) {
+function usePromptEditor() {
     const modal = useModal();
     const { rtId, promptId } = useParams();
 

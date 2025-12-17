@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useBus } from '@/lib/zustbus';
 
-import { useRTStore } from '@/context/RTContext';
+import { useRTStore } from '@/context/RTContext/RTStoreContextProvider';
 import { RTFlowNodeOptions } from '@afron/types';
 import { useNavigate } from 'react-router';
 import { emitNavigate } from '@/events/navigate';

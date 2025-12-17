@@ -14,10 +14,7 @@ export type PromptData = {
     variables: PromptVar[];
     contents: string;
 
-    config: {
-        
-        // modelLimit : 'nothing' | '';
-    }
+    config: Record<string, never>; // 추후 사용
     promptOnly: PromptEditorPromptOnlyData;
     flags: Partial<{
         syncRTName: boolean;

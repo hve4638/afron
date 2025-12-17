@@ -52,7 +52,7 @@ abstract class EventPipe<TData> {
     }
 
     async receive(chId: string) {
-        let ch = this.#getCh(chId);
+        const ch = this.#getCh(chId);
         const result = await ch.consume();
 
         if (this.isClosedData(result)) {

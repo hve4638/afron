@@ -39,7 +39,7 @@ export function SelectAddition({
         const num = currentOptions.length + 1;
 
         const name = `선택 ${num}`;
-        let baseValue = `select-${num}`;
+        const baseValue = `select-${num}`;
         let value: string;
         let index = -1;
 

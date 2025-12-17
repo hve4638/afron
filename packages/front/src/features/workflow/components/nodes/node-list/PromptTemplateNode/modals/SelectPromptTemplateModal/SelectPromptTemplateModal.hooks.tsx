@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import TreeView, { directory, node, Tree } from '@/components/TreeView';
+import { Tree } from '@/components/TreeView';
 import { Emit } from '@/lib/zustbus';
 import { NewPromptTemplateModal } from '../NewPromptTemplateModal/NewPromptTemplateModal';
 import { RTWorkflowModel } from '@/features/workflow/models/RTWorkflowModel';
@@ -19,10 +19,9 @@ export function useSelectPromptTemplateModal({
     emitPromptTemplate
 }: SelectPromptTemplateModalProps) {
     const modal = useModal();
-    const {} = useModalInstance();
     const workflowModel = useMemo(() => RTWorkflowModel.From(rtId), [rtId]);
 
-    const [tree, setTree] = useState<Tree<string | Symbol>>([]);
+    const [tree, setTree] = useState<Tree<string | symbol>>([]);
     const [selected, setSelected] = useState<string | null>(initPromptId);
 
     useEffect(() => {
@@ -31,7 +30,7 @@ export function useSelectPromptTemplateModal({
             .then((t) => setTree(t));
     }, [workflowModel]);
 
-    const relocateTree = async (next: Tree<string | Symbol>) => {
+    const relocateTree = async (next: Tree<string | symbol>) => {
         setTree(next);
     }
 

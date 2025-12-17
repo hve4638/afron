@@ -1,9 +1,8 @@
-import { createContext, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router';
-import { createRTStore, type RTState } from '@/stores/local'
-import { useContextForce } from './utils';
 
-export const RTStoreContext = createContext<RTState | null>(null);
+import { createRTStore } from '@/stores/local'
+import { RTStoreContext } from './RTStoreContext';
 
 export function RTStoreContextProvider({ children }: { children: React.ReactNode }) {
     const { rtId } = useParams();
@@ -18,7 +17,3 @@ export function RTStoreContextProvider({ children }: { children: React.ReactNode
         </RTStoreContext.Provider>
     );
 };
-
-export function useRTStore() {
-    return useContextForce(RTStoreContext);
-}

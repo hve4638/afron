@@ -68,7 +68,7 @@ function SingleIO({
         return ProfileEvent.model.getName(last.modelId);
     }, [last?.modelId]);
 
-    let [left, right] = useConfigStore(state => state.textarea_io_ratio);
+    const [left, right] = useConfigStore(state => state.textarea_io_ratio);
 
     const textareaSectionRef = useRef(null);
 

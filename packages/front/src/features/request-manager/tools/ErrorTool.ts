@@ -12,13 +12,13 @@ type RTEventErrorData = (
 
 export class ErrorTool {
     #addErrorLog: (entry: LogData) => string;
-    #sessionAPI: SessionAPI;
+    // #sessionAPI: SessionAPI;
     #sessionId: string;
 
     constructor(sessionAPI: SessionAPI) {
         const { add: addErrorLog } = useErrorLogStore.getState();
         this.#addErrorLog = addErrorLog;
-        this.#sessionAPI = sessionAPI;
+        // this.#sessionAPI = sessionAPI;
         this.#sessionId = sessionAPI.id;
     }
 

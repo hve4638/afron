@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 import { useNavigate, useParams } from 'react-router';
 import { convertFlowDataToWorkflow, applyConnnectionsToFlowData, applyWorkflowData } from './utils';
 import { RTFlowData } from '@afron/types';
-import { useRTStore } from '@/context/RTContext';
+import { useRTStore } from '@/context/RTContext/RTStoreContextProvider';
 import { emitNavigate } from '@/events/navigate';
 
 export function useWorkflowEditor() {

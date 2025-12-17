@@ -1,20 +1,11 @@
-import { useContextForce } from '@/context';
-import { createContext, ReactNode, useContext, useRef, useState } from 'react';
-import { ModalInstanceContextProvider } from './ModalInstance';
+import { ReactNode, useRef, useState } from 'react';
+
+import { ModalInstanceContextProvider } from '../ModalInstance/ModalInstanceProvider';
+import { ModalContext } from './ModalContext';
 
 interface ModalData {
     node: ReactNode;
     key: any;
-}
-interface ModalContextType {
-    open: (node: ReactNode) => void;
-    count: number;
-}
-
-const ModalContext = createContext<ModalContextType | null>(null);
-
-export function useModal() {
-    return useContextForce(ModalContext);
 }
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
