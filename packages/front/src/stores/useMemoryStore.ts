@@ -10,7 +10,7 @@ type MemoryStates = {
     availableVersion: VersionInfo | null;
 }
 
-const useMemoryStore = create<MemoryStates>((set, get) => ({
+const useMemoryStore = create<MemoryStates>(() => ({
     profileId: null,
     allModels: [],
     modelsMap: {},

@@ -1,4 +1,4 @@
-import { BaseRTVar, RTVar, RTVarCreate, RTVarData, RTVarDataNaive, RTVarForm, RTVarFormCreate } from '@afron/types';
+import { RTVarDataNaive } from '@afron/types';
 
 export type BasePromptVar = {
     /** 변수 ID, 변수 생성 시 임시 ID 할당 */

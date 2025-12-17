@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { RefetchMethods, UpdateMethods } from './types';
-import { globalStoreTool, profileStoreTool } from './utils';
+import { globalStoreTool } from './utils';
 
 interface GlobalConfigFields {
     shared_mode: boolean;

@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { Shortcut } from '@/types/shortcut';
 import { LayoutModes, ThemeModes } from '@/types/profile';
 import { RefetchMethods, UpdateMethods } from './types';
 import { profileStoreTool } from './utils';

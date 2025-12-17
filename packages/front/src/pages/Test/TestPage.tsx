@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Grid, Row, Align } from '@/components/layout';
-import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
-import Dropdown from '@/components/atoms/Dropdown';
+import { Grid, Row } from '@/components/layout';
+import { Dropdown, GIconButton } from '@/components/atoms';
 import MarkdownTest from './MarkdownTest';
 import FlowTest from './FlowTest';
 import { emitNavigate } from '@/events/navigate';

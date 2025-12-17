@@ -1,7 +1,6 @@
 import { MockModal } from '../../components/MockModal';
-import { Button, Well } from '@/components/atoms';
-import { Align, Column, Flex, Row } from '@/components/layout';
-import { useState } from 'react';
+import { Well } from '@/components/atoms';
+import { Column } from '@/components/layout';
 
 export function WellModalDemo() {
     return (

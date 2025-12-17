@@ -1,12 +1,9 @@
 import { create } from 'zustand'
 import { RefetchMethods, UpdateMethods } from './types';
-import { profileStoreTool, sessionStoreTool } from './utils';
+import { sessionStoreTool } from './utils';
 import ProfilesAPI, { type ProfileAPI } from '@/api/profiles';
-import RequestManager from '@/features/request-manager';
-import useChannelStore from './useChannelStore';
 import { HistoryData } from '@/features/session-history';
 import useCacheStore from './useCacheStore';
-import { emitEvent } from '@/hooks/useEvent';
 import { InputFile, InputFileHash, InputFilePreview } from '@afron/types';
 
 interface SessionCacheFields {
@@ -150,14 +147,13 @@ export const useSessionStore = create<SessionState>((set, get) => {
                 set({ input_files: next });
             },
             refetchInputFiles: async () => {
-                const { deps, cached_thumbnails } = get();
+                const { deps } = get();
                 const { last_session_id } = useCacheStore.getState();
                 if (!last_session_id) {
                     console.warn('No session ID available for fetching input files.');
                     return;
                 }
 
-                const hashes = Object.keys(cached_thumbnails);
                 const files = await deps.api.session(last_session_id).inputFiles.getPreviews();
                 const next: InputFile[] = files.map(f => {
                     const file: Partial<InputFilePreview> = {

@@ -39,7 +39,7 @@ export function mapDropdownOption<TNode, TDirectory>(
 
 export function mapRTMetadataToNode(
     metadataTree: RTMetadataTree,
-    mapOption: (mt: RTMetadataNode) => RTNodeOptions = (mt) => ({}),
+    mapOption: (mt: RTMetadataNode) => RTNodeOptions = () => ({}),
 ) {
     const mapNode = (item: RTNode) => {
         return {

@@ -13,7 +13,7 @@ export function profileStoreTool<FIELDS extends object>(set:ZustandSet<FIELDS>, 
 } {
     const keys = Object.keys(fields) as (keyof FIELDS)[];
 
-    const committer = <T>(name:keyof FIELDS) => {
+    const committer = (name:keyof FIELDS) => {
         return async () => {
             const { api } = useProfileAPIStore.getState();
 

@@ -6,11 +6,11 @@
  * @param validate
  * @returns 
  */
-export function genUntil<T, K=unknown>(
-    gen: (tryCount: number) => T,
-    validate: (item: T, tryCount: number) => boolean,
-    limitTryCount: number = 1000,
-): [T, number] {
+export function genUntil<TResult>(
+    gen: (tryCount: number) => TResult,
+    validate: (item: TResult, tryCount: number) => boolean,
+    limitTryCount: number = 1024,
+): [TResult, number] {
     let count = 0;
     while (true) {
         const item = gen(count);

@@ -70,8 +70,8 @@ const useErrorLogStore = create<ErrorLogState>()(
             }));
             return errorId;
         },
-        markAsRead: () => set(state => ({ hasUnread: false })),
-        markAsUnread: () => set(state => ({ hasUnread: true })),
+        markAsRead: () => set(() => ({ hasUnread: false })),
+        markAsUnread: () => set(() => ({ hasUnread: true })),
     }))
 );
 

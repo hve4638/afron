@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import Channel from '@hve/channel';
-import { ActionMethods } from './types';
 
 const channels = {
     request_ready: 0,

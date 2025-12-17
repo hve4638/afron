@@ -1,4 +1,4 @@
-import { BaseRTVar, ModelConfiguration, RTVar, RTVarCreate, RTVarData, RTVarForm, RTVarFormCreate } from '@afron/types';
+import { ModelConfiguration } from '@afron/types';
 import { PromptInputType } from '@/types';
 import { PromptVar } from './prompt-var';
 

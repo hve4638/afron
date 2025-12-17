@@ -10,7 +10,7 @@ export const splitByQuotes = (text: string) => {
         const group = pattern.exec(text);
 
         if (group) {
-            const [_, prefix, matched, postfix] = group;
+            const [, prefix, matched, postfix] = group;
             if (prefix !== '') parts.push(prefix);
             parts.push(matched);
             text = postfix;
