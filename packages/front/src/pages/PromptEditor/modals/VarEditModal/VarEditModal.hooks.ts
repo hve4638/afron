@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useBus } from '@/lib/zustbus';
 import { PromptEditorData } from '../../hooks';
-import useModalDisappear from '@/hooks/useModalDisappear';
-import useHotkey from '@/hooks/useHotkey';
 import { VarEditModalControlEvent } from './types';
 import { useModalInstance } from '@/features/modal';
 

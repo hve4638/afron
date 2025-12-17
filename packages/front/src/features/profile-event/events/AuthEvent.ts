@@ -1,9 +1,7 @@
 import { v7 } from 'uuid';
 
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
-import useCacheStore from '@/stores/useCacheStore';
 import useDataStore from '@/stores/useDataStore';
-import { ProfileSessionMetadata } from '@/types';
 import { ProviderName } from '../types';
 import { VertexAIAuth } from '@afron/types';
 

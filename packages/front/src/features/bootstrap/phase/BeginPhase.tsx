@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { BootResult } from './type';
 import useBootStore from '../useBootStore';
 
 function BeginPhase() {

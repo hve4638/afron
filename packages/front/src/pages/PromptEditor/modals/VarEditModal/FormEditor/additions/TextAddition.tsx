@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { CheckBoxForm, StringForm, StringLongForm } from '@/components/FormFields';
+import { CheckBoxForm, StringForm } from '@/components/FormFields';
 import { TextAreaInput } from '@/components/Input';
-import { RTVarConfig, RTVarForm } from '@afron/types';
 import { AdditionProps } from './types';
 
 export function TextAddition({

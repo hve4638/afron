@@ -4,8 +4,7 @@ import {
     RTEvent,
     ModelEvent,
     AuthEvent,
-    CurrentSessionFormEvent,
-    GlobalModelConfigEvent
+    CurrentSessionFormEvent
 } from './events';
 import { CustomModelCreate, RTMetadata, RTMetadataTree, VertexAIAuth } from '@afron/types';
 

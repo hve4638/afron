@@ -2,10 +2,7 @@ import { TextInput } from '@/components/Input';
 import { Align, Flex, Row } from '@/components/layout';
 import classNames from 'classnames';
 
-import { useEffect, useRef, useState } from 'react';
-import { Modal } from '@/features/modal';
-import Button from '@/components/atoms/Button';
-import { ModalHeader } from '@/features/modal';
+import { useEffect, useRef } from 'react';
 import { CommonProps } from '@/types';
 
 import styles from './styles.module.scss';

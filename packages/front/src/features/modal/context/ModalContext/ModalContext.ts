@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useRef, useState } from 'react';
+import { createContext, ReactNode } from 'react';
 
 interface ModalContextType {
     open: (node: ReactNode) => void;

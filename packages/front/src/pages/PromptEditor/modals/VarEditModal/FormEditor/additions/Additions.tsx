@@ -6,7 +6,6 @@ import { StructAddition } from './StructAddition';
 import { ArrayAddition } from './ArrayAddition';
 
 import { AdditionProps } from './types';
-import { PromptVarForm } from '@/types/prompt-var';
 import { RTVarDataType } from '@afron/types';
 
 export function Additions(props: AdditionProps & { dataType: RTVarDataType }) {

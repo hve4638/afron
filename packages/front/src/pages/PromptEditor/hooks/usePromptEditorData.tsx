@@ -2,7 +2,7 @@ import { SetStateAction, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBus } from '@/lib/zustbus';
 import { PromptData, PromptInputType } from '@/types';
-import { ModelConfiguration, RTVar, RTVarConfig, RTVarDataNaive } from '@afron/types';
+import { ModelConfiguration, RTVarConfig, RTVarDataNaive } from '@afron/types';
 import { genUntil } from '@/utils/genUntil';
 import { PromptVar } from '@/types/prompt-var';
 import { PromptDataUpdateEvent } from '../types/events';

@@ -4,17 +4,16 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { MODAL_DISAPPEAR_DURATION_MS } from '@/constants';
-import { Modal, ModalBackground, ModalHeader, useModalInstance } from '@/features/modal';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
 
 import { TreeDirectory, TreeNode } from './TreeNode';
 import { relocateTree } from './utils';
-import { Tree, TreeDirectoryData, TreeNodeData, TreeOffsets, } from './types';
+import { TreeDirectoryData, TreeNodeData, TreeOffsets, } from './types';
 import { Regions } from './TreeNode/types';
-import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
+import type { RTNodeTree } from '@/types/rt-node'
 import { RTMetadataTree } from '@afron/types';
 
 type PromptTreeModalProps = {

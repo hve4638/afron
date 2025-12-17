@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModalBox, ModalHeader } from '@/features/modal';
 import { PromptVarForm } from '@/types/prompt-var';

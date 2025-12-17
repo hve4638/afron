@@ -1,4 +1,4 @@
-import { RTVarConfig, RTVarDataNaive, RTVarDataType } from '@afron/types';
+import { RTVarDataNaive, RTVarDataType } from '@afron/types';
 
 type Config<T extends RTVarDataType> = NonNullable<RTVarDataNaive['config'][T]>;
 

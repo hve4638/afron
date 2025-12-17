@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
+import { Modal, useModalInstance } from '@/features/modal';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
 import Button from '@/components/atoms/Button';
 
-import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
-import RTTreeView from 'features/rtTreeView';
+import type { RTNodeTree } from '@/types/rt-node'
+import RTTreeView from '@/features/rtTreeView';
 import { RTMetadataTree } from '@afron/types';
 
 type RTSaveModalProps = {

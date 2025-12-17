@@ -1,8 +1,7 @@
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
 import useSessionStore from '@/stores/useSessionStore';
-import { RTFormWithLastValue, ProviderName } from '../types';
-import { RTFormNaive } from '@afron/types';
+import { RTFormWithLastValue } from '../types';
 
 class CurrentSessionFormEvent {
     static async getCurrentSessionForms(): Promise<RTFormWithLastValue[]> {

@@ -1,5 +1,5 @@
 import '@xyflow/react/dist/style.css';
-import { buildNode, Workflow } from '@/features/workflow';
+import { buildNode } from '@/features/workflow';
 
 const initialNodes = [
     buildNode('1', { x: 0, y: 0 }, 'rt-run'),

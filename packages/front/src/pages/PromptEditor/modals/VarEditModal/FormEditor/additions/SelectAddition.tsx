@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
-import { TextInput } from 'components/Input';
-import { Align, Flex, Grid, Row } from 'components/layout';
+import { TextInput } from '@/components/Input';
+import { Align, Grid, Row } from '@/components/layout';
 import DropdownForm, { Dropdown } from '@/components/FormFields/DropdownForm';
 import { AdditionProps } from './types';
 

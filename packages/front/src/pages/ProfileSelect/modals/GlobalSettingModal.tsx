@@ -1,5 +1,5 @@
 import { CheckBoxForm } from '@/components/FormFields';
-import { Column, Gap } from '@/components/layout';
+import { Column } from '@/components/layout';
 import { Modal } from '@/features/modal';
 import { useGlobalConfigStore } from '@/stores';
 

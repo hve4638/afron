@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ModelConfiguration } from '@afron/types';
 
-import useHotkey from '@/hooks/useHotkey';
 import { PromptDataPO } from './types';
 import { PromptEditorData } from '../../hooks';
 

@@ -6,7 +6,7 @@ import { Align, Column, Flex, Row } from "@/components/layout";
 import { GIconButton, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import Button from '@/components/atoms/Button';
 
-import useHotkey from '@/hooks/useHotkey';
+
 
 import type { PromptData } from '@/types';
 import { EditableText } from '@/components/atoms/EditableText';

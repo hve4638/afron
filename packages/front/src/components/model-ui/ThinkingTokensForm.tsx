@@ -1,4 +1,4 @@
-import { CheckBoxForm, NumberForm } from "../FormFields";
+import { NumberForm } from '../FormFields';
 
 interface ThinkingTokensFormProps {
     value: number | undefined;

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+
 import { dropdownItem } from '../../utils';
 import TextAddition from './TextAddition';
 import CheckboxAddition from './CheckboxAddition';

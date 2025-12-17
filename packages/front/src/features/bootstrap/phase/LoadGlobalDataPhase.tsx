@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import useTrigger from '@/hooks/useTrigger';
 import ProfilesAPI from '@/api/profiles';
 import { useGlobalConfigStore, useProfileAPIStore } from '@/stores';
 

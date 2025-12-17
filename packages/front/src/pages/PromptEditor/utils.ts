@@ -1,9 +1,5 @@
-import type {
-    PromptData,
-    PromptInputType
-} from '@/types';
 import { PromptVar } from '@/types/prompt-var';
-import { RTVar, RTVarCreate, RTVarData, RTVarDataNaive, RTVarFormUpdate, RTVarUpdate } from '@afron/types';
+import { RTVar, RTVarCreate, RTVarData, RTVarDataNaive, RTVarUpdate } from '@afron/types';
 
 export function convertRTVarToPromptVar(rtVar: RTVar): PromptVar {
     if (rtVar.include_type === 'external') {

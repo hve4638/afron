@@ -1,6 +1,6 @@
-import { Modal, ModalHeader } from '@/features/modal';
+import { Modal } from '@/features/modal';
 import Subdescription from '@/components/atoms/Description';
-import { Column, Row } from '@/components/layout';
+import { Column } from '@/components/layout';
 import ModelForm from '@/components/model-ui';
 
 import { useSafetySettingConfigModal } from './SafetySettingConfigModal.hooks';

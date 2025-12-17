@@ -2,7 +2,7 @@ import { Modal, useModalInstance } from '@/features/modal';
 import { Align, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';
 
-import { ConfirmDialog, DeleteConfirmDialog } from '@/modals/Dialog';
+import { ConfirmDialog } from '@/modals/Dialog';
 
 import ListView from '@/components/container/ListView/ListView';
 import { useModal } from '@/features/modal';
