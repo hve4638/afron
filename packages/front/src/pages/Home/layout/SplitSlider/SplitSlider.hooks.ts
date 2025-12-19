@@ -1,9 +1,29 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import classNames from 'classnames';
+import { useState } from 'react';
 
-import { Center } from '@/components/layout';
-import { useConfigStore } from '@/stores';
+import { useAltControl, useSliderPosition, useSliderState, useSplitAction } from './hooks';
 
-export function useSplitSlider() {
-    
+type UseSplitSliderProps = {
+    targetRef: React.RefObject<HTMLDivElement | null>;
+}
+
+export function useSplitSlider({
+    targetRef,
+}: UseSplitSliderProps) {
+    const {
+        rate,
+        layoutMode,
+    } = useSliderState();
+
+    const [splitMode, setSplitMode] = useState(false);
+    const { altMode } = useAltControl({ setSplitMode });
+    const sliderPosition = useSliderPosition({ layoutMode, rate });
+
+    useSplitAction({ targetRef, layoutMode, rate, splitMode });
+
+    return {
+        sliderPosition,
+        altMode,
+        splitMode,
+        enableSplitMode: () => setSplitMode(true)
+    }
 }

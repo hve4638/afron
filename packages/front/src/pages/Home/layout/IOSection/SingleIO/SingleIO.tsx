@@ -2,12 +2,11 @@ import { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import InputField from './InputField';
-import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
 import { useConfigStore, useSessionStore } from '@/stores';
 
-import SplitSlider from '../../SplitSlider';
+import { SplitSlider } from '../../SplitSlider';
 
 import { useHistoryStore } from '@/stores/useHistoryStore';
 import { HistoryData } from '@/features/session-history';
@@ -70,7 +69,7 @@ function SingleIO({
 
     const [left, right] = useConfigStore(state => state.textarea_io_ratio);
 
-    const textareaSectionRef = useRef(null);
+    const textareaSectionRef = useRef<HTMLDivElement>(null);
 
     const textAreaBorderRadius = useMemo(() => {
         const radius = remapDecimal(configState.textarea_padding, { min: 4, max: 16 }, { min: 1, max: 5 });
@@ -297,7 +296,7 @@ function SingleIO({
                     </Row>
                 </InputField>
                 <SplitSlider
-                    containerRef={textareaSectionRef}
+                    targetRef={textareaSectionRef}
                 />
             </Grid>
         </>
