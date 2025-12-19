@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useBus } from '@/lib/zustbus';
 
-import { useRTStore } from '@/context/RTContext/RTStoreContextProvider';
+import { useRTStore } from '@/context/RTContext';
 import { RTFlowNodeOptions } from '@afron/types';
-import { useNavigate } from 'react-router';
 import { emitNavigate } from '@/events/navigate';
 import { RTWorkflowModel } from '@/features/workflow/models/RTWorkflowModel';
+
 export interface PromptTemplateEvent {
     select_prompt: { promptId: string };
     select_and_open_prompt_editor: { promptId: string; };

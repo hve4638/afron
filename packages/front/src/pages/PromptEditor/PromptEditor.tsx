@@ -8,14 +8,13 @@ import styles from './styles.module.scss';
 import { ModalProvider } from '@/features/modal';
 
 function PromptEditorInner() {
-    const [_, refresh] = useTrigger();
     const {
         promptEditorData,
         promptEditorEvent: {
             emitPromptEditorEvent,
             usePromptEditorEvent,
         }
-    } = usePromptEditor({ refresh });
+    } = usePromptEditor();
 
     if (promptEditorData.value == null) {
         return <></>;

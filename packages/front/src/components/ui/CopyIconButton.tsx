@@ -13,7 +13,7 @@ function CopyIconButton({
     handleEvent,
 }: CopyIconButtonProps) {
     const [checked, setChecked] = useState(false);
-    const timeoutRef = useRef<number>();
+    const timeoutRef = useRef<number>(null);
 
     const enableChecked = () => {
         if (timeoutRef.current) {

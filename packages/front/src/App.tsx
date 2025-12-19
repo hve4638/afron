@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import classNames from 'classnames';
 
 import ProfilesAPI from '@/api/profiles';

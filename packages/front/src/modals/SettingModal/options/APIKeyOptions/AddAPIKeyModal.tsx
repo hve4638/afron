@@ -3,6 +3,7 @@ import { Modal, ModalHeader } from '@/features/modal';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
 import { StringForm, StringLongForm } from '@/components/FormFields';
 import { useModalInstance } from '@/features/modal';
+import { Gap } from '@/components/layout';
 
 type StringInputModalProps = {
     title: string;
@@ -33,9 +34,13 @@ function AddAPIKeyModal({
                 minWidth: '400px',
             }}
             allowEscapeKey={true}
+
+            header={{
+                label: title,
+                showCloseButton: false,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>{title}</ModalHeader>
-            <div style={{ height: '0.5em' }} />
+            <Gap h='0.5em'/>
             <StringLongForm
                 name={apiKeyName ?? 'API Key'}
                 value={authKey}

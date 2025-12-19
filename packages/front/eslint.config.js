@@ -25,7 +25,7 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-expressions': 'warn',
+      '@typescript-eslint/no-unused-expressions': 'error',
       '@typescript-eslint/no-namespace': 'warn',
       'no-unused-private-class-members': 'warn',
     },

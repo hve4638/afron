@@ -2,21 +2,14 @@ import React from 'react';
 import { DropdownItem, DropdownItemList } from "./types";
 
 const getItemType = (node: React.ReactNode) => {
-    if (Array.isArray(node)) {
-        return 'array';
-    }
-    else if (
-        !React.isValidElement(node)
-        || !('name' in node.props)
-    ) {
-        return null;
-    }
-    else if ('value' in node.props) {
-        return 'item';
-    }
-    else if ('children' in node.props) {
-        return 'list';
-    }
+    if (Array.isArray(node)) return 'array';
+    if (!React.isValidElement(node)) return null;
+
+    // @TODO: any 제거 필요
+    const nodeProps = node.props as any;
+    if (!('name' in nodeProps)) return null;
+    else if ('value' in nodeProps) return 'item';
+    else if ('children' in nodeProps) return 'list';
 
     return null;
 }

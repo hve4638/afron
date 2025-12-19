@@ -12,7 +12,7 @@ function createLocal<E extends EventMap>() {
 
 /** @returns [useValue, emit, useOn] */
 export function useBus<E extends EventMap>(): [Emit<E>, UseOn<E>, UseValue<E>] {
-    const storeRef = useRef<ReturnType<typeof createLocal<E>>>();
+    const storeRef = useRef<ReturnType<typeof createLocal<E>>>(null);
     if (!storeRef.current) storeRef.current = createLocal<E>();
     const useStore = storeRef.current;
 
