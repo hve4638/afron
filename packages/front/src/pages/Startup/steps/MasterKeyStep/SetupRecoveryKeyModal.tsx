@@ -3,21 +3,21 @@ import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
 import { Align, Gap, Row } from '@/components/layout';
-import { Modal, useModalInstance } from '@/features/modal';
+import { Modal } from '@/features/modal';
 import Button from '@/components/atoms/Button';
 import { StringForm } from '@/components/FormFields';
 
 import styles from './styles.module.scss';
 
-interface RecoveryKeySetupModalProps {
+interface SetupRecoveryKeyModalProps {
     onSubmit: (recoveryKey: string) => Promise<boolean>;
     onClose: () => void;
 }
 
-function RecoveryKeySetupModal({
+function SetupRecoveryKeyModal({
     onSubmit,
     onClose,
-}: RecoveryKeySetupModalProps) {
+}: SetupRecoveryKeyModalProps) {
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
     const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey]);
@@ -103,4 +103,4 @@ function RecoveryKeySetupModal({
     )
 }
 
-export default RecoveryKeySetupModal;
+export default SetupRecoveryKeyModal;

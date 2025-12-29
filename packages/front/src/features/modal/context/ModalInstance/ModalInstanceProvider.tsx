@@ -32,3 +32,4 @@ export function ModalInstanceContextProvider({ children, focused, onClose }: Mod
         </ModalInstanceContext.Provider>
     )
 }
+
