@@ -162,6 +162,7 @@ export function Dropdown<T>({
                         className={classNames(listProps.className)}
                         style={listProps.style}
                         parentRef={layer1ListRef}
+                        repositionTrigger={focusedLayer1ItemRect}
 
                         reposition={({ left, right, width, top }, pRect) => {
                             if (align === 'right') {
@@ -174,7 +175,7 @@ export function Dropdown<T>({
                             else {
                                 return {
                                     left: headerRect.left + pRect.width + 2,
-                                    top: headerRect.bottom + 2,
+                                    top: focusedLayer1ItemRect?.top ?? 0,
                                     width: width,
                                 };
                             }

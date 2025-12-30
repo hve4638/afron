@@ -8,6 +8,7 @@ interface DropdownListProps {
     style?: React.CSSProperties;
     parentRef: React.RefObject<HTMLDivElement | null>;
     reposition?: (inner: DOMRect, parent: DOMRect) => { left?: number; top: number; width: number };
+    repositionTrigger?: unknown;
 
     children?: React.ReactNode;
 }
@@ -21,6 +22,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(({
     className = '',
     style = {},
     reposition = ({ left, top, width }: DOMRect) => ({ left, top, width }),
+    repositionTrigger,
     children,
     parentRef,
 }, forwardedRef) => {
@@ -39,10 +41,10 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(({
             const innerRect = innerRef.current.getBoundingClientRect();
             setPosition(reposition(innerRect, parentRect));
         }
-    }, []);
-
+    }, [repositionTrigger]);
 
     const { left, top, width } = position;
+    console.log('position', position);
     return (
         <div
             ref={forwardedRef}
