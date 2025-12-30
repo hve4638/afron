@@ -42,7 +42,7 @@ function ModelDropdown() {
                         {parents.map((parent) => (
                             <RenderProviderIcon key={parent.key} value={parent.name} />
                         ))}
-                        <span>{name}</span>
+                        <span style={{ display: 'flex', alignItems: 'center' }}>{name}</span>
                     </>
                 );
             }}
