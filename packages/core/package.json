@@ -14,7 +14,6 @@
   "scripts": {
     "build": "rollup -c",
     "test": "vitest run",
-    "electron-rebuild": "./node_modules/.bin/electron-rebuild",
     "coverage": "jest --coverage"
   },
   "license": "MIT",
@@ -53,7 +52,6 @@
     "@types/unzipper": "^0.10.11",
     "babel-jest": "^30.0.4",
     "dotenv": "^16.5.0",
-    "electron-rebuild": "^3.2.9",
     "jest": "^29.7.0",
     "rollup": "^2.79.2",
     "rollup-plugin-dts": "^6.1.1",

@@ -22,7 +22,7 @@
 
         "clean": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-dist.ps1",
 
-        "postinstall": "cd packages/core && yarn electron-rebuild",
+        "postinstall": "cd packages/electron && yarn electron-rebuild",
         "uninstall": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-install.ps1"
     },
     "devDependencies": {

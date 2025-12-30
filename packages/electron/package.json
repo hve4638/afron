@@ -1,7 +1,7 @@
 {
   "name": "@afron/electron",
   "private": true,
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "ChatAI Frontend",
   "repository": "https://github.com/hve4638/ai-front.git",
   "author": "Hve",
@@ -23,7 +23,7 @@
     "compile": "tsc",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "rebuild": "electron-rebuild -f -w better-sqlite3"
+    "electron-rebuild": "electron-rebuild --force --module-dir ../core -w better-sqlite3"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
@@ -60,6 +60,9 @@
     "@afron/chatai-models": "1.0.0",
     "@afron/core": "1.0.0",
     "@afron/types": "1.0.0",
+    "balanced-match": "^1.0.2",
+    "brace-expansion": "^2.0.1",
+    "minimatch": "^9.0.5",
     "@hve/channel": "^1.0.1",
     "@hve/chatai": "^0.12.0",
     "@hve/mime": "^1.0.0",
