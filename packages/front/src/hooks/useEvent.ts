@@ -67,7 +67,7 @@ type Events = {
     open_new_rt_modal: ping;
 
     /* Chaining */
-    request_ready: Channel<unknown>;
+    request_ready: Latch;
 
     import_rt_from_file: ping;
     export_rt_to_file: { rtId: string; };

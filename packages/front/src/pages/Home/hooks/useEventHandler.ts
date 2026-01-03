@@ -6,6 +6,7 @@ import { emitEvent, EventNames, useEvent } from '@/hooks/useEvent';
 import { useCacheStore, useProfileAPIStore, useSessionStore } from '@/stores';
 import RequestManager from '@/features/request-manager';
 import { emitNavigate } from '@/events/navigate';
+import Latch from '@/lib/Latch';
 function useEventHandler() {
     const navigate = useNavigate();
 
@@ -23,9 +24,9 @@ function useEventHandler() {
         if (!checkAPI()) return;
         if (last_session_id == null) return;
 
-        const waitChannel = new Channel();
-        emitEvent('request_ready', waitChannel);
-        await waitChannel.consume();
+        const latch = new Latch();
+        emitEvent('request_ready', latch);
+        await latch.wait();
 
         RequestManager.preview(api.id, last_session_id);
     }, [last_session_id, api]);
@@ -34,9 +35,9 @@ function useEventHandler() {
         if (!checkAPI()) return;
         if (last_session_id == null) return;
 
-        const waitChannel = new Channel();
-        emitEvent('request_ready', waitChannel);
-        await waitChannel.consume();
+        const latch = new Latch();
+        emitEvent('request_ready', latch);
+        await latch.wait();
 
         RequestManager.request(api.id, last_session_id);
     }, [last_session_id, api]);

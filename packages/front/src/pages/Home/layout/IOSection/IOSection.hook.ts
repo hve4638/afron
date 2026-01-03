@@ -63,9 +63,9 @@ function useIOSection() {
     }, [sessionState.deps.last_session_id, refreshInputState]);
 
     // 요청 시 입력값을 즉시 업데이트
-    useEvent('request_ready', async (chan) => {
+    useEvent('request_ready', async (latch) => {
         await sessionState.update.input(inputTextRef.current);
-        chan.produce(0); // 완료 신호
+        latch.release(); // 완료 신호
     }, []);
 
     return {
