@@ -1,6 +1,7 @@
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
 import useDataStore from '@/stores/useDataStore';
+import { deriveSessionState } from '../utils/sessionState';
 import { ProfileSessionMetadata } from '@/types';
 
 class SessionEvent {
@@ -100,23 +101,7 @@ class SessionEvent {
                     }
                 }
 
-                const STATE_ORDER = {
-                    'idle': 0,
-                    'done': 0,
-                    'loading': 1,
-                    'error': 2,
-                } as const;
-                let state: string = 'idle';
-                let stateOrder: number = 0;
-                for (const rt of Object.values(running_rt ?? {})) {
-                    const order = STATE_ORDER[rt.state];
-                    
-                    if (order == null) continue;
-                    if (stateOrder < order) {
-                        stateOrder = order;
-                        state = rt.state;
-                    }
-                }
+                const state = deriveSessionState(running_rt);
 
                 return {
                     id: sid,
