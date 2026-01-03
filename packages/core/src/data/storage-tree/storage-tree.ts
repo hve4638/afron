@@ -32,7 +32,7 @@ export const PROFILE_STORAGE_TREE = {
                 'running_rt': {
                     '*': { // key: token
                         token: JSONType.String(),
-                        createdAt: JSONType.Number(),
+                        created_at: JSONType.Number(),
                         state: JSONType.String(),
                     }
                 },

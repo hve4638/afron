@@ -4,11 +4,11 @@ import { useSessionStore } from '@/stores';
 import { SessionState } from '@/stores/useSessionStore';
 
 export class SessionTool {
-    // #token: string;
+    #token: string;
     #sessionAPI: SessionAPI;
 
     constructor(token: string, sessionAPI: SessionAPI) {
-        // this.#token = token;
+        this.#token = token;
         this.#sessionAPI = sessionAPI;
     }
 
@@ -19,7 +19,16 @@ export class SessionTool {
         // 현재는 전역으로 바뀌는데, 추후 rt 세션별로 바뀔 수 있음
         const { running_rt = {} } = await this.#sessionAPI.get('data.json', ['running_rt']);
 
+        running_rt[this.#token] = {
+            token: this.#token,
+            state: state,
+            created_at: Date.now(),
+        };
+
+        console.log('Setting running_rt:', running_rt);
+
         await this.#sessionAPI.set('data.json', { running_rt });
+        useSessionStore.getState().refetch.running_rt();
     }
 
     async setOutput(output: string) {
