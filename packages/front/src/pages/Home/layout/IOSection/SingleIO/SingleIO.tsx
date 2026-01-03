@@ -24,13 +24,13 @@ import {
     CopyButton,
 } from '../ui';
 
-import { CommonProps } from '@/types';
+import { ReactNodeProps } from '@/types';
 
 import styles from './SingleIO.module.scss';
 import { readImageFromClipboard } from '@/utils/clipboard';
 import Latch from '@/lib/Latch';
 
-interface SingleIOLayoutProps extends CommonProps {
+interface SingleIOLayoutProps extends ReactNodeProps.Common {
     inputText: string;
     onChangeInputText: (text: string) => void;
 

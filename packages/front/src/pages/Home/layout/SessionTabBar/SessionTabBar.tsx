@@ -20,7 +20,6 @@ function SessionTabBar() {
 
     const [sessionMetadataList, setSessionMetadataList] = useState<ProfileSessionMetadata[]>([]);
     const tabItems = useMemo(() => {
-
         return sessionMetadataList.map((metadata) => ({
             ...metadata,
             key: metadata.id
