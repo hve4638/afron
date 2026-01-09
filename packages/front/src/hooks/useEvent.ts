@@ -21,6 +21,7 @@ type Events = {
     font_size_up: ping;
     font_size_down: ping;
     send_request: ping;
+    abort_request: ping;
     send_preview_request: ping;
     copy_response: ping;
     create_tab: ping;

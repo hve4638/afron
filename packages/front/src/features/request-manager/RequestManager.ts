@@ -16,8 +16,10 @@ class RequestManager {
     async request(profileId: string, sessionId: string) {
         const sessionAPI = ProfilesAPI.profile(profileId).session(sessionId);
 
-        RequestEventPipe.request(profileId, sessionId)
-            .then((chId) => responseReceiver(chId, sessionAPI));
+        const chId = await RequestEventPipe.request(profileId, sessionId);
+        responseReceiver(chId, sessionAPI);
+
+        return chId; // .then((chId) => );
     }
 
     async preview(profileId: string, sessionId: string) {

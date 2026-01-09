@@ -24,7 +24,9 @@ function RequestButton() {
                 if (isIdle) {
                     emitEvent('send_request');
                 }
-                
+                else {
+                    emitEvent('abort_request');
+                }
             }}
         />
     )

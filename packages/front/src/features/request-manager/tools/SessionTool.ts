@@ -16,19 +16,22 @@ export class SessionTool {
      * 현재 RT work 세션의 상태 변경
     */
     async changeState(state: 'loading' | 'idle' | 'error' | 'done') {
-        // 현재는 전역으로 바뀌는데, 추후 rt 세션별로 바뀔 수 있음
-        const { running_rt = {} } = await this.#sessionAPI.get('data.json', ['running_rt']);
+        const sessionStore = useSessionStore.getState();
+        const runningRT = { ...sessionStore.running_rt };
 
-        running_rt[this.#token] = {
-            token: this.#token,
-            state: state,
-            created_at: Date.now(),
-        };
+        if (state === 'idle' || state === 'done') {
+            delete runningRT[this.#token];
+        }
+        else {
+            runningRT[this.#token] = {
+                token: this.#token,
+                state: state,
+                created_at: Date.now(),
+            };
+        }
 
-        console.log('Setting running_rt:', running_rt);
-
-        await this.#sessionAPI.set('data.json', { running_rt });
-        useSessionStore.getState().refetch.running_rt();
+        console.log('#', runningRT);
+        sessionStore.update.running_rt(runningRT);
     }
 
     async setOutput(output: string) {

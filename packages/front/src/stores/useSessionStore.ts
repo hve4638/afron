@@ -14,13 +14,6 @@ interface SessionCacheFields {
 
     state: 'loading' | 'idle' | 'error' | 'done';
     markdown: boolean;
-    running_rt: {
-        [key: string]: {
-            token: string;
-            createdAt: number;
-            state: string;
-        }
-    };
 }
 
 interface SessionConfigFields {
@@ -28,6 +21,16 @@ interface SessionConfigFields {
     model_id: string;
     rt_id: string;
     color: string;
+}
+
+interface SessionDataFields {
+    running_rt: {
+        [key: string]: {
+            token: string;
+            created_at: number;
+            state: string;
+        }
+    };
 }
 
 interface SessionManagedFields {
@@ -43,7 +46,6 @@ const defaultCache: SessionCacheFields = {
     last_history: null,
     state: 'idle',
     markdown: true,
-    running_rt: {},
 }
 const defaultConfig: SessionConfigFields = {
     name: null,
@@ -55,8 +57,11 @@ const defaultManaged: SessionManagedFields = {
     input_files: [],
     cached_thumbnails: {},
 }
+const defaultData: SessionDataFields = {
+    running_rt: {},
+}
 
-type SessionFields = SessionCacheFields & SessionConfigFields;
+type SessionFields = SessionCacheFields & SessionConfigFields & SessionDataFields;
 
 export interface SessionState extends SessionFields, SessionManagedFields {
     actions: {
@@ -88,14 +93,19 @@ export const useSessionStore = create<SessionState>((set, get) => {
         refetch: refetchConfig,
         refetchAll: refetchAllConfig
     } = sessionStoreTool<SessionConfigFields>(set, get, 'config.json', defaultConfig);
+    const {
+        update: updateData,
+        refetch: refetchData,
+        refetchAll: refetchAllData
+    } = sessionStoreTool<SessionDataFields>(set, get, 'data.json', defaultData);
 
     return {
         ...defaultCache,
         ...defaultConfig,
+        ...defaultData,
         ...defaultManaged,
 
         actions: {
-
             addInputFile: async (filename: string, base64Data: string) => {
                 const { deps, input_files, cached_thumbnails } = get();
                 if (!deps.last_session_id) {
@@ -179,17 +189,20 @@ export const useSessionStore = create<SessionState>((set, get) => {
         },
         update: {
             ...updateCache,
-            ...updateConfig
+            ...updateConfig,
+            ...updateData,
         },
         refetch: {
             ...refetchCache,
-            ...refetchConfig
+            ...refetchConfig,
+            ...refetchData,
         },
         refetchAll: async () => {
             const { actions } = get();
             await Promise.all([
                 refetchAllCache(),
                 refetchAllConfig(),
+                refetchAllData(),
                 actions.refetchInputFiles(),
             ]);
         }

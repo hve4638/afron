@@ -41,7 +41,6 @@ class RequestEventPipeSingleton extends EventPipe<RTEventData> {
 
         return chId;
     }
-
 }
 
 export default RequestEventPipeSingleton;

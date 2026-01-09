@@ -42,6 +42,10 @@ function useEventHandler() {
         RequestManager.request(api.id, last_session_id);
     }, [last_session_id, api]);
 
+    useEvent('abort_request', () => {
+        
+    }, []);
+
     useEvent('copy_response', () => {
         const { output } = useSessionStore.getState();
         if (output) {
