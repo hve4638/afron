@@ -42,8 +42,8 @@ function useEventHandler() {
         RequestManager.request(api.id, last_session_id);
     }, [last_session_id, api]);
 
-    useEvent('abort_request', () => {
-        
+    useEvent('abort_request', async () => {
+        await RequestManager.abortAll();
     }, []);
 
     useEvent('copy_response', () => {

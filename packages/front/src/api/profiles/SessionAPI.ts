@@ -1,8 +1,6 @@
 import LocalAPI from '@/api/local';
 import { HistorySearch, InputFileHash, KeyValueInput } from '@afron/types';
 
-const electron = window.electron;
-
 class SessionAPI {
     #profileId: string;
     #sessionId: string;
