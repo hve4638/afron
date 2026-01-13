@@ -1,7 +1,15 @@
+import { IACSubStorage } from 'ac-storage';
+
 import { uuidv7 } from '@/lib/uuid';
-import { BaseRTVar, ProfileStorage, RTForm, RTPromptDataEditable, RTPromptMetadata, RTVar, RTVarCreate, RTVarData, RTVarFormUpdate, RTVarStored, RTVarUpdate } from '@afron/types';
-import { IACSubStorage, IJSONAccessor } from 'ac-storage';
+import {
+    BaseRTVar, ProfileStorageSchema,
+    RTForm, RTPromptDataEditable, RTPromptMetadata,
+    RTVar, RTVarCreate, RTVarData, RTVarStored, RTVarUpdate
+} from '@afron/types';
+
 import { RTFormControl } from './RTFormControl';
+
+type PromptVar = ProfileStorageSchema.RT.Prompts['variables'][number];
 
 export class RTPromptControl {
     #formControl: RTFormControl;
@@ -51,10 +59,10 @@ export class RTPromptControl {
     /**
      * 프롬프트 전체 구조 가져오기
      */
-    async getStruct(promptId: string): Promise<ProfileStorage.RT.Prompt> {
+    async getStruct(promptId: string): Promise<ProfileStorageSchema.RT.Prompts> {
         const promptAC = await this.accessPrompt(promptId);
 
-        return promptAC.getAll() as ProfileStorage.RT.Prompt;
+        return promptAC.getAll() as ProfileStorageSchema.RT.Prompts;
     }
 
     async getName(promptId: string): Promise<string> {
@@ -76,7 +84,7 @@ export class RTPromptControl {
 
         promptAC.setOne('name', name);
 
-        const { mode, prompts = [] } = indexAC.get('mode', 'prompts') as ProfileStorage.RT.Index;
+        const { mode, prompts = [] } = indexAC.get('mode', 'prompts') as ProfileStorageSchema.RT.Metadata;
         if (mode === 'prompt_only') {
             // prompt_only 모드에서는 rt 이름과 prompt 명이 동일
             indexAC.setOne('name', name);
@@ -200,7 +208,7 @@ export class RTPromptControl {
      * 
      * 하위버전 포맷 호환성 처리
      */
-    async #getVariables(promptId: string): Promise<ProfileStorage.RT.PromptVar[]> {
+    async #getVariables(promptId: string): Promise<PromptVar[]> {
         const promptAC = await this.accessPrompt(promptId);
 
         const variables: {
@@ -212,9 +220,9 @@ export class RTPromptControl {
         ];
         
         let fixed = false;
-        const promptVars = variables.map<ProfileStorage.RT.PromptVar>((v) => {
+        const promptVars = variables.map<PromptVar>((v) => {
             if ('id' in v) {
-                return v as ProfileStorage.RT.PromptVar;
+                return v as PromptVar;
             }
             else {
                 fixed = true;
@@ -295,7 +303,7 @@ export class RTPromptControl {
     /**
      * RTVarUpdate 정보를 promptVars에서 찾아 처리 후 갱신된 promptVars 리턴
      */
-    async #updateRTVar(promptId: string, rtVar: RTVarUpdate, prevPromptVars: ProfileStorage.RT.PromptVar[]): Promise<ProfileStorage.RT.PromptVar[]> {
+    async #updateRTVar(promptId: string, rtVar: RTVarUpdate, prevPromptVars: PromptVar[]): Promise<PromptVar[]> {
         const i = prevPromptVars.findIndex((pv) => pv.id === rtVar.id);
         if (i < 0) {
             throw new Error(`Prompt variable not found (id=${rtVar.id})`);
@@ -423,7 +431,7 @@ export class RTPromptControl {
      */
     async #tearDownPromptVarInclude(
         promptId: string,
-        promptVar: Readonly<ProfileStorage.RT.PromptVar>
+        promptVar: Readonly<PromptVar>
     ) {
         const next = { ...promptVar };
         next.type = 'unknown';

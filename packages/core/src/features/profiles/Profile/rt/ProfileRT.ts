@@ -1,8 +1,11 @@
 import { v7 as uuidv7 } from 'uuid';
 import { IACSubStorage } from 'ac-storage';
-import { KeyValueInput, RTForm, ProfileStorage } from '@afron/types';
+import { KeyValueInput, RTForm, ProfileStorageSchema } from '@afron/types';
 import { RTWorkflowControl } from './RTWorkflowControl';
 import { RTPromptControl } from './RTPromptControl';
+
+type RTPromptsSchema = ProfileStorageSchema.RT.Prompts;
+type RTIndexSchema = ProfileStorageSchema.RT.Metadata;
 
 class ProfileRT {
     #workflowControl: RTWorkflowControl;
@@ -46,13 +49,13 @@ class ProfileRT {
 
         getPrompt: async (promptId: string) => {
             const promptAC = await this.accessPrompt(promptId);
-            return promptAC.getAll() as ProfileStorage.RT.Prompt;
+            return promptAC.getAll() as RTPromptsSchema;
         },
-        setPrompt: async (promptId: string, data: ProfileStorage.RT.Prompt) => {
+        setPrompt: async (promptId: string, data: RTPromptsSchema) => {
             const promptAC = await this.accessPrompt(promptId);
             return promptAC.set(data)
         },
-        setIndex: async (input: Partial<ProfileStorage.RT.Index>) => {
+        setIndex: async (input: Partial<RTIndexSchema>) => {
             const indexAC = await this.accessMetadata();
 
             indexAC.set(input);
@@ -79,10 +82,10 @@ class ProfileRT {
         }
     }
 
-    async getMetadata(): Promise<ProfileStorage.RT.Index> {
+    async getMetadata(): Promise<RTIndexSchema> {
         const indexAC = await this.accessMetadata();
 
-        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'forms', 'entrypoint_node') as ProfileStorage.RT.Index;
+        return indexAC.get('version', 'id', 'name', 'uuid', 'mode', 'input_type', 'forms', 'entrypoint_node') as RTIndexSchema;
     }
     async setMetadata(input: KeyValueInput): Promise<void> {
         const indexAC = await this.accessMetadata();

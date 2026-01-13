@@ -1,6 +1,7 @@
 import { JSONType, StorageAccess } from 'ac-storage';
 import REQUEST_TEMPLATE_TREE from './request-template-tree';
 import { GLOBAL_MODEL_SETTINGS, MODEL_SETTINGS } from './model-config';
+import { ProfileStorageSchema } from '@afron/types';
 
 const API_KEYS_ELEMENT = {
     secret_id: JSONType.String(),
@@ -37,14 +38,14 @@ export const PROFILE_STORAGE_TREE = {
                     }
                 },
             }),
-            'config.json': StorageAccess.JSON({
+            'config.json': StorageAccess.JSON<ProfileStorageSchema.Session.Config>({
                 'name': JSONType.String(),
                 'color': JSONType.String(),
                 'model_id': JSONType.String(),
                 'rt_id': JSONType.String(),
                 'delete_lock': JSONType.Bool(),
             }),
-            'cache.json': StorageAccess.JSON({
+            'cache.json': StorageAccess.JSON<ProfileStorageSchema.Session.Cache>({
                 'input': JSONType.String(),
                 'output': JSONType.String(),
                 'input_token_count': JSONType.Number().default_value(0),
@@ -144,4 +145,4 @@ export const PROFILE_STORAGE_TREE = {
     'secret.json': StorageAccess.Custom('secret-json'),
     'unique': StorageAccess.Custom('secret-json'),
     'thumbnail': StorageAccess.Binary(),
-}
+};

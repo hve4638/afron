@@ -1,6 +1,8 @@
 import { IACSubStorage } from 'ac-storage';
 import { FlowNodeIf, FlowNodePosition } from './types';
-import { FlowNodeType, ProfileStorage } from '@afron/types';
+import { FlowNodeType, ProfileStorageSchema } from '@afron/types';
+
+type FlowNode = ProfileStorageSchema.RT.Flow['FlowNode'];
 
 /**
  * 워크플로우 노드 고수준 제어 클래스
@@ -20,7 +22,7 @@ export class RTWorkflowNodeControl {
 
     async addNode(type: FlowNodeType, position: FlowNodePosition = { x: 0, y: 0 }): Promise<string> {
         const flowAC = await this.accessFlow();
-        const nodes: Record<string, ProfileStorage.RT.FlowNode> = flowAC.getAll() ?? {};
+        const nodes: Record<string, FlowNode> = flowAC.getAll() ?? {};
 
         let index = 0;
         let nodeId = `${type}-${index}`;
@@ -28,7 +30,7 @@ export class RTWorkflowNodeControl {
             index++;
         }
 
-        const newNode: ProfileStorage.RT.FlowNode = {
+        const newNode: FlowNode = {
             type: type,
             description: '',
             connection: [],
@@ -75,7 +77,7 @@ export class RTWorkflowNodeControl {
 
     async connectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean> {
         const flowAC = await this.accessFlow();
-        const node: ProfileStorage.RT.FlowNode | null = flowAC.getOne(from.node);
+        const node: FlowNode | null = flowAC.getOne(from.node);
 
         if (!node) return false;
 
@@ -93,7 +95,7 @@ export class RTWorkflowNodeControl {
     async disconnectNode(from: FlowNodeIf, to: FlowNodeIf): Promise<boolean> {
         const flowAC = await this.accessFlow();
 
-        const fromNode: ProfileStorage.RT.FlowNode = flowAC.getOne(from.node);
+        const fromNode: FlowNode = flowAC.getOne(from.node);
         if (!fromNode) return false;
 
         const next = fromNode.connection.filter(

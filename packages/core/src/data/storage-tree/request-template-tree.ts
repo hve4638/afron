@@ -1,6 +1,7 @@
-import { JSONType, StorageAccess } from "ac-storage";
-import { FORM_JSON_TREE } from "./form-json-tree";
-import { MODEL_SETTINGS } from "./model-config";
+import { JSONType, StorageAccess, ValidateJSONTree } from 'ac-storage';
+import { FORM_JSON_TREE } from './form-json-tree';
+import { MODEL_SETTINGS } from './model-config';
+import { ProfileStorageSchema } from '@afron/types';
 
 const REQUEST_TEMPLATE_TREE = {
     'index.json': StorageAccess.JSON({
@@ -8,7 +9,7 @@ const REQUEST_TEMPLATE_TREE = {
         'ids': JSONType.Array(),
     }),
     '*': {
-        'index.json': StorageAccess.JSON({
+        'index.json': StorageAccess.JSON<ProfileStorageSchema.RT.Metadata>({
             'version': JSONType.String().default_value('1.0.0'),
             'id': JSONType.String(),
             'name': JSONType.String(),
@@ -41,11 +42,11 @@ const REQUEST_TEMPLATE_TREE = {
                     'x': JSONType.Number().default_value(0),
                     'y': JSONType.Number().default_value(0),
                 },
-            },
+            } satisfies ValidateJSONTree<ProfileStorageSchema.RT.Flow['FlowNode']>,
         }),
         'prompts': {
             // key: prompt_id
-            '*': StorageAccess.JSON({
+            '*': StorageAccess.JSON<ProfileStorageSchema.RT.Prompts>({
                 'id': JSONType.String(),
                 'name': JSONType.String(),
 
