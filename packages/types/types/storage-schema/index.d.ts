@@ -1,6 +1,8 @@
 import { GeminiSafetySetting, SupportedThinkingEfforts, SupportedVerbosity } from '../chatai';
 import { FlowNodeType, RTFormNaive } from '../rt';
 
+export * as ProfileStorageSchema from './ProfileStorageSchema';
+
 export declare namespace ProfileStorage {
     namespace RT {
         type Index = {
