@@ -21,12 +21,14 @@ export const DEFINITION = {
             // Special input variables {{:input}}, {{:chat}}
             [/:(input|chat|blank|nl)\b/, 'variable.special'],
 
-            // Role directive - split ::role and role name
+            // Role directive - split ::role / #role and role name
             [/::role/, 'keyword.role.directive'],
+            [/#role\b/, 'keyword.role.directive'],
             [/(system|user|assistant|model|bot)\b/, 'keyword.role.name'],
 
             // Control flow directives
             [/::(if|else|endif|foreach|endforeach)\b/, 'keyword.control'],
+            [/#(if|elseif|elif|else|endif|foreach|endforeach|if_inline|foreach_inline|split)\b/, 'keyword.control'],
 
             // Function calls - func() pattern
             [/[a-zA-Z_][a-zA-Z0-9_]*(?=\()/, 'function'],
@@ -61,7 +63,7 @@ export const DEFINITION = {
             [/[ \t\r\n]+/, 'white'],
 
             // Comments (if supported)
-            [/#.*$/, 'comment'],
+            // [/#.*$/, 'comment'],
         ],
 
         string_double: [
