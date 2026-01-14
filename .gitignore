@@ -42,3 +42,5 @@ front-old/
 tsconfig.app.tsbuildinfo
 docs/
 GUIDE.md
+tmpclaude-*
+.github/copilot-instructions.md
