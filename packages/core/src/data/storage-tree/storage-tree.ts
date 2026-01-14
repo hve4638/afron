@@ -16,27 +16,14 @@ export const PROFILE_STORAGE_TREE = {
     'request-template': REQUEST_TEMPLATE_TREE,
     'session': {
         '*': {
-            'data.json': StorageAccess.JSON({
-                'forms': {
-                    // key: rt id
-                    '*': {
-                        // key: form id
-                        '*': JSONType.Any(),
-                    }
-                },
-                'custom_models': JSONType.Array({
-                    name: JSONType.String(),
-                    url: JSONType.String(),
-                    api_format: JSONType.Union('chat_completions', 'anthropic_claude', 'generative_language'),
-                    secret_key: JSONType.String().nullable(),
-                }).strict(),
-                'running_rt': {
+            'data.json': StorageAccess.JSON<ProfileStorageSchema.Session.Data>({
+                'running_rt': JSONType.Replace({
                     '*': { // key: token
                         token: JSONType.String(),
                         created_at: JSONType.Number(),
                         state: JSONType.String(),
                     }
-                },
+                }),
             }),
             'config.json': StorageAccess.JSON<ProfileStorageSchema.Session.Config>({
                 'name': JSONType.String(),

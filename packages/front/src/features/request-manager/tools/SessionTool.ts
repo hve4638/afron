@@ -12,14 +12,27 @@ export class SessionTool {
         this.#sessionAPI = sessionAPI;
     }
 
+    #tryGetSessionStore() {
+        const sessionStore = useSessionStore.getState();
+        const lastSessionId = sessionStore.deps.last_session_id;
+
+        if (lastSessionId === this.#sessionAPI.id) {
+            return useSessionStore.getState();
+        }
+        else {
+            return null;
+        }
+    }
+
     /**
      * 현재 RT work 세션의 상태 변경
     */
     async changeState(state: 'loading' | 'idle' | 'error' | 'done') {
-        const sessionStore = useSessionStore.getState();
-        const runningRT = { ...sessionStore.running_rt };
+        const {
+            running_rt: runningRT
+        } = await this.#sessionAPI.get('data.json', ['running_rt']);
 
-        if (state === 'idle' || state === 'done') {
+        if (state === 'idle') {
             delete runningRT[this.#token];
         }
         else {
@@ -30,8 +43,11 @@ export class SessionTool {
             };
         }
 
-        console.log('#', runningRT);
-        sessionStore.update.running_rt(runningRT);
+        await this.#sessionAPI.set('data.json', { running_rt: runningRT });
+        const sessionStore = this.#tryGetSessionStore();
+        if (sessionStore) {
+            await sessionStore.refetch.running_rt();
+        }
     }
 
     async setOutput(output: string) {

@@ -1,7 +1,5 @@
 
 export interface Data {
-    forms: Record<string, Record<string, unknown>>;
-    custom_models: SessionCustomModel[];
     running_rt: Record<string, SessionRunningRTEntry>;
 }
 

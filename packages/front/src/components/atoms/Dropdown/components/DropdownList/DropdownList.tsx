@@ -44,7 +44,6 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(({
     }, [repositionTrigger]);
 
     const { left, top, width } = position;
-    console.log('position', position);
     return (
         <div
             ref={forwardedRef}
