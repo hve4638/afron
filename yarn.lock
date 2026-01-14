@@ -2112,6 +2112,13 @@
     axios "^1.7.9"
     tslib "^2.8.1"
 
+"@hve/json-accessor@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@hve/json-accessor/-/json-accessor-0.11.1.tgz#4310a878ec5c765706b968f48ffe2cedfcd56746"
+  integrity sha512-2BhSnRR1zWYa+Wb9xqyendSXOXSu32v8GKyc9nf7NOPA/KysWHFk/OTyn4oUXibb45BGec+cUdp+8kSHdfgXYg==
+  dependencies:
+    tree-navigate "^0.4.0"
+
 "@hve/json-accessor@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@hve/json-accessor/-/json-accessor-0.6.0.tgz#26bd6ba3086fe9d7c97c06ca6d214fa70b016c2c"
@@ -2123,13 +2130,6 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@hve/json-accessor/-/json-accessor-0.7.0.tgz#70a8616b9e1d5bde875bf52c87967f3a7a3d9cb6"
   integrity sha512-pP6QI67hCGAS1IAJBk08hn28K+WRwkWYPkyVmjXWihhN7w8IjhGAaZxMn3KN0NRQxQ7qk8Yhr+SkL3KQuRoLWQ==
-  dependencies:
-    tree-navigate "^0.4.0"
-
-"@hve/json-accessor@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@hve/json-accessor/-/json-accessor-0.8.0.tgz#73932a18011a61309ca1aa77945a737e6f588405"
-  integrity sha512-l6qgm6zk0TfY33j69M+oGl5VJ5QKWVECbuSEkHFmoTvyBx+C+suiIdD6sh1Cf38Rkd078CInFj0yb0/oAJr9RQ==
   dependencies:
     tree-navigate "^0.4.0"
 
@@ -4142,12 +4142,12 @@ ac-storage@^0.15.1:
     fast-deep-equal "^3.1.3"
     tree-navigate "^0.1.1"
 
-ac-storage@^0.16.2:
-  version "0.16.2"
-  resolved "https://registry.yarnpkg.com/ac-storage/-/ac-storage-0.16.2.tgz#571d1eaa5657cc343162fadf02a55cb222c519a4"
-  integrity sha512-RklQ4jNGDgF/kOa9f/v0If1YChgnA59QaiE1xUVpMwLB47YIYFr4+3jaqO0bVqlLKlqAUxLhyFzDVQsUaBV37A==
+ac-storage@^0.16.5:
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/ac-storage/-/ac-storage-0.16.5.tgz#4f5f00a88dc62f98d0990d24c95b343cd07dc2ba"
+  integrity sha512-Xbbq0S43+SPaOltgdbTqnEqiM27MkPD80gHvkdahTzDuydqbbzwC9rThzRKfgwm2ubMCcPW7hi5kvhEaew7VOA==
   dependencies:
-    "@hve/json-accessor" "^0.8.0"
+    "@hve/json-accessor" "^0.11.1"
     fast-deep-equal "^3.1.3"
     tree-navigate "^0.1.1"
 
