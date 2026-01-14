@@ -1,5 +1,6 @@
 
 export interface Data {
+    forms: Record<string, Record<string, any>>;
     running_rt: Record<string, SessionRunningRTEntry>;
 }
 

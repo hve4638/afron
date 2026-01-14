@@ -17,6 +17,13 @@ export const PROFILE_STORAGE_TREE = {
     'session': {
         '*': {
             'data.json': StorageAccess.JSON<ProfileStorageSchema.Session.Data>({
+                'forms': {
+                    // key: rt id
+                    '*': {
+                        // key: form id
+                        '*': JSONType.Any(),
+                    }
+                },
                 'running_rt': JSONType.Replace({
                     '*': { // key: token
                         token: JSONType.String(),
