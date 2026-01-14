@@ -20,6 +20,7 @@ function initProvider(builder: CategoryBuilder) {
 
     builder.group('Gemini 3.0', genAPI, {})
         .model('gemini-3-pro-preview', 'Gemini 3.0 Pro (preview)', { thinking: 'enabled' }, { latest, featured })
+        .model('gemini-3-flash-preview', 'Gemini 3.0 Flash (preview)', { thinking: 'enabled' }, { latest, featured })
         // .model('gemini-3-pro-image-preview', 'Gemini 3.0 Pro Image Preview', { thinking: 'enabled' }, { latest, featured })
 
     builder.group('Gemini 2.5', genAPI, {})
