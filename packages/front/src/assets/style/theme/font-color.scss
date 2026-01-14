@@ -1,0 +1,20 @@
+.theme-light {
+
+}
+
+.theme-dark {
+    /** 범용 텍스트 색상 */
+    --text-color: white;
+    --text-color-dim-1: oklab(80% 0 -0.0001);
+    --text-color-dim-2: oklab(70% 0 -0.0001);
+    --text-color-dim-3: oklab(60% 0 -0.0001);
+    --text-color-dim-4: oklab(50% 0 -0.0001);
+    --text-color-dim-5: oklab(40% 0 -0.0001);
+
+    --text-color-dim: var(--text-color-dim-3);
+
+    --hr-color: var(--text-color-dim-3);
+
+    --text-well-color: var(--text-color-dim-2);
+    --text-well-color-dim: var(--text-color-dim-2);
+}

@@ -1,7 +1,7 @@
 {
   "name": "@afron/electron",
   "private": true,
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "ChatAI Frontend",
   "repository": "https://github.com/hve4638/ai-front.git",
   "author": "Hve",
@@ -16,17 +16,20 @@
     "build": "rollup -c",
     "dist": "yarn dist:win",
     "dist:win": "electron-builder -c.extraMetadata.main=./dist/main.js",
+    "dist:mac": "electron-builder -c.extraMetadata.main=./dist/main.js --mac",
+    "make:mac": "electron-forge make --platform=darwin",
     "playground": "tsx ./src/playground",
     "test": "jest",
     "compile": "tsc",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "rebuild": "electron-rebuild -f -w better-sqlite3"
+    "electron-rebuild": "electron-rebuild --force --module-dir ../core -w better-sqlite3"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
     "@electron-forge/cli": "^7.5.0",
     "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-dmg": "^7.5.0",
     "@electron-forge/maker-rpm": "^7.5.0",
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.5.0",
@@ -57,11 +60,13 @@
     "@afron/chatai-models": "1.0.0",
     "@afron/core": "1.0.0",
     "@afron/types": "1.0.0",
+    "balanced-match": "^1.0.2",
+    "brace-expansion": "^2.0.1",
+    "minimatch": "^9.0.5",
     "@hve/channel": "^1.0.1",
     "@hve/chatai": "^0.12.0",
     "@hve/mime": "^1.0.0",
-    "@hve/prompt-template": "^0.2.0",
-    "ac-storage": "^0.12.0",
+    "ac-storage": "^0.15.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.5.0",
@@ -91,6 +96,52 @@
     "directories": {
       "buildResources": "static/assets",
       "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "./static/favicon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-mac-${arch}.${ext}",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "./build/entitlements.mac.plist",
+      "entitlementsInherit": "./build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "backgroundColor": "#ffffff",
+      "window": {
+        "width": 600,
+        "height": 420
+      },
+      "contents": [
+        {
+          "x": 130,
+          "y": 220,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     }
   }
 }

@@ -2,11 +2,12 @@ import { create } from 'zustand'
 import ProfilesAPI, { type ProfileAPI } from 'api/profiles';
 
 interface ProfileAPIState {
+    /** 현재 프로필 API */
     api: ProfileAPI;
     setAPI : (profileId:string) => Promise<void>;
 }
 
-const useProfileAPIStore = create<ProfileAPIState>((set, get)=>({
+const useProfileAPIStore = create<ProfileAPIState>((set, )=>({
     api: ProfilesAPI.getMockProfile(),
     setAPI : async (profileId: string) => {
         const api = ProfilesAPI.profile(profileId);

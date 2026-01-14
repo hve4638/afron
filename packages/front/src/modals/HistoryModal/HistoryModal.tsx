@@ -1,31 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
+
+import { Align, Column, Flex, Gap, Grid, Row } from '@/components/layout';
 import { useCacheStore, useSessionStore } from '@/stores';
 import { useHistoryStore } from '@/stores/useHistoryStore';
-import { Modal, ModalHeader } from '@/components/Modal';
-import { Align, Column, Flex, Grid, Row } from '@/components/layout';
-import useModalDisappear from '@/hooks/useModalDisappear';
+
 import useLazyThrottle from '@/hooks/useLazyThrottle';
-import useHotkey from '@/hooks/useHotkey';
+import { emitEvent } from '@/hooks/useEvent';
+import useTrigger from '@/hooks/useTrigger';
+
+import { Modal, ModalHeader } from '@/features/modal';
+import { useModalInstance } from '@/features/modal';
+import { HistoryData } from '@/features/session-history';
+
+import HistoryItem from './HistoryItem';
 
 import styles from './styles.module.scss';
-import classNames from 'classnames';
-import HistoryItem from './HistoryItem';
-import { HistoryData } from '@/features/session-history';
-import useTrigger from '@/hooks/useTrigger';
-import { emitEvent } from '@/hooks/useEvent';
 
-type NewRTModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function HistoryModal({
-    isFocused,
-    onClose = ()=>{},
-}:NewRTModalProps) {
+function HistoryModal() {
     const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal } = useModalInstance();
     const historyState = useHistoryStore();
     const updateSessionState = useSessionStore(state=>state.update);
     const [refreshHistoryPing, refreshHistory] = useTrigger();
@@ -65,30 +60,33 @@ function HistoryModal({
         }
     }, [last_session_id, searchText, history_search_scope, refreshHistoryPing])
 
-    useHotkey({
-        'Escape' : close,
-    }, isFocused, []);
-
     return (
         <Modal
-            disappear={disappear}
             style={{
                 minWidth: '80%',
                 height: '80%',
+                // paddingTop: '0.5em'
+            }}
+            allowEscapeKey={true}
+            header={{
+                label: t('history.title'),
+                showCloseButton: true,
             }}
         >
             <Grid
                 className={styles['history-container']}
                 columns='1fr'
-                rows='2.5em 0.5em 1.5em 0.75em 1fr 1.5em'
+                rows='0.5em 1.5em 0.75em 1fr 1.5em'
+                // rows='2.5em 0.5em 1.5em 0.75em 1fr 1.5em'
                 style={{
                     height: '100%',
                 }}
             >
-                <ModalHeader onClose={close}>
+                {/* <ModalHeader onClose={closeModal}>
                     {t('history.title')}
                 </ModalHeader>
-                <div/>
+                <div/> */}
+                <Gap/>
                 <Row
                     style={{
                         gap: '0.5em',
@@ -142,7 +140,7 @@ function HistoryModal({
                                     await Promise.all(promises);
 
                                     emitEvent('refresh_input');
-                                    close();
+                                    closeModal();
                                 }}
                                 onDelete={async ()=>{
                                     await historyState.actions.deleteMessage(item.id, 'both');

@@ -1,5 +1,6 @@
 import { IPCError } from 'api/error';
 import { IIPCAPI } from './types';
+import { CustomModel, GlobalModelConfiguration, HistorySearch, InputFileHash, KeyValueInput, ProfileStorage, RTFlowData, RTMetadata, RTMetadataTree, RTPromptDataEditable, RTPromptMetadata, RTVar, RTVarCreate, RTVarUpdate } from '@afron/types';
 
 const electron = window.electron;
 
@@ -142,8 +143,7 @@ class ElectronIPCAPI implements IIPCAPI {
             const [err] = await electron.profile.removeCustomModel(profileId, customId);
             if (err) throw new IPCError(err.message);
         },
-
-
+        
         async getGlobalModelConfig(profileId: string, modelId: string) {
             const [err, config] = await electron.profile.getGlobalModelConfig(profileId, modelId);
             if (err) throw new IPCError(err.message);
@@ -339,17 +339,17 @@ class ElectronIPCAPI implements IIPCAPI {
             const [err] = await electron.profileRT.reflectMetadata(profileId, rtId);
             if (err) throw new IPCError(err.message);
         },
-        async importFile(token:string, profileId: string) {
+        async importFile(token: string, profileId: string) {
             const [err] = await electron.profileRTs.importFile(token, profileId);
             if (err) throw new IPCError(err.message);
         },
-        async exportFile(token:string, profileId: string, rtId: string) {
+        async exportFile(token: string, profileId: string, rtId: string) {
             const [err] = await electron.profileRTs.exportFile(token, profileId, rtId);
             if (err) throw new IPCError(err.message);
         }
     } as const;
     profileRT = {
-        async getMetadata(profileId: string, rtId: string): Promise<RTIndex> {
+        async getMetadata(profileId: string, rtId: string): Promise<ProfileStorage.RT.Index> {
             const [err, metadata] = await electron.profileRT.getMetadata(profileId, rtId);
             if (err) throw new IPCError(err.message);
             return metadata;
@@ -362,31 +362,10 @@ class ElectronIPCAPI implements IIPCAPI {
             const [err] = await electron.profileRT.reflectMetadata(profileId, rtId);
             if (err) throw new IPCError(err.message);
         },
-        async getForms(profileId: string, rtId: string): Promise<PromptVar[]> {
+        async getForms(profileId: string, rtId: string) {
             const [err, forms] = await electron.profileRT.getForms(profileId, rtId);
             if (err) throw new IPCError(err.message);
             return forms;
-        },
-        async addNode(profileId: string, rtId: string, nodeCategory: string): Promise<number> {
-            const [err, nodeId] = await electron.profileRT.addNode(profileId, rtId, nodeCategory);
-            if (err) throw new IPCError(err.message);
-            return nodeId;
-        },
-        async removeNode(profileId: string, rtId: string, nodeId: number) {
-            const [err] = await electron.profileRT.removeNode(profileId, rtId, nodeId);
-            if (err) throw new IPCError(err.message);
-        },
-        async updateNodeOption(profileId: string, rtId: string, nodeId: number, option: Record<string, unknown>) {
-            const [err] = await electron.profileRT.updateNodeOption(profileId, rtId, nodeId, option);
-            if (err) throw new IPCError(err.message);
-        },
-        async connectNode(profileId: string, rtId: string, connectFrom: RTNodeEdge, connectTo: RTNodeEdge) {
-            const [err] = await electron.profileRT.connectNode(profileId, rtId, connectFrom, connectTo);
-            if (err) throw new IPCError(err.message);
-        },
-        async disconnectNode(profileId: string, rtId: string, connectFrom: RTNodeEdge, connectTo: RTNodeEdge) {
-            const [err] = await electron.profileRT.disconnectNode(profileId, rtId, connectFrom, connectTo);
-            if (err) throw new IPCError(err.message);
         },
     } as const;
     profileRTStorage = {
@@ -426,12 +405,12 @@ class ElectronIPCAPI implements IIPCAPI {
             if (err) throw new IPCError(err.message);
             return ids;
         },
-        async getVariables(profileId: string, rtId: string, promptId: string): Promise<PromptVar[]> {
+        async getVariables(profileId: string, rtId: string, promptId: string): Promise<RTVar[]> {
             const [err, variables] = await electron.profileRTPrompt.getVariables(profileId, rtId, promptId);
             if (err) throw new IPCError(err.message);
             return variables;
         },
-        async setVariables(profileId: string, rtId: string, promptId: string, vars: PromptVar[]) {
+        async setVariables(profileId: string, rtId: string, promptId: string, vars: (RTVarCreate | RTVarUpdate)[]) {
             const [err, ids] = await electron.profileRTPrompt.setVariables(profileId, rtId, promptId, vars);
             if (err) throw new IPCError(err.message);
 
@@ -450,6 +429,38 @@ class ElectronIPCAPI implements IIPCAPI {
         async setContents(profileId: string, rtId: string, promptId: string, contents: string) {
             const [err] = await electron.profileRTPrompt.setContents(profileId, rtId, promptId, contents);
             if (err) throw new IPCError(err.message);
+        }
+    } as const;
+    profileRTFlow = {
+        async getFlowData(profileId: string, rtId: string): Promise<RTFlowData> {
+            const [err, data] = await electron.profileRTFlow.getFlowData(profileId, rtId);
+            if (err) throw new IPCError(err.message);
+            return data;
+        },
+        async setFlowData(profileId: string, rtId: string, data: RTFlowData) {
+            const [err] = await electron.profileRTFlow.setFlowData(profileId, rtId, data);
+            if (err) throw new IPCError(err.message);
+        },
+
+        async getPrompts(profileId: string, rtId: string) {
+            const [err, order] = await electron.profileRTFlow.getPrompts(profileId, rtId);
+            if (err) throw new IPCError(err.message);
+            return order;
+        },
+        async setPrompts(profileId: string, rtId: string, order: ProfileStorage.RT.PromptOrder) {
+            const [err] = await electron.profileRTFlow.setPrompts(profileId, rtId, order);
+            if (err) throw new IPCError(err.message);
+        },
+
+        async addPrompt(profileId: string, rtId: string, promptId: string, promptName: string) {
+            const [err, order] = await electron.profileRTFlow.addPrompt(profileId, rtId, promptId, promptName);
+            if (err) throw new IPCError(err.message);
+            return order;
+        },
+        async removePrompt(profileId: string, rtId: string, promptId: string) {
+            const [err, order] = await electron.profileRTFlow.removePrompt(profileId, rtId, promptId);
+            if (err) throw new IPCError(err.message);
+            return order;
         }
     } as const;
     request = {

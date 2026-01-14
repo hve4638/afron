@@ -10,7 +10,7 @@ export const splitByQuotes = (text: string) => {
         const group = pattern.exec(text);
 
         if (group) {
-            const [_, prefix, matched, postfix] = group;
+            const [, prefix, matched, postfix] = group;
             if (prefix !== '') parts.push(prefix);
             parts.push(matched);
             text = postfix;
@@ -28,8 +28,7 @@ export const splitByQuotes = (text: string) => {
     }
 
     while (text !== '') {
-        if (0
-            || tryMatchAndAddParts(pattern_say)
+        if (tryMatchAndAddParts(pattern_say)
             || tryMatchAndAddParts(pattern_accent)
             || tryMatchAndAddParts(pattern_think)
             || tryMatchAndAddParts(pattern_plain)

@@ -1,41 +1,29 @@
 import { Column } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import Well from '@/components/ui/Well';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { Modal } from '@/features/modal';
+import { Well } from '@/components/atoms';
+import { useModalInstance } from '@/features/modal';
 
 type InfoModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-
     item: Array<{ name?: string; value: string; }>;
 }
 
 function InfoModal({
-    isFocused,
-    onClose,
     item
 }: InfoModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { useCloseKeyBind } = useModalInstance();
 
-    useHotkey({
-        'Escape': () => {
-            close();
-        }
-    }, isFocused, []);
-    
+    useCloseKeyBind();
+
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
                 overflowY: 'auto',
             }}
-            headerLabel={
-                <ModalHeader
-                    onClose={close}
-                >정보</ModalHeader>
-            }
+            header={{
+                label: '정보',
+                showCloseButton: true,
+            }}
         >
             {
                 item.map((data, i) => {
@@ -51,6 +39,7 @@ function InfoModal({
                             <Well
                                 style={{
                                     whiteSpace: 'pre',
+                                    padding: '0em 0.25em',
                                     // fontSize: '0.75em',
                                 }}
                             >
@@ -61,8 +50,6 @@ function InfoModal({
                     );
                 })
             }
-            {/* <ModalHeader ="정보" onClose={() => {}} /> */}
-            {/* {item.toString()} */}
         </Modal>
     );
 }

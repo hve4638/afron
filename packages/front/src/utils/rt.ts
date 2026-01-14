@@ -1,4 +1,5 @@
-import { RTNode, RTNodeDirectory, RTNodeTree } from 'types/rt-node';
+import { RTMetadataDirectory, RTMetadataNode, RTMetadataTree } from '@afron/types';
+import { RTNode, RTNodeDirectory, RTNodeTree } from '@/types/rt-node';
 
 type RTNodeOptions = Omit<RTNode, 'type' | 'id' | 'name'>;
 
@@ -38,7 +39,7 @@ export function mapDropdownOption<TNode, TDirectory>(
 
 export function mapRTMetadataToNode(
     metadataTree: RTMetadataTree,
-    mapOption: (mt: RTMetadataNode) => RTNodeOptions = (mt) => ({}),
+    mapOption: (mt: RTMetadataNode) => RTNodeOptions = () => ({}),
 ) {
     const mapNode = (item: RTNode) => {
         return {

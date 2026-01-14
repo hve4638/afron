@@ -4,47 +4,46 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 
-import { MODAL_DISAPPEAR_DURATION } from 'data';
-import { Modal, ModalBackground, ModalHeader } from 'components/Modal';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
+import { GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import { Align, Grid, Row } from 'components/layout';
-import Button from 'components/Button';
+import Button from '@/components/atoms/Button';
 
 import { TreeDirectory, TreeNode } from './TreeNode';
 import { relocateTree } from './utils';
-import { Tree, TreeDirectoryData, TreeNodeData, TreeOffsets, } from './types';
+import { TreeDirectoryData, TreeNodeData, TreeOffsets, } from './types';
 import { Regions } from './TreeNode/types';
-import type { RTNodeTree, RTNode, RTNodeDirectory } from 'types/rt-node'
+import type { RTNodeTree } from '@/types/rt-node'
+import { RTMetadataTree } from '@afron/types';
 
 type PromptTreeModalProps = {
-    item:RTNodeTree;
-    onConfirm: (item:RTMetadataTree) => void;
+    item: RTNodeTree;
+    onConfirm: (item: RTMetadataTree) => void;
     onCancel: () => void;
-    onClose: () => void;
 }
 
 function RTTreeModal({
     item,
     onConfirm,
     onCancel,
-    onClose,
-}:PromptTreeModalProps) {
+}: PromptTreeModalProps) {
     const { t } = useTranslation();
-    const [disappear, setDisappear] = useState(true);
+    const { closeModal } = useModalInstance();
+
     // 드래그 인디케이터 위치지정
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [draggingNode, setDraggingNode] = useState<{
-        node : TreeNodeData;
-        offsets : TreeOffsets;
-    }|null>(null);
+        node: TreeNodeData;
+        offsets: TreeOffsets;
+    } | null>(null);
     const [hoveredNode, setHoveredNode] = useState<{
-        node : TreeNodeData|TreeDirectoryData;
-        offsets : TreeOffsets;
-        region : Regions;
-    }|null>(null);
+        node: TreeNodeData | TreeDirectoryData;
+        offsets: TreeOffsets;
+        region: Regions;
+    } | null>(null);
     const [tree, setTree] = useState<RTMetadataTree>(item);
 
-    const makeNode = (node:any, offsets:number[]=[]) => {
+    const makeNode = (node: any, offsets: number[] = []) => {
         const key = offsets.join('_') + '_' + node.name;
         if (node.type === 'directory') {
             return (
@@ -55,18 +54,18 @@ function RTTreeModal({
                     added={node.added ?? false}
                     mouseRegionCount={
                         draggingNode
-                        ? 3
-                        : 0
+                            ? 3
+                            : 0
                     }
                     onRegionMouseEnter={(e, region) => {
                         setHoveredNode({
-                            node : node,
-                            offsets : offsets as TreeOffsets,
-                            region : region,
+                            node: node,
+                            offsets: offsets as TreeOffsets,
+                            region: region,
                         });
                     }}
                     onRegionMouseLeave={(e, region) => {
-                        setHoveredNode(prev=>{
+                        setHoveredNode(prev => {
                             if (prev &&
                                 prev.node === node &&
                                 prev.region === region
@@ -79,11 +78,11 @@ function RTTreeModal({
                         });
                     }}
                 >
-                {
-                    node.children.map(
-                        (child:any, index:number) => makeNode(child, [...offsets, index])
-                    )
-                }
+                    {
+                        node.children.map(
+                            (child: any, index: number) => makeNode(child, [...offsets, index])
+                        )
+                    }
                 </TreeDirectory>
             );
         }
@@ -96,22 +95,22 @@ function RTTreeModal({
                     added={node.added ?? false}
                     mouseRegionCount={
                         !draggingNode
-                        ? 1
-                        : (
-                            draggingNode.node === node
                             ? 1
-                            : 2
-                        )
+                            : (
+                                draggingNode.node === node
+                                    ? 1
+                                    : 2
+                            )
                     }
                     onRegionMouseEnter={(e, region) => {
                         setHoveredNode({
-                            node : node,
-                            offsets : offsets as TreeOffsets,
-                            region : region,
+                            node: node,
+                            offsets: offsets as TreeOffsets,
+                            region: region,
                         });
                     }}
                     onRegionMouseLeave={(e, region) => {
-                        setHoveredNode(prev=>{
+                        setHoveredNode(prev => {
                             if (prev &&
                                 prev.node === node &&
                                 prev.region === region
@@ -125,8 +124,8 @@ function RTTreeModal({
                     }}
                     onDragBegin={() => {
                         setDraggingNode({
-                            node : node,
-                            offsets : offsets as TreeOffsets,
+                            node: node,
+                            offsets: offsets as TreeOffsets,
                         });
                     }}
                 />
@@ -136,41 +135,34 @@ function RTTreeModal({
 
     const submit = () => {
         onConfirm(tree);
-        close();
+        closeModal();
     }
     const cancel = () => {
         onCancel();
-        close();
+        closeModal();
     }
 
-    const close = () => {
-        setDisappear(true);
-        setTimeout(() => {
-            onClose();  
-        }, MODAL_DISAPPEAR_DURATION);
-    }
-    
     // 트리 노드 드래그 해제
-    useEffect(()=>{
+    useEffect(() => {
         const handleMouseUp = () => {
             if (draggingNode) {
-                setTree(prev=>{
+                setTree(prev => {
                     if (!hoveredNode) {
                         return prev;
                     }
                     else if (hoveredNode.node.type === 'directory') {
                         if (hoveredNode.region === Regions.Top) {
-                            const offsets:TreeOffsets = [...hoveredNode.offsets];
+                            const offsets: TreeOffsets = [...hoveredNode.offsets];
                             offsets[offsets.length - 1] -= 1;
                             return relocateTree(prev, draggingNode.offsets, offsets);
                         }
                         else if (hoveredNode.region === Regions.Bottom) {
-                            const offsets:TreeOffsets = [...hoveredNode.offsets];
+                            const offsets: TreeOffsets = [...hoveredNode.offsets];
                             offsets[offsets.length - 1] += 1;
                             return relocateTree(prev, draggingNode.offsets, offsets);
                         }
                         else if (hoveredNode.region === Regions.Center) {
-                            const offsets:TreeOffsets = [...hoveredNode.offsets];
+                            const offsets: TreeOffsets = [...hoveredNode.offsets];
                             offsets.push(hoveredNode.node.children.length);
                             return relocateTree(prev, draggingNode.offsets, offsets);
                         }
@@ -180,7 +172,7 @@ function RTTreeModal({
                             return relocateTree(prev, draggingNode.offsets, hoveredNode.offsets);
                         }
                         else if (hoveredNode.region === Regions.Bottom) {
-                            const offsets:TreeOffsets = [...hoveredNode.offsets];
+                            const offsets: TreeOffsets = [...hoveredNode.offsets];
                             offsets[offsets.length - 1] += 1;
                             return relocateTree(prev, draggingNode.offsets, offsets);
                         }
@@ -201,34 +193,24 @@ function RTTreeModal({
 
     useEffect(() => {
         const updateMousePosition = (event) => {
-          setMousePosition({
-            x: event.clientX,
-            y: event.clientY,
-          });
+            setMousePosition({
+                x: event.clientX,
+                y: event.clientY,
+            });
         };
-        
-        window.addEventListener('mousemove', updateMousePosition);
-        
-        return () => {
-          window.removeEventListener('mousemove', updateMousePosition);
-        };
-    }, []);
 
-    useEffect(()=>{
-        setTimeout(()=>setDisappear(false), 1);
+        window.addEventListener('mousemove', updateMousePosition);
+
+        return () => {
+            window.removeEventListener('mousemove', updateMousePosition);
+        };
     }, []);
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
             }}
-            // headerLabel={
-            //     <ModalHeader onClose={close}>
-            //         설정
-            //     </ModalHeader>
-            // }
         >
             <Grid
                 columns='1fr'
@@ -237,7 +219,7 @@ function RTTreeModal({
                     height: '100%',
                 }}
             >
-                <ModalHeader hideCloseButton={true}>{t('prompt.save')}</ModalHeader>
+                <ModalHeader showCloseButton={false}>{t('prompt.save')}</ModalHeader>
                 <Row rowAlign={Align.End}>
                     <GoogleFontIcon
                         value='create_new_folder'
@@ -259,10 +241,10 @@ function RTTreeModal({
                     style={{
                         display: 'block',
                         overflow: 'auto',
-                        height : '100%',
+                        height: '100%',
                     }}
                 >
-                    
+
                     {
                         tree.map((node, index) => makeNode(node, [index]))
                     }
@@ -305,7 +287,7 @@ function RTTreeModal({
                     >
                         {draggingNode.node.name}
                     </div>
-                ,document.body)
+                    , document.body)
             }
         </Modal>
     );

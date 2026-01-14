@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Modal, ModalHeader } from 'components/Modal';
+import { useState } from 'react';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
+import { Column, Flex } from '@/components/layout';
+import useMemoryStore from '@/stores/useMemoryStore';
 import {
     GeneralOptions,
     APIKeyOptions,
@@ -8,37 +10,11 @@ import {
     DataOptions,
     ModelOptions,
     ShortcutOptions,
+    AdvancedOptions,
 } from './options';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
-import useHotkey from 'hooks/useHotkey';
-import useModalDisappear from 'hooks/useModalDisappear';
-import { Column, Flex } from '@/components/layout';
-import useMemoryStore from '@/stores/useMemoryStore';
-import AdvancedOptions from './options/AdvancedOptions';
+import { SETTING_CATEGORY } from './constants';
 
-const SETTING_CATEGORY = {
-    GENERAL: '일반',
-    API: 'API 키',
-    MODELS: '모델',
-    SHORTCUT: '단축키',
-    SESSION: '세션',
-    HISTORY: '기록',
-    SERVER: '서버 (베타)',
-    DATA: '데이터',
-    ADVANCED: '고급',
-}
-type SETTING_CATEGORY = typeof SETTING_CATEGORY[keyof typeof SETTING_CATEGORY];
-
-
-type SettingModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function SettingModal({
-    isFocused,
-    onClose,
-}: SettingModalProps) {
+function SettingModal() {
     const categories = [
         SETTING_CATEGORY.GENERAL,
         SETTING_CATEGORY.MODELS,
@@ -49,21 +25,17 @@ function SettingModal({
         // SETTING_CATEGORY.DATA,
         SETTING_CATEGORY.ADVANCED,
     ]
-    const [disappear, close] = useModalDisappear(onClose);
     const [currentCategory, setCurrentCategory] = useState<SETTING_CATEGORY>(SETTING_CATEGORY.GENERAL);
     const version = useMemoryStore(state => state.version);
-
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
+    const { closeModal } = useModalInstance();
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 height: '80%',
                 maxHeight: '80%',
             }}
+            allowEscapeKey={true}
         >
             <div
                 style={{
@@ -75,10 +47,12 @@ function SettingModal({
                     height: '100%',
                 }}
             >
+                <div></div>
                 <div>
-                </div>
-                <div>
-                    <ModalHeader onClose={close}>{currentCategory}</ModalHeader>
+                    <ModalHeader
+                        onClose={closeModal}
+                        showCloseButton={true}
+                    >{currentCategory}</ModalHeader>
                 </div>
                 <Column
                     className='undraggable'
@@ -113,7 +87,7 @@ function SettingModal({
                             </div>
                         ))
                     }
-                    <Flex/>
+                    <Flex />
                     <small className='subtle-text'>{version}</small>
                 </Column>
                 <div

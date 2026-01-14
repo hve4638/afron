@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react';
 import './Load.scss';
 
-interface LoadPageProps {
 
-}
-
-function LoadPage({
-
-}:LoadPageProps) {
+function LoadPage() {
     const [fadeIn, setFadeIn] = useState(false);
 
     useEffect(() => {

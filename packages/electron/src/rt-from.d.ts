@@ -1,22 +1,4 @@
 declare global {
-    type RTIndex = {
-        version : number;
-        id : string;
-        name : string;
-        uuid : string;
-        mode : 'flow' | 'prompt_only';
-        input_type : 'normal' | 'chat';
-        form_order : string[];
-        entrypoint_node : number;
-    }
-
-    type RTPromptMetadata = {
-        id : string;
-        name : string;
-        variables : string[];
-        contents : string;
-    }
-
     type RTForm = {
         type : 'text' | 'number' | 'checkbox' | 'select' | 'array' | 'struct' ;
         id : string;

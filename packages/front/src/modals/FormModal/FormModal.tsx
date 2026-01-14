@@ -1,132 +1,98 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useTranslation } from 'react-i18next';
-
-import ProfileEvent from '@/features/profile-event';
-
 import { Column } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-
-import useModalDisappear from '@/hooks/useModalDisappear';
-import useHotkey from '@/hooks/useHotkey';
-import useTrigger from '@/hooks/useTrigger';
+import { Modal } from '@/features/modal';
 
 import { ArrayField, CheckBoxField, NumberField, SelectField, StructField, TextField } from './form-fields';
-import { getPromptVarDefaultValue } from './utils';
+import { useFormModal } from './FormModal.hooks';
 
-type FormModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function FormModal({
-    isFocused,
-    onClose
-}: FormModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
-    const [forms, setForms] = useState<PromptVar[]>([]);
-    const variables = useRef<Record<string, any>>({});
-
-    const [_, refresh] = useTrigger();
-
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
-
-    useEffect(() => {
-        ProfileEvent.currentSession.getForms()
-            .then((forms) => {
-                const vars: Record<string, any> = {};
-                for (const form of forms) {
-                    const formId = form.id!;
-
-                    if (form.last_value != null) {
-                        vars[formId] = form.last_value;
-                    }
-                    else {
-                        vars[formId] = getPromptVarDefaultValue(form);
-                    }
-                }
-
-                variables.current = vars;
-                setForms(forms);
-                refresh();
-            });
-
-        return () => {
-            ProfileEvent.currentSession.setForms(variables.current);
-        }
-    }, []);
+function FormModal() {
+    const {
+        forms,
+        variables,
+        setVariables,
+    } = useFormModal();
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
                 overflowY: 'auto',
             }}
-            headerLabel={
-                <ModalHeader onClose={close}>변수</ModalHeader>
-            }
+            header = {{
+                label: '변수',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <Column
-                style={{ gap: '0.5em', }}
+                style={{ gap: '0.5em' }}
             >
                 {
-                    forms.map((form, index) => {
+                    forms.map((form, i) => {
                         const formId = form.id!;
-                        const value = variables.current[formId];
-                        const change = (next) => {
-                            variables.current[formId] = next;
-                            refresh();
+                        const value = variables[formId];
+                        const onChange = (next) => {
+                            setVariables((prev) => ({
+                                ...prev,
+                                [formId]: next,
+                            }));
                         }
 
                         if (form.type === 'text') {
                             return <TextField
                                 key={formId}
-                                promptVar={form}
-                                value={value}
-                                onChange={change}
+
+                                name={form.display_name}
+                                value={value ?? form.config.text?.default_value}
+                                onChange={onChange}
                             />
                         }
                         else if (form.type === 'number') {
                             return <NumberField
                                 key={formId}
-                                promptVar={form}
-                                value={value}
-                                onChange={change}
+
+                                name={form.display_name}
+                                value={value ?? form.config.number?.default_value}
+                                onChange={onChange}
                             />
                         }
                         else if (form.type === 'checkbox') {
                             return <CheckBoxField
                                 key={formId}
-                                promptVar={form}
-                                value={value}
-                                onChange={change}
+
+                                name={form.display_name}
+                                value={value ?? form.config.checkbox?.default_value}
+                                onChange={onChange}
                             />
                         }
                         else if (form.type === 'select') {
                             return <SelectField
                                 key={formId}
-                                promptVar={form}
-                                value={value}
-                                onChange={change}
+                                name={form.display_name}
+                                value={value ?? form.config.select?.default_value}
+                                options={form.config.select?.options ?? []}
+
+                                onChange={onChange}
                             />
                         }
                         else if (form.type === 'struct') {
                             return <StructField
                                 key={formId}
-                                promptVar={form}
-                                value={value}
-                                onChange={change}
+
+                                name={form.display_name}
+                                fields={form.config.struct?.fields ?? []}
+
+                                value={value ?? {}}
+                                onChange={onChange}
                             />
                         }
                         else if (form.type === 'array') {
                             return <ArrayField
                                 key={formId}
-                                promptVar={form}
-                                value={value}
-                                onChange={change}
+
+                                name={form.display_name}
+                                arrayConfig={form.config.array!}
+                                value={value ?? []}
+                                onChange={onChange}
                             />
                         }
                     })

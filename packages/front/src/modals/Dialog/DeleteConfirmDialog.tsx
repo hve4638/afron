@@ -21,9 +21,6 @@ function DeleteConfirmDialog({
     onDelete = async ()=>true,
     onCancel = async ()=>true,
 
-    isFocused,
-    onClose,
-
     enableRoundedBackground = false,
 
     className='',
@@ -40,8 +37,6 @@ function DeleteConfirmDialog({
                 { text: t('delete_label'), tone: 'warn' },
                 { text: t('cancel_label'), tone: 'dimmed' }
             ]}
-            isFocused={isFocused}
-            onClose={onClose}
             onSelect={async (choice, index) => {
                 if (index === 0) {
                     return await onDelete();

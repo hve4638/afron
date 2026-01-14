@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { v7 as uuidv7 } from 'uuid';
 
 import LocalAPI from '@/api/local';

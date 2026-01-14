@@ -1,59 +1,47 @@
-import Button from '@/components/Button';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import Button from '@/components/atoms/Button';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import { EditableText } from '@/components/EditableText';
+import { Modal, ModalHeader } from '@/features/modal';
+import { EditableText } from '@/components/atoms/EditableText';
 import TreeView from '@/components/TreeView';
 
 import { LeafNode } from './nodes';
 import useRTEditModal from './RTEditModal.hook';
 import { t } from 'i18next';
 import { emitEvent } from '@/hooks/useEvent';
+import { useModalInstance } from '@/features/modal';
 
-type RTEditModalProps = {
-    isFocused: boolean;
-    onClose: () => void;
-}
-
-function RTEditModal({
-    isFocused,
-    onClose
-}: RTEditModalProps) {
+function RTEditModal() {
+    const { closeModal, disappear } = useModalInstance();
     const {
-        action: {
-            navigatePromptEditor,
-            close,
-
-            tree: treeAction,
-
-            confirmNodeDeletion,
-            openRTCreateModal,
-            openRTExportModal,
-        },
         state: {
             tree,
-            disappear,
-        }
-    } = useRTEditModal({
-        isFocused,
-        onClose,
-    });
+        },
+        action: {
+            tree: treeAction,
+
+            navigatePromptEditor,
+
+            confirmNodeDeletion,
+            confirmDirectoryDeletion,
+            openRTExportModal,
+        },
+    } = useRTEditModal();
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 maxHeight: '80%',
+            }}
+            header={{
+                label: t('rt.rt_edit'),
+                showCloseButton: true,
             }}
         >
             <Grid
                 columns='1fr'
-                rows='2em 24px 2px 1fr 6px 32px'
-                style={{
-                    height: '100%',
-                }}
+                rows='24px 2px 1fr 6px 32px'
             >
-                <ModalHeader onClose={close}>{t('rt.rt_edit')}</ModalHeader>
                 <Row
                     style={{
                         padding: '0px 4px',
@@ -68,7 +56,7 @@ function RTEditModal({
                         }}
                         value='create_new_folder'
                         hoverEffect='square'
-                        onClick={() => treeAction.addDirectoryNode()}
+                        onClick={() => treeAction.addDirectory()}
                     />
                 </Row>
                 <div />
@@ -81,7 +69,7 @@ function RTEditModal({
                             <LeafNode
                                 name={name}
                                 value={value}
-                                onRename={(renamed) => treeAction.renameNode(value, renamed)}
+                                onRename={(renamed) => treeAction.rename(value, renamed)}
                                 onDelete={() => confirmNodeDeletion(name, value)}
                                 onEdit={() => navigatePromptEditor(value)}
                                 onExport={() => openRTExportModal(value)}
@@ -103,13 +91,13 @@ function RTEditModal({
                                     <EditableText
                                         value={name}
                                         onChange={(renamed) => {
-                                            treeAction.renameNode(value, renamed);
+                                            treeAction.rename(value, renamed);
                                         }}
                                     />
                                 </Flex>
                                 <DeleteButton
                                     onClick={(e) => {
-                                        confirmNodeDeletion(name, value);
+                                        confirmDirectoryDeletion(name, value);
                                         e.stopPropagation();
                                         e.preventDefault();
                                     }}
@@ -129,7 +117,7 @@ function RTEditModal({
                     <Button
                         onClick={() => {
                             emitEvent('import_rt_from_file');
-                            close();
+                            closeModal();
                         }}
                         style={{
                             minWidth: '80px',
@@ -143,8 +131,8 @@ function RTEditModal({
                     </Button>
                     <Button
                         onClick={() => {
-                            openRTCreateModal();
-                            close();
+                            emitEvent('open_new_rt_modal');
+                            closeModal();
                         }}
                         style={{
                             minWidth: '80px',

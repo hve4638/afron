@@ -1,12 +1,16 @@
 import { useEffect } from 'react';
-import { Shortcut } from '@/types/shortcut';
+
+import { emitNavigate } from '@/events/navigate';
 import useShortcutStore from '@/stores/useShortcutStore';
+
 import { emitEvent, EventNames } from '@/hooks/useEvent';
 import useHotkey from '@/hooks/useHotkey';
-import { useNavigate } from 'react-router';
+
+import { Shortcut } from '@/types/shortcut';
+import { useKeyBind } from '@/hooks/useKeyBind';
+import { useModal } from '@/features/modal';
 
 function useShortcutEmitter() {
-    const navigate = useNavigate();
     const shortcuts = useShortcutStore();
 
     useShortcut(shortcuts.font_size_up, 'font_size_up');
@@ -28,17 +32,14 @@ function useShortcutEmitter() {
     useShortcut(shortcuts.tab8, 'change_tab8');
     useShortcut(shortcuts.tab9, 'change_tab9');
 
-    useHotkey({
-        'F12': (e) => {
-            if (e.altKey && e.ctrlKey) {
-                console.log('F12 + Alt');
-                navigate('/test');
-            }
-        }
-    }, true)
+    useKeyBind({
+        'C-A-F12': (e) => emitNavigate('goto_test'),
+    }, [], import.meta.env['VITE_DEV'] === 'TRUE');
 }
 
 function useShortcut(shortcut: Shortcut, eventName: EventNames) {
+    const { count: modalCount } = useModal();
+
     const addHandler = (shortcut: Shortcut, callback: () => void, verbose: boolean = false, name: string = 'shortcut') => {
         if (shortcut == null) return () => { };
         if (shortcut.key) {
@@ -81,10 +82,12 @@ function useShortcut(shortcut: Shortcut, eventName: EventNames) {
         }
     };
 
-    useEffect(
-        () => addHandler(shortcut, () => emitEvent(eventName, undefined)),
-        [shortcut]
-    );
+    useEffect(() => {
+        if (modalCount > 0) return;
+        const removeHandler = addHandler(shortcut, () => emitEvent(eventName, undefined));
+
+        return removeHandler;
+    }, [shortcut, modalCount]);
 }
 
 export default useShortcutEmitter;

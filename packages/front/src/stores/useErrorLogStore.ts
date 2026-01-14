@@ -16,7 +16,7 @@ export interface LogEntry {
     };
 }
 
-type LogData = {
+export type LogData = {
     message: string;
     detail: string[];
     occurredAt: {
@@ -43,7 +43,7 @@ interface ErrorLogState {
     add: (entry:  LogData) => string;
 }
 
-const useErrorLogStore = create<ErrorLogState, [['zustand/subscribeWithSelector', never]]>(
+const useErrorLogStore = create<ErrorLogState>()(
     subscribeWithSelector((set, get) => ({
         nextErrorId: 1,
         hasUnread: false,
@@ -70,8 +70,8 @@ const useErrorLogStore = create<ErrorLogState, [['zustand/subscribeWithSelector'
             }));
             return errorId;
         },
-        markAsRead: () => set(state => ({ hasUnread: false })),
-        markAsUnread: () => set(state => ({ hasUnread: true })),
+        markAsRead: () => set(() => ({ hasUnread: false })),
+        markAsUnread: () => set(() => ({ hasUnread: true })),
     }))
 );
 

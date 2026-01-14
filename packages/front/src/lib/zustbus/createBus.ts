@@ -11,7 +11,7 @@ function useLatestRef<T>(value: T) {
 }
 
 /** @returns [useValue, emit, useOn] */
-export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseOn<E>] {
+export function createBus<E extends EventMap>(): [Emit<E>, UseOn<E>, UseValue<E>] {
     const useStore = create<StoreShape<E>, [['zustand/subscribeWithSelector', never]]>(
         subscribeWithSelector(() => ({} as StoreShape<E>))
     );
@@ -20,7 +20,7 @@ export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseOn<E>
         key: K,
         callback: (value: E[K]) => void,
         deps: React.DependencyList = [],
-        enabled: boolean = true
+        enabled: boolean = true,
     ) {
         const cbRef = useLatestRef(callback);
 
@@ -45,7 +45,5 @@ export function createBus<E extends EventMap>(): [UseValue<E>, Emit<E>, UseOn<E>
         return useStore((s) => s[key]?.current);
     }
 
-    return [useValue, emit, useOn] as const;
+    return [emit, useOn, useValue] as const;
 }
-
-export type ping = undefined;

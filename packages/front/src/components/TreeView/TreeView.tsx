@@ -9,7 +9,7 @@ import { ITreeDirectoryNode, ITreeLeafNode, TreeOffsets, } from './types';
 import { Flex, Row } from '../layout';
 
 type ITreeNode<T> = ITreeDirectoryNode<T> | ITreeLeafNode<T>;
-type Tree<T> = ITreeNode<T>[];
+export type Tree<T> = Readonly<ITreeNode<T>[]>;
 
 type TreeViewProps<T> = {
     className?: string;

@@ -12,7 +12,6 @@ yarn.lock
 
 # output
 dist/
-build/
 out/
 release/
 
@@ -32,6 +31,7 @@ CLAUDE.md
 .env.development.local
 .env.test.local
 .env.production.local
+NUL
 
 npm-debug.log*
 yarn-debug.log*
@@ -41,3 +41,6 @@ yarn-error.log*
 front-old/
 tsconfig.app.tsbuildinfo
 docs/
+GUIDE.md
+tmpclaude-*
+.github/copilot-instructions.md

@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 
 type ExtraArgs<T> = {
-    store : (key:string, value:T) => Promise<void>;
-    load : (key:string) => Promise<T>;
-    onStoreError? : (error: unknown) => void;
-    onLoadError? : (error: unknown) => void;
-    encode? : (value:any)=>T|undefined;
-    decode? : (value:T)=>any;
+    store: (key: string, value: T) => Promise<void>;
+    load: (key: string) => Promise<T>;
+    onStoreError?: (error: unknown) => void;
+    onLoadError?: (error: unknown) => void;
+    encode?: (value: any) => T | undefined;
+    decode?: (value: T) => any;
 }
 
 export function useStorage<T>(
-    key:string,
+    key: string,
     {
         encode,
         decode,
@@ -18,9 +18,9 @@ export function useStorage<T>(
         onLoadError = (error: unknown) => console.error(error),
         store,
         load,
-    }:ExtraArgs<T>,
-    deps:any[]|undefined = undefined
-): [any, (value: any)=>Promise<void>, ()=>Promise<void>] {
+    }: ExtraArgs<T>,
+    deps: any[] | undefined = undefined
+): [any, (value: any) => Promise<void>, () => Promise<void>] {
     const [cacheValue, setCacheValue] = useState<any>(undefined);
 
     const refetchCache = useCallback(async () => {
@@ -35,13 +35,13 @@ export function useStorage<T>(
             setCacheValue(undefined)
             return undefined;
         }
-        
+
     }, [key, decode, load, onLoadError]);
 
     const writeValue = useCallback(async (value: any) => {
         const prev = cacheValue;
         const next = typeof value === 'function' ? value(prev) : value;
-        
+
         try {
             await store(key, encode ? encode(next) : next);
             setCacheValue(next);

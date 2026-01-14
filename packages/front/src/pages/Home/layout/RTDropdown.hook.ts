@@ -1,19 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useSessionStore } from '@/stores';
 import ProfileEvent from '@/features/profile-event';
 
 import { emitEvent, useEventState } from '@/hooks/useEvent';
-import { useModal } from '@/hooks/useModal';
-
-import NewRTModal from '@/modals/NewRTModal';
+import { RTMetadataTree } from '@afron/types';
 
 function useRTDropdown() {
-    const navigate = useNavigate();
     const refreshPing = useEventState('refresh_rt_tree');
-
-    const modal = useModal();
 
     const rtId = useSessionStore(state => state.rt_id);
     const name = useSessionStore(state => state.name);
@@ -27,14 +21,6 @@ function useRTDropdown() {
                 setTree(tree);
             });
     }, [refreshPing]);
-
-    const openNewRTModal = () => {
-        modal.open(NewRTModal, {
-            onAddRT: (rtId: string, mode: RTMode) => {
-                navigate(`/workflow/${rtId}/prompt/default`);
-            }
-        });
-    }
 
     const changeRT = async (rtId: string) => {
         await updateSessionState.rt_id(rtId);
@@ -51,7 +37,6 @@ function useRTDropdown() {
             rtId,
         },
         action: {
-            openNewRTModal,
             changeRT,
         }
     }

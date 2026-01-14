@@ -1,60 +1,69 @@
-import React, { useCallback } from 'react';
-import {
-    ReactFlow,
-    MiniMap,
-    Controls,
-    Background,
-    useNodesState,
-    useEdgesState,
-    addEdge,
-    BackgroundVariant,
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
-import { InputNode } from './nodes';
+import { Workflow } from '@/features/workflow';
+import { useWorkflowEditor } from './WorkflowEditor.hook';
 
-const initialNodes = [
-    {
-        id: '1',
-        type: 'input',
-        position: { x: 0, y: 0 },
-        data: {
-            label: '1232131',
-            ports: ['123']
-        }
-     },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+import styles from './WorkflowEditor.module.scss';
+import { Align, Flex, Grid, Row } from '@/components/layout';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import { ModalProvider } from '@/features/modal';
 
-const nodeTypes = {
-    input : InputNode,
-}
+function WorkflowEditorInner() {
+    const {
+        workflow: {
+            nodes,
+            edges,
+            flowData,
+            setFlowData,
+            setFlowNode,
+            setFlowEdges,
+        },
 
-function WorkflowEditor() {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-    const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+        save,
+        closeModal,
+    } = useWorkflowEditor();
 
     return (
-        <div style={{ width: '100vw', height: '100vh' }}>
-            <ReactFlow
-                nodeTypes={nodeTypes}
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
+        <Grid
+            className={styles['workflow-editor']}
+            rows='40px 1fr'
+            columns='auto'
+        >
+            <Row
+                columnAlign={Align.Center}
+                style={{
+                    padding: '0 0.5em',
+                    // gridColumn: 'span 2',
+                }}
             >
-                <Background
-                    variant={BackgroundVariant.Lines}
-                    gap={32}
-                    size={1}
-                    color="#ddd1"
+                <span>Workflow Editor</span>
+                <Flex />
+                <GIconButton
+                    style={{ fontSize: '30px' }}
+                    value='close'
+                    hoverEffect='square'
+                    onClick={closeModal}
                 />
-            </ReactFlow>
-        </div>
+            </Row>
+            {
+                nodes != null &&
+                edges != null &&
+                <Workflow
+                    nodes={nodes}
+                    edges={edges}
+                    data={flowData}
+                    onNodesChange={setFlowNode}
+                    onEdgesChange={setFlowEdges}
+                    onDataChange={setFlowData}
+                    onSave={save}
+                ></Workflow>
+            }
+        </Grid >
     );
 }
 
-export default WorkflowEditor;
+export function WorkflowEditor() {
+    return (
+        <ModalProvider>
+            <WorkflowEditorInner />
+        </ModalProvider>
+    )
+}

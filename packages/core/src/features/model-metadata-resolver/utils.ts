@@ -1,3 +1,5 @@
+import { ChatAIModel } from "@afron/types";
+
 export function getAPICategory(model: ChatAIModel): 'known_provider' | 'vertexai' | null {
     switch (model.config?.endpoint) {
         case 'chat_completions':

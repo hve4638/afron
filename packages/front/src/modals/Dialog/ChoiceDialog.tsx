@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 
 import { Align, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import Button from '@/components/Button';
-
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { Modal, ModalHeader } from '@/features/modal';
+import Button from '@/components/atoms/Button';
 
 import { CommonDialogProps } from './types';
 import styles from './styles.module.scss';
 import useHotkey from '@/hooks/useHotkey';
+import { useModalInstance } from '@/features/modal';
+import { useKeyBind } from '@/hooks/useKeyBind';
 
 type ChoiceTone = 'default'|'highlight'|'dimmed'|'warn';
 type ChoiceDetail = {
@@ -37,7 +37,6 @@ function ChoiceDialog({
     children,
     choices,
     onSelect = async (choice:string, index:number)=>true,
-    onClose,
 
     onEnter = async ()=>false,
     onEscape = async ()=>true,
@@ -47,24 +46,24 @@ function ChoiceDialog({
     className='',
     style={},
 }:ChoiceDialogProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal, disappear, focused } = useModalInstance(); 
 
-    useHotkey({
+    useKeyBind({
         'Enter' : (e)=>{
             onEnter().then((b)=>{
-                if (b) close();
+                if (b) closeModal();
             });
 
             return true;
         },
         'Escape' : (e)=>{
             onEscape().then((b)=>{
-                if (b) close();
+                if (b) closeModal();
             });
             
             return true;
         }
-    })
+    }, [], focused);
 
     return (
         <Modal
@@ -74,11 +73,12 @@ function ChoiceDialog({
                 minWidth: '40%',
                 width : 'auto',
             }}
-            disappear={disappear}
-            enableRoundedBackground={enableRoundedBackground}
+            backgroundProps={{
+                enableRoundedBackground
+            }}
         >
             <ModalHeader
-                hideCloseButton={true}
+                showCloseButton={false}
             >
                 {title}
             </ModalHeader>
@@ -104,7 +104,7 @@ function ChoiceDialog({
             {
                 choices?.map((choice, index)=>{
                     const text = typeof choice === 'string' ? choice : choice.text;
-                    let choiceTone:ChoiceTone = typeof choice === 'string' ? 'default' : (choice.tone ?? 'default');
+                    const choiceTone:ChoiceTone = typeof choice === 'string' ? 'default' : (choice.tone ?? 'default');
 
                     return (
                         <Button
@@ -118,7 +118,7 @@ function ChoiceDialog({
                             style={{ minWidth: '6em' }}
                             onClick={async ()=>{
                                 if (await onSelect(text, index)) {
-                                    close();
+                                    closeModal();
                                 }
                             }}
                         >{text}</Button>

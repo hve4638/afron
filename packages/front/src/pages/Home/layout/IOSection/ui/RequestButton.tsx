@@ -1,18 +1,19 @@
 import classNames from 'classnames';
 
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import { useSessionState } from '@/features/profile-event/hooks/useSessionState';
 import { emitEvent } from '@/hooks/useEvent';
-import { useSessionStore } from '@/stores';
 
 import styles from './ui.module.scss';
 
 function RequestButton() {
-    const sessionState = useSessionStore();
-    
+    const sessionState = useSessionState();
+    const isIdle = sessionState === 'idle';
+
     return (
         <GIconButton
             className={classNames(styles['input-section-button'])}
-            value={sessionState.state === 'idle' ? 'send' : 'stop'}
+            value={isIdle ? 'send' : 'stop'}
             style={{
                 cursor: 'pointer',
                 fontSize: '32px',
@@ -20,7 +21,12 @@ function RequestButton() {
                 height: '40px',
             }}
             onClick={() => {
-                emitEvent('send_request');
+                if (isIdle) {
+                    emitEvent('send_request');
+                }
+                else {
+                    emitEvent('abort_request');
+                }
             }}
         />
     )

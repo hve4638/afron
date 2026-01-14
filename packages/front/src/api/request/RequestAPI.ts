@@ -1,6 +1,7 @@
 import LocalAPI from 'api/local';
 import Channel from '@hve/channel';
 import { v7 as uuidv7 } from 'uuid';
+import { RTEventData } from '@afron/types';
 
 /**
  * RT 요청 수행 API
@@ -72,7 +73,7 @@ class RequestAPI {
     }
 
     async response(chId:string) {
-        let ch = this.#getCh(chId);
+        const ch = this.#getCh(chId);
         const result = await ch.consume();
 
         /// @TODO: result null인 경우 처리 필요

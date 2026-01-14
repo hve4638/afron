@@ -1,5 +1,6 @@
 import { CategoryBuilder } from '@/features/model-builder';
 import { flags } from '@/data';
+import { ChatAIConfig } from '@afron/types';
 
 const {
     latest,
@@ -8,9 +9,18 @@ const {
     snapshot,
 } = flags;
 
-
+// Claude Models 목록
+// https://platform.claude.com/docs/en/about-claude/models/overview
 function initProvider(builder: CategoryBuilder) {
     const claudeAPI: Partial<ChatAIConfig> = { endpoint: 'anthropic' };
+
+    builder.group('Claude 4.5', { endpoint: 'anthropic', thinking: 'optional' }, {})
+        .model('claude-opus-4-5', 'Claude Opus 4.5', {}, { latest, featured })
+        .model('claude-opus-4-5-20251101', 'Claude Opus 4.5 (2025-11-01)', {}, { snapshot })
+        .model('claude-sonnet-4-5', 'Claude Sonnet 4.5', {}, { latest, featured })
+        .model('claude-sonnet-4-5-20250929', 'Claude Sonnet 4.5 (2025-09-29)', {}, { snapshot })
+        .model('claude-haiku-4-5', 'Claude Haiku 4.5', {}, { latest, featured })
+        .model('claude-haiku-4-5-20251001', 'Claude Haiku 4.5 (2025-10-01)', {}, { snapshot })
 
     builder.group('Claude 4.1', { endpoint: 'anthropic', thinking: 'optional' }, {})
         .model('claude-opus-4-1-20250805', 'Claude Opus 4.1', {}, { latest, featured })

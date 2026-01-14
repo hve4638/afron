@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import Channel from '@hve/channel';
-import { ActionMethods } from './types';
 
 const channels = {
     request_ready: 0,
@@ -20,7 +19,7 @@ interface ChannelState {
     reset: ChannelReset;
 }
 
-export const useChannelStore = create<ChannelState, [['zustand/subscribeWithSelector', never]]>(
+export const useChannelStore = create<ChannelState>()(
     subscribeWithSelector((set)=>{
         const instances = Object.fromEntries(
             Object.entries(channels).map(([key])=>{

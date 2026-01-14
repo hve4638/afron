@@ -1,6 +1,6 @@
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import { useModal } from '@/features/modal';
 import { HistoryData } from '@/features/session-history';
-import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { useHistoryStore } from '@/stores';
 
@@ -14,14 +14,15 @@ function DeleteButton({ data, origin }: { data: HistoryData, origin: 'in' | 'out
             onClick={(e) => {
                 e.stopPropagation();
 
-                modal.open(DeleteConfirmDialog
-                    , {
-                    onDelete: async () => {
-                        await historyState.actions.deleteMessage(data.id, origin);
+                modal.open(
+                    <DeleteConfirmDialog
+                        onDelete={async () => {
+                            await historyState.actions.deleteMessage(data.id, origin);
 
-                        return true;
-                    }
-                });
+                            return true;
+                        }}
+                    />
+                );
             }}
         />
     )

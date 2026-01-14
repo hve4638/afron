@@ -1,20 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames';
-import Button from 'components/Button';
-import { Modal, ModalHeader } from 'components/Modal';
-import { Align, Center, Column, Flex, Grid, Row } from 'components/layout';
-import useModalDisappear from 'hooks/useModalDisappear';
-import { useTranslation } from 'react-i18next';
-import useHotkey from 'hooks/useHotkey';
+import { Modal, useModalInstance } from '@/features/modal';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
 
 type StringInputModalProps = {
-    title:string;
-    aboveDescription?:string;
-    belowDescription?:string;
-    placeholder?:string;
-    onSubmit?:(value:string)=>Promise<boolean>|boolean|undefined|void;
-    onClose?:()=>void;
+    title: string;
+    aboveDescription?: string;
+    belowDescription?: string;
+    placeholder?: string;
+    onSubmit?: (value: string) => Promise<boolean> | boolean | undefined | void;
 }
 
 function StringInputModal({
@@ -23,67 +17,62 @@ function StringInputModal({
     belowDescription,
     placeholder,
     onSubmit = () => { return; },
-    onClose = () => {},
-}:StringInputModalProps) {
-    const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(()=>onClose());
+}: StringInputModalProps) {
+    const { closeModal } = useModalInstance();
     const [text, setText] = useState<string>('');
-
-    useHotkey({
-        'Escape': ()=>{
-            close();
-        }
-    })
 
     return (
         <Modal
             className='relative'
-            disappear={disappear}
             style={{
-                width : 'auto',
+                width: 'auto',
                 minWidth: '400px',
             }}
+            header={{
+                label: title,
+                showCloseButton: false,
+            }}
+            allowEscapeKey={false}
         >
-            <ModalHeader hideCloseButton={true}>{title}</ModalHeader>
-            <div style={{height: '1em'}}/>
+            <div style={{ height: '1em' }} />
             <div className={classNames('undraggable')}>
-            {
-                aboveDescription?.split('\n').map((line, index) => (
-                    <div key={index}>{line}</div>
-                ))
-            }
+                {
+                    aboveDescription?.split('\n').map((line, index) => (
+                        <div key={index}>{line}</div>
+                    ))
+                }
             </div>
             <input
                 className='input-number'
                 type='text'
                 value={text}
                 style={{
-                    width : '100%',
+                    width: '100%',
                 }}
                 placeholder={placeholder}
-                onChange={(e)=>setText(e.target.value)}
+                onChange={(e) => setText(e.target.value)}
             />
             <div className={classNames('undraggable')}>
-            {
-                belowDescription?.split('\n').map((line, index) => (
-                    <div key={index}>{line}</div>
-                ))
-            }
+                {
+                    belowDescription?.split('\n').map((line, index) => (
+                        <div key={index}>{line}</div>
+                    ))
+                }
             </div>
-            <div style={{height: '0.5em'}}/>
+            <div style={{ height: '0.5em' }} />
             <ConfirmCancelButtons
-                onConfirm={async ()=>{
+                onConfirm={async () => {
                     let result = onSubmit(text);
-                    if (result == undefined) close();
-                    
+                    if (result == undefined) closeModal();
+
                     if (result && typeof result['then'] === 'function') {
                         result = await result;
                     }
                     if (result || result == undefined) {
-                        close();
+                        closeModal();
                     }
                 }}
-                onCancel={()=>close()}
+                onCancel={() => closeModal()}
                 enableConfirmButton={text.length > 0}
             />
         </Modal>

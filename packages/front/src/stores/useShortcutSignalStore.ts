@@ -11,7 +11,7 @@ interface ShortcutSignalState extends ShortcutSignalFields {
     signal : ActionMethods<ShortcutSignalFields>;
 }
 
-export const useShortcutSignalStore = create<ShortcutSignalState, [['zustand/subscribeWithSelector', never]]>(
+export const useShortcutSignalStore = create<ShortcutSignalState>()(
     subscribeWithSelector((set, get)=>{
         const {
             fields, signal

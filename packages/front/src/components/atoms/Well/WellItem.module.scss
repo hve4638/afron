@@ -1,0 +1,24 @@
+.well-item {
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+    gap: 0.5em;
+
+    color: var(--text-color-dim-1);
+    background-color: var(--bgcolor-well-item-dim);
+    transition: background-color 0.1s ease;
+    
+    &:global {
+        &.selected {
+            color: var(--text-color);
+            background-color: var(--bgcolor-well-highlight-2);
+        }
+
+        &.hoverable {
+            &:hover {
+                background-color: var(--bgcolor-well-highlight);
+            }
+        }
+    }
+}

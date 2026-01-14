@@ -5,6 +5,7 @@ import {
     initClaudeModel,
     initVertexAIModel,
 } from './modelInitializer';
+import { ChatAIModel, ChatAIModelData } from '@afron/types';
 
 class ModelDeclaration {
     static #instance: ModelDeclaration;

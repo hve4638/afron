@@ -1,14 +1,10 @@
-import { create } from 'zustand'
-import { v7 } from 'uuid';
-import i18next from 'i18next';
-
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
 import useSessionStore from '@/stores/useSessionStore';
-import { PromptVarWithLastValue, ProviderName } from '../types';
+import { RTFormWithLastValue } from '../types';
 
 class CurrentSessionFormEvent {
-    static async getCurrentSessionForms() {
+    static async getCurrentSessionForms(): Promise<RTFormWithLastValue[]> {
         const { api } = useProfileAPIStore.getState();
         const { rt_id } = useSessionStore.getState();
         const { last_session_id } = useCacheStore.getState();
@@ -18,7 +14,7 @@ class CurrentSessionFormEvent {
         const rt = api.rt(rt_id);
         const session = api.session(last_session_id);
 
-        const forms: PromptVarWithLastValue[] = await rt.getForms();
+        const forms: RTFormWithLastValue[] = await rt.getForms();
         const formValues = await session.getFormValues(rt_id);
 
         for (const form of forms) {

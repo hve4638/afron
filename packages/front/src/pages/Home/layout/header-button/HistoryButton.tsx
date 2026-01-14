@@ -1,5 +1,5 @@
-import { GIconButton } from '@/components/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import { useModal } from '@/features/modal';
 import HistoryModal from '@/modals/HistoryModal';
 
 function HistoryButton() {
@@ -16,7 +16,7 @@ function HistoryButton() {
                 cursor: 'pointer',
             }}
             onClick={() => {
-                modal.open(HistoryModal, {})
+                modal.open(<HistoryModal/>);
             }}
         />
     );

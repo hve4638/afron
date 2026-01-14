@@ -1,77 +1,74 @@
-import { Modal, ModalHeader } from 'components/Modal';
-import useHotkey from 'hooks/useHotkey';
-import useModalDisappear from 'hooks/useModalDisappear';
+import { Activity, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import RTSelectWidget from './RTSelectWidget';
-import { useState } from 'react';
-import EditMetadataLayout from './layout/EditMetadataLayout';
+
+import { Modal, useModalInstance } from '@/features/modal';
 import ProfileEvent from '@/features/profile-event';
 
-const enum NewRTModalStep {
+import { SelectStep, EditMetadataStep } from './components';
+import { RTMode } from '@afron/types';
+
+const enum NewRTModalSteps {
     SelectRTType = 0,
     EditMetadata = 1,
 }
 
 type NewRTModalProps = {
-    onAddRT: (rtId: string, rtMode:RTMode) => void;
-
-    isFocused: boolean;
-    onClose: () => void;
+    onAddRT: (rtId: string, rtMode: RTMode) => void;
 }
 
-function NewRTModal({
-    onAddRT = ()=>{},
-
-    isFocused,
-    onClose = ()=>{},
-}:NewRTModalProps) {
+export function NewRTModal({
+    onAddRT = () => { },
+}: NewRTModalProps) {
     const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(onClose);
-    const [step, setStep] = useState<NewRTModalStep>(NewRTModalStep.SelectRTType);
+    const { closeModal } = useModalInstance();
+    const [step, setStep] = useState<NewRTModalSteps>(NewRTModalSteps.SelectRTType);
     const [rtMode, setRTMode] = useState<RTMode>('prompt_only');
 
-    useHotkey({
-        'Escape' : close,
-    }, isFocused, []);
+    const selectStep = step === NewRTModalSteps.SelectRTType;
+    const editStep = step === NewRTModalSteps.EditMetadata;
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 width: 'auto',
                 maxWidth: '80%',
             }}
+            allowEscapeKey={true}
+            header={{
+                label: t('rt.new_rt_title'),
+                showCloseButton: true,
+            }}
         >
-            <ModalHeader onClose={close}>{t('rt.new_rt_title')}</ModalHeader>
-            {
-                step === NewRTModalStep.SelectRTType &&
-                <RTSelectWidget
-                    onPrev={close}
-                    onSelectRTType={(selected)=>{
+            <Activity
+                mode={selectStep ? 'visible' : 'hidden'}
+            >
+                <SelectStep
+                    onPrev={closeModal}
+                    onSelectRTType={(selected) => {
                         setRTMode(selected);
-                        setStep(NewRTModalStep.EditMetadata);
+                        setStep(NewRTModalSteps.EditMetadata);
                     }}
                 />
-            }
-            {
-                step === NewRTModalStep.EditMetadata &&
-                <EditMetadataLayout
-                    onPrev={()=>{
-                        setStep(NewRTModalStep.SelectRTType);
+            </Activity>
+            <Activity
+                mode={editStep ? 'visible' : 'hidden'}
+            >
+                <EditMetadataStep
+                    rtMode={rtMode}
+                    onPrev={() => {
+                        setStep(NewRTModalSteps.SelectRTType);
                     }}
-                    onConfirm={async (metadata)=>{
+                    onConfirm={async (metadata) => {
                         await ProfileEvent.rt.create({
                             name: metadata.name,
                             id: metadata.id,
                             mode: rtMode,
                         }, metadata.templateId);
-                        
+
                         onAddRT(metadata.id, rtMode);
                     }}
                 />
-            }
+            </Activity>
         </Modal>
     )
 }
-
-export default NewRTModal;

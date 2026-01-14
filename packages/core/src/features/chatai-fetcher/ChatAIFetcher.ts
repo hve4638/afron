@@ -7,6 +7,7 @@ import type { ChatAIRequestAPI, RequestCustomModelProps, RequestModelProps } fro
 import { ChatAIFetcherFailed } from './errors';
 import FormBuilder from './form-builder';
 import { resolveCustomModelInfo } from '../model-metadata-resolver';
+import { ChatAIModel, CustomModel, ModelConfiguration, VertexAIAuth } from '@afron/types';
 
 interface RequestProps {
     model: ChatAIModel;

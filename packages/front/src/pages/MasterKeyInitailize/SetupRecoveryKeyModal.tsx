@@ -1,77 +1,49 @@
 import { Align, Flex, Row } from "components/layout";
-import { Modal, ModalHeader } from "components/Modal";
+import { Modal, ModalHeader, useModalInstance } from "@/features/modal";
 import { useEffect, useMemo, useState } from "react";
 import styles from './styles.module.scss';
-import Button from "components/Button";
+import Button from "@/components/atoms/Button";
 import classNames from "classnames";
 import ReactLoading from 'react-loading';
-import useModalDisappear from "hooks/useModalDisappear";
-import { StringForm } from "@/components/forms";
+import { StringForm } from "@/components/FormFields";
 
 interface RecoveryKeySetupModalProps {
-    onSubmit: (recoveryKey:string) => Promise<boolean>;
+    onSubmit: (recoveryKey: string) => Promise<boolean>;
     onClose: () => void;
 }
 
 function RecoveryKeySetupModal({
     onSubmit,
     onClose,
-}:RecoveryKeySetupModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+}: RecoveryKeySetupModalProps) {
+    const { closeModal } = useModalInstance();
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
-    const valid = useMemo(()=>recoveryKey.length >= 4, [recoveryKey]);
+    const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey]);
 
-    const submit = async ()=>{
+    const submit = async () => {
         if (!valid || loading) return;
         setLoading(true);
-        
+
         const b = await onSubmit(recoveryKey);
         setLoading(false);
         if (b) {
-            close();
+            closeModal();
         }
     }
 
     return (
         <Modal
-            disappear={disappear}
             style={{
-                width : 'auto',
+                width: 'auto',
                 minWidth: '400px',
             }}
+            header={{
+                label: '복구 키 설정',
+                showCloseButton: false,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>복구 키 설정</ModalHeader>
-            <div style={{ height:'0.25em' }}/>
-            {/* <Row
-                style={{
-                    height: '1.4em',
-                    margin: '0.5em 0px'
-                }}
-                columnAlign={Align.Center}
-            >
-                <span
-                    className='noflex undraggable'
-                    style={{
-                        marginRight: '1em'
-                    }}
-                >
-                    복구키
-                </span>
-                <input
-                    type='text'
-                    className='input-number flex'
-                    value={recoveryKey}
-                    onChange={(e)=>setRecoveryKey(e.target.value)}
-                    onKeyDown={(e)=>{
-                        if (e.key === 'Enter') {
-                            submit();
-                            e.preventDefault();
-                            e.stopPropagation();
-                        }                        
-                    }}
-                />
-            </Row> */}
+            <div style={{ height: '0.25em' }} />
             <StringForm
                 name='복구 키'
                 value={recoveryKey}
@@ -118,7 +90,7 @@ function RecoveryKeySetupModal({
                     className={
                         classNames(
                             'green',
-                            {disabled: (!valid || loading)}
+                            { disabled: (!valid || loading) }
                         )
                     }
                     style={{

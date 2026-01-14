@@ -39,7 +39,7 @@
         },
         {
             // 기본 빌드 작업: Ctrl+Shift+B 로 실행
-            "label": "build:all",
+            "label": "build-all",
             "dependsOn": [
                 "chatai_models:build",
                 "core:build",

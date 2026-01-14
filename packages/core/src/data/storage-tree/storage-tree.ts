@@ -1,6 +1,7 @@
 import { JSONType, StorageAccess } from 'ac-storage';
 import REQUEST_TEMPLATE_TREE from './request-template-tree';
 import { GLOBAL_MODEL_SETTINGS, MODEL_SETTINGS } from './model-config';
+import { ProfileStorageSchema } from '@afron/types';
 
 const API_KEYS_ELEMENT = {
     secret_id: JSONType.String(),
@@ -15,29 +16,30 @@ export const PROFILE_STORAGE_TREE = {
     'request-template': REQUEST_TEMPLATE_TREE,
     'session': {
         '*': {
-            'data.json': StorageAccess.JSON({
+            'data.json': StorageAccess.JSON<ProfileStorageSchema.Session.Data>({
                 'forms': {
-                    // key : rt id
+                    // key: rt id
                     '*': {
-                        // key : form id
+                        // key: form id
                         '*': JSONType.Any(),
                     }
                 },
-                'custom_models': JSONType.Array({
-                    name: JSONType.String(),
-                    url: JSONType.String(),
-                    api_format: JSONType.Union('chat_completions', 'anthropic_claude', 'generative_language'),
-                    secret_key: JSONType.String().nullable(),
-                }).strict(),
+                'running_rt': JSONType.Replace({
+                    '*': { // key: token
+                        token: JSONType.String(),
+                        created_at: JSONType.Number(),
+                        state: JSONType.String(),
+                    }
+                }),
             }),
-            'config.json': StorageAccess.JSON({
+            'config.json': StorageAccess.JSON<ProfileStorageSchema.Session.Config>({
                 'name': JSONType.String(),
                 'color': JSONType.String(),
                 'model_id': JSONType.String(),
                 'rt_id': JSONType.String(),
                 'delete_lock': JSONType.Bool(),
             }),
-            'cache.json': StorageAccess.JSON({
+            'cache.json': StorageAccess.JSON<ProfileStorageSchema.Session.Cache>({
                 'input': JSONType.String(),
                 'output': JSONType.String(),
                 'input_token_count': JSONType.Number().default_value(0),
@@ -123,7 +125,7 @@ export const PROFILE_STORAGE_TREE = {
         'prompt_preview_enabled': JSONType.Bool().default_value(false),
         'global_model_config_enabled': JSONType.Bool().default_value(false),
         'show_token_count': JSONType.Bool().default_value(false),
-        
+
         'preview_prettify_header': JSONType.Bool().default_value(true),
         'preview_prettify_body': JSONType.Bool().default_value(true),
     }),
@@ -137,4 +139,4 @@ export const PROFILE_STORAGE_TREE = {
     'secret.json': StorageAccess.Custom('secret-json'),
     'unique': StorageAccess.Custom('secret-json'),
     'thumbnail': StorageAccess.Binary(),
-}
+};

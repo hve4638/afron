@@ -1,18 +1,18 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { app } from 'electron';
-import fs from 'fs';
-import path from 'path';
 
 const documentsPath = app.getPath('documents');
-const saveFolderPath = path.join(documentsPath, "AIFront");
-const historyFolderPath = path.join(saveFolderPath, "history");
-const promptFolderPath = path.join(saveFolderPath, "prompts");
-const configFilePath = path.join(saveFolderPath, "config.json");
+const saveFolderPath = path.join(documentsPath, 'AIFront');
+const historyFolderPath = path.join(saveFolderPath, 'history');
+const promptFolderPath = path.join(saveFolderPath, 'prompts');
+const configFilePath = path.join(saveFolderPath, 'config.json');
 
 function readConfigData() {
     if (fs.existsSync(configFilePath)) {
         const contents = fs.readFileSync(configFilePath, 'utf8');
         try { return JSON.parse(contents); }
-        catch {}
+        catch { }
     }
     return null;
 }
@@ -60,7 +60,7 @@ function readHistory(key) {
     if (fs.existsSync(targetPath)) {
         const contents = fs.readFileSync(targetPath, 'utf8');
         try { return JSON.parse(contents); }
-        catch {}
+        catch { }
     }
     return [];
 }
@@ -72,7 +72,7 @@ export {
     readPromptContents,
     readPromptList,
     readPromptMetadata,
-    
+
     promptFolderPath,
     historyFolderPath,
 }

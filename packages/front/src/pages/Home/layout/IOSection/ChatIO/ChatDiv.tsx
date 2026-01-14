@@ -7,7 +7,7 @@ import ProfileEvent from '@/features/profile-event';
 import { HistoryData } from '@/features/session-history';
 
 import { Align, Flex, Row } from '@/components/layout';
-import { GIconButton } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import MarkdownArea from '@/components/MarkdownArea';
 
 import { CommonProps } from '@/types';

@@ -3,12 +3,13 @@ import classNames from 'classnames';
 
 import { CommonProps } from '@/types';
 import { Align, Row } from '@/components/layout';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { useSessionStore } from '@/stores';
 import useDiff from '@/hooks/useDiff';
 import { clamp } from '@/utils/math';
 
 import styles from './styles.module.scss';
+import { InputFilePreview } from '@afron/types';
 
 interface FilesFormLayoutProps extends CommonProps {
     internalPadding?: string;

@@ -1,35 +1,22 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import classNames from 'classnames';
+import { useEffect, useRef} from 'react';
 
-import { Modal, ModalHeader } from '@/components/Modal';
-import ListView from '@/components/ListView/ListView';
+import { Modal} from '@/features/modal';
+import ListView from '@/components/container/ListView/ListView';
 
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
-
-import useErrorLogStore, { LogEntry } from '@/stores/useErrorLogStore';
+import useErrorLogStore from '@/stores/useErrorLogStore';
 
 import LogEntryItem from './LogEntryItem';
 
 type ErrorLogModalProps = {
     errorId: string | null;
-    isFocused: boolean;
-    onClose: () => void;
 }
 
 function ErrorLogModal({
     errorId,
-    isFocused,
-    onClose
 }: ErrorLogModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
     const scrollAnchorRef = useRef<HTMLDivElement>(null);
     const initOpenRef = useRef<HTMLDivElement>(null);
     const { log: errorLog, markAsRead, hasUnread } = useErrorLogStore();
-
-    useHotkey({
-        'Escape': close,
-    }, isFocused, []);
 
     if (hasUnread) {
         markAsRead();
@@ -41,15 +28,14 @@ function ErrorLogModal({
 
     return (
         <Modal
-            disappear={disappear}
             style={{
                 height: '60%'
-                // minHeight: '60%',
-                // maxHeight: '80%',
             }}
-            headerLabel={
-                <ModalHeader onClose={close}>에러</ModalHeader>
-            }
+            header={{
+                label: '에러',
+                showCloseButton: true,
+            }}
+            allowEscapeKey={true}
         >
             <ListView
                 style={{

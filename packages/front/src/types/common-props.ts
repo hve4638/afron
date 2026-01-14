@@ -1,3 +1,6 @@
+/**
+ * @deprecated use ReactNodeProps.Common instead
+ */
 export interface CommonProps {
     className?: string;
     style?: React.CSSProperties;

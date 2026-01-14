@@ -1,3 +1,4 @@
+import { ChatAIModelData } from '@afron/types';
 import CategoryBuilder from './CategoryBuilder';
 
 class ModelListBuilder {

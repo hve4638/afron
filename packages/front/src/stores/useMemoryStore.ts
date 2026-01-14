@@ -1,3 +1,4 @@
+import { ChatAIModel, ChatAIModelData, CustomModel, VersionInfo } from '@afron/types';
 import { create } from 'zustand';
 
 type MemoryStates = {
@@ -9,7 +10,7 @@ type MemoryStates = {
     availableVersion: VersionInfo | null;
 }
 
-const useMemoryStore = create<MemoryStates>((set, get) => ({
+const useMemoryStore = create<MemoryStates>(() => ({
     profileId: null,
     allModels: [],
     modelsMap: {},

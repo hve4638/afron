@@ -2,12 +2,11 @@ import { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import InputField from './InputField';
-import { GIconButton } from '@/components/GoogleFontIcon';
 import { Align, Flex, Grid, Row } from '@/components/layout';
 
 import { useConfigStore, useSessionStore } from '@/stores';
 
-import SplitSlider from '../../SplitSlider';
+import { SplitSlider } from '../../SplitSlider';
 
 import { useHistoryStore } from '@/stores/useHistoryStore';
 import { HistoryData } from '@/features/session-history';
@@ -25,13 +24,13 @@ import {
     CopyButton,
 } from '../ui';
 
-import { CommonProps } from '@/types';
+import { ReactNodeProps } from '@/types';
 
 import styles from './SingleIO.module.scss';
 import { readImageFromClipboard } from '@/utils/clipboard';
 import Latch from '@/lib/Latch';
 
-interface SingleIOLayoutProps extends CommonProps {
+interface SingleIOLayoutProps extends ReactNodeProps.Common {
     inputText: string;
     onChangeInputText: (text: string) => void;
 
@@ -68,9 +67,9 @@ function SingleIO({
         return ProfileEvent.model.getName(last.modelId);
     }, [last?.modelId]);
 
-    let [left, right] = useConfigStore(state => state.textarea_io_ratio);
+    const [left, right] = useConfigStore(state => state.textarea_io_ratio);
 
-    const textareaSectionRef = useRef(null);
+    const textareaSectionRef = useRef<HTMLDivElement>(null);
 
     const textAreaBorderRadius = useMemo(() => {
         const radius = remapDecimal(configState.textarea_padding, { min: 4, max: 16 }, { min: 1, max: 5 });
@@ -297,7 +296,7 @@ function SingleIO({
                     </Row>
                 </InputField>
                 <SplitSlider
-                    containerRef={textareaSectionRef}
+                    targetRef={textareaSectionRef}
                 />
             </Grid>
         </>

@@ -1,8 +1,3 @@
-import { useEffect, useState } from 'react';
-import { Align, Center, Column, Flex, Row } from 'components/layout';
-import { GoogleFontIcon } from 'components/GoogleFontIcon';
-import { SpinnerCircular } from 'spinners-react';
-import { TabRender } from './types';
 import classNames from 'classnames';
 
 interface TabProps<T> {

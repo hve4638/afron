@@ -19,7 +19,12 @@ function SessionTabBar() {
     useEvent('refresh_session_metadata', ()=>rerender(), [rerender]);
 
     const [sessionMetadataList, setSessionMetadataList] = useState<ProfileSessionMetadata[]>([]);
-    const tabItems = useMemo(() => sessionMetadataList.map((metadata) => ({ ...metadata, key: metadata.id })), [sessionMetadataList]);
+    const tabItems = useMemo(() => {
+        return sessionMetadataList.map((metadata) => ({
+            ...metadata,
+            key: metadata.id
+        }));
+    }, [sessionMetadataList]);
     const focusTab = useMemo(() => {
         const empty = {
             key: 'empty',

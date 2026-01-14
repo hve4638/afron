@@ -1,6 +1,7 @@
 import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
 import useDataStore from '@/stores/useDataStore';
+import { deriveSessionState } from '../utils/sessionState';
 import { ProfileSessionMetadata } from '@/types';
 
 class SessionEvent {
@@ -75,13 +76,17 @@ class SessionEvent {
                 const configPromise = sessionAPI.get('config.json', [
                     'name', 'color', 'delete_lock', 'model_id', 'rt_id'
                 ]);
-                const cachePromise = sessionAPI.get('cache.json', [
-                    'state'
+                // const cachePromise = sessionAPI.get('cache.json', [
+                //     'state'
+                // ]);
+                const dataPromise = sessionAPI.get('data.json', [
+                    'running_rt'
                 ]);
                 const { name, color, delete_lock, model_id, rt_id } = await configPromise;
-                const { state } = await cachePromise;
+                // const { state } = await cachePromise;
+                const { running_rt } = await dataPromise as { running_rt: Record<string, { token: string, state: string }> };
 
-                let displayName = name;
+                let displayName: string | null = name;
                 if (name == null || name === '') {
                     if (await api.rts.existsId(rt_id)) {
                         const rtAPI = api.rt(rt_id);
@@ -96,15 +101,17 @@ class SessionEvent {
                     }
                 }
 
+                const state = deriveSessionState(running_rt);
+
                 return {
                     id: sid,
                     name: name ?? '',
-                    displayName: displayName,
+                    displayName: displayName as string,
                     color: color,
                     deleteLock: delete_lock ?? false,
                     modelId: model_id,
                     rtId: rt_id,
-                    state: state ?? 'idle',
+                    state: (state ?? 'idle') as 'idle' | 'loading' | 'error' | 'done',
                 }
             })
         )

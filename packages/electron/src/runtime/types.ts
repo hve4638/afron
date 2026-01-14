@@ -9,6 +9,7 @@ import type {
 } from '@afron/core';
 import MigrationService from '@/features/migration-service';
 import EventProcess from '@/features/event-process/EventProcess';
+import { IPCInvokerInterface } from '@afron/types';
 
 export type RuntimeRegistry = {
     profiles: Profiles;

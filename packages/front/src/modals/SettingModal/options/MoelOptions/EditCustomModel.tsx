@@ -1,21 +1,19 @@
-import { ButtonForm, StringForm, StringLongForm } from '@/components/forms';
-import { Modal, ModalHeader } from '@/components/Modal';
-import { ConfirmCancelButtons } from '@/components/ModalButtons';
-import { useModal } from '@/hooks/useModal';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import { useState } from 'react';
+import { ButtonForm, StringForm, StringLongForm } from '@/components/FormFields';
+import { Modal, ModalHeader } from '@/features/modal';
+import { ConfirmCancelButtons } from '@/components/ModalButtons';
+
 import SelectAuthKeyModal from './SelectAuthKeyModal';
-import useHotkey from '@/hooks/useHotkey';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
-import { GIconButton } from '@/components/GoogleFontIcon';
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
+import DropdownForm, { Dropdown } from '@/components/FormFields/DropdownForm';
+import { CustomModelCreate } from '@afron/types';
+import { useModal, useModalInstance } from '@/features/modal';
 
 interface EditCustomModelModalProps {
     value?: CustomModelCreate;
     onConfirm?: (value: CustomModelCreate) => Promise<boolean | void>;
     onDelete?: (customId: string) => Promise<boolean | void>;
-    onClose?: () => void;
-    isFocused?: boolean;
 }
 
 function EditCustomModelModal({
@@ -28,12 +26,10 @@ function EditCustomModelModal({
         secret_key: '',
     },
     onConfirm = async () => { },
-    onClose = () => { },
     onDelete = async () => { },
-    isFocused = true,
 }: EditCustomModelModalProps) {
     const modal = useModal();
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal, } = useModalInstance();
     const [name, setName] = useState(value.name);
     const [model, setModel] = useState(value.model);
     const [url, setURL] = useState(value.url);
@@ -41,36 +37,32 @@ function EditCustomModelModal({
     const [authSecretKey, setAuthSecretKey] = useState<string>(value.secret_key ?? '');
     const [thinking, setThinking] = useState(value.thinking);
 
-    useHotkey({
-        'Escape': () => {
-            close();
-        },
-    }, isFocused);
-
     return (
         <Modal
             className='relative'
-            disappear={disappear}
             style={{
                 width: 'auto',
                 minWidth: '400px',
             }}
+            allowEscapeKey={true}
         >
             <ModalHeader
-                buttonRenderer={() => (
+                renderButton={() => (
                     value.id != undefined
                         ? (
                             <GIconButton
                                 value='delete'
                                 hoverEffect='square'
                                 onClick={() => {
-                                    modal.open(DeleteConfirmDialog, {
-                                        onDelete: async () => {
-                                            await onDelete(value.id!);
-                                            close();
-                                            return true;
-                                        },
-                                    });
+                                    modal.open(
+                                        <DeleteConfirmDialog
+                                            onDelete={async () => {
+                                                await onDelete(value.id!);
+                                                closeModal();
+                                                return true;
+                                            }}
+                                        />
+                                    );
                                 }}
                             />
                         )
@@ -114,19 +106,16 @@ function EditCustomModelModal({
                 <Dropdown.Item name='Google Generative Language' value='generative_language' />
             </DropdownForm>
             <div style={{ height: '0.25em' }} />
-            {/* <CheckBoxForm
-                name='추론 모델 여부'
-                checked={thinking}
-                onChange={(value) => setThinking(value)}
-            /> */}
             <ButtonForm
                 name='API 키'
                 text='변경'
                 onClick={() => {
-                    modal.open(SelectAuthKeyModal, {
-                        value: authSecretKey,
-                        onChange: (value) => setAuthSecretKey(value),
-                    });
+                    modal.open(
+                        <SelectAuthKeyModal
+                            value={authSecretKey}
+                            onChange={(value) => setAuthSecretKey(value)}
+                        />
+                    );
                 }}
             />
             <div style={{ height: '0.5em' }} />
@@ -143,9 +132,9 @@ function EditCustomModelModal({
                     };
                     const result = await onConfirm(next);
 
-                    if (result ?? true) close();
+                    if (result ?? true) closeModal();
                 }}
-                onCancel={() => close()}
+                onCancel={() => closeModal()}
                 enableConfirmButton={model !== '' && url !== '' && name !== ''}
             />
         </Modal>

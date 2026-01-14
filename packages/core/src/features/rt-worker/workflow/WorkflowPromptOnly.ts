@@ -2,6 +2,7 @@ import { InputNode, OutputNode, PromptBuildNode, StringifyChatMLNode, ChatAIFetc
 import { WorkNodeStop } from '../nodes/errors';
 import RTWorkflow from './RTWorkflow';
 import { UserInput } from '../nodes/types';
+import { RTInput } from '@afron/types';
 
 class RTWorkflowPromptOnly extends RTWorkflow {
     async process(rtInput: RTInput): Promise<any> {

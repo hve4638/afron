@@ -4,8 +4,9 @@ import { IPCInvokerName } from 'types';
 import runtime from '@/runtime';
 import { type Profile } from '@afron/core';
 import { RTExportProcess } from '@/features/event-process';
+import { IPCInvokers, RTMetadata } from '@afron/types';
 
-function handler(): IPCInvokerProfileRTs {
+function handler(): IPCInvokers.ProfileRTs {
     const throttles = {};
 
     const saveProfile = (profile: Profile) => {
@@ -21,7 +22,7 @@ function handler(): IPCInvokerProfileRTs {
         async generateId(profileId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rtId = await profile.generateRTId();
-            
+
             return [null, rtId] as const;
         },
 

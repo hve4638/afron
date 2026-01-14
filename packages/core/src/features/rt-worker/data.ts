@@ -1,10 +1,10 @@
-import { ExpressionEventHooks } from "@hve/prompt-template/dist/expr-eval/types/expr-hooks";
+import type { OperatorHooks } from 'advanced-prompt-template-lang';
 
 export const BUILT_IN_VARS = {
     'blank' : '',
     'nl' : '\n',
 } as const;
-export const HOOKS:Partial<ExpressionEventHooks> = {
+export const HOOKS:Partial<OperatorHooks> = {
     objectify(value) {
         return value;
     },

@@ -1,6 +1,7 @@
 import LocalAPI from '@/api/local';
 
 import EventPipe from './EventPipe';
+import { RTEventData } from '@afron/types';
 
 /**
  * RT 요청 수행 API
@@ -40,7 +41,6 @@ class RequestEventPipeSingleton extends EventPipe<RTEventData> {
 
         return chId;
     }
-
 }
 
 export default RequestEventPipeSingleton;

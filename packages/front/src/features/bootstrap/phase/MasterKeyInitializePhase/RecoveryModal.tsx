@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import ReactLoading from 'react-loading';
 
-import { Align, Flex, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import { ConfirmModal } from '@/components/Modal';
-import Button from '@/components/Button';
-
-import { MODAL_DISAPPEAR_DURATION } from '@/data';
+import { Align, Row } from '@/components/layout';
+import Button from '@/components/atoms/Button';
+import { Modal, useModalInstance } from '@/features/modal';
+import { ConfirmModal } from '@/features/modal';
 
 import styles from './styles.module.scss';
 
@@ -22,36 +20,24 @@ function RecoveryModal({
     onRecovery,
     onClose,
 }:RecoveryModalProps) {
-    const [disappear, setDisappear] = useState(true);
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
     const valid = useMemo(()=>recoveryKey.length >= 4, [recoveryKey]);
     const [errorMessage, setErrorMessage] = useState('');
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-    useEffect(()=>{
-        setTimeout(() => {
-            setDisappear(false);
-        }, 1);
-    }, []);
-
-    const close = () => {
-        setDisappear(true);
-        setTimeout(() => {
-            onClose();
-        }, MODAL_DISAPPEAR_DURATION);
-    }
-
     return (
         <Modal
             className='relative'
-            disappear={disappear}
             style={{
                 width : 'auto',
                 minWidth: '400px',
             }}
+            header={{
+                label: '복구 키 입력',
+                showCloseButton: false,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>복구 키 입력</ModalHeader>
             <Row
                 style={{
                     height: '1.4em',
@@ -126,7 +112,7 @@ function RecoveryModal({
                             const success = await onRecovery(recoveryKey);
                             if (success) {
                                 setErrorMessage('');
-                                close();
+                                onClose();
                             }
                             else{
                                 setErrorMessage('복구할 수 없습니다.');
@@ -164,7 +150,7 @@ function RecoveryModal({
                     title='키 초기화'
                     onConfirm={()=>{
                         onReset();
-                        close();
+                        onClose();
                         return true;
                     }}
                     onClosed={()=>{

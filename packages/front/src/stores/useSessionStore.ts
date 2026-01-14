@@ -1,36 +1,21 @@
 import { create } from 'zustand'
 import { RefetchMethods, UpdateMethods } from './types';
-import { profileStoreTool, sessionStoreTool } from './utils';
+import { sessionStoreTool } from './utils';
 import ProfilesAPI, { type ProfileAPI } from '@/api/profiles';
-import RequestManager from '@/features/request-manager';
-import useChannelStore from './useChannelStore';
-import { HistoryData } from '@/features/session-history';
 import useCacheStore from './useCacheStore';
-import { emitEvent } from '@/hooks/useEvent';
-
-interface SessionCacheFields {
-    input: string;
-    output: string;
-    last_history: HistoryData | null;
-    input_token_count: number;
-
-    state: 'loading' | 'idle' | 'error' | 'done';
-    markdown: boolean;
-}
-
-interface SessionConfigFields {
-    name: string | null;
-    model_id: string;
-    rt_id: string;
-    color: string;
-}
+import { InputFile, InputFileHash, InputFilePreview, ProfileStorageSchema } from '@afron/types';
 
 interface SessionManagedFields {
     input_files: InputFilePreview[];
-    cached_thumbnails: Record<string, string|null>;
+    cached_thumbnails: Record<string, string | null>;
+}
+const defaultManaged: SessionManagedFields = {
+    input_files: [],
+    cached_thumbnails: {},
 }
 
-const defaultCache: SessionCacheFields = {
+type CacheFields = Omit<ProfileStorageSchema.Session.Cache, 'upload_files'>;
+const defaultCache: CacheFields = {
     input: '',
     output: '',
     input_token_count: 0,
@@ -39,20 +24,21 @@ const defaultCache: SessionCacheFields = {
     state: 'idle',
     markdown: true,
 }
-const defaultConfig: SessionConfigFields = {
-    name: null,
+type ConfigFields = Omit<ProfileStorageSchema.Session.Config, 'delete_lock'>;
+const defaultConfig: ConfigFields = {
+    name: 'unknown',
     model_id: '',
     rt_id: '',
     color: 'default',
 }
-const defaultManaged: SessionManagedFields = {
-    input_files: [],
-    cached_thumbnails: {},
+type DataFields = Pick<ProfileStorageSchema.Session.Data, 'running_rt'>;
+const defaultData: DataFields = {
+    running_rt: {},
 }
 
-type SessionFields = SessionCacheFields & SessionConfigFields;
+type SessionFields = CacheFields & ConfigFields & DataFields;
 
-interface SessionState extends SessionFields, SessionManagedFields {
+export interface SessionState extends SessionFields, SessionManagedFields {
     actions: {
         addInputFile(filename: string, base64Data: string): Promise<void>;
         updateInputFiles(fileHashes: InputFileHash[]): Promise<void>;
@@ -76,20 +62,25 @@ export const useSessionStore = create<SessionState>((set, get) => {
         update: updateCache,
         refetch: refetchCache,
         refetchAll: refetchAllCache
-    } = sessionStoreTool<SessionCacheFields>(set, get, 'cache.json', defaultCache);
+    } = sessionStoreTool<CacheFields>(set, get, 'cache.json', defaultCache);
     const {
         update: updateConfig,
         refetch: refetchConfig,
         refetchAll: refetchAllConfig
-    } = sessionStoreTool<SessionConfigFields>(set, get, 'config.json', defaultConfig);
+    } = sessionStoreTool<ConfigFields>(set, get, 'config.json', defaultConfig);
+    const {
+        update: updateData,
+        refetch: refetchData,
+        refetchAll: refetchAllData
+    } = sessionStoreTool<DataFields>(set, get, 'data.json', defaultData);
 
     return {
         ...defaultCache,
         ...defaultConfig,
+        ...defaultData,
         ...defaultManaged,
 
         actions: {
-
             addInputFile: async (filename: string, base64Data: string) => {
                 const { deps, input_files, cached_thumbnails } = get();
                 if (!deps.last_session_id) {
@@ -98,7 +89,7 @@ export const useSessionStore = create<SessionState>((set, get) => {
                 }
 
                 const metadata = await deps.api.session(deps.last_session_id).inputFiles.add(filename, base64Data);
-                const next:InputFilePreview[] = [...input_files];
+                const next: InputFilePreview[] = [...input_files];
                 next.push({
                     filename: metadata.filename,
                     size: metadata.size,
@@ -116,10 +107,10 @@ export const useSessionStore = create<SessionState>((set, get) => {
                     console.warn('No session ID available for uploading input file.');
                     return;
                 }
-                
+
                 const { updated, removed } = await deps.api.session(deps.last_session_id).inputFiles.update(fileHashes);
-                
-                const next:InputFilePreview[] = [];
+
+                const next: InputFilePreview[] = [];
                 for (const metadata of updated) {
                     const file = input_files.find(f => f.hash_sha256 === metadata.hash_sha256);
                     if (file) {
@@ -137,21 +128,20 @@ export const useSessionStore = create<SessionState>((set, get) => {
                         delete cached_thumbnails[file.hash_sha256];
                     }
                 }
-                
+
                 set({ input_files: next });
             },
             refetchInputFiles: async () => {
-                const { deps, cached_thumbnails } = get();
+                const { deps } = get();
                 const { last_session_id } = useCacheStore.getState();
                 if (!last_session_id) {
                     console.warn('No session ID available for fetching input files.');
                     return;
                 }
 
-                const hashes = Object.keys(cached_thumbnails);
                 const files = await deps.api.session(last_session_id).inputFiles.getPreviews();
                 const next: InputFile[] = files.map(f => {
-                    const file:Partial<InputFilePreview> = {
+                    const file: Partial<InputFilePreview> = {
                         filename: f.filename,
                         size: f.size,
                         type: f.type,
@@ -174,17 +164,20 @@ export const useSessionStore = create<SessionState>((set, get) => {
         },
         update: {
             ...updateCache,
-            ...updateConfig
+            ...updateConfig,
+            ...updateData,
         },
         refetch: {
             ...refetchCache,
-            ...refetchConfig
+            ...refetchConfig,
+            ...refetchData,
         },
         refetchAll: async () => {
             const { actions } = get();
             await Promise.all([
                 refetchAllCache(),
                 refetchAllConfig(),
+                refetchAllData(),
                 actions.refetchInputFiles(),
             ]);
         }

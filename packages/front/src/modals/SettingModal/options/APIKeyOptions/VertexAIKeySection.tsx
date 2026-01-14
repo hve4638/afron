@@ -1,19 +1,20 @@
 import { Align, Flex, Row } from '@/components/layout';
 import { APIKeyMetadata } from '@/types/apikey-metadata';
 
-import DivButton from '@/components/DivButton';
-import { GIcon } from '@/components/GoogleFontIcon';
-import { useModal } from '@/hooks/useModal';
+import DivButton from '@/components/atoms/DivButton';
+import { GIcon } from '@/components/atoms/GoogleFontIcon';
 
 import APIItem from './APIItem';
 import AddVertexAPIModal from './AddVertexAPIModal';
 import ProfileEvent from '@/features/profile-event';
+import { VertexAIAuth } from '@afron/types';
+import { useModal } from '@/features/modal';
 
 interface SingleAPIKeySectionProps {
     title: string;
 
     addButtonText: string;
-    
+
     apiKeys: APIKeyMetadata[];
 }
 
@@ -62,18 +63,20 @@ interface AddVertexAIKeyButtonProps {
 function AddVertexAIKeyButton({
     title,
     onAddAPIKey
-}:AddVertexAIKeyButtonProps) {
+}: AddVertexAIKeyButtonProps) {
     const modal = useModal();
 
     return (
         <DivButton
             center={true}
-            onClick={()=>{
-                modal.open(AddVertexAPIModal, {
-                    title,
-                    onSubmit : onAddAPIKey,
-                    placeholder : 'API 키',
-                });
+            onClick={() => {
+                modal.open(
+                    <AddVertexAPIModal
+                        title={title}
+                        onSubmit={onAddAPIKey}
+                        placeholder='API 키'
+                    />
+                );
             }}
         >
             <GIcon

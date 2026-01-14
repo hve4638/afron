@@ -2,53 +2,58 @@ import classNames from 'classnames';
 
 import { Column, Flex, Row } from '@/components/layout';
 
-import FormFieldProps from './types';
+import { FormFieldProps } from './types';
 
 import { CheckBoxField, NumberField, SelectField, TextField } from './primary-fields';
 
 import styles from './styles.module.scss';
-import { GIconButton, GoogleFontIcon } from '@/components/GoogleFontIcon';
+import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { useCallback } from 'react';
 import StructField from './StructField';
-import { getPromptVarDefaultValue } from '../utils';
+import { getRTVarConfigDefaultValue } from '../utils';
+import { RTVarConfig } from '@afron/types';
 
+interface ArrayFieldProps extends FormFieldProps<'array', unknown[]> {
+    arrayConfig: RTVarConfig.Array;
+}
 
-function ArrayField({ promptVar, onChange, value }: FormFieldProps<PromptVarArray, unknown[]>) {
-    const elementCompoment = useCallback((item: any, index: number) => {
+function ArrayField({ name, onChange, value, arrayConfig }: ArrayFieldProps) {
+    const elementCompoment = useCallback((elementValue: any, index: number) => {
         const change = (nextElement: unknown) => {
             const newValue = [...value];
             newValue[index] = nextElement;
-            onChange(newValue);
+            onChange((prev) => {
+                const next = [...prev];
+                next[index] = nextElement;
+                return next;
+            });
         }
 
         const name = `[${index}]`;
-        switch (promptVar.element.type) {
+        switch (arrayConfig.element_type) {
             case 'text':
                 return <TextField
                     name={name}
-                    promptVar={promptVar.element}
-                    value={item}
+                    value={elementValue}
                     onChange={change}
                 />
             case 'number':
                 return <NumberField
                     name={name}
-                    promptVar={promptVar.element}
-                    value={item}
+                    value={elementValue}
                     onChange={change}
                 />
             case 'checkbox':
                 return <CheckBoxField
                     name={name}
-                    promptVar={promptVar.element}
-                    value={item}
+                    value={elementValue}
                     onChange={change}
                 />
             case 'select':
                 return <SelectField
                     name={name}
-                    promptVar={promptVar.element}
-                    value={item}
+                    value={elementValue}
+                    options={arrayConfig.config.select?.options ?? []}
                     onChange={change}
                 />
             case 'struct':
@@ -58,17 +63,22 @@ function ArrayField({ promptVar, onChange, value }: FormFieldProps<PromptVarArra
                     >
                         <span className='undraggable'>{name}</span>
                         <StructField
-                            key={index}
-                            promptVar={promptVar.element}
-                            value={item}
+                            name={name}
+                            fields={arrayConfig.config.struct?.fields ?? []}
+
+                            value={elementValue}
                             onChange={change}
                         />
                     </Row>
                 )
         }
-    }, [promptVar, onChange]);
+    }, [onChange]);
     const addElement = () => {
-        const defaultValue = getPromptVarDefaultValue(promptVar.element);
+        const varData = {
+            type: arrayConfig.element_type,
+            config: arrayConfig.config
+        }
+        const defaultValue = getRTVarConfigDefaultValue(varData);
         const newValue = [...value, defaultValue];
         onChange(newValue);
     }
@@ -93,7 +103,7 @@ function ArrayField({ promptVar, onChange, value }: FormFieldProps<PromptVarArra
                         padding: '0px',
                         margin: '0px',
                     }}
-                >{promptVar.display_name}</span>
+                >{name}</span>
                 <Flex />
                 <GIconButton
                     value='add'

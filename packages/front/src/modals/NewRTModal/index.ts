@@ -1,3 +1,1 @@
-import AddPromptModal from './NewRTModal';
-
-export default AddPromptModal;
+export { NewRTModal } from './NewRTModal';

@@ -1,9 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import classNames from 'classnames';
 
 import ProfilesAPI from '@/api/profiles';
 import { useProfileAPIStore } from '@/stores';
-import { ModalProvider } from '@/hooks/useModal';
 
 import ProfileSelectPage from '@/pages/ProfileSelect';
 import Hub from '@/pages/Hub';
@@ -14,6 +13,7 @@ import {
     useBootStore,
     useInitialize
 } from './features/bootstrap';
+import { ModalProvider } from './features/modal';
 
 const LoadPhase = {
     Boot: 'boot',

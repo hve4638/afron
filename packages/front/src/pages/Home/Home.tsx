@@ -1,4 +1,4 @@
-import { ModalProvider } from '@/hooks/useModal';
+import { ModalProvider } from '@/features/modal';
 import { Grid } from '@/components/layout';
 import ToastRenderer from '@/components/ToastAnchor/ToastRenderer';
 
@@ -10,13 +10,13 @@ import {
 import { useEventHandler, useFontSizeChanger, useShortcutEmitter } from './hooks';
 import ModalHandler from './ModalHandler';
 
-function HomePage() {
+function HomePageInner() {
     useShortcutEmitter();
     useFontSizeChanger();
     useEventHandler();
 
     return (
-        <ModalProvider>
+        <>
             <Grid
                 id='home'
                 className='column relative'
@@ -36,8 +36,16 @@ function HomePage() {
                 right='0'
             />
             <ModalHandler />
-        </ModalProvider>
+        </>
     );
+}
+
+function HomePage() {
+    return (
+        <ModalProvider>
+            <HomePageInner />
+        </ModalProvider >
+    )
 }
 
 export default HomePage;

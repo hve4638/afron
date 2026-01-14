@@ -1,12 +1,11 @@
-import { Modal, ModalHeader, ModalRequiredProps } from '@/components/Modal';
+import { Modal } from '@/features/modal';
 import { useProgressModalEvent } from './events';
 import { Align, Gap, Row } from '@/components/layout';
-import Button from '@/components/Button';
+import Button from '@/components/atoms/Button';
 import { useState } from 'react';
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { useModalInstance } from '@/features/modal';
 
-interface ProgressModalProps extends ModalRequiredProps {
+interface ProgressModalProps {
     modalId: string;
 
     title?: string;
@@ -15,14 +14,13 @@ interface ProgressModalProps extends ModalRequiredProps {
 }
 
 function ProgressModal({
-    onClose,
     modalId,
 
     title,
     description,
     progress
 }: ProgressModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal } = useModalInstance();
     const [currentTitle, setCurrentTitle] = useState(title ?? null);
     const [currentDescription, setCurrentDescription] = useState(description ?? null);
     const [closeInteractionEnabled, setCloseInteractionEnabled] = useState(false);
@@ -42,7 +40,7 @@ function ProgressModal({
     useProgressModalEvent('close', ({ id }) => {
         if (id !== modalId) return;
 
-        onClose();
+        closeModal();
     }, [modalId]);
 
     useProgressModalEvent('show_close_button', ({ id }) => {
@@ -51,26 +49,17 @@ function ProgressModal({
         setCloseInteractionEnabled(true);
     }, [modalId]);
 
-    useHotkey({
-        'Escape': () => {
-            close();
-        }
-    }, closeInteractionEnabled, []);
-
     return (
         <Modal
-            disappear={disappear}
             style={{
-                // maxWidth: undefined,
                 minWidth: '15em',
                 width: 'auto',
             }}
-            headerLabel={
-                currentTitle != null &&
-                <ModalHeader hideCloseButton>
-                    {title}
-                </ModalHeader>
-            }
+            header={{
+                label: 'title',
+                showCloseButton: false,
+            }}
+            allowEscapeKey={closeInteractionEnabled}
         >
             <div>{currentDescription}</div>
             {
@@ -81,9 +70,7 @@ function ProgressModal({
                 >
                     <Button
                         style={{ minWidth: '5em' }}
-                        onClick={() => {
-                            close();
-                        }}
+                        onClick={closeModal}
                     >닫기</Button>
                 </Row>
             }

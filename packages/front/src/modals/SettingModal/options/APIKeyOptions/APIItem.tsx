@@ -1,7 +1,7 @@
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { Align, Flex, Row } from '@/components/layout';
+import { useModal } from '@/features/modal';
 import ProfileEvent from '@/features/profile-event';
-import { useModal } from '@/hooks/useModal';
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { APIKeyMetadata } from '@/types/apikey-metadata';
 import { use } from 'i18next';
@@ -35,13 +35,13 @@ function APIItem({ item, onDelete, onChangeType }: APIItemProps) {
             columnAlign={Align.Center}
         >
             <Tooltip
-                style={{ fontSize:'0.8em', padding:'0.2em 1em'}}
+                style={{ fontSize: '0.8em', padding: '0.2em 1em' }}
                 anchorSelect='.noverified'
                 delayShow={250}
             >키 검증에 실패했습니다</Tooltip>
             {
                 verified === false &&
-                <GIcon className='noverified' value='warning'/>
+                <GIcon className='noverified' value='warning' />
             }
             <small className='secondary-color'>{item.display_name}</small>
             {
@@ -60,13 +60,14 @@ function APIItem({ item, onDelete, onChangeType }: APIItemProps) {
                 hoverEffect='square'
 
                 onClick={() => {
-                    modal.open(DeleteConfirmDialog, {
-                        onDelete: async () => {
-                            onDelete();
-                            return true;
-                        }
-                    })
-
+                    modal.open(
+                        <DeleteConfirmDialog
+                            onDelete={async () => {
+                                onDelete();
+                                return true;
+                            }}
+                        />
+                    );
                 }}
             />
         </Row>

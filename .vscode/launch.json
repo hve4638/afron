@@ -2,18 +2,17 @@
     "version": "0.2.0",
     "compounds": [
         {
-            "name": "Debug App (Build -> Front + Electron)",
+            "name": "Launch App",
             "configurations": [
-                "Start Frontend (New)",
-                "Debug Electron Main (New)"
+                "front:launch",
+                "electron:launch"
             ],
-            "preLaunchTask": "build:all",
             "stopAll": true
         }
     ],
     "configurations": [
         {
-            "name": "Debug Electron Main (New)",
+            "name": "electron:launch",
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceFolder}/packages/electron",
@@ -30,10 +29,11 @@
                 // "ELECTRON_DEFAULT_RT" : "TRUE",
                 // "ELECTRON_SHOW_DEVTOOL" : "TRUE",
             },
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "preLaunchTask": "build-all",
         },
         {
-            "name": "Start Frontend (New)",
+            "name": "front:launch",
             "type": "node-terminal",
             "request": "launch",
             "command": "yarn start",

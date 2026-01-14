@@ -1,10 +1,9 @@
 import { v7 } from 'uuid';
 
-import useProfileAPIStore from '@/stores/useProfileAPIStore';
 import useCacheStore from '@/stores/useCacheStore';
 import useDataStore from '@/stores/useDataStore';
-import { ProfileSessionMetadata } from '@/types';
 import useMemoryStore from '@/stores/useMemoryStore';
+import { ChatAIModel, ChatAIModelCategory, ChatAIModelGroup, CustomModel, CustomModelCreate } from '@afron/types';
 
 class ModelEvent {
     static isModelStarred(modelMetadataId: string) {

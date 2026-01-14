@@ -1,9 +1,15 @@
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
+import Channel from '@hve/channel';
+
 import { emitEvent, EventNames, useEvent } from '@/hooks/useEvent';
 import { useCacheStore, useProfileAPIStore, useSessionStore } from '@/stores';
 import RequestManager from '@/features/request-manager';
-import Channel from '@hve/channel';
-import { useCallback } from 'react';
+import { emitNavigate } from '@/events/navigate';
+import Latch from '@/lib/Latch';
 function useEventHandler() {
+    const navigate = useNavigate();
+
     const api = useProfileAPIStore(state => state.api);
     const last_session_id = useCacheStore(state => state.last_session_id);
     const checkAPI = useCallback(() => {
@@ -18,9 +24,9 @@ function useEventHandler() {
         if (!checkAPI()) return;
         if (last_session_id == null) return;
 
-        const waitChannel = new Channel();
-        emitEvent('request_ready', waitChannel);
-        await waitChannel.consume();
+        const latch = new Latch();
+        emitEvent('request_ready', latch);
+        await latch.wait();
 
         RequestManager.preview(api.id, last_session_id);
     }, [last_session_id, api]);
@@ -29,12 +35,16 @@ function useEventHandler() {
         if (!checkAPI()) return;
         if (last_session_id == null) return;
 
-        const waitChannel = new Channel();
-        emitEvent('request_ready', waitChannel);
-        await waitChannel.consume();
+        const latch = new Latch();
+        emitEvent('request_ready', latch);
+        await latch.wait();
 
         RequestManager.request(api.id, last_session_id);
     }, [last_session_id, api]);
+
+    useEvent('abort_request', async () => {
+        await RequestManager.abortAll();
+    }, []);
 
     useEvent('copy_response', () => {
         const { output } = useSessionStore.getState();
@@ -48,6 +58,18 @@ function useEventHandler() {
             }
         }
     }, []);
+
+    useEvent('goto_rt_editor', async ({ rtId }) => {
+        const metadata = await api.rt(rtId).getMetadata();
+        console.log(metadata);
+        const { mode } = metadata;
+        if (mode === 'flow') {
+            emitNavigate('goto_workflow_editor', { rtId });
+        }
+        else if (mode === 'prompt_only') {
+            emitNavigate('goto_prompt_editor', { rtId, promptId: 'default' });
+        }
+    }, [api]);
 }
 
 export default useEventHandler;

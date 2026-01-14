@@ -5,6 +5,7 @@ import { HistoryRow } from '@/features/acstorage-accessor/HistoryAccessor/types'
 
 import RTEventEmitter from '../RTEventEmitter';
 import { NodeData } from '../nodes/types';
+import { RTInput } from '@afron/types';
 
 abstract class RTWorkflow {
     constructor(

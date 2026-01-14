@@ -1,10 +1,8 @@
 import classNames from 'classnames';
 
 import { Align, Row } from '@/components/layout';
-import { Modal, ModalHeader } from '@/components/Modal';
-import Button from '@/components/Button';
-
-import useModalDisappear from '@/hooks/useModalDisappear';
+import { Modal, ModalHeader, useModalInstance } from '@/features/modal';
+import Button from '@/components/atoms/Button';
 
 import { CommonDialogProps } from './types';
 
@@ -26,7 +24,6 @@ function ConfirmDialog({
     cancelText = '취소',
     onConfirm = ()=>true,
     onCancel = ()=>true,
-    onClose,
     confirmButtonClassName='',
     cancelButtonClassName='',
 
@@ -35,20 +32,21 @@ function ConfirmDialog({
     className='',
     style={},
 }:ConfirmDialogProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal } = useModalInstance();
 
     return (
         <Modal
             className={className}
             style={style}
-            disappear={disappear}
-            enableRoundedBackground={enableRoundedBackground}
+            header={{
+                label: title,
+                showCloseButton: false,
+            }}
+            allowEscapeKey={false}
+            backgroundProps={{
+                enableRoundedBackground: enableRoundedBackground,
+            }}
         >
-            <ModalHeader
-                hideCloseButton={true}
-            >
-                {title}
-            </ModalHeader>
             <div
                 className='undraggable'
                 style={{
@@ -73,7 +71,7 @@ function ConfirmDialog({
                     style={{ minWidth: '6em' }}
                     onClick={()=>{
                         if (onConfirm()) {
-                            close();
+                            closeModal();
                         }
                     }}
                 >{confirmText}</Button>
@@ -82,7 +80,7 @@ function ConfirmDialog({
                     style={{ minWidth: '6em' }}
                     onClick={()=>{
                         if (onCancel()) {
-                            close();
+                            closeModal();
                         }
                     }}
                 >{cancelText}</Button>

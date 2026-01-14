@@ -1,14 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import classNames from 'classnames';
-import Button from 'components/Button';
-import { Modal, ModalHeader } from 'components/Modal';
-import { Align, Center, Column, Flex, Grid, Row } from 'components/layout';
-import useModalDisappear from 'hooks/useModalDisappear';
-import { useTranslation } from 'react-i18next';
-import useHotkey from 'hooks/useHotkey';
+import { Modal, ModalHeader } from '@/features/modal';
 import { ConfirmCancelButtons } from 'components/ModalButtons';
-import UploadForm from '@/components/UploadForm';
-import { StringForm, StringLongForm } from '@/components/forms';
+import { StringForm, StringLongForm } from '@/components/FormFields';
+import { useModalInstance } from '@/features/modal';
+import { Gap } from '@/components/layout';
 
 type StringInputModalProps = {
     title: string;
@@ -18,7 +13,6 @@ type StringInputModalProps = {
     memo?: string;
 
     onSubmit?: (x: { authKey: string; memo: string; }) => Promise<boolean> | boolean | undefined | void;
-    onClose?: () => void;
 }
 
 function AddAPIKeyModal({
@@ -27,30 +21,26 @@ function AddAPIKeyModal({
     editMode = false,
     memo = '',
     onSubmit = () => { return; },
-    onClose = () => {},
 }: StringInputModalProps) {
-    const { t } = useTranslation();
-    const [disappear, close] = useModalDisappear(() => onClose());
+    const { closeModal } = useModalInstance();
     const [authKey, setAuthKey] = useState<string>('');
     const [currentMemo, setCurrentMemo] = useState<string>(memo);
-
-    useHotkey({
-        'Escape': () => {
-            close();
-        }
-    })
 
     return (
         <Modal
             className='relative'
-            disappear={disappear}
             style={{
                 width: 'auto',
                 minWidth: '400px',
             }}
+            allowEscapeKey={true}
+
+            header={{
+                label: title,
+                showCloseButton: false,
+            }}
         >
-            <ModalHeader hideCloseButton={true}>{title}</ModalHeader>
-            <div style={{ height: '0.5em' }} />
+            <Gap h='0.5em'/>
             <StringLongForm
                 name={apiKeyName ?? 'API Key'}
                 value={authKey}
@@ -69,16 +59,16 @@ function AddAPIKeyModal({
             <ConfirmCancelButtons
                 onConfirm={async () => {
                     let result = onSubmit({ authKey, memo: currentMemo });
-                    if (result == undefined) close();
+                    if (result == undefined) closeModal();
 
                     if (result && typeof result['then'] === 'function') {
                         result = await result;
                     }
                     if (result || result == undefined) {
-                        close();
+                        closeModal();
                     }
                 }}
-                onCancel={() => close()}
+                onCancel={() => closeModal()}
                 enableConfirmButton={authKey.length > 0 || editMode}
             />
         </Modal>

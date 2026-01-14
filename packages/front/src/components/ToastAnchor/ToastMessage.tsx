@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { Align, Column, Row } from '@/components/layout';
-import { GIcon, GIconButton } from '@/components/GoogleFontIcon';
+import { GIcon, GIconButton } from '@/components/atoms/GoogleFontIcon';
 import useModalDisappear from '@/hooks/useModalDisappear';
 import { Toast } from '@/types/toast';
 
@@ -15,7 +15,7 @@ interface ToastMessageProps {
 }
 
 export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
-    const [disappear, close] = useModalDisappear(onDispose);
+    const [disappear, closeToast] = useModalDisappear(onDispose);
     const icon = useMemo(()=>{
         switch (value.type) {
             case 'fatal':
@@ -30,14 +30,6 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
                 return 'check_circle';
         }
     }, [value.type])
-
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         close();
-    //     }, 3000);
-
-    //     return () => clearTimeout(timer);
-    // }, []);
 
     return (
         <Row
@@ -55,7 +47,7 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
             columnAlign={Align.Center}
             onClick={(e) => {
                 onClick();
-                close();
+                closeToast();
                 e.stopPropagation();
             }}
         >
@@ -69,7 +61,7 @@ export function ToastMessage({ value, onClick, onDispose }: ToastMessageProps) {
                 className={styles['close-button']}
                 value='close'
                 onClick={(e) => {
-                    close();
+                    closeToast();
                     e.stopPropagation();
                 }}
             />

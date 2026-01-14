@@ -1,4 +1,5 @@
-import DropdownForm, { Dropdown } from '@/components/forms/DropdownForm';
+import DropdownForm, { Dropdown } from '@/components/FormFields/DropdownForm';
+import { SupportedVerbosity } from '@afron/types';
 
 interface VerbosityFormProps {
     candidates?: readonly SupportedVerbosity[];
@@ -6,6 +7,7 @@ interface VerbosityFormProps {
     value: SupportedVerbosity | undefined;
     onChange: (value: SupportedVerbosity) => void;
 
+    align?: 'left' | 'right';
     disabled?: boolean;
 }
 
@@ -15,6 +17,7 @@ function VerbosityForm({
     value,
     onChange,
 
+    align,
     disabled = false,
 }: VerbosityFormProps) {
     return (
@@ -25,6 +28,7 @@ function VerbosityForm({
             onItemNotFound={(value) => {
                 if (value != null) onChange(value);
             }}
+            align={align}
         >
             {candidates.includes('low') && <Dropdown.Item name='low' value='low' />}
             {candidates.includes('medium') && <Dropdown.Item name='medium' value='medium' />}

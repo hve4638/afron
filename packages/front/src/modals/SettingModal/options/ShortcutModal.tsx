@@ -1,14 +1,12 @@
-import useHotkey from '@/hooks/useHotkey';
-import useModalDisappear from '@/hooks/useModalDisappear';
 import classNames from 'classnames';
-import Button from 'components/Button';
-import { Modal, ModalHeader } from 'components/Modal';
-import { Align, Center, Column, Flex, Grid, Row } from 'components/layout';
-import { MODAL_DISAPPEAR_DURATION } from 'data';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import Button from '@/components/atoms/Button';
+import { Modal } from '@/features/modal';
+import { Align, Column, Flex, Grid, Row } from 'components/layout';
+import { useEffect, useMemo, useState } from 'react';
 import { Shortcut } from 'types/shortcut';
 import { getKeyType, isKeyCodeChar, KEY_TYPE, mapKeyCode } from 'utils/keycode-map';
 import { shortcutToText } from 'utils/shortcut';
+import { useModalInstance } from '@/features/modal';
 
 const hasSpecialKey = (shortcut: Shortcut) => {
     return shortcut.ctrl || shortcut.shift || shortcut.alt || shortcut.win;
@@ -18,16 +16,15 @@ type ShortcutModalProps = {
     initValue?: Shortcut;
     name: string;
     onChange?: (shortcut: Shortcut) => void;
-    onClose?: () => void;
 }
 
 function ShortcutModal({
     initValue = {},
     name,
     onChange = () => { },
-    onClose = () => { },
 }: ShortcutModalProps) {
-    const [disappear, close] = useModalDisappear(onClose);
+    const { closeModal } = useModalInstance();
+
     const [focus, setFocus] = useState(false);
     const [shortcut, setShortcut] = useState<Shortcut>(initValue);
     const shortcutText = useMemo(() => shortcutToText(shortcut), [shortcut]);
@@ -77,7 +74,7 @@ function ShortcutModal({
         e.stopPropagation();
 
         if (e.key === 'Escape') {
-            onClose();
+            closeModal();
             return;
         }
         if (e.key === 'Control') return;
@@ -125,13 +122,6 @@ function ShortcutModal({
         }
     }
 
-    useHotkey({
-        'Escape': () => {
-            onClose();
-            return true;
-        }
-    }, true, [onClose]);
-
     useEffect(() => {
         if (!focus) return;
         addEventListener('wheel', handleWheel);
@@ -145,24 +135,23 @@ function ShortcutModal({
 
     return (
         <Modal
-            disappear={disappear}
             className='shortcut-modal'
             style={{
                 width: '60%',
                 minHeight: '230px',
             }}
 
-            onEscapeAction={close}
-            focused={true}
+            allowEscapeKey={true}
 
             backgroundProps={{
                 style: {
                     borderRadius: '5px',
                 }
             }}
-            headerLabel={
-                <ModalHeader className='noflex' onClose={close}>단축키 설정</ModalHeader>
-            }
+            header = {{
+                label: '단축키 설정',
+                showCloseButton: true,
+            }}
         >
             <Grid
                 columns='1fr'
@@ -235,7 +224,7 @@ function ShortcutModal({
                                 if (!validShortcut) return;
 
                                 onChange(shortcut);
-                                close();
+                                closeModal();
                             }}
                         >확인</Button>
                         <div style={{ width: '8px' }} />
@@ -245,7 +234,7 @@ function ShortcutModal({
                                 width: '96px',
                                 height: '100%',
                             }}
-                            onClick={() => close()}
+                            onClick={closeModal}
                         >취소</Button>
                     </Row>
                 </Column>

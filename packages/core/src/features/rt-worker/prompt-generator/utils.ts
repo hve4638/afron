@@ -1,6 +1,7 @@
-import { CBFResult } from '@hve/prompt-template';
+import { InputFile } from '@afron/types';
+import { TemplateOutput } from 'advanced-prompt-template-lang';
 
-export function parseInputFileToCBFResult(file: InputFile): CBFResult {
+export function parseInputFileToCBFResult(file: InputFile): TemplateOutput {
     switch (file.type) {
         case 'text/plain':
         case 'application/pdf':

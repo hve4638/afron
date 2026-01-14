@@ -1,0 +1,18 @@
+.modal {
+    background-color: rgb(23, 23, 23);
+    border: 1px solid #4c4c4c;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 600px;
+    display: block;
+
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    transform: scale(1);
+    opacity: 1;
+
+    &.disappear {
+        transform: scale(0.9);
+        opacity: 0.0;
+    }
+}

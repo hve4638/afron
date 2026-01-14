@@ -1,6 +1,7 @@
 import runtime from '@/runtime';
+import { IPCInvokers } from '@afron/types';
 
-function handler(): IPCInvokerRequest {
+function handler(): IPCInvokers.Request {
     return {
         async requestRT(token: string, profileId: string, sessionId: string) {
             const profile = await runtime.profiles.getProfile(profileId);
@@ -19,9 +20,8 @@ function handler(): IPCInvokerRequest {
             return [null] as const;
         },
         async abort(token: string) {
-            /// @TODO : 구현 필요
-
-            throw new Error('Not implemented');
+            runtime.rtWorker.abort(token);
+            
             return [null] as const;
         },
     }

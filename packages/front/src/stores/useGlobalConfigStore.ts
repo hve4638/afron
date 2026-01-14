@@ -1,14 +1,16 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { RefetchMethods, UpdateMethods } from './types';
-import { globalStoreTool, profileStoreTool } from './utils';
+import { globalStoreTool } from './utils';
 
 interface GlobalConfigFields {
     shared_mode: boolean;
+    hardware_acceleration: boolean;
 }
 
 const defaultCache:GlobalConfigFields = {
-    shared_mode : false,
+    shared_mode: false,
+    hardware_acceleration: false,
 }
 
 interface GlobalConfigState extends GlobalConfigFields {
@@ -17,7 +19,7 @@ interface GlobalConfigState extends GlobalConfigFields {
     refetchAll : () => Promise<void>;
 }
 
-const useGlobalConfigStore = create<GlobalConfigState, [['zustand/subscribeWithSelector', never]]>(
+const useGlobalConfigStore = create<GlobalConfigState>()(
     subscribeWithSelector((set, get)=>{
         const {
             update,

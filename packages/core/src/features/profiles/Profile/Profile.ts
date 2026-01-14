@@ -14,11 +14,12 @@ import { ProfileError } from './errors';
 import { v4 as uuidv4 } from 'uuid';
 import ProfileRT from './rt/ProfileRT';
 // import IRTControl from './rt/IRTControl';
-import { PromptOnlyTemplateFactory } from '@/features/rt-template-factory';
+import { FlowTemplateFactory, PromptOnlyTemplateFactory } from '@/features/rt-template-factory';
 import ProfileModel from './ProfileModel';
 import { LevelLogger } from '@/types';
 import NoLogger from '@/features/nologger';
 import type { IMasterKeyGettable } from '@/features/masterkey-manager';
+import { RTMetadata, RTMetadataTree } from '@afron/types';
 
 type ProfileRequried = {
     masterKeyGetter: IMasterKeyGettable;
@@ -120,7 +121,7 @@ class Profile {
         if (key == undefined) {
             key = uuidv4().trim();
             uniqueAC.setOne('personal-key', key);
-        }
+    }
         return key;
     }
 
@@ -170,6 +171,19 @@ class Profile {
                 /* through */
                 case 'empty':
                     await PromptOnlyTemplateFactory.empty(this, metadata.id, metadata.name);
+                    break;
+            }
+        }
+        else if (metadata.mode === 'flow') {
+            switch (templateId) {
+                case 'normal':
+                    await FlowTemplateFactory.normal(this, metadata.id, metadata.name);
+                    break;
+                default:
+                    console.warn(`Unknown templateId: ${templateId}`);
+                /* through */
+                case 'empty':
+                    await FlowTemplateFactory.empty(this, metadata.id, metadata.name);
                     break;
             }
         }

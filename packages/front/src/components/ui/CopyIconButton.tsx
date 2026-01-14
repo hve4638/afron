@@ -1,5 +1,5 @@
 import { CommonProps } from "@/types";
-import { GIconButton } from "../GoogleFontIcon";
+import { GIconButton } from "../atoms/GoogleFontIcon";
 import { EventNames, useEvent } from "@/hooks/useEvent";
 import { useRef, useState } from "react";
 
@@ -13,7 +13,7 @@ function CopyIconButton({
     handleEvent,
 }: CopyIconButtonProps) {
     const [checked, setChecked] = useState(false);
-    const timeoutRef = useRef<number>();
+    const timeoutRef = useRef<number>(null);
 
     const enableChecked = () => {
         if (timeoutRef.current) {

@@ -6,6 +6,7 @@ import { WorkNodeStop } from './errors';
 import { ProfileAPIKeyControl } from '@/features/profiles/ProfileControl';
 import ChatAIFetcher, { ChatAIFetcherFailed } from '@/features/chatai-fetcher';
 import { resolveModelConfiguration } from '@/features/model-metadata-resolver';
+import { ChatAIModel, CustomModel, ModelConfiguration } from '@afron/types';
 
 type ChatAIFetchNodeInput = {
     messages: ChatMessages;
@@ -129,7 +130,7 @@ class ChatAIFetchNode extends WorkNode<ChatAIFetchNodeInput, ChatAIFetchNodeOutp
 
         const globalConfig = await profile.model.getGlobalModelConfig(modelId);
 
-        const { model } = await rt.getPromptMetadata(this.option.promptId ?? 'default');
+        const { model } = await rt.prompt.getMetadata(this.option.promptId ?? 'default');
         const modelConfiguration = resolveModelConfiguration([globalConfig], [model]);
 
         if (modelId.startsWith('custom:')) {

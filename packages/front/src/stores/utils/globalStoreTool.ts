@@ -13,7 +13,7 @@ export function globalStoreTool<FIELDS extends object>(set:ZustandSet<FIELDS>, g
 } {
     const keys = Object.keys(fields) as (keyof FIELDS)[];
 
-    const committer = <T>(name:keyof FIELDS) => {
+    const committer = (name:keyof FIELDS) => {
         return async () => {
             const next = get()[name];
             await LocalAPI.globalStorage.set(accessorId, { [name]: next });

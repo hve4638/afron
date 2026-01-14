@@ -1,14 +1,12 @@
 import { Column } from '@/components/layout';
 
-import { useModal } from '@/hooks/useModal';
-import ErrorLogModal from '@/modals/ErrorLogModal';
-
-import { Z_INDEX_TOAST } from '@/data/z';
+import { Z_INDEX } from '@/constants';
 
 import { ToastMessage } from './ToastMessage';
 import useToastRenderer from './ToastRenderer.hook';
 import { emitEvent } from '@/hooks/useEvent';
 import InfoModal from '@/modals/InfoModal/InfoModal';
+import { useModal } from '@/features/modal';
 
 interface ToastRendererProps {
     top?: string;
@@ -37,11 +35,11 @@ function ToastRenderer({
                 bottom,
                 margin: '6px',
                 gap: '4px',
-                zIndex: Z_INDEX_TOAST,
+                zIndex: Z_INDEX.TOAST,
             }}
         >
             {
-                toasts.map((toast, index) => (
+                toasts.map((toast, i) => (
                     <ToastMessage
                         key={toast.id}
                         value={toast}
@@ -51,9 +49,7 @@ function ToastRenderer({
                                 emitEvent('open_error_log', toast.clickAction.error_id);
                             }
                             else if (toast.clickAction.action === 'open_info') {
-                                modal.open(InfoModal, {
-                                    item: toast.clickAction.item,
-                                });
+                                modal.open(<InfoModal item={toast.clickAction.item} />);
                                 
                             }
                         }}

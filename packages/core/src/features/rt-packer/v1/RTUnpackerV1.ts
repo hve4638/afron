@@ -94,7 +94,7 @@ export class RTUnpackerV1 {
         });
         await rt.raw.setForm(form);
         await rt.raw.setPrompt('default', rtPrompts);
-        await rt.setPromptName('default', rtIndex.name);
+        await rt.prompt.setName('default', rtIndex.name);
 
         this.logger.info(`RT '${rtIndex.name}' unpacked successfully as '${newRtId}'`);
     }

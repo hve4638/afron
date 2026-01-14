@@ -1,11 +1,11 @@
 import { useLayoutEffect, useState } from 'react';
-import { CheckBoxForm, HotkeyForm } from '@/components/forms';
+import { CheckBoxForm, HotkeyForm } from '@/components/FormFields';
 import ShortcutModal from './ShortcutModal';
 import { shortcutToText } from 'utils/shortcut';
 import { Shortcut } from 'types/shortcut';
 import useShortcutStore from '@/stores/useShortcutStore';
-import { useModal } from '@/hooks/useModal';
 import { useTranslation } from 'react-i18next';
+import { useModal } from '@/features/modal';
 
 function ShortcutOptions() {
     const { t } = useTranslation();
@@ -48,42 +48,19 @@ function ShortcutOptions() {
                         name={name}
                         text={shortcutToText(sc)}
                         onClick={()=>{
-                            console.log('CLICK?');
                             modal.open(
-                                ShortcutModal,
-                                {
-                                    initValue: sc,
-                                    name : name,
-                                    onChange: (shortcut:Shortcut)=>{
+                                <ShortcutModal
+                                    initValue={sc}
+                                    name={name}
+                                    onChange={(shortcut:Shortcut)=>{
                                         updateSC(shortcut);
-                                    }
-                                }
+                                    }}
+                                />
                             )
                         }}
                     />
                 ))
             }
-            {/* <div style={{ height: '1em' }}/>
-            <h2 className='undraggable'>전역 단축키</h2>
-            <CheckBoxForm
-                name='활성화'
-                checked={enabledGlobalHotkey}
-                onChange={setEnabledGlobalHotkey}
-            />
-            <HotkeyForm
-                name={t('shortcut.toggle_screen')}
-                text='-'
-                onClick={()=>{
-                    ;
-                }}
-            />
-            <HotkeyForm
-                name={t('shortcut.paste_clipboard_into_input')}
-                text='-'
-                onClick={()=>{
-                    ;
-                }}
-            /> */}
         </>
     )
 }

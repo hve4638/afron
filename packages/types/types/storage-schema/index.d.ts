@@ -1,0 +1,116 @@
+import { GeminiSafetySetting, SupportedThinkingEfforts, SupportedVerbosity } from '../chatai';
+import { FlowNodeType, RTFormNaive } from '../rt';
+
+export * as ProfileStorageSchema from './ProfileStorageSchema';
+
+export declare namespace ProfileStorage {
+    namespace RT {
+        type Index = {
+            version: string;
+            id: string;
+            name: string;
+            uuid: string;
+            mode: 'flow' | 'prompt_only';
+            input_type: 'normal' | 'chat';
+            forms: string[];
+            entrypoint_node: number;
+            prompts: PromptOrder;
+        }
+
+        // form.json 내 { [string]: Form } 형식의 Form에 해당
+        type Form = RTFormNaive;
+
+        // request-template.<rt-id>.prompt.<prompt-id>
+        type Prompt = {
+            id: string;
+            name: string
+            variables: PromptVar[];
+            constants: Array<{
+                name: string;
+                value: any;
+            }>;
+            model: {
+                stream: boolean;
+
+                top_p: number;
+                temperature: number;
+                max_tokens: number;
+                use_thinking: boolean;
+                thinking_tokens: number;
+                thinking_auto_budget: boolean;
+                thinking_effort: 'minimal' | 'low' | 'medium' | 'high';
+                verbosity: 'low' | 'medium' | 'high';
+
+                safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
+            };
+            contents: string;
+        }
+
+        type PromptVar = {
+            /** 변수 유형, external/form 선택 시 외부 연결이 끊기면 unknown으로 지정됨 */
+            type: 'constant' | 'form' | 'external' | 'unknown';
+            id: string;
+            name: string;
+            weak?: boolean;
+
+            /** 'form'이면서 form_id가 없다면 id를 form_id로 대체 사용 (이전버전 호환성) */
+            form_id?: string;
+            external_id?: string;
+            value?: any;
+        }
+
+        type FlowNode = {
+            type: FlowNodeType;
+            description: string;
+            data: Record<string, any>;
+            connection: Array<{
+                from_handle: string;
+                to_node: string;
+                to_handle: string;
+            }>;
+            position: {
+                x: number;
+                y: number;
+            };
+        }
+
+        type PromptOrder = {
+            id: string;
+            name: string;
+        }[];
+    }
+}
+
+export type ModelConfiguration = {
+    stream?: boolean;
+
+    temperature?: number;
+    top_p?: number;
+    max_tokens?: number;
+
+    use_thinking?: boolean;
+    thinking_auto_budget?: boolean;
+    thinking_tokens?: number;
+    thinking_effort?: SupportedThinkingEfforts;
+    thinking_summary?: boolean;
+    verbosity?: SupportedVerbosity;
+
+    safety_settings?: Partial<Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>>;
+}
+
+export type GlobalModelConfiguration = {
+    /**
+     * 전역 설정에서 기존 설정을 덮어쓰는지 여부
+     * 
+     * 전역 설정이 아니라면 무시됨
+     */
+    override_enabled?: boolean;
+
+    override_common?: boolean;
+    override_thinking?: boolean;
+    override_safety_settings?: boolean;
+    override_gpt5?: boolean;
+} & ModelConfiguration;
+
+
+export { };

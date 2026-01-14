@@ -1,3 +1,4 @@
+import { GlobalEventData, GlobalEventDataWithoutId } from '@afron/types';
 import BaseEventEmitter from './BaseEventEmitter';
 
 class GlobalEventEmitter extends BaseEventEmitter<GlobalEventData, GlobalEventDataWithoutId> {

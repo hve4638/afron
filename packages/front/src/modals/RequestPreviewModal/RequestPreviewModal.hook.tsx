@@ -1,4 +1,5 @@
 import useConfigStore from '@/stores/useConfigStore';
+import { RTEventPreviewData } from '@afron/types';
 import { useMemo } from 'react';
 
 type useRequestPreviewModalProps = {
