@@ -8,6 +8,7 @@
     "start": "vite",
     "start:test": "cross-env VITE_TEST=TRUE vite",
     "build": "tsc -b && vite build",
+    "check:build": "tsc -b --noEmit",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -22,7 +23,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@xyflow/react": "^12.8.6",
-    "advanced-prompt-template-lang": "^0.10.4",
+    "advanced-prompt-template-lang": "^0.10.5",
     "classnames": "^2.5.1",
     "crypto-js": "^4.2.0",
     "i18next": "^24.2.1",

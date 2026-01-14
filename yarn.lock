@@ -4175,6 +4175,13 @@ advanced-prompt-template-lang@^0.10.4:
   dependencies:
     contextual-trim "^0.1.0"
 
+advanced-prompt-template-lang@^0.10.5:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/advanced-prompt-template-lang/-/advanced-prompt-template-lang-0.10.5.tgz#2417ee1dcd6e7c19acc791e4087520eaa1083a14"
+  integrity sha512-GA1ED9s38SgZ909oPhxNAtUz/lvCFZG0JlxqBarl0wAmFOCC/qdMhkbQSknbrcFbr3mOcwQJYsqqPB8x53IYVg==
+  dependencies:
+    contextual-trim "^0.1.0"
+
 agent-base@6, agent-base@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
