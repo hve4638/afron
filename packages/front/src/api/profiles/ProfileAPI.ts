@@ -1,5 +1,5 @@
-import SessionAPI from './SessionAPI';
 import LocalAPI from '@/api/local';
+import { SessionAPI } from './SessionAPI';
 import RTAPI from './RTAPI';
 import { CustomModel, KeyValueInput, RTFlowData, RTMetadata, RTMetadataTree } from '@afron/types';
 

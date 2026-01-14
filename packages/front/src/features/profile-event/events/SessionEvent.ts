@@ -86,7 +86,7 @@ class SessionEvent {
                 // const { state } = await cachePromise;
                 const { running_rt } = await dataPromise as { running_rt: Record<string, { token: string, state: string }> };
 
-                let displayName = name;
+                let displayName: string | null = name;
                 if (name == null || name === '') {
                     if (await api.rts.existsId(rt_id)) {
                         const rtAPI = api.rt(rt_id);
@@ -106,7 +106,7 @@ class SessionEvent {
                 return {
                     id: sid,
                     name: name ?? '',
-                    displayName: displayName,
+                    displayName: displayName as string,
                     color: color,
                     deleteLock: delete_lock ?? false,
                     modelId: model_id,

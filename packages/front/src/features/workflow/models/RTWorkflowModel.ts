@@ -30,7 +30,7 @@ export class RTWorkflowModel {
             return this.#prompts;
         }
         this.#prompts ??= await this.#api.rt(this.#rtId).workflow.getPrompts();
-        return this.#prompts;
+        return this.#prompts!;
     }
 
     /**

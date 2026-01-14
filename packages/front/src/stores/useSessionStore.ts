@@ -2,43 +2,20 @@ import { create } from 'zustand'
 import { RefetchMethods, UpdateMethods } from './types';
 import { sessionStoreTool } from './utils';
 import ProfilesAPI, { type ProfileAPI } from '@/api/profiles';
-import { HistoryData } from '@/features/session-history';
 import useCacheStore from './useCacheStore';
-import { InputFile, InputFileHash, InputFilePreview } from '@afron/types';
-
-interface SessionCacheFields {
-    input: string;
-    output: string;
-    last_history: HistoryData | null;
-    input_token_count: number;
-
-    state: 'loading' | 'idle' | 'error' | 'done';
-    markdown: boolean;
-}
-
-interface SessionConfigFields {
-    name: string | null;
-    model_id: string;
-    rt_id: string;
-    color: string;
-}
-
-interface SessionDataFields {
-    running_rt: {
-        [key: string]: {
-            token: string;
-            created_at: number;
-            state: string;
-        }
-    };
-}
+import { InputFile, InputFileHash, InputFilePreview, ProfileStorageSchema } from '@afron/types';
 
 interface SessionManagedFields {
     input_files: InputFilePreview[];
     cached_thumbnails: Record<string, string | null>;
 }
+const defaultManaged: SessionManagedFields = {
+    input_files: [],
+    cached_thumbnails: {},
+}
 
-const defaultCache: SessionCacheFields = {
+type CacheFields = Omit<ProfileStorageSchema.Session.Cache, 'upload_files'>;
+const defaultCache: CacheFields = {
     input: '',
     output: '',
     input_token_count: 0,
@@ -47,21 +24,19 @@ const defaultCache: SessionCacheFields = {
     state: 'idle',
     markdown: true,
 }
-const defaultConfig: SessionConfigFields = {
-    name: null,
+type ConfigFields = Omit<ProfileStorageSchema.Session.Config, 'delete_lock'>;
+const defaultConfig: ConfigFields = {
+    name: 'unknown',
     model_id: '',
     rt_id: '',
     color: 'default',
 }
-const defaultManaged: SessionManagedFields = {
-    input_files: [],
-    cached_thumbnails: {},
-}
-const defaultData: SessionDataFields = {
+type DataFields = Pick<ProfileStorageSchema.Session.Data, 'running_rt'>;
+const defaultData: DataFields = {
     running_rt: {},
 }
 
-type SessionFields = SessionCacheFields & SessionConfigFields & SessionDataFields;
+type SessionFields = CacheFields & ConfigFields & DataFields;
 
 export interface SessionState extends SessionFields, SessionManagedFields {
     actions: {
@@ -87,17 +62,17 @@ export const useSessionStore = create<SessionState>((set, get) => {
         update: updateCache,
         refetch: refetchCache,
         refetchAll: refetchAllCache
-    } = sessionStoreTool<SessionCacheFields>(set, get, 'cache.json', defaultCache);
+    } = sessionStoreTool<CacheFields>(set, get, 'cache.json', defaultCache);
     const {
         update: updateConfig,
         refetch: refetchConfig,
         refetchAll: refetchAllConfig
-    } = sessionStoreTool<SessionConfigFields>(set, get, 'config.json', defaultConfig);
+    } = sessionStoreTool<ConfigFields>(set, get, 'config.json', defaultConfig);
     const {
         update: updateData,
         refetch: refetchData,
         refetchAll: refetchAllData
-    } = sessionStoreTool<SessionDataFields>(set, get, 'data.json', defaultData);
+    } = sessionStoreTool<DataFields>(set, get, 'data.json', defaultData);
 
     return {
         ...defaultCache,

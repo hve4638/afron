@@ -1,6 +1,8 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers, RTFlowData, ProfileStorage } from '@afron/types';
+import { IPCInvokers, RTFlowData, ProfileStorageSchema } from '@afron/types';
+
+type PromptOrder = ProfileStorageSchema.RT.Metadata['prompts'];
 
 export function profileRTFlow(): IPCInvokers.ProfileRTFlow {
     const throttle = ThrottleAction.getInstance();
@@ -28,7 +30,7 @@ export function profileRTFlow(): IPCInvokers.ProfileRTFlow {
 
             return [null, promptsMetadata];
         },
-        async setPrompts(profileId: string, rtId: string, order: ProfileStorage.RT.PromptOrder) {
+        async setPrompts(profileId: string, rtId: string, order: PromptOrder) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
             await rt.workflow.setPromptsOrder(order);

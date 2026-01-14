@@ -1,6 +1,6 @@
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers, ProfileStorage } from '@afron/types';
+import { IPCInvokers, ProfileStorageSchema } from '@afron/types';
 
 function handler(): IPCInvokers.ProfileRT {
     const throttle = ThrottleAction.getInstance();
@@ -13,7 +13,7 @@ function handler(): IPCInvokers.ProfileRT {
 
             return [null, metadata];
         },
-        async setMetadata(profileId: string, rtId: string, metadata: ProfileStorage.RT.Index) {
+        async setMetadata(profileId: string, rtId: string, metadata: ProfileStorageSchema.RT.Metadata) {
             const profile = await runtime.profiles.getProfile(profileId);
             const rt = profile.rt(rtId);
 
