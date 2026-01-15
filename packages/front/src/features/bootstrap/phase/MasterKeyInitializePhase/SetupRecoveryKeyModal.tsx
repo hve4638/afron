@@ -8,6 +8,8 @@ import Button from '@/components/atoms/Button';
 import { StringForm } from '@/components/FormFields';
 
 import styles from './styles.module.scss';
+import { ModalLegacy } from './legacy/Modal';
+import useModalDisappear from '@/hooks/useModalDisappear';
 
 interface RecoveryKeySetupModalProps {
     onSubmit: (recoveryKey: string) => Promise<boolean>;
@@ -20,7 +22,8 @@ function RecoveryKeySetupModal({
 }: RecoveryKeySetupModalProps) {
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
-    const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey]);
+    const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey])
+    const [disappear, closeModal] = useModalDisappear(onClose);
 
     const submit = async () => {
         if (!valid || loading) return;
@@ -34,15 +37,13 @@ function RecoveryKeySetupModal({
     }
 
     return (
-        <Modal
+        <ModalLegacy
             style={{
                 width: 'auto',
                 minWidth: '400px',
             }}
-            header={{
-                label: '복구 키 설정',
-                showCloseButton: false,
-            }}
+            headerLabel='복구 키 설정'
+            disappear={disappear}
         >
             <Gap h='0.25em' />
             <StringForm
@@ -99,7 +100,7 @@ function RecoveryKeySetupModal({
                     onClick={submit}
                 >확인</Button>
             </Row>
-        </Modal>
+        </ModalLegacy>
     )
 }
 
