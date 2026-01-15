@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react';
 import classNames from 'classnames';
-import ReactLoading from 'react-loading';
-
 import { Align, Row } from '@/components/layout';
-import Button from '@/components/atoms/Button';
-import { Modal, useModalInstance } from '@/features/modal';
+import { Button, Spinner } from '@/components/atoms';
 import { ConfirmModal } from '@/features/modal';
 
 import styles from './styles.module.scss';
+import { ModalLegacy } from './legacy/Modal';
+import useModalDisappear from '@/hooks/useModalDisappear';
 
 interface RecoveryModalProps {
     onReset: () => void;
@@ -25,18 +24,17 @@ function RecoveryModal({
     const valid = useMemo(()=>recoveryKey.length >= 4, [recoveryKey]);
     const [errorMessage, setErrorMessage] = useState('');
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [disappear, closeModal] = useModalDisappear(onClose);
 
     return (
-        <Modal
+        <ModalLegacy
             className='relative'
             style={{
                 width : 'auto',
                 minWidth: '400px',
             }}
-            header={{
-                label: '복구 키 입력',
-                showCloseButton: false,
-            }}
+            headerLabel='showCloseButton'
+            disappear={disappear}
         >
             <Row
                 style={{
@@ -87,10 +85,7 @@ function RecoveryModal({
                             width: '2em',
                         }}
                     >
-                        <ReactLoading
-                            type={"spinningBubbles"}
-                            height={'1em'}
-                        />
+                        <Spinner height='1em' />
                     </div>
                 }
                 <Button
@@ -160,7 +155,7 @@ function RecoveryModal({
                     <div>정말로 초기화하겠습니까?</div>
                 </ConfirmModal>
             }
-        </Modal>
+        </ModalLegacy>
     )
 }
 

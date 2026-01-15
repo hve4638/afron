@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import classNames from 'classnames';
-import ReactLoading from 'react-loading';
-
 import { Align, Gap, Row } from '@/components/layout';
 import { Modal, useModalInstance } from '@/features/modal';
-import Button from '@/components/atoms/Button';
+import { Spinner, Button } from '@/components/atoms';
 import { StringForm } from '@/components/FormFields';
 
 import styles from './styles.module.scss';
+import { ModalLegacy } from './legacy/Modal';
+import useModalDisappear from '@/hooks/useModalDisappear';
 
 interface RecoveryKeySetupModalProps {
     onSubmit: (recoveryKey: string) => Promise<boolean>;
@@ -20,7 +20,8 @@ function RecoveryKeySetupModal({
 }: RecoveryKeySetupModalProps) {
     const [loading, setLoading] = useState(false);
     const [recoveryKey, setRecoveryKey] = useState('');
-    const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey]);
+    const valid = useMemo(() => recoveryKey.length >= 4, [recoveryKey])
+    const [disappear, closeModal] = useModalDisappear(onClose);
 
     const submit = async () => {
         if (!valid || loading) return;
@@ -34,15 +35,13 @@ function RecoveryKeySetupModal({
     }
 
     return (
-        <Modal
+        <ModalLegacy
             style={{
                 width: 'auto',
                 minWidth: '400px',
             }}
-            header={{
-                label: '복구 키 설정',
-                showCloseButton: false,
-            }}
+            headerLabel='복구 키 설정'
+            disappear={disappear}
         >
             <Gap h='0.25em' />
             <StringForm
@@ -79,10 +78,7 @@ function RecoveryKeySetupModal({
                             width: '2em',
                         }}
                     >
-                        <ReactLoading
-                            type={"spinningBubbles"}
-                            height={'1em'}
-                        />
+                        <Spinner height='1em' />
                     </div>
                 }
                 <Button
@@ -99,7 +95,7 @@ function RecoveryKeySetupModal({
                     onClick={submit}
                 >확인</Button>
             </Row>
-        </Modal>
+        </ModalLegacy>
     )
 }
 

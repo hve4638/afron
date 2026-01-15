@@ -10,3 +10,4 @@ export { default as Popover } from './Popover';
 export { default as Subdescription } from './Description';
 export { Well } from './Well';
 export { Textarea } from './Textarea';
+export { Spinner } from './Spinner';

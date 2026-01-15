@@ -29,7 +29,7 @@ export class SessionTool {
     */
     async changeState(state: 'loading' | 'idle' | 'error' | 'done') {
         const {
-            running_rt: runningRT
+            running_rt: runningRT = {}
         } = await this.#sessionAPI.get('data.json', ['running_rt']);
 
         if (state === 'idle') {

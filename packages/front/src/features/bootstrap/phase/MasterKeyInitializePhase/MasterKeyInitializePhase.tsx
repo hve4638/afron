@@ -17,7 +17,7 @@ function MasterKeyInitializePhase() {
     }
 
     useEffect(() => {
-        (async ()=>{
+        (async () => {
             setResetMode(false);
             setRecoveryMode(false);
             if (forceReset) {
@@ -49,35 +49,35 @@ function MasterKeyInitializePhase() {
 
     return (
         <div>
-        {
-            resetMode &&
-            <SetupRecoveryKeyModal
-                onSubmit={async (recoveryKey:string)=>{
-                    await LocalAPI.masterKey.reset(recoveryKey);
-                    return true;
-                }}
-                onClose = {()=>{
-                    setResetMode(false);
-                    sendRefreshSignal();
-                }}
-            />
-        }
-        {
-            recoveryMode &&
-            <RecoveryModal
-                onRecovery={async (recoveryKey:string)=>{
-                    const success = await LocalAPI.masterKey.recover(recoveryKey);
-                    return success;
-                }}
-                onReset={async ()=>{
-                    setForceReset(true);
-                }}
-                onClose={()=>{
-                    setRecoveryMode(false);
-                    sendRefreshSignal();
-                }}
-            />
-        }
+            {
+                resetMode &&
+                <SetupRecoveryKeyModal
+                    onSubmit={async (recoveryKey: string) => {
+                        await LocalAPI.masterKey.reset(recoveryKey);
+                        return true;
+                    }}
+                    onClose={() => {
+                        setResetMode(false);
+                        sendRefreshSignal();
+                    }}
+                />
+            }
+            {
+                recoveryMode &&
+                <RecoveryModal
+                    onRecovery={async (recoveryKey: string) => {
+                        const success = await LocalAPI.masterKey.recover(recoveryKey);
+                        return success;
+                    }}
+                    onReset={async () => {
+                        setForceReset(true);
+                    }}
+                    onClose={() => {
+                        setRecoveryMode(false);
+                        sendRefreshSignal();
+                    }}
+                />
+            }
         </div>
     );
 }
