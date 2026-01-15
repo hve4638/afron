@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react';
 import classNames from 'classnames';
-import ReactLoading from 'react-loading';
-
 import { Align, Gap, Row } from '@/components/layout';
 import { Modal } from '@/features/modal';
-import Button from '@/components/atoms/Button';
+import { Button, Spinner } from '@/components/atoms';
 import { StringForm } from '@/components/FormFields';
 
 import styles from './styles.module.scss';
@@ -79,10 +77,7 @@ function SetupRecoveryKeyModal({
                             width: '2em',
                         }}
                     >
-                        <ReactLoading
-                            type={"spinningBubbles"}
-                            height={'1em'}
-                        />
+                        <Spinner height='1em' />
                     </div>
                 }
                 <Button

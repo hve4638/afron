@@ -2,9 +2,8 @@ import { Align, Row } from "components/layout";
 import { Modal, useModalInstance } from "@/features/modal";
 import { useMemo, useState } from "react";
 import styles from './styles.module.scss';
-import Button from "@/components/atoms/Button";
+import { Spinner, Button } from "@/components/atoms";
 import classNames from "classnames";
-import ReactLoading from "react-loading";
 import { ConfirmModal } from "@/features/modal";
 
 interface RecoveryModalProps {
@@ -87,10 +86,7 @@ function RecoveryModal({
                             width: '2em',
                         }}
                     >
-                        <ReactLoading
-                            type={"spinningBubbles"}
-                            height={'1em'}
-                        />
+                        <Spinner height='1em' />
                     </div>
                 }
                 <Button
