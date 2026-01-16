@@ -15,14 +15,30 @@ export default defineConfig({
     server: {
         port : 3600,
     },
+    optimizeDeps: {
+        include: [
+            'react',
+            'react-dom',
+            'react-router',
+            'react-router-dom',
+            'zustand',
+            '@xyflow/react',
+            '@monaco-editor/react',
+            'i18next',
+            'react-i18next',
+            '@emotion/react',
+            '@emotion/styled',
+        ],
+    },
     plugins: [
-        react({
-            babel: {
-                plugins: [
-                    ['babel-plugin-react-compiler'],
-                ],
-            },
-        }),
+        react(),
+        // react({
+        //     babel: {
+        //         plugins: [
+        //             ['babel-plugin-react-compiler'],
+        //         ],
+        //     },
+        // }),
         tailwindcss(),
     ],
     css: {

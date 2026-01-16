@@ -1,12 +1,15 @@
-import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { RTStoreContextProvider } from '@/context';
 
 import Home from './Home';
-import PromptEditor from './PromptEditor';
 import TestPage from './Test';
-import { WorkflowEditor } from './WorkflowEditor';
-import useHotkey from '@/hooks/useHotkey';
 import { HubEventHandler } from './Hub.hooks';
+
+const PromptEditor = lazy(() => import('./PromptEditor'));
+const WorkflowEditor = lazy(() =>
+    import('./WorkflowEditor').then((module) => ({ default: module.WorkflowEditor }))
+);
 
 function Hub() {
     return (
@@ -19,7 +22,9 @@ function Hub() {
                     path="/prompt/:rtId"
                     element={
                         <RTStoreContextProvider>
-                            <PromptEditor />
+                            <Suspense fallback={<div></div>}>
+                                <PromptEditor />
+                            </Suspense>
                         </RTStoreContextProvider>
                     }
                 />
@@ -27,7 +32,9 @@ function Hub() {
                     path='/workflow/:rtId'
                     element={
                         <RTStoreContextProvider>
-                            <WorkflowEditor />
+                            <Suspense fallback={<div></div>}>
+                                <WorkflowEditor />
+                            </Suspense>
                         </RTStoreContextProvider>
                     }
                 />
@@ -35,7 +42,9 @@ function Hub() {
                     path='/workflow/:rtId/prompt/:promptId'
                     element={
                         <RTStoreContextProvider>
-                            <PromptEditor />
+                            <Suspense fallback={<div></div>}>
+                                <PromptEditor />
+                            </Suspense>
                         </RTStoreContextProvider>
                     }
                 />
