@@ -8,13 +8,13 @@
   "license": "GPL-3.0-only",
   "main": "dist/main.js",
   "scripts": {
-    "start": "pnpm build && electron-forge start",
+    "start": "yarn build && electron-forge start",
     "start:fast": "electron-forge start",
-    "start:dev": "pnpm build && cross-env ELECTRON_DEV=TRUE electron .",
-    "start:dev:mem": "pnpm build && cross-env ELECTRON_DEV=TRUE ELECTRON_IN_MEMORY=TRUE electron .",
-    "start:release": "pnpm build && cross-env ELECTRON_DEV=FALSE electron .",
+    "start:dev": "yarn build && cross-env ELECTRON_DEV=TRUE electron .",
+    "start:dev:mem": "yarn build && cross-env ELECTRON_DEV=TRUE ELECTRON_IN_MEMORY=TRUE electron .",
+    "start:release": "yarn build && cross-env ELECTRON_DEV=FALSE electron .",
     "build": "rollup -c",
-    "dist": "pnpm dist:win",
+    "dist": "yarn dist:win",
     "dist:win": "electron-builder -c.extraMetadata.main=./dist/main.js",
     "dist:mac": "electron-builder -c.extraMetadata.main=./dist/main.js --mac",
     "make:mac": "electron-forge make --platform=darwin",
@@ -23,7 +23,7 @@
     "compile": "tsc",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "electron-rebuild": "electron-rebuild --force --only better-sqlite3,sharp"
+    "electron-rebuild": "electron-rebuild --force --module-dir ../core -w better-sqlite3"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
@@ -57,9 +57,9 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "@afron/chatai-models": "workspace:*",
-    "@afron/core": "workspace:*",
-    "@afron/types": "workspace:*",
+    "@afron/chatai-models": "1.0.0",
+    "@afron/core": "1.0.0",
+    "@afron/types": "1.0.0",
     "balanced-match": "^1.0.2",
     "brace-expansion": "^2.0.1",
     "minimatch": "^9.0.5",
