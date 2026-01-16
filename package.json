@@ -5,24 +5,24 @@
     "author": "Hve <hve4638@gmail.com>",
     "license": "GPL-3.0-only",
     "scripts": {
-        "start": "yarn app:start",
-        "app:start": "concurrently \"yarn electron:start\" \"yarn front:start\"",
-        "front:start": "cd packages/front && yarn start",
-        "electron:start": "cd packages/electron && wait-on http://localhost:3600 && yarn start",
+        "start": "pnpm app:start",
+        "app:start": "concurrently \"pnpm electron:start\" \"pnpm front:start\"",
+        "front:start": "pnpm --filter @afron/frontend start",
+        "electron:start": "wait-on http://localhost:3600 && pnpm --filter @afron/electron start",
 
-        "build": "yarn chatai:build && yarn core:build && yarn electron:build && yarn front:build",
-        "chatai:build": "cd packages/chatai-models && yarn build",
-        "core:build": "cd packages/core && yarn build",
-        "electron:build": "cd packages/electron && yarn build",
-        "front:build": "cd packages/front && yarn build",
+        "build": "pnpm chatai:build && pnpm core:build && pnpm electron:build && pnpm front:build",
+        "chatai:build": "pnpm --filter @afron/chatai-models build",
+        "core:build": "pnpm --filter @afron/core build",
+        "electron:build": "pnpm --filter @afron/electron build",
+        "front:build": "pnpm --filter @afron/frontend build",
 
-        "dist": "yarn build && yarn electron:load_static && yarn electron:dist",
+        "dist": "pnpm build && pnpm electron:load_static && pnpm electron:dist",
         "electron:load_static": "cd packages/electron && powershell -ExecutionPolicy Bypass -File ./import-static.ps1",
-        "electron:dist": "cd packages/electron && yarn dist:win",
+        "electron:dist": "pnpm --filter @afron/electron dist:win",
 
         "clean": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-dist.ps1",
 
-        "postinstall": "cd packages/electron && yarn electron-rebuild",
+        "postinstall": "pnpm --filter @afron/electron electron-rebuild",
         "uninstall": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-install.ps1"
     },
     "devDependencies": {
@@ -31,10 +31,5 @@
         "wait-on": "^8.0.1"
     },
     "dependencies": {},
-    "private": true,
-    "workspaces": {
-        "packages": [
-            "packages/*"
-        ]
-    }
+    "private": true
 }
