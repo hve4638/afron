@@ -9,9 +9,16 @@ import { UniqueStoreSchema } from './types';
 class UniqueStore {
     static readonly AppName = 'afron';
     static readonly ConfigFileName = 'afron.config.json';
+    static #instance: UniqueStore | null = null;
     #path: string;
 
-    constructor() {
+    static instance() {
+        this.#instance ??= new UniqueStore();
+
+        return this.#instance;
+    }
+
+    private constructor() {
         this.#path = this.#getConfigPath();
     }
 

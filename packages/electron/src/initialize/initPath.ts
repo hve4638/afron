@@ -2,7 +2,7 @@ import UniqueStore from '@/features/unique-store';
 import ProgramPath from '@/features/program-path';
 
 export function initPath() {
-    const uniqueStore = new UniqueStore();
+    const uniqueStore = UniqueStore.instance();
 
     let savePath = uniqueStore.getSavePath();
     if (savePath === null) {
