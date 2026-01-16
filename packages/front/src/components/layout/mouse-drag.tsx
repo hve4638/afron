@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { clamp } from "utils/math";
 
 interface MouseDragProps {
@@ -26,7 +26,13 @@ function MouseDrag({
 }:MouseDragProps) {
     const dragContainerRef = useRef<HTMLDivElement>(null);
     const [dragging, setDragging] = useState(false);
-    const prevPos = useMemo(()=>({ x: 0, y: 0 }), []);
+    const draggingRef = useRef(false);
+    const prevPosRef = useRef({ x: 0, y: 0 });
+
+    const onDragRef = useRef(onDrag);
+    const onDragEndRef = useRef(onDragEnd);
+    onDragRef.current = onDrag;
+    onDragEndRef.current = onDragEnd;
 
     const getMousePosition = useCallback(
         (e: MouseEvent) => {
@@ -41,7 +47,7 @@ function MouseDrag({
                     x = clamp(x, rect.left, rect.right);
                     y = clamp(y, rect.top, rect.bottom);
                 }
-                
+
                 return {
                     x: x - rect.left,
                     y: y - rect.top,
@@ -53,45 +59,36 @@ function MouseDrag({
         },
         [relative, clampToBound]
     );
-    
-    const handleMouseMove = useCallback(
-        (e: MouseEvent) => {
-            if (dragging) {
-                const {x, y} = getMousePosition(e);
-                if (prevPos.x !== x || prevPos.y !== y) {
-                    prevPos.x = x;
-                    prevPos.y = y;
-                    onDrag(x, y);
-                }
-            }
-        },
-        [dragging, onDrag]
-    );
-    const handleMouseUp = useCallback(
-        (e: MouseEvent) => {
-            if (dragging) {
-                const {x, y} = getMousePosition(e);
-                setDragging(false);
-                onDragEnd(x, y)
-            }
-        },
-        [dragging, onDragEnd]
-    );
 
     useEffect(() => {
-        if (dragging) {
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
-        } else {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-        }
+        const handleMouseMove = (e: MouseEvent) => {
+            if (draggingRef.current) {
+                const {x, y} = getMousePosition(e);
+                if (prevPosRef.current.x !== x || prevPosRef.current.y !== y) {
+                    prevPosRef.current.x = x;
+                    prevPosRef.current.y = y;
+                    onDragRef.current(x, y);
+                }
+            }
+        };
+
+        const handleMouseUp = (e: MouseEvent) => {
+            if (draggingRef.current) {
+                const {x, y} = getMousePosition(e);
+                draggingRef.current = false;
+                setDragging(false);
+                onDragEndRef.current(x, y);
+            }
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
 
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [dragging, handleMouseMove, handleMouseUp]);
+    }, [getMousePosition]);
     
     return (
         <div
@@ -100,12 +97,12 @@ function MouseDrag({
             style={style}
             onMouseDown={(e)=>{
                 if (e.button === 0) {
+                    draggingRef.current = true;
                     setDragging(true);
-    
-                    // @TODO : 마우스 문제 해결
+
                     const {x, y} = getMousePosition(e as unknown as MouseEvent);
-                    prevPos.x = x;
-                    prevPos.y = y;
+                    prevPosRef.current.x = x;
+                    prevPosRef.current.y = y;
                     onDragBegin(x, y);
                 }
             }}

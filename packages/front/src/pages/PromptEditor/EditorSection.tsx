@@ -100,8 +100,8 @@ function EditorSection({
         quickSuggestions: false,
         contextmenu: false,
         lightbulb: { enabled: undefined },
-        wordWrap: 'bounded',
-        wrappingStrategy: 'advanced',
+        wordWrap: 'bounded' as const,
+        wrappingStrategy: 'advanced' as const,
     };
 
     return (
