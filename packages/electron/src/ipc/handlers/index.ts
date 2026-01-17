@@ -1,3 +1,4 @@
+import { globalConfig } from './globalConfig';
 import general from './general';
 import masterKey from './masterKey';
 import globalStorage from './globalStorage';
@@ -18,6 +19,8 @@ import { IPCInvokerInterface } from '@afron/types';
 
 function get(): IPCInvokerInterface {
     return {
+        globalConfig: globalConfig(),
+        
         general: general(),
         globalStorage: globalStorage(),
         masterKey: masterKey(),

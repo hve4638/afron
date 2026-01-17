@@ -13,6 +13,10 @@ type IPCInvokerPath = {
 // 런타임 시점 참조를 위한 객체
 // 타입에 묶여있어 IPC API 수정후 preload 반영을 까먹으면 빌드에 실패하도록 하기 위함
 const ipcInvokerPath = {
+    globalConfig: {
+        getHardwareAccelerationEnabled: 0,
+        setHardwareAccelerationEnabled: 0,
+    },
     general: {
         echo: 0,
         openBrowser: 0,

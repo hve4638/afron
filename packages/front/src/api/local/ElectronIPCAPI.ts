@@ -24,6 +24,19 @@ class ElectronIPCAPI implements IIPCAPI {
         await electron.removeRequestListener(listener);
     }
 
+    globalConfig = {
+        async getHardwareAccelerationEnabled() {
+            const [err, value] = await electron.globalConfig.getHardwareAccelerationEnabled();
+            if (err) throw new IPCError(err.message);
+            return value;
+        },
+        
+        async setHardwareAccelerationEnabled(value: boolean) {
+            const [err] = await electron.globalConfig.setHardwareAccelerationEnabled(value);
+            if (err) throw new IPCError(err.message);
+        }
+    } as const;
+
     general = {
         async echo(message: any) {
             const [_, data] = await electron.general.echo(message);

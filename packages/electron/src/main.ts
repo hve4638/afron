@@ -7,8 +7,11 @@ import { FastStore } from '@/features/fast-store'
 const store = FastStore.instance();
 store.load();
 
-const disableHardwareAcceleration = store.get('disable_hardware_acceleration') ?? false;
-if (disableHardwareAcceleration) app.disableHardwareAcceleration();
+const hardwareAccelerationEnabled = store.get('hardware_acceleration_enabled') ?? true;
+if (!hardwareAccelerationEnabled) {
+    app.disableHardwareAcceleration();
+    console.log('Hardware acceleration is disabled.');
+}
 
 const gotLocked = app.requestSingleInstanceLock();
 

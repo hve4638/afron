@@ -1,3 +1,3 @@
 export type FastStoreConfig = {
-    disable_hardware_acceleration: boolean;
+    hardware_acceleration_enabled: boolean;
 }
