@@ -1,5 +1,5 @@
 import { Gen1, type IEncryptModel } from './encrypt-model';
-import { MasterKeyInitResult } from './types'
+import { MasterKeyInitResult } from './types';
 import UniqueKeyFS from './FSUtil';
 import UniqueIdentifier from './UniqueIdentifier';
 import MasterKeyEncryptUtil from './MasterKeyEncryption';
@@ -7,9 +7,10 @@ import { LevelLogger } from '@/types';
 import NoLogger from '../nologger';
 import { IMasterKeyGettable } from './types';
 
+
 class MasterKeyManager implements IMasterKeyGettable {
     protected fsUtil = new UniqueKeyFS();
-    protected encryptModel: IEncryptModel = new Gen1();
+    protected encryptModel: IEncryptModel;
     #rawEncryptionData: string[] = [];
 
     #masterKey: string | null = null;
@@ -19,7 +20,9 @@ class MasterKeyManager implements IMasterKeyGettable {
 
     constructor(protected target: string, logger?: LevelLogger) {
         this.#logger = logger ?? NoLogger.instance;
+        this.encryptModel = new Gen1(this.#logger);
     }
+
 
     get masterKey(): string | null {
         return this.#masterKey;
@@ -30,8 +33,13 @@ class MasterKeyManager implements IMasterKeyGettable {
      */
     async init(): Promise<MasterKeyInitResult> {
         this.#logger.info(`Initializing MasterKeyManager`);
+        const initStart = Date.now();
         if (this.#rawEncryptionData.length === 0) {
+            const rawStart = Date.now();
+            this.#logger.debug(`MasterKey.init: raw data setup start`);
             const result = await this.#setupRawEncryptionData();
+            const rawDuration = Date.now() - rawStart;
+            this.#logger.debug(`MasterKey.init: raw data setup end (ms=${rawDuration})`);
             if (result != null) {
                 this.#logger.trace(`Failed to initialize raw encryption data: ${result}`);
                 return result;
@@ -43,7 +51,11 @@ class MasterKeyManager implements IMasterKeyGettable {
         }
 
         if (!this.#hardwareKey) {
+            const hardwareStart = Date.now();
+            this.#logger.debug(`MasterKey.init: hardware key setup start`);
             const result = await this.#setupHardwareKey();
+            const hardwareDuration = Date.now() - hardwareStart;
+            this.#logger.debug(`MasterKey.init: hardware key setup end (ms=${hardwareDuration})`);
             if (result != null) {
                 this.#logger.trace(`Failed to initialize hardware key: ${result}`);
                 return result;
@@ -55,7 +67,11 @@ class MasterKeyManager implements IMasterKeyGettable {
         }
 
         if (!this.#masterKey) {
+            const masterStart = Date.now();
+            this.#logger.debug(`MasterKey.init: master key setup start`);
             const result = await this.#setupMasterKey();
+            const masterDuration = Date.now() - masterStart;
+            this.#logger.debug(`MasterKey.init: master key setup end (ms=${masterDuration})`);
             if (result != null) {
                 this.#logger.trace(`Failed to initialize master key: ${result}`);
                 return result;
@@ -66,8 +82,11 @@ class MasterKeyManager implements IMasterKeyGettable {
             this.#logger.trace(`Master key already initialized`);
         }
 
+        const initDuration = Date.now() - initStart;
+        this.#logger.debug(`MasterKey.init: total end (ms=${initDuration})`);
         return MasterKeyInitResult.Normal;
     }
+
 
     async #setupRawEncryptionData(): Promise<undefined | MasterKeyInitResult> {
         try {
@@ -84,26 +103,33 @@ class MasterKeyManager implements IMasterKeyGettable {
 
     async #setupHardwareKey() {
         try {
-            this.#hardwareKey ??= await UniqueIdentifier.makeAsHardwareNames();
+            this.#hardwareKey ??= await UniqueIdentifier.makeAsHardwareNames(this.#logger);
         }
         catch (e) {
             return MasterKeyInitResult.UnexpectedError;
         }
     }
 
+
     async #setupMasterKey(): Promise<MasterKeyInitResult | undefined> {
         if (this.#rawEncryptionData.length === 0) return MasterKeyInitResult.NoData;
 
-        for (const encrypted of this.#rawEncryptionData) {
+        for (const [index, encrypted] of this.#rawEncryptionData.entries()) {
+            const decryptStart = Date.now();
             try {
                 const decrypted = await this.encryptModel.decrypt(encrypted, this.#hardwareKey!);
+                const decryptDuration = Date.now() - decryptStart;
+                this.#logger.debug(`MasterKey.init: decrypt attempt ${index} success (ms=${decryptDuration})`);
                 this.#masterKey = decrypted;
                 return;
             }
             catch (e) {
+                const decryptDuration = Date.now() - decryptStart;
+                this.#logger.debug(`MasterKey.init: decrypt attempt ${index} failed (ms=${decryptDuration})`);
                 continue;
             }
         }
+
         return MasterKeyInitResult.NeedRecovery;
     }
 
@@ -152,7 +178,8 @@ class MasterKeyManager implements IMasterKeyGettable {
     private async encryptMasterKey(...keys: string[]):Promise<string[]> {
         if (!this.masterKey) throw new Error('Master key is not initialized or loaded');
         
-        const encryptUtil = new MasterKeyEncryptUtil(this.masterKey);
+        const encryptUtil = new MasterKeyEncryptUtil(this.masterKey, this.#logger);
+
         return await Promise.all(keys.map((key) => encryptUtil.encrypt(key)));
     }
 
