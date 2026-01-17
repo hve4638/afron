@@ -6,7 +6,7 @@ import ServerOptions from './ServerOptions';
 import DataOptions from './DataOptions';
 import ShortcutOptions from './ShortcutOptions';
 import ModelOptions from './MoelOptions/ModelOptions';
-import AdvancedOptions from './AdvancedOptions';
+import { AdvancedOptions } from './AdvancedOptions';
 
 
 export {
