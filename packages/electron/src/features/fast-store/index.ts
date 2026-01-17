@@ -1,11 +1,12 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { FastStoreConfig } from './constants';
 
 export class FastStore<
     T extends Record<string, any> = Record<string, any>
 > {
-    readonly #filePath: string = path.resolve('~/.afron/config.json');
+    readonly #filePath: string = path.resolve(os.homedir(), '.afron/config.json');
     #data: T = {} as T;
 
     static #instance: FastStore<any> | null = null;
