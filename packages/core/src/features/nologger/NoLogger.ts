@@ -5,13 +5,18 @@ class NoLogger implements LevelLogger {
 
     private constructor() {}
 
-    async trace(...messages: unknown[]) {}
-    async debug(...messages: unknown[]) {}
-    async info(...messages: unknown[]) {}
-    async warn(...messages: unknown[]) {}
-    async error(...messages: unknown[]) {}
-    async fatal(...messages: unknown[]) {}
-    async close() {}
+    get instanceId(): string {
+        return 'no-logger';
+    }
+
+    trace(...messages: unknown[]) {}
+    debug(...messages: unknown[]) {}
+    info(...messages: unknown[]) {}
+    warn(...messages: unknown[]) {}
+    error(...messages: unknown[]) {}
+    fatal(...messages: unknown[]) {}
+    close() {}
+
 }
 
 export default NoLogger;

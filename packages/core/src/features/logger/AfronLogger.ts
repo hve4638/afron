@@ -1,25 +1,32 @@
 import fs from 'fs';
 import path from 'path';
-import Channel from '@hve/channel';
-import { formatDateLocal, formatDateUTC } from '@/utils/date';
-import { LogEntry, LogLevel, LogOptions } from './types';
+import * as winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+import { LogLevel, LogOptions } from './types';
 import { LevelLogger } from '@/types';
+import { uuidv7 } from '@/lib/uuid';
+
+const logLevels = {
+    fatal: 0,
+    error: 1,
+    warn: 2,
+    info: 3,
+    debug: 4,
+    trace: 5,
+};
 
 class AfronLogger implements LevelLogger {
-    private target: string;
-    private verbose: boolean = false;
-    private level: LogLevel = LogLevel.INFO;
-    private channel: Channel<LogEntry> = new Channel<LogEntry>();
-    private closed: boolean = false;
+    #logger: winston.Logger;
+    #level: LogLevel = LogLevel.INFO;
+    #closed: boolean = false;
+    #instanceId: string = uuidv7();
 
     constructor(logDirectory: string, options: LogOptions = {}) {
         const {
             verbose = false,
             level = LogLevel.INFO
         } = options;
-        this.target = '';
-        this.verbose = verbose;
-        this.level = level;
+        this.#level = level;
 
         if (!fs.existsSync(logDirectory)) {
             fs.mkdirSync(logDirectory, { recursive: true });
@@ -28,123 +35,136 @@ class AfronLogger implements LevelLogger {
             throw new Error(`Log path exists but is not a directory: ${logDirectory}`);
         }
 
-        const dt = formatDateLocal();
+        const format = winston.format.combine(
+            winston.format.timestamp({
+                format: () => new Date().toISOString()
+            }),
+            winston.format.printf(({ timestamp, level: logLevel, message, meta }) => {
+                const base = `${timestamp} ${String(logLevel)}:\t${String(message ?? '')}`.trimEnd();
 
-        let counter = 0;
-        let logFile = path.join(logDirectory, `log-${dt}.txt`);
-        while (fs.existsSync(logFile)) {
-            counter++;
-            logFile = path.join(logDirectory, `log-${dt}-${counter}.txt`);
+                const metaText = AfronLogger.#formatMeta(meta);
+                return metaText ? `${base} ${metaText}` : base;
+            })
+        );
+
+        const transports: winston.transport[] = [
+            new DailyRotateFile({
+                dirname: path.resolve(logDirectory),
+                filename: 'app-%DATE%.log',
+                datePattern: 'YYMMDD',
+                maxFiles: '90d'
+            })
+        ];
+
+        if (verbose) {
+            transports.push(new winston.transports.Console());
         }
 
-        this.target = logFile;
+        this.#logger = winston.createLogger({
+            level: this.#getLogLevelName(level),
+            levels: logLevels,
+            format,
+            transports,
+            exitOnError: false,
+        });
 
-        this.workLog();
-        this.info(`Log file created: ${formatDateUTC()} (UTC+0)`);
+        this.info(`Log file created`);
     }
 
-    private async workLog() {
-        while (true) {
-            const entry = await this.channel.consume();
-            if (!entry || entry.done) break;
-            if (this.level > entry.level) continue;
-            
-            try {
-                const levelName = this.getLogLevelName(entry.level);
-                const text = `[${entry.timestamp}][${levelName}] ${entry.message}`;
+    get instanceId(): string {
+        return this.#instanceId;
+    }
 
-                if (this.verbose) {
-                    switch (entry.level) {
-                        case LogLevel.TRACE:
-                        case LogLevel.DEBUG:
-                            console.log(text);
-                            break;
-                        case LogLevel.INFO:
-                            console.info(text);
-                            break;
-                        case LogLevel.WARN:
-                            console.warn(text);
-                            break;
-                        case LogLevel.ERROR:
-                        case LogLevel.FATAL:
-                            console.error(text);
-                            break;
-                    }
-                }
-                fs.appendFileSync(this.target, `${text}\n`);
-            } catch (err) {
-                console.error('Error writing to log file:', err);
-            }
+    static #formatMeta(meta: unknown): string {
+        if (meta === undefined) return '';
+        try {
+            return JSON.stringify(meta);
+        }
+        catch (error) {
+            return JSON.stringify({ error: 'Unserializable meta' });
         }
     }
 
-    private getLogLevelName(level: LogLevel): string {
+    #getLogLevelName(level: LogLevel): string {
         switch (level) {
-            case LogLevel.TRACE: return 'TRACE';
-            case LogLevel.DEBUG: return 'DEBUG';
-            case LogLevel.INFO: return 'INFO';
-            case LogLevel.WARN: return 'WARN';
-            case LogLevel.ERROR: return 'ERROR';
-            case LogLevel.FATAL: return 'FATAL';
-            default: return 'UNKNOWN';
+            case LogLevel.TRACE: return 'trace';
+            case LogLevel.DEBUG: return 'debug';
+            case LogLevel.INFO: return 'info';
+            case LogLevel.WARN: return 'warn';
+            case LogLevel.ERROR: return 'error';
+            case LogLevel.FATAL: return 'fatal';
+            default: return 'info';
         }
     }
 
-    async trace(...messages: unknown[]) {
-        await this.log(LogLevel.TRACE, ...messages);
-    }
+    #buildLogPayload(messages: unknown[]): { message: string; meta?: unknown } {
+        const messageParts: string[] = [];
+        const metaParts: unknown[] = [];
 
-    async debug(...messages: unknown[]) {
-        await this.log(LogLevel.DEBUG, ...messages);
-    }
-
-    async info(...messages: unknown[]) {
-        await this.log(LogLevel.INFO, ...messages);
-    }
-
-    async warn(...messages: unknown[]) {
-        await this.log(LogLevel.WARN, ...messages);
-    }
-
-    async error(...messages: unknown[]) {
-        await this.log(LogLevel.ERROR, ...messages);
-    }
-
-    async fatal(...messages: unknown[]) {
-        await this.log(LogLevel.FATAL, ...messages);
-    }
-
-    async log(level: LogLevel, ...messages: unknown[]) {
-        if (this.closed || this.level > level) return;
-
-        const message = messages.map((msg) => {
-            if (typeof msg === 'object' && msg != null) {
-                try {
-                    return JSON.stringify(msg, null, 2);
-                }
-                catch (e) {
-                    return `[Object: ${msg.constructor.name}]`;
-                }
+        for (const msg of messages) {
+            if (msg instanceof Error) {
+                metaParts.push({
+                    name: msg.name,
+                    message: msg.message,
+                    stack: msg.stack,
+                });
+                continue;
             }
-            return String(msg);
-        }).join(' ');
 
-        const entry: LogEntry = {
-            timestamp: formatDateLocal(),
-            message,
-            level,
-            done: false
-        };
-        await this.channel.produce(entry);
+            if (typeof msg === 'object' && msg != null) {
+                metaParts.push(msg);
+                continue;
+            }
+
+            messageParts.push(String(msg));
+        }
+
+        const message = messageParts.join(' ');
+        const meta = metaParts.length ? (metaParts.length === 1 ? metaParts[0] : metaParts) : undefined;
+        return { message, meta };
     }
 
-    async close() {
-        if (this.closed) return;
+    trace(...messages: unknown[]) {
+        this.log(LogLevel.TRACE, ...messages);
+    }
 
-        await this.info(`Log closed`);
-        this.channel.produceAll({ done: true });
-        this.channel.close();
-        this.closed = true;
+    debug(...messages: unknown[]) {
+        this.log(LogLevel.DEBUG, ...messages);
+    }
+
+    info(...messages: unknown[]) {
+        this.log(LogLevel.INFO, ...messages);
+    }
+
+    warn(...messages: unknown[]) {
+        this.log(LogLevel.WARN, ...messages);
+    }
+
+    error(...messages: unknown[]) {
+        this.log(LogLevel.ERROR, ...messages);
+    }
+
+    fatal(...messages: unknown[]) {
+        this.log(LogLevel.FATAL, ...messages);
+    }
+
+    log(level: LogLevel, ...messages: unknown[]) {
+        if (this.#closed || this.#level > level) return;
+
+        const { message, meta } = this.#buildLogPayload(messages);
+        this.#logger.log({
+            level: this.#getLogLevelName(level),
+            message,
+            meta,
+        });
+    }
+
+    close() {
+        if (this.#closed) return;
+
+        this.info('Log closed');
+        this.#logger.close();
+        this.#closed = true;
     }
 }
 
