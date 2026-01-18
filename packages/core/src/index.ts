@@ -10,7 +10,9 @@ export {
     CryptoAdapterUnavailableError,
     type CryptoAdapterProvider,
 } from '@/features/crypto-adapter';
-
+export {
+    FastStore,
+} from '@/features/fast-store'
 
 export {
     PromptOnlyTemplateFactory,

@@ -22,8 +22,7 @@ class MasterKeyManager implements IMasterKeyGettable {
         this.#logger = logger ?? NoLogger.instance;
         this.encryptModel = new Gen1(this.#logger);
     }
-
-
+    
     get masterKey(): string | null {
         return this.#masterKey;
     }
