@@ -60,4 +60,40 @@ describe('AfronLogger', () => {
             fs.rmSync(tempDir, { recursive: true, force: true });
         }
     });
+
+    it('writes debug and trace logs with json format', async () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'afron-logger-'));
+        const logger = new AfronLogger(tempDir, { level: LogLevel.TRACE });
+
+        try {
+            logger.info('hello');
+            logger.debug('details');
+            logger.trace('trace');
+
+            await delay(100);
+
+            const dateSuffix = formatDateForFile(new Date());
+            const debugFile = path.join(tempDir, `app-${dateSuffix}.debug.log`);
+            const traceFile = path.join(tempDir, `app-${dateSuffix}.trace.log`);
+
+            const debugContent = fs.readFileSync(debugFile, 'utf8');
+            const traceContent = fs.readFileSync(traceFile, 'utf8');
+
+            const debugLines = debugContent.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
+            const traceLines = traceContent.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
+
+            expect(debugLines.some((entry) => entry.message === 'hello' && entry.level === 'info')).toBe(true);
+            expect(debugLines.some((entry) => entry.message === 'details' && entry.level === 'debug')).toBe(true);
+            expect(debugLines.some((entry) => entry.message === 'trace')).toBe(false);
+
+            expect(traceLines.some((entry) => entry.message === 'hello' && entry.level === 'info')).toBe(true);
+            expect(traceLines.some((entry) => entry.message === 'details' && entry.level === 'debug')).toBe(true);
+            expect(traceLines.some((entry) => entry.message === 'trace' && entry.level === 'trace')).toBe(true);
+
+        } finally {
+            logger.close();
+
+            fs.rmSync(tempDir, { recursive: true, force: true });
+        }
+    });
 });

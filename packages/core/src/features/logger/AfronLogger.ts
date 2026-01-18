@@ -35,6 +35,9 @@ class AfronLogger implements LevelLogger {
             throw new Error(`Log path exists but is not a directory: ${logDirectory}`);
         }
 
+        const enableDebug = level <= LogLevel.DEBUG;
+        const enableTrace = level <= LogLevel.TRACE;
+
         const format = winston.format.combine(
             winston.format.timestamp({
                 format: () => new Date().toISOString()
@@ -47,6 +50,13 @@ class AfronLogger implements LevelLogger {
             })
         );
 
+        const jsonFormat = winston.format.combine(
+            winston.format.timestamp({
+                format: () => new Date().toISOString()
+            }),
+            winston.format.json()
+        );
+
         const transports: winston.transport[] = [
             new DailyRotateFile({
                 dirname: path.resolve(logDirectory),
@@ -55,6 +65,28 @@ class AfronLogger implements LevelLogger {
                 maxFiles: '90d'
             })
         ];
+
+        if (enableDebug) {
+            transports.push(new DailyRotateFile({
+                dirname: path.resolve(logDirectory),
+                filename: 'app-%DATE%.debug.log',
+                datePattern: 'YYMMDD',
+                maxFiles: '90d',
+                level: 'debug',
+                format: jsonFormat,
+            }));
+        }
+
+        if (enableTrace) {
+            transports.push(new DailyRotateFile({
+                dirname: path.resolve(logDirectory),
+                filename: 'app-%DATE%.trace.log',
+                datePattern: 'YYMMDD',
+                maxFiles: '90d',
+                level: 'trace',
+                format: jsonFormat,
+            }));
+        }
 
         if (verbose) {
             transports.push(new winston.transports.Console());
