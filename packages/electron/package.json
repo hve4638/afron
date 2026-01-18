@@ -79,7 +79,8 @@
     "systeminformation": "^5.23.23",
     "tiktoken": "^1.0.21",
     "uuid": "^11.0.3",
-    "win-known-folders": "^1.0.0"
+    "win-known-folders": "^1.0.0",
+    "write-file-atomic": "^7.0.0"
   },
   "build": {
     "productName": "Afron",
