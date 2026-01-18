@@ -30,7 +30,7 @@ describe('CryptoAdapter', () => {
         const provider = createProvider();
         const crypto = new CryptoAdapter(provider);
 
-        expect(crypto.supportsSync()).toBe(true);
+        expect(crypto.supportSyncAPI()).toBe(true);
         expect(crypto.isAvailableSync()).toBe(true);
         expect(crypto.encryptSync('data')).toBe('enc:data');
         expect(crypto.decryptSync('enc:data')).toBe('data');
@@ -40,7 +40,7 @@ describe('CryptoAdapter', () => {
         expect(provider.decryptSync).toHaveBeenCalledWith('enc:data');
     });
 
-    test('throws when sync methods are unavailable', () => {
+    test('treats async-only providers as sync-unavailable', () => {
         const provider: CryptoAdapterProvider = {
             isAvailable: vi.fn(async () => true),
             encrypt: vi.fn(async (plain: string) => `enc:${plain}`),
@@ -48,9 +48,34 @@ describe('CryptoAdapter', () => {
         };
         const crypto = new CryptoAdapter(provider);
 
-        expect(crypto.supportsSync()).toBe(false);
-        expect(() => crypto.isAvailableSync()).toThrow(CryptoAdapterUnavailableError);
+        expect(crypto.supportSyncAPI()).toBe(false);
+        expect(crypto.isAvailableSync()).toBe(false);
         expect(() => crypto.encryptSync('data')).toThrow(CryptoAdapterUnavailableError);
         expect(() => crypto.decryptSync('enc:data')).toThrow(CryptoAdapterUnavailableError);
+    });
+
+    test('bridges sync-only providers to async APIs', async () => {
+        const provider = {
+            isAvailableSync: vi.fn(() => true),
+            encryptSync: vi.fn((plain: string) => `enc:${plain}`),
+            decryptSync: vi.fn((cipher: string) => cipher.replace('enc:', '')),
+        } as unknown as CryptoAdapterProvider;
+        const crypto = new CryptoAdapter(provider);
+
+        await expect(crypto.isAvailable()).resolves.toBe(true);
+        await expect(crypto.encrypt('data')).resolves.toBe('enc:data');
+        await expect(crypto.decrypt('enc:data')).resolves.toBe('data');
+        expect(crypto.isAvailableSync()).toBe(true);
+
+        expect(provider.isAvailableSync).toHaveBeenCalledTimes(2);
+        expect(provider.encryptSync).toHaveBeenCalledWith('data');
+        expect(provider.decryptSync).toHaveBeenCalledWith('enc:data');
+        expect(crypto.supportSyncAPI()).toBe(true);
+    });
+
+    test('throws when provider supports neither async nor sync APIs', () => {
+        const provider = {} as CryptoAdapterProvider;
+
+        expect(() => new CryptoAdapter(provider)).toThrow(CryptoAdapterUnavailableError);
     });
 });
