@@ -1,22 +1,27 @@
-import { describe, expect, jest, test } from '@jest/globals';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { CryptoAdapterOperationError } from '@afron/core';
-import HardwareCryptoProvider from './HardwareCryptoProvider';
 
-const mockSafeStorage = {
-    isEncryptionAvailable: jest.fn(),
-    encryptString: jest.fn(),
-    decryptString: jest.fn(),
-};
+const mockSafeStorage = vi.hoisted(() => ({
+    isEncryptionAvailable: vi.fn(),
+    encryptString: vi.fn(),
+    decryptString: vi.fn(),
+}));
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
     safeStorage: mockSafeStorage,
 }));
 
+import HardwareCryptoProvider from './HardwareCryptoProvider';
+
 describe('HardwareCryptoProvider', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
     test('reports availability via safeStorage', async () => {
-        mockSafeStorage.isEncryptionAvailable.mockReturnValueOnce(true);
+        mockSafeStorage.isEncryptionAvailable.mockReturnValue(true);
         await expect(HardwareCryptoProvider.isAvailable()).resolves.toBe(true);
-        expect(HardwareCryptoProvider.isAvailableSync()).toBe(true);
+        expect(HardwareCryptoProvider.isAvailableSync?.()).toBe(true);
         expect(mockSafeStorage.isEncryptionAvailable).toHaveBeenCalledTimes(2);
     });
 
@@ -42,7 +47,7 @@ describe('HardwareCryptoProvider', () => {
         const cipherBuffer = Buffer.from('sync-cipher');
         mockSafeStorage.encryptString.mockReturnValueOnce(cipherBuffer);
 
-        const encrypted = HardwareCryptoProvider.encryptSync('plain-sync');
+        const encrypted = HardwareCryptoProvider.encryptSync?.('plain-sync');
         expect(encrypted).toBe(cipherBuffer.toString('base64'));
         expect(mockSafeStorage.encryptString).toHaveBeenCalledWith('plain-sync');
 
@@ -51,7 +56,7 @@ describe('HardwareCryptoProvider', () => {
             return 'plain-sync';
         });
 
-        const decrypted = HardwareCryptoProvider.decryptSync(cipherBuffer.toString('base64'));
+        const decrypted = HardwareCryptoProvider.decryptSync?.(cipherBuffer.toString('base64'));
         expect(decrypted).toBe('plain-sync');
         expect(decryptSpy).toHaveBeenCalledTimes(1);
     });
@@ -71,6 +76,6 @@ describe('HardwareCryptoProvider', () => {
             throw new Error('boom');
         });
 
-        expect(() => HardwareCryptoProvider.decryptSync('bad')).toThrow(CryptoAdapterOperationError);
+        expect(() => HardwareCryptoProvider.decryptSync?.('bad')).toThrow(CryptoAdapterOperationError);
     });
 });
