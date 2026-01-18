@@ -40,7 +40,8 @@
           "types/*": ["src/types/*"]
         },
         "types" : [
-            "@afron/types"
+            "@afron/types",
+            "vitest/globals"
         ]
     },
     "include": [
