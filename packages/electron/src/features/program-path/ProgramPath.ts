@@ -1,12 +1,21 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { getDefaultSavePath } from './utils';
 
 class ProgramPath {
-    #basePath:string;
-    constructor(basePath:string) {
-        this.#basePath = basePath;
+    static From(basePath: string) {
+        return new ProgramPath(basePath);
     }
 
+    static FromDefaultPath() {
+        return ProgramPath.From(getDefaultSavePath());
+    }
+
+    #basePath: string;
+    private constructor(basePath: string) {
+        this.#basePath = basePath;
+    }
+    
     get basePath() {
         return this.#basePath;
     }

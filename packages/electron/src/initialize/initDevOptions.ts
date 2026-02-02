@@ -1,13 +1,7 @@
-import * as path from 'node:path';
-import { personal, localAppdata } from 'win-known-folders';
-import { ACStorage, IACStorage, JSONType, MemACStorage, StorageAccess } from 'ac-storage';
 import { app } from 'electron';
-import dotenv from 'dotenv';
+import { MasterKeyInitResult } from '@afron/core';
 
-import runtime, { updateRegistry } from '@/runtime';
-import { initIPC } from '@/ipc';
-
-import { MasterKeyManager, MasterKeyInitResult, MockMasterKeyManager } from '@afron/core';
+import runtime from '@/runtime';
 
 export async function initDevOptions() {
     if (app.isPackaged) return; // 개발 환경에서만 동작

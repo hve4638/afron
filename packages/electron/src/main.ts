@@ -2,20 +2,19 @@ import { app } from 'electron';
 import ElectronApp from '@/features/elctron-app';
 import { showMessage } from '@/utils';
 import initialize from '@/initialize';
-import { FastStore } from '@/features/fast-store'
+import { GlobalStore } from '@/features/global-store';
 
-const store = FastStore.instance();
-store.load();
+const config = GlobalStore.config();
 
-const hardwareAccelerationEnabled = store.get('hardware_acceleration_enabled') ?? true;
+const hardwareAccelerationEnabled = config.get('hardware_acceleration_enabled') ?? true;
 if (!hardwareAccelerationEnabled) {
     app.disableHardwareAcceleration();
     console.log('Hardware acceleration is disabled.');
 }
 
-const gotLocked = app.requestSingleInstanceLock();
-
 async function main() {
+    const gotLocked = app.requestSingleInstanceLock();
+
     if (gotLocked === false) {
         console.error('Afron is already running.');
         if (!app.isPackaged) showMessage('Afron is already running.');

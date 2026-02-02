@@ -1,23 +1,21 @@
-import { FastStore } from '@/features/fast-store';
+import { GlobalStore } from '@/features/global-store';
 import ThrottleAction from '@/features/throttle-action';
-import runtime from '@/runtime';
-import { IPCInvokers, KeyValueInput } from '@afron/types';
+import { IPCInvokers } from '@afron/types';
 
 export function globalConfig(): IPCInvokers.GlobalConfig {
-    const store = FastStore.instance();
-    const throttle = ThrottleAction.getInstance();
+    const config = GlobalStore.config();
 
     return {
         async getHardwareAccelerationEnabled() {
-            store.load();
-            const value = store.get('hardware_acceleration_enabled');
+            const value = config.get('hardware_acceleration_enabled');
 
             return [null, value ?? false];
         },
         async setHardwareAccelerationEnabled(value: boolean) {
-            store.load();
-            store.set('hardware_acceleration_enabled', value);
-            store.save();
+            config.load();
+            config.set('hardware_acceleration_enabled', value);
+            // @TODO: throttle 추가 필요
+            config.save();
 
             return [null];
         }
