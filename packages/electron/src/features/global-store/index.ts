@@ -9,7 +9,7 @@ const CONFIG_PATH = path.resolve(APP_DIR, 'config.json');
 
 let configInstance: FastStore<GlobalStoreConfig> | null = null;
 export const GlobalStore = {
-    config() {
+    config(): FastStore<GlobalStoreConfig> {
         if (configInstance == null) {
             configInstance = new FastStore(CONFIG_PATH);
             configInstance.load();

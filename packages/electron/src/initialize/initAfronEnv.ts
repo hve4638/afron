@@ -3,8 +3,11 @@ import dotenv from 'dotenv';
 import { AfronEnv } from '@/runtime/types';
 import { updateRegistry } from '@/runtime';
 
+/** 환경변수 구성 */
 export function initAfronEnv() {
     let env: AfronEnv;
+
+    // 프로덕션에서는 모든 플래그 비활성화
     if (app.isPackaged) {
         env = {
             dev: false,

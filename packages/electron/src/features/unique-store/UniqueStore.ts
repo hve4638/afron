@@ -6,9 +6,6 @@ import { personal } from 'win-known-folders';
 
 import { UniqueStoreSchema } from './types';
 
-/**
- * 앱 전역 config 파일로 관리하는 싱글턴 저장소
- */
 class UniqueStore {
     static readonly AppName = 'afron';
     static readonly ConfigFileName = 'afron.config.json';
