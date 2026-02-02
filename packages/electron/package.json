@@ -24,7 +24,7 @@
     "compile": "tsc",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "electron-rebuild": "electron-rebuild --force --module-dir ../core -w better-sqlite3"
+    "electron-rebuild": "electron-rebuild --force --module-dir ../.. --only better-sqlite3 --version 40.1.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
@@ -37,6 +37,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
     "@electron-forge/plugin-fuses": "^7.5.0",
     "@electron/fuses": "^1.8.0",
+    "@electron/rebuild": "^4.0.3",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
@@ -45,9 +46,8 @@
     "@types/node": "^25.0.9",
     "better-sqlite3": "^12.2.0",
     "cross-env": "^7.0.3",
-    "electron": "37.2.3",
+    "electron": "^40.1.0",
     "electron-builder": "^26.0.12",
-    "electron-rebuild": "^3.2.9",
     "rollup": "^4.28.1",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.36.0",
