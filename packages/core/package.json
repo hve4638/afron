@@ -18,6 +18,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@afron/chatai-models": "1.0.0",
     "@afron/types": "1.0.0",
     "@hve/channel": "^1.0.1",
     "@hve/chatai": "^0.16.0",

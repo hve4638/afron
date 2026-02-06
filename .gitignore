@@ -8,7 +8,10 @@ node_modules/
 
 # lock files
 package-lock.json
-yarn.lock
+
+# pnpm
+.pnpm-store/
+.pnpm-debug.log
 
 # output
 dist/
