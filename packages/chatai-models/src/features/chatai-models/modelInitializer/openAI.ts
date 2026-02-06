@@ -33,6 +33,7 @@ function initProvider(builder: CategoryBuilder) {
     }, {})
         .model('gpt-5.2', 'GPT-5.2', gpt5ParamConfig, { latest, featured })
         .model('gpt-5.2-2025-12-11', 'GPT-5.2 (2025-12-11)', gpt5ParamConfig, { snapshot })
+        // .model('gpt-5.2-codex', 'GPT-5.2 Codex', gpt5ParamConfig, { latest, featured })
         // .model('gpt-5.2-pro', 'GPT-5.2 Pro', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
         // .model('gpt-5.2-pro-2025-12-11', 'GPT-5.2 Pro (2025-12-11)', { ...gpt5ParamConfig, endpoint: 'responses' }, { snapshot })
 
