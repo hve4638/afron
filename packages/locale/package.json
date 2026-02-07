@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@afron/types": "1.0.0",
+    "@afron/types": "workspace:*",
     "@hve/channel": "^1.0.1",
     "@hve/chatai": "^0.16.0",
     "@hve/mime": "^1.0.0",
