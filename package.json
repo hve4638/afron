@@ -17,12 +17,11 @@
         "dist": "pnpm build && pnpm electron:load_static && pnpm electron:dist",
         "electron:load_static": "cd packages/electron && powershell -ExecutionPolicy Bypass -File ./import-static.ps1",
         "electron:dist": "pnpm --filter @afron/electron dist:win",
-
         "clean": "pnpm clean:modules",
         "clean:modules": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-install.ps1",
         "clean:dist": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-dist.ps1",
         "reinstall": "pnpm clean:modules && pnpm install",
-        "postinstall": "pnpm --filter @afron/electron electron-rebuild"
+        "postinstall": "node node_modules/electron/install.js && pnpm --filter @afron/electron electron-rebuild"
     },
     "devDependencies": {
         "concurrently": "^9.0.1",
@@ -43,7 +42,6 @@
             "@parcel/watcher",
             "@tailwindcss/oxide",
             "better-sqlite3",
-            "electron",
             "electron-winstaller",
             "esbuild",
             "sharp"

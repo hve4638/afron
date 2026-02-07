@@ -25,6 +25,9 @@ export default [
             json(),
             ts({ tsconfig: './tsconfig.json' }), // TypeScript 변환
             // terser(), // 코드 압축 (필요시 활성화)
+        ],
+        external: [
+            'write-file-atomic',
         ]
     },
     {
