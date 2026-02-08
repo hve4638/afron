@@ -21,7 +21,7 @@
         "clean:modules": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-install.ps1",
         "clean:dist": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-dist.ps1",
         "reinstall": "pnpm clean:modules && pnpm install",
-        "postinstall": "node node_modules/electron/install.js && pnpm --filter @afron/electron electron-rebuild"
+        "postinstall": "pnpm --filter @afron/electron electron-rebuild"
     },
     "devDependencies": {
         "concurrently": "^9.0.1",
@@ -38,10 +38,11 @@
         "overrides": {
             "node-abi": "4.26.0"
         },
-        "ignoredBuiltDependencies": [
+        "onlyBuiltDependencies": [
             "@parcel/watcher",
             "@tailwindcss/oxide",
             "better-sqlite3",
+            "electron",
             "electron-winstaller",
             "esbuild",
             "sharp"
