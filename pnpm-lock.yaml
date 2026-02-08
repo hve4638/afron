@@ -94,8 +94,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       ac-storage:
-        specifier: ^0.16.5
-        version: 0.16.5
+        specifier: ^0.17.0
+        version: 0.17.0
       advanced-prompt-template-lang:
         specifier: ^0.10.5
         version: 0.10.5
@@ -3131,8 +3131,9 @@ packages:
   ac-storage@0.15.1:
     resolution: {integrity: sha512-xS1Jck0vLv/J60Ojo92mXNeXpPie3q3hIUhPlXKG0r1TBshjwc2De8rZbR18YeoLBEuu5XM8nxy0Ji7rUeXyQQ==}
 
-  ac-storage@0.16.5:
-    resolution: {integrity: sha512-Xbbq0S43+SPaOltgdbTqnEqiM27MkPD80gHvkdahTzDuydqbbzwC9rThzRKfgwm2ubMCcPW7hi5kvhEaew7VOA==}
+  ac-storage@0.17.0:
+    resolution: {integrity: sha512-LAVrtgNaHAwEJKX3Y+XH5gDxfaQjj5lTEmEgbuxko/g3WffDlcBMm3qFoOnNn0FH35Wc5su0OkwVPs5N9e4wxA==}
+    engines: {node: '>=22.13.0'}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -4209,6 +4210,9 @@ packages:
   exponential-backoff@3.1.2:
     resolution: {integrity: sha512-8QxYTVXUkuy7fIIoitQkPwGonB8F3Zj8eEO8Sqg9Zv/bkI7RJAzowee4gr81Hak/dUTpA2Z7VfQgoijjPNlUZA==}
 
+  exponential-backoff@3.1.3:
+    resolution: {integrity: sha512-ZgEeZXj30q+I0EN+CbSSpIyPaJ5HVQD18Z1m+u1FXbAeT94mr1zw50q4q6jiiC447Nl/YTcIYSAftiGqetwXCA==}
+
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
 
@@ -4705,6 +4709,10 @@ packages:
   interpret@3.1.1:
     resolution: {integrity: sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==}
     engines: {node: '>=10.13.0'}
+
+  ip-address@10.1.0:
+    resolution: {integrity: sha512-XXADHxXmvT9+CRxhXg56LJovE+bmWnEWB78LB83VZTprKTmaC5QfruXocxzTZ2Kl0DNwKuBdlIhjL8LeY8Sf8Q==}
+    engines: {node: '>= 12'}
 
   ip-address@9.0.5:
     resolution: {integrity: sha512-zHtQzGojZXTwZTHQqra+ETKd4Sn3vgi7uBmlPoXVWZqYvuKmtI0l/VZTjqGmJY9x88GGOaZ9+G9ES8hC4T4X8g==}
@@ -6514,6 +6522,10 @@ packages:
     resolution: {integrity: sha512-pe4Y2yzru68lXCb38aAqRf5gvN8YdjP1lok5o0J7BOHljkyCGKVz7H3vpVIXKD27rj2giOJ7DwVyk/GWrPHDWA==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
 
+  socks@2.8.7:
+    resolution: {integrity: sha512-HLpt+uLy/pxB+bum/9DzAgiKS8CX1EvbWxI4zlmgGCExImLdiad2iCwXT5Z4c9c3Eq8rP2318mPW2c+QbtjK8A==}
+    engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -6560,6 +6572,10 @@ packages:
 
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
+
+  sqlite-appfile@0.1.0:
+    resolution: {integrity: sha512-RsFxNg5Kp4faLj3uGGqQycfvjGprfYKWQm3FXjhDE8ILoz0k0V7GY7tv3Ia9qOy3bqKGy6BpIOMe+OTn+umWyg==}
+    engines: {node: '>=22.13.0'}
 
   ssri@12.0.0:
     resolution: {integrity: sha512-S7iGNosepx9RadX82oimUkvr0Ct7IjJbEbs4mJcTxst8um95J3sDYU1RBEOvdu6oL1Wek2ODI5i4MAw+dZ6cAQ==}
@@ -8571,7 +8587,7 @@ snapshots:
   '@electron/node-gyp@https://codeload.github.com/electron/node-gyp/tar.gz/06b29aafb7708acef8b3669835c8a7857ebc92d2':
     dependencies:
       env-paths: 2.2.1
-      exponential-backoff: 3.1.2
+      exponential-backoff: 3.1.3
       glob: 8.1.0
       graceful-fs: 4.2.11
       make-fetch-happen: 10.2.1
@@ -10408,10 +10424,11 @@ snapshots:
       fast-deep-equal: 3.1.3
       tree-navigate: 0.1.2
 
-  ac-storage@0.16.5:
+  ac-storage@0.17.0:
     dependencies:
       '@hve/json-accessor': 0.11.1
       fast-deep-equal: 3.1.3
+      sqlite-appfile: 0.1.0
       tree-navigate: 0.1.2
 
   acorn-jsx@5.3.2(acorn@8.15.0):
@@ -11789,6 +11806,8 @@ snapshots:
 
   exponential-backoff@3.1.2: {}
 
+  exponential-backoff@3.1.3: {}
+
   extend@3.0.2: {}
 
   extract-zip@2.0.1:
@@ -12382,6 +12401,8 @@ snapshots:
   install@0.13.0: {}
 
   interpret@3.1.1: {}
+
+  ip-address@10.1.0: {}
 
   ip-address@9.0.5:
     dependencies:
@@ -14703,7 +14724,7 @@ snapshots:
     dependencies:
       agent-base: 6.0.2
       debug: 4.4.3
-      socks: 2.8.6
+      socks: 2.8.7
     transitivePeerDependencies:
       - supports-color
 
@@ -14718,6 +14739,11 @@ snapshots:
   socks@2.8.6:
     dependencies:
       ip-address: 9.0.5
+      smart-buffer: 4.2.0
+
+  socks@2.8.7:
+    dependencies:
+      ip-address: 10.1.0
       smart-buffer: 4.2.0
 
   source-map-js@1.2.1: {}
@@ -14762,6 +14788,8 @@ snapshots:
   sprintf-js@1.0.3: {}
 
   sprintf-js@1.1.3: {}
+
+  sqlite-appfile@0.1.0: {}
 
   ssri@12.0.0:
     dependencies:
