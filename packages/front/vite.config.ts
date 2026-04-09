@@ -10,6 +10,8 @@ function alias(find:string, replacement:string) {
     }
 }
 
+const backendMode = process.env.VITE_BACKEND ?? 'electron';
+
 export default defineConfig({
     base: './',
     server: {
@@ -50,6 +52,15 @@ export default defineConfig({
     },
     resolve: {
         alias: [
+            // api/local → backend별 분기 (정확한 경로만 매칭)
+            {
+                find: /^@\/api\/local$/,
+                replacement: path.resolve(__dirname, `src/api/local/${backendMode}`),
+            },
+            {
+                find: /^api\/local$/,
+                replacement: path.resolve(__dirname, `src/api/local/${backendMode}`),
+            },
             alias('@', 'src'),
             alias('data', 'src/data'),
             alias('components', 'src/components'),

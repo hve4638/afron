@@ -18,6 +18,7 @@ yarn.lock
 dist/
 out/
 release/
+packages/web/static/
 
 # test
 coverage/

@@ -8,6 +8,7 @@
     "start": "vite",
     "start:test": "cross-env VITE_TEST=TRUE vite",
     "build": "tsc -b && vite build",
+    "build:web": "tsc -b && VITE_BACKEND=web vite build",
     "check:build": "tsc -b --noEmit",
     "lint": "eslint .",
     "preview": "vite preview"

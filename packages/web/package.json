@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "rollup -c",
-    "dev": "tsx src/server.ts"
+    "dev": "tsx src/server.ts",
+    "build:front": "pnpm --filter @afron/frontend build:web && cp -r ../front/dist/* ./static/"
   },
   "dependencies": {
     "@afron/chatai-models": "workspace:*",
