@@ -3,8 +3,7 @@ import { fileURLToPath } from 'node:url';
 import Fastify from 'fastify';
 import fastifyWebsocket from '@fastify/websocket';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import initialize from './initialize/initialize';
 import { initRoutes } from './initialize/initRoutes';

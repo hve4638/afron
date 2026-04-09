@@ -2,7 +2,7 @@
   "name": "@afron/web",
   "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
