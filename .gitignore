@@ -46,6 +46,6 @@ docs/
 GUIDE.md
 tmpclaude-*
 .github/copilot-instructions.md
-.omc/*
-.omx/*
+.omc/
+.omx/
 _report/
