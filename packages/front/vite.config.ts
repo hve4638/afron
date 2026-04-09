@@ -15,7 +15,14 @@ const backendMode = process.env.VITE_BACKEND ?? 'electron';
 export default defineConfig({
     base: './',
     server: {
-        port : 3600,
+        port: 8536,
+        host: '0.0.0.0',
+        ...(backendMode === 'web' && {
+            proxy: {
+                '/api': 'http://localhost:8537',
+                '/ws': { target: 'ws://localhost:8537', ws: true },
+            },
+        }),
     },
     optimizeDeps: {
         include: [

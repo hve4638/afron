@@ -26,7 +26,7 @@ export function initAfronEnv() {
 
         env = {
             dev: ENV.boolean('DEV'), // 파일 대신 URL에서 프론트엔드 로드
-            devUrl: ENV.str('DEV_URL') ?? 'http://localhost:3600', // DEV 모드에서 프론트엔드 URL
+            devUrl: ENV.str('DEV_URL') ?? 'http://localhost:8536', // DEV 모드에서 프론트엔드 URL
             inMemory: ENV.boolean('IN_MEMORY'), // 휘발성 모드
             skipMasterKeyInitialization: ENV.boolean('SKIP_MASTER_KEY_INITAILIZATION'), // 마스터키 초기화 생략
             showDevTool: ENV.boolean('SHOW_DEVTOOL'), // 실행시 개발자 도구 열기

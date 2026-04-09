@@ -13,7 +13,7 @@ export const registry:RuntimeRegistry = {
     version: 'unknown',
     env: {
         dev: false,
-        devUrl : 'http://localhost:3600',
+        devUrl : 'http://localhost:8536',
         inMemory: false,
         showDevTool: false,
         skipMasterKeyInitialization: false,
