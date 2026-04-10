@@ -1,26 +1,20 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers } from '@afron/types';
+import { route } from '@/utils/route';
 
-function profileSession(): IPCInvokers.ProfileSession {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async getFormValues(profileId: string, sessionId: string, rtId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const values = await profile.session(sessionId).getFormValues(rtId);
-            return [null, values];
-        },
-        async setFormValues(profileId: string, sessionId: string, rtId: string, values: Record<string, any>) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const session = profile.session(sessionId);
+    app.get('/api/profiles/:profileId/sessions/:sessionId/form/:rtId', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        return profile.session(params['sessionId']).getFormValues(params['rtId']);
+    }));
 
-            session.setFormValues(rtId, values);
-            throttle.saveProfile(profile);
-
-            return [null];
-        },
-    }
+    app.put('/api/profiles/:profileId/sessions/:sessionId/form/:rtId', route(async (params, body) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const session = profile.session(params['sessionId']);
+        session.setFormValues(params['rtId'], body.values);
+        throttle.saveProfile(profile);
+    }));
 }
-
-export default profileSession;

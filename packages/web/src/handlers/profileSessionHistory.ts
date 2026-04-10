@@ -1,90 +1,82 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
-import { HistoryMessage, HistoryMetadata, HistorySearch, IPCInvokers } from '@afron/types';
+import { HistoryMessage, HistoryMetadata, HistorySearch } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.ProfileSessionHistory {
-    return {
-        async get(profileId: string, sessionId: string, offset: number, limit: number, desc: boolean) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsHistory(sessionId);
-            const historyRows = accessor.getHistory(offset, limit, desc);
-            const metadata: HistoryMetadata[] = historyRows.map(row => ({
-                id: row.id,
-                requestType: row.chat_type,
-                createdAt: row.create_at,
-                bookmark: false,
-                rtId: row.rt_id,
-                rtUUID: row.rt_uuid,
-                modelId: row.model_id,
-                form: JSON.parse(row.form),
-                isComplete: Boolean(row.is_complete),
-            }));
+export default async function(app: FastifyInstance) {
+    app.get('/api/profiles/:profileId/sessions/:sessionId/history', route(async (params, _body, query) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const accessor = await profile.accessAsHistory(params['sessionId']);
+        const offset = Number(query['offset'] ?? 0);
+        const limit = Number(query['limit'] ?? 50);
+        const desc = query['desc'] === 'true';
+        const historyRows = accessor.getHistory(offset, limit, desc);
+        const metadata: HistoryMetadata[] = historyRows.map(row => ({
+            id: row.id,
+            requestType: row.chat_type,
+            createdAt: row.create_at,
+            bookmark: false,
+            rtId: row.rt_id,
+            rtUUID: row.rt_uuid,
+            modelId: row.model_id,
+            form: JSON.parse(row.form),
+            isComplete: Boolean(row.is_complete),
+        }));
+        return metadata;
+    }));
 
-            return [null, metadata] as const;
-        },
-        async search(profileId: string, sessionId: string, offset: number, limit: number, condition: HistorySearch) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsHistory(sessionId);
-            const rows = accessor.searchHistory({
-                text: condition.text,
-                search_scope: condition.searchScope,
-                regex: false,
-                offset: offset,
-                limit: limit,
-            });
-            const metadata: HistoryMetadata[] = rows.map(row => ({
-                id: row.id,
-                requestType: row.chat_type,
-                createdAt: row.create_at,
-                bookmark: false,
-                rtId: row.rt_id,
-                rtUUID: row.rt_uuid,
-                modelId: row.model_id,
-                form: JSON.parse(row.form),
-                isComplete: Boolean(row.is_complete),
-            }));
+    app.post('/api/profiles/:profileId/sessions/:sessionId/history/search', route(async (params, body) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const accessor = await profile.accessAsHistory(params['sessionId']);
+        const condition: HistorySearch = body.condition;
+        const rows = accessor.searchHistory({
+            text: condition.text,
+            search_scope: condition.searchScope,
+            regex: false,
+            offset: body.offset,
+            limit: body.limit,
+        });
+        const metadata: HistoryMetadata[] = rows.map(row => ({
+            id: row.id,
+            requestType: row.chat_type,
+            createdAt: row.create_at,
+            bookmark: false,
+            rtId: row.rt_id,
+            rtUUID: row.rt_uuid,
+            modelId: row.model_id,
+            form: JSON.parse(row.form),
+            isComplete: Boolean(row.is_complete),
+        }));
+        return metadata;
+    }));
 
-            return [null, metadata] as const;
-        },
-        async getMessage(profileId: string, sessionId: string, historyIds: number[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsHistory(sessionId);
+    app.get('/api/profiles/:profileId/sessions/:sessionId/history/messages', route(async (params, _body, query) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const accessor = await profile.accessAsHistory(params['sessionId']);
+        const historyIds = query['ids'] ? query['ids'].split(',').map(Number) : [];
+        const messages: HistoryMessage[] = [];
+        for (const id of historyIds) {
+            const { input, output } = accessor.getMessageText(id);
+            messages.push({ id, input, output });
+        }
+        return messages;
+    }));
 
-            const messages: HistoryMessage[] = [];
-            for (const id of historyIds) {
-                const { input, output } = accessor.getMessageText(id);
-                messages.push({
-                    id: id,
-                    input: input,
-                    output: output,
-                });
-            }
-            return [null, messages] as const;
-        },
-        async deleteMessage(profileId: string, sessionId: string, historyId: number, origin: 'in' | 'out' | 'both') {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsHistory(sessionId);
+    app.delete('/api/profiles/:profileId/sessions/:sessionId/history/:historyId/message', route(async (params, _body, query) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const accessor = await profile.accessAsHistory(params['sessionId']);
+        accessor.deleteMessage(Number(params['historyId']), query['origin'] as 'in' | 'out' | 'both');
+    }));
 
-            accessor.deleteMessage(historyId, origin);
+    app.delete('/api/profiles/:profileId/sessions/:sessionId/history/:historyId', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const accessor = await profile.accessAsHistory(params['sessionId']);
+        accessor.delete(Number(params['historyId']));
+    }));
 
-            return [null] as const;
-        },
-        async delete(profileId: string, sessionId: string, historyKey: number) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsHistory(sessionId);
-
-            accessor.delete(historyKey);
-
-            return [null] as const;
-        },
-        async deleteAll(profileId: string, sessionId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsHistory(sessionId);
-
-            accessor.deleteAll();
-
-            return [null] as const;
-        },
-    };
+    app.delete('/api/profiles/:profileId/sessions/:sessionId/history', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const accessor = await profile.accessAsHistory(params['sessionId']);
+        accessor.deleteAll();
+    }));
 }
-
-export default handler;

@@ -1,60 +1,56 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { ChatAIModels } from '@afron/chatai-models'
-import { IPCInvokers, VersionInfo } from '@afron/types';
+import { ChatAIModels } from '@afron/chatai-models';
+import { route } from '@/utils/route';
 
-function general(): IPCInvokers.General {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async echo(message: string) {
-            return [null, message];
-        },
-        async openBrowser(_url: string) {
-            // web에서는 no-op (front에서 window.open 처리)
-            return [null];
-        },
-        async getCurrentVersion() {
-            return [null, runtime.version];
-        },
-        async getAvailableVersion(prerelease: boolean) {
-            let ver: VersionInfo | null;
-            if (prerelease) {
-                ver = await runtime.appVersionManager.getLatestBeta();
-            }
-            else {
-                ver = await runtime.appVersionManager.getLatestStable();
-            }
+    app.post('/api/echo', route(async (_params, body) => {
+        return body.message;
+    }));
 
-            if (ver && runtime.appVersionManager.isNewerVersion(ver.semver)) {
-                return [null, ver];
-            }
-            else {
-                return [new Error('Failed to fetch version information')];
-            }
-        },
-        async getChatAIModels() {
-            return [null, ChatAIModels.categories()];
-        },
+    app.get('/api/version', route(async () => {
+        return runtime.version;
+    }));
 
-        async existsLegacyData() {
-            return [null, runtime.migrationService.existsLegacyData()];
-        },
-        async migrateLegacyData() {
-            const legacyData = await runtime.migrationService.extract();
-            if (!legacyData) {
-                return [new Error('No legacy data found')];
-            }
-            await runtime.migrationService.migrate(runtime.profiles, legacyData);
-            throttle.saveProfiles();
-
-            return [null];
-        },
-        async ignoreLegacyData() {
-            runtime.migrationService.setMigrated();
-            return [null];
+    app.get('/api/version/available', route(async (_params, _body, query) => {
+        const prerelease = query['prerelease'] === 'true';
+        let ver;
+        if (prerelease) {
+            ver = await runtime.appVersionManager.getLatestBeta();
         }
-    }
-}
+        else {
+            ver = await runtime.appVersionManager.getLatestStable();
+        }
 
-export default general;
+        if (ver && runtime.appVersionManager.isNewerVersion(ver.semver)) {
+            return ver;
+        }
+        else {
+            throw new Error('Failed to fetch version information');
+        }
+    }));
+
+    app.get('/api/models', route(async () => {
+        return ChatAIModels.categories();
+    }));
+
+    app.get('/api/legacy/exists', route(async () => {
+        return runtime.migrationService.existsLegacyData();
+    }));
+
+    app.post('/api/legacy/migrate', route(async () => {
+        const legacyData = await runtime.migrationService.extract();
+        if (!legacyData) {
+            throw new Error('No legacy data found');
+        }
+        await runtime.migrationService.migrate(runtime.profiles, legacyData);
+        throttle.saveProfiles();
+    }));
+
+    app.post('/api/legacy/ignore', route(async () => {
+        runtime.migrationService.setMigrated();
+    }));
+}

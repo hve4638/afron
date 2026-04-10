@@ -1,94 +1,66 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers, RTPromptDataEditable, RTVarCreate, RTVarUpdate } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.ProfileRTPrompt {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async getMetadata(profileId: string, rtId: string, promptId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            const metadata = await rt.prompt.getMetadata(promptId);
+    app.get('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/metadata', route(async ({ profileId, rtId, promptId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).prompt.getMetadata(promptId);
+    }));
 
-            return [null, metadata];
-        },
-        async setMetadata(profileId: string, rtId: string, promptId: string, metadata: RTPromptDataEditable) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            await rt.prompt.setMetadata(promptId, metadata);
-            await profile.updateRTMetadata(rtId);
-            throttle.saveProfile(profile);
+    app.put('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/metadata', route(async ({ profileId, rtId, promptId }, { metadata }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.rt(rtId).prompt.setMetadata(promptId, metadata);
+        await profile.updateRTMetadata(rtId);
+        throttle.saveProfile(profile);
+    }));
 
-            return [null];
-        },
+    app.get('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/name', route(async ({ profileId, rtId, promptId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).prompt.getName(promptId);
+    }));
 
-        async getName(profileId: string, rtId: string, promptId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            const name = await rt.prompt.getName(promptId);
+    app.put('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/name', route(async ({ profileId, rtId, promptId }, { name }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.rt(rtId).prompt.setName(promptId, name);
+        await profile.updateRTMetadata(rtId);
+        throttle.saveProfile(profile);
+    }));
 
-            return [null, name];
-        },
-        async setName(profileId: string, rtId: string, promptId: string, name: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            await rt.prompt.setName(promptId, name);
-            await profile.updateRTMetadata(rtId);
-            throttle.saveProfile(profile);
+    app.get('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/variables', route(async ({ profileId, rtId, promptId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).prompt.getVariables(promptId);
+    }));
 
-            return [null];
-        },
+    app.get('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/variables/names', route(async ({ profileId, rtId, promptId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).prompt.getVariableNames(promptId);
+    }));
 
-        async getVariableNames(profileId: string, rtId: string, promptId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            const names = await rt.prompt.getVariableNames(promptId);
+    app.put('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/variables', route(async ({ profileId, rtId, promptId }, { vars }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        const varIds: string[] = await profile.rt(rtId).prompt.setVariables(promptId, vars);
+        throttle.saveProfile(profile);
+        return varIds;
+    }));
 
-            return [null, names];
-        },
-        async getVariables(profileId: string, rtId: string, promptId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            const variables = await rt.prompt.getVariables(promptId);
+    app.delete('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/variables', route(async ({ profileId, rtId, promptId }, { varIds }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.rt(rtId).prompt.removeVariables(promptId, varIds);
+        throttle.saveProfile(profile);
+    }));
 
-            return [null, variables];
-        },
-        async setVariables(profileId: string, rtId: string, promptId: string, vars: (RTVarCreate | RTVarUpdate)[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
+    app.get('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/contents', route(async ({ profileId, rtId, promptId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).prompt.getContents(promptId);
+    }));
 
-            const varIds: string[] = await rt.prompt.setVariables(promptId, vars);
-            throttle.saveProfile(profile);
-
-            return [null, varIds] as const;
-        },
-        async removeVariables(profileId: string, rtId: string, promptId: string, varIds: string[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-
-            await rt.prompt.removeVariables(promptId, varIds);
-            throttle.saveProfile(profile);
-
-            return [null];
-        },
-
-        async getContents(profileId: string, rtId: string, promptId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            const contents = await rt.prompt.getContents(promptId);
-
-            return [null, contents];
-        },
-        async setContents(profileId: string, rtId: string, promptId: string, contents: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            await rt.prompt.setContents(promptId, contents);
-            throttle.saveProfile(profile);
-
-            return [null];
-        },
-    }
+    app.put('/api/profiles/:profileId/rts/:rtId/prompts/:promptId/contents', route(async ({ profileId, rtId, promptId }, { contents }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.rt(rtId).prompt.setContents(promptId, contents);
+        throttle.saveProfile(profile);
+    }));
 }
-
-export default handler;

@@ -1,28 +1,22 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers, KeyValueInput } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.ProfileRTStorage {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async get(profileId: string, rtId: string, accessorId: string, keys: string[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsJSON(accessorId);
-            const value = accessor.get(...keys);
+    app.get('/api/profiles/:profileId/rts/:rtId/storage/:accessorId', route(async ({ profileId, rtId, accessorId }, _body, query) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsJSON(accessorId);
+        const keys = query['keys'] ? query['keys'].split(',') : [];
+        return accessor.get(...keys);
+    }));
 
-            return [null, value] as const;
-        },
-        async set(profileId: string, rtId: string, accessorId: string, data: KeyValueInput) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsJSON(accessorId);
-            accessor.set(data);
-
-            throttle.saveProfile(profile);
-
-            return [null] as const;
-        },
-    }
+    app.put('/api/profiles/:profileId/rts/:rtId/storage/:accessorId', route(async ({ profileId, rtId, accessorId }, { data }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsJSON(accessorId);
+        accessor.set(data);
+        throttle.saveProfile(profile);
+    }));
 }
-
-export default handler;

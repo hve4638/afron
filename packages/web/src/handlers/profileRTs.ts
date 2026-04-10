@@ -1,10 +1,10 @@
+import { FastifyInstance } from 'fastify';
 import * as utils from '@/utils';
-
 import runtime from '@/runtime';
 import { type Profile } from '@afron/core';
-import { IPCInvokers, RTMetadata } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.ProfileRTs {
+export default async function(app: FastifyInstance) {
     const throttles = {};
 
     const saveProfile = (profile: Profile) => {
@@ -15,75 +15,47 @@ function handler(): IPCInvokers.ProfileRTs {
         });
     }
 
-    return {
-        async generateId(profileId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rtId = await profile.generateRTId();
+    app.get('/api/profiles/:profileId/rts', route(async ({ profileId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.getRTTree();
+    }));
 
-            return [null, rtId] as const;
-        },
+    app.put('/api/profiles/:profileId/rts', route(async ({ profileId }, { tree }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        profile.updateRTTree(tree);
+        saveProfile(profile);
+    }));
 
-        async getTree(profileId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const tree = await profile.getRTTree();
+    app.post('/api/profiles/:profileId/rts', route(async ({ profileId }, { metadata }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.addRT(metadata);
+        saveProfile(profile);
+    }));
 
-            return [null, tree] as const;
-        },
-        async updateTree(profileId: string, tree: any) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            profile.updateRTTree(tree);
-            saveProfile(profile);
+    app.delete('/api/profiles/:profileId/rts/:rtId', route(async ({ profileId, rtId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        profile.removeRT(rtId);
+        saveProfile(profile);
+    }));
 
-            return [null] as const;
-        },
+    app.post('/api/profiles/:profileId/rts/generate-id', route(async ({ profileId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.generateRTId();
+    }));
 
-        async createUsingTemplate(profileId: string, rtMetadata: RTMetadata, templateId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            await profile.createUsingTemplate(rtMetadata, templateId);
+    app.get('/api/profiles/:profileId/rts/:rtId/exists', route(async ({ profileId, rtId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.hasRTId(rtId);
+    }));
 
-            return [null] as const;
-        },
-        async add(profileId: string, metadata: RTMetadata) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            await profile.addRT(metadata);
-            saveProfile(profile);
+    app.put('/api/profiles/:profileId/rts/:rtId/id', route(async ({ profileId, rtId }, { newRTId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        profile.changeRTId(rtId, newRTId);
+        saveProfile(profile);
+    }));
 
-            return [null] as const;
-        },
-        async remove(profileId: string, promptId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            profile.removeRT(promptId);
-            saveProfile(profile);
-
-            return [null] as const;
-        },
-
-        async existsId(profileId: string, rtId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const exists = await profile.hasRTId(rtId);
-
-            return [null, exists] as const;
-        },
-        async changeId(profileId: string, oldRTId: string, newRTId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            profile.changeRTId(oldRTId, newRTId);
-            saveProfile(profile);
-
-            return [null] as const;
-        },
-
-        async importFile(token: string, profileId: string) {
-            // TODO: web에서는 HTTP upload 기반으로 변경 필요
-            // 현재는 stub - front에서 별도 upload 엔드포인트 사용 예정
-            const rtImportProcess = runtime.eventProcess.RTImportProcess();
-            return [new Error('File import via dialog is not supported in web mode. Use upload endpoint.')] as const;
-        },
-        async exportFile(token: string, profileId: string, rtId: string) {
-            // TODO: web에서는 HTTP download 기반으로 변경 필요
-            const rtExportProcess = runtime.eventProcess.RTExportProcess();
-            return [new Error('File export via dialog is not supported in web mode. Use download endpoint.')] as const;
-        }
-    }
+    app.post('/api/profiles/:profileId/rts/from-template', route(async ({ profileId }, { metadata, templateId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.createUsingTemplate(metadata, templateId);
+    }));
 }
-
-export default handler;

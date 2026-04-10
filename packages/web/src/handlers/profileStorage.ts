@@ -1,10 +1,11 @@
+import { FastifyInstance } from 'fastify';
 import * as utils from '@/utils';
 import runtime from '@/runtime';
 import { type Profile } from '@afron/core';
-import { IPCInvokers, KeyValueInput } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.ProfileStorage {
-    const throttles = {};
+export default async function(app: FastifyInstance) {
+    const throttles: Record<string, ReturnType<typeof utils.throttle>> = {};
 
     const saveProfile = (profile: Profile) => {
         const throttleId = `profile_${profile.path}`;
@@ -12,73 +13,83 @@ function handler(): IPCInvokers.ProfileStorage {
         throttles[throttleId](() => {
             profile.commit();
         });
-    }
+    };
 
-    return {
-        async get(profileId: string, id: string, keys: string[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsJSON(id);
-            const value = accessor.get(...keys);
-            return [null, value] as const;
-        },
-        async set(profileId: string, id: string, data: KeyValueInput) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsJSON(id);
-            accessor.set(data);
+    app.get('/api/profiles/:profileId/storage/:accessorId', route(async (params, _body, query) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const keys = (query['keys'] as string)?.split(',') ?? [];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsJSON(accessorId);
+        return accessor.get(...keys);
+    }));
 
-            saveProfile(profile);
-            return [null] as const;
-        },
-        async getAsText(profileId: string, id: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsText(id);
-            return [null, await accessor.read()] as const;
-        },
-        async setAsText(profileId: string, id: string, value: any) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsText(id);
-            accessor.write(value);
+    app.put('/api/profiles/:profileId/storage/:accessorId', route(async (params, body) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsJSON(accessorId);
+        accessor.set(body.data);
+        saveProfile(profile);
+    }));
 
-            return [null] as const;
-        },
-        async getAsBinary(profileId: string, id: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsBinary(id);
-            return [null, await accessor.read()] as const;
-        },
-        async setAsBinary(profileId: string, id: string, content: Buffer) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsBinary(id);
-            accessor.write(content);
+    app.get('/api/profiles/:profileId/storage/:accessorId/text', route(async (params) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsText(accessorId);
+        return accessor.read();
+    }));
 
-            return [null] as const;
-        },
+    app.put('/api/profiles/:profileId/storage/:accessorId/text', route(async (params, body) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsText(accessorId);
+        accessor.write(body.value);
+    }));
 
-        async setAsSecret(profileId: string, id: string, data: KeyValueInput) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsSecret(id);
-            accessor.set(data);
+    app.get('/api/profiles/:profileId/storage/:accessorId/binary', route(async (params) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsBinary(accessorId);
+        return accessor.read();
+    }));
 
-            saveProfile(profile);
-            return [null] as const;
-        },
-        async verifyAsSecret(profileId: string, id: string, keys: string[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsSecret(id);
-            const result = accessor.exists(keys);
+    app.put('/api/profiles/:profileId/storage/:accessorId/binary', route(async (params, body) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsBinary(accessorId);
+        accessor.write(body.content);
+    }));
 
-            saveProfile(profile);
-            return [null, result] as const;
-        },
-        async removeAsSecret(profileId: string, id: string, keys: string[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const accessor = await profile.accessAsSecret(id);
-            accessor.remove(keys);
+    app.post('/api/profiles/:profileId/storage/:accessorId/verify', route(async (params, body) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsSecret(accessorId);
+        const result = accessor.exists(body.keys);
+        saveProfile(profile);
+        return result;
+    }));
 
-            saveProfile(profile);
-            return [null] as const;
-        },
-    }
+    app.put('/api/profiles/:profileId/storage/:accessorId/secret', route(async (params, body) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsSecret(accessorId);
+        accessor.set(body.data);
+        saveProfile(profile);
+    }));
+
+    app.delete('/api/profiles/:profileId/storage/:accessorId/secret', route(async (params, body) => {
+        const profileId = params['profileId'];
+        const accessorId = params['accessorId'];
+        const profile = await runtime.profiles.getProfile(profileId);
+        const accessor = await profile.accessAsSecret(accessorId);
+        accessor.remove(body.keys);
+        saveProfile(profile);
+    }));
 }
-
-export default handler;

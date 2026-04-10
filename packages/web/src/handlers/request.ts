@@ -1,30 +1,21 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
-import { IPCInvokers } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.Request {
-    return {
-        async requestRT(token: string, profileId: string, sessionId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
+export default async function(app: FastifyInstance) {
+    app.post('/api/request', route(async (_params, { token, profileId, sessionId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        runtime.logger.info(`RT request (token=${token}, sessionId=${sessionId})`);
+        await runtime.rtWorker.request(token, { profile, sessionId }, { preview: false });
+    }));
 
-            runtime.logger.info(`RT request (token=${token}, sessionId=${sessionId})`);
-            await runtime.rtWorker.request(token, { profile, sessionId }, { preview: false });
+    app.post('/api/request/preview', route(async (_params, { token, profileId, sessionId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        runtime.logger.info(`RT preview (token=${token}, sessionId=${sessionId})`);
+        await runtime.rtWorker.request(token, { profile, sessionId }, { preview: true });
+    }));
 
-            return [null] as const;
-        },
-        async previewPrompt(token: string, profileId: string, sessionId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-
-            runtime.logger.info(`RT preview (token=${token}, sessionId=${sessionId})`);
-            await runtime.rtWorker.request(token, { profile, sessionId }, { preview: true });
-
-            return [null] as const;
-        },
-        async abort(token: string) {
-            runtime.rtWorker.abort(token);
-
-            return [null] as const;
-        },
-    }
+    app.post('/api/request/abort', route(async (_params, { token }) => {
+        runtime.rtWorker.abort(token);
+    }));
 }
-
-export default handler;

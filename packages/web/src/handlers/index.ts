@@ -1,4 +1,5 @@
-import { globalConfig } from './globalConfig';
+import { FastifyInstance } from 'fastify';
+import globalConfig from './globalConfig';
 import general from './general';
 import masterKey from './masterKey';
 import globalStorage from './globalStorage';
@@ -13,34 +14,25 @@ import profileRTs from './profileRTs';
 import profileRT from './profileRT';
 import profileRTStorage from './profileRTStorage';
 import profileRTPrompt from './profileRTPrompt';
-import { profileRTFlow } from './profileRTFlow';
+import profileRTFlow from './profileRTFlow';
 import request from './request';
-import { IPCInvokerInterface } from '@afron/types';
 
-function get(): IPCInvokerInterface {
-    return {
-        globalConfig: globalConfig(),
-
-        general: general(),
-        globalStorage: globalStorage(),
-        masterKey: masterKey(),
-
-        profiles: profiles(),
-        profile: profile(),
-        profileStorage: profileStorage(),
-        profileSession: profileSession(),
-        profileSessions: profileSessions(),
-        profileSessionStorage: profileSessionStorage(),
-        profileSessionHistory: profileSessionHistory(),
-
-        profileRTs: profileRTs(),
-        profileRT: profileRT(),
-        profileRTStorage: profileRTStorage(),
-        profileRTPrompt: profileRTPrompt(),
-        profileRTFlow: profileRTFlow(),
-
-        request: request(),
-    };
+export default async function registerHandlers(app: FastifyInstance) {
+    await app.register(globalConfig);
+    await app.register(general);
+    await app.register(masterKey);
+    await app.register(globalStorage);
+    await app.register(profiles);
+    await app.register(profile);
+    await app.register(profileStorage);
+    await app.register(profileSession);
+    await app.register(profileSessions);
+    await app.register(profileSessionStorage);
+    await app.register(profileSessionHistory);
+    await app.register(profileRTs);
+    await app.register(profileRT);
+    await app.register(profileRTStorage);
+    await app.register(profileRTPrompt);
+    await app.register(profileRTFlow);
+    await app.register(request);
 }
-
-export default get;

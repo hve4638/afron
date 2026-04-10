@@ -1,57 +1,42 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers, RTFlowData, ProfileStorageSchema } from '@afron/types';
+import { route } from '@/utils/route';
 
-type PromptOrder = ProfileStorageSchema.RT.Metadata['prompts'];
-
-export function profileRTFlow(): IPCInvokers.ProfileRTFlow {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async getFlowData(profileId: string, rtId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
+    app.get('/api/profiles/:profileId/rts/:rtId/flow', route(async ({ profileId, rtId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).workflow.getWorkflowNodes();
+    }));
 
-            const data = await rt.workflow.getWorkflowNodes();
-            return [null, data];
-        },
-        async setFlowData(profileId: string, rtId: string, data: RTFlowData) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            await rt.workflow.setWorkflowNodes(data);
+    app.put('/api/profiles/:profileId/rts/:rtId/flow', route(async ({ profileId, rtId }, { data }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.rt(rtId).workflow.setWorkflowNodes(data);
+    }));
 
-            return [null];
-        },
+    app.get('/api/profiles/:profileId/rts/:rtId/flow/prompts', route(async ({ profileId, rtId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).workflow.getPrompts();
+    }));
 
-        async getPrompts(profileId: string, rtId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            const promptsMetadata = await rt.workflow.getPrompts();
+    app.put('/api/profiles/:profileId/rts/:rtId/flow/prompts', route(async ({ profileId, rtId }, { order }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.rt(rtId).workflow.setPromptsOrder(order);
+    }));
 
-            return [null, promptsMetadata];
-        },
-        async setPrompts(profileId: string, rtId: string, order: PromptOrder) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            await rt.workflow.setPromptsOrder(order);
+    app.post('/api/profiles/:profileId/rts/:rtId/flow/prompts', route(async ({ profileId, rtId }, { promptId, promptName }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        const rt = profile.rt(rtId);
+        await rt.workflow.addPrompt(promptId, promptName);
+        return await rt.workflow.getPrompts();
+    }));
 
-            return [null];
-        },
-        async addPrompt(profileId: string, rtId: string, promptId: string, promptName: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            await rt.workflow.addPrompt(promptId, promptName);
-
-            const prompts = await rt.workflow.getPrompts();
-            return [null, prompts];
-        },
-        async removePrompt(profileId: string, rtId: string, promptId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            await rt.workflow.removePrompt(promptId);
-
-            const prompts = await rt.workflow.getPrompts();
-            return [null, prompts];
-        }
-    }
+    app.delete('/api/profiles/:profileId/rts/:rtId/flow/prompts/:promptId', route(async ({ profileId, rtId, promptId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        const rt = profile.rt(rtId);
+        await rt.workflow.removePrompt(promptId);
+        return await rt.workflow.getPrompts();
+    }));
 }

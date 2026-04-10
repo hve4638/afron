@@ -1,42 +1,29 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers, ProfileStorageSchema } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.ProfileRT {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async getMetadata(profileId: string, rtId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-            const metadata = await rt.getMetadata();
+    app.get('/api/profiles/:profileId/rts/:rtId/metadata', route(async ({ profileId, rtId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).getMetadata();
+    }));
 
-            return [null, metadata];
-        },
-        async setMetadata(profileId: string, rtId: string, metadata: ProfileStorageSchema.RT.Metadata) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
+    app.put('/api/profiles/:profileId/rts/:rtId/metadata', route(async ({ profileId, rtId }, { metadata }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        await profile.rt(rtId).setMetadata(metadata);
+        throttle.saveProfile(profile);
+    }));
 
-            await rt.setMetadata(metadata);
-            throttle.saveProfile(profile);
+    app.post('/api/profiles/:profileId/rts/:rtId/metadata/reflect', route(async ({ profileId, rtId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        profile.updateRTMetadata(rtId);
+    }));
 
-            return [null];
-        },
-        async reflectMetadata(profileId: string, rtId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            profile.updateRTMetadata(rtId);
-
-            return [null];
-        },
-
-        async getForms(profileId: string, rtId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const rt = profile.rt(rtId);
-
-            const forms = await rt.getForms();
-            return [null, forms];
-        },
-    }
+    app.get('/api/profiles/:profileId/rts/:rtId/forms', route(async ({ profileId, rtId }) => {
+        const profile = await runtime.profiles.getProfile(profileId);
+        return await profile.rt(rtId).getForms();
+    }));
 }
-
-export default handler;

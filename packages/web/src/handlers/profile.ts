@@ -1,41 +1,30 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
-import { CustomModel, GlobalModelConfiguration, IPCInvokers } from '@afron/types';
+import { route } from '@/utils/route';
 
-function handler(): IPCInvokers.Profile {
-    return {
-        async getCustomModels(profileId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const models = await profile.model.getCustomModels();
+export default async function(app: FastifyInstance) {
+    app.get('/api/profiles/:profileId/models', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        return profile.model.getCustomModels();
+    }));
 
-            return [null, models];
-        },
-        async setCustomModel(profileId: string, model: CustomModel) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const customId = await profile.model.setCustomModel(model);
+    app.put('/api/profiles/:profileId/models/:customId', route(async (params, body) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        return profile.model.setCustomModel(body.model);
+    }));
 
-            return [null, customId];
+    app.delete('/api/profiles/:profileId/models/:customId', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        await profile.model.removeCustomModel(params['customId']);
+    }));
 
-        },
-        async removeCustomModel(profileId: string, customId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            await profile.model.removeCustomModel(customId);
+    app.get('/api/profiles/:profileId/models/:modelId/config', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        return profile.model.getGlobalModelConfig(params['modelId']);
+    }));
 
-            return [null];
-        },
-
-        async getGlobalModelConfig(profileId: string, modelId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const config = await profile.model.getGlobalModelConfig(modelId);
-
-            return [null, config];
-        },
-        async setGlobalModelConfig(profileId: string, modelId: string, config: GlobalModelConfiguration) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            await profile.model.setGlobalModelConfig(modelId, config);
-
-            return [null];
-        }
-    }
+    app.put('/api/profiles/:profileId/models/:modelId/config', route(async (params, body) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        await profile.model.setGlobalModelConfig(params['modelId'], body.config);
+    }));
 }
-
-export default handler;

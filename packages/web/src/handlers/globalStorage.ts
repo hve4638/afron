@@ -1,23 +1,22 @@
+import { FastifyInstance } from 'fastify';
 import ThrottleAction from '@/features/throttle-action';
 import runtime from '@/runtime';
-import { IPCInvokers, KeyValueInput } from '@afron/types';
+import { route } from '@/utils/route';
 
-function globalStorage(): IPCInvokers.GlobalStorage {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async get(identifier: string, key: string[]) {
-            const accessor = await runtime.globalStorage.accessAsJSON(identifier);
-            const value = accessor.get(...key)
-            return [null, value];
-        },
-        async set(identifier: string, data: KeyValueInput) {
-            const accessor = await runtime.globalStorage.accessAsJSON(identifier);
-            accessor.set(data);
-            throttle.saveGlobal();
-            return [null];
-        },
-    }
-}
+    app.get('/api/storage/:identifier', route(async (params, _body, query) => {
+        const identifier = params['identifier'];
+        const keys = (query['keys'] as string)?.split(',') ?? [];
+        const accessor = await runtime.globalStorage.accessAsJSON(identifier);
+        return accessor.get(...keys);
+    }));
 
-export default globalStorage;
+    app.put('/api/storage/:identifier', route(async (params, body) => {
+        const identifier = params['identifier'];
+        const accessor = await runtime.globalStorage.accessAsJSON(identifier);
+        accessor.set(body.data);
+        throttle.saveGlobal();
+    }));
+}

@@ -20,11 +20,54 @@ class WebHTTPAPI implements IIPCAPI {
         this.baseUrl = window.location.origin;
     }
 
-    private async call<T>(category: string, method: string, ...args: any[]): Promise<T> {
-        const res = await fetch(`${this.baseUrl}/api/${category}/${method}`, {
+    // ── HTTP helpers ──────────────────────────────────────
+
+    private async get<T>(path: string, query?: Record<string, string>): Promise<T> {
+        const url = new URL(path, this.baseUrl);
+        if (query) {
+            for (const [k, v] of Object.entries(query)) {
+                if (v != null) url.searchParams.set(k, String(v));
+            }
+        }
+        const res = await fetch(url.toString());
+        const json = await res.json();
+        if (json.error) throw new IPCError(json.error.message);
+        return json.data;
+    }
+
+    private async post<T>(path: string, body?: any): Promise<T> {
+        const res = await fetch(`${this.baseUrl}${path}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ args }),
+            ...(body !== undefined ? {
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            } : {}),
+        });
+        const json = await res.json();
+        if (json.error) throw new IPCError(json.error.message);
+        return json.data;
+    }
+
+    private async put<T>(path: string, body?: any): Promise<T> {
+        const res = await fetch(`${this.baseUrl}${path}`, {
+            method: 'PUT',
+            ...(body !== undefined ? {
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            } : {}),
+        });
+        const json = await res.json();
+        if (json.error) throw new IPCError(json.error.message);
+        return json.data;
+    }
+
+    private async del<T>(path: string, body?: any): Promise<T> {
+        const res = await fetch(`${this.baseUrl}${path}`, {
+            method: 'DELETE',
+            ...(body !== undefined ? {
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            } : {}),
         });
         const json = await res.json();
         if (json.error) throw new IPCError(json.error.message);
@@ -82,10 +125,10 @@ class WebHTTPAPI implements IIPCAPI {
 
     globalConfig = {
         getHardwareAccelerationEnabled: async (): Promise<boolean> => {
-            return false;
+            return this.get<boolean>('/api/config/hardware-acceleration');
         },
-        setHardwareAccelerationEnabled: async (_value: boolean): Promise<void> => {
-            // no-op for web
+        setHardwareAccelerationEnabled: async (value: boolean): Promise<void> => {
+            await this.put('/api/config/hardware-acceleration', { value });
         },
     } as const;
 
@@ -93,28 +136,28 @@ class WebHTTPAPI implements IIPCAPI {
 
     general = {
         echo: async (message: any) => {
-            return this.call<any>('general', 'echo', message);
+            return this.post<any>('/api/echo', { message });
         },
         openBrowser: async (url: string) => {
             window.open(url, '_blank');
         },
         getCurrentVersion: async () => {
-            return this.call<string>('general', 'getCurrentVersion');
+            return this.get<string>('/api/version');
         },
         getAvailableVersion: async (prerelease: boolean = false) => {
-            return this.call<any>('general', 'getAvailableVersion', prerelease);
+            return this.get<any>('/api/version/available', { prerelease: String(prerelease) });
         },
         getChatAIModels: async () => {
-            return this.call<any>('general', 'getChatAIModels');
+            return this.get<any>('/api/models');
         },
         existsLegacyData: async () => {
-            return this.call<boolean>('general', 'existsLegacyData');
+            return this.get<boolean>('/api/legacy/exists');
         },
         migrateLegacyData: async () => {
-            return this.call<void>('general', 'migrateLegacyData');
+            await this.post('/api/legacy/migrate');
         },
         ignoreLegacyData: async () => {
-            return this.call<void>('general', 'ignoreLegacyData');
+            await this.post('/api/legacy/ignore');
         },
     } as const;
 
@@ -122,13 +165,13 @@ class WebHTTPAPI implements IIPCAPI {
 
     masterKey = {
         init: async () => {
-            return this.call<any>('masterKey', 'init');
+            return this.post<any>('/api/master-key/init');
         },
         reset: async (recoveryKey: string) => {
-            return this.call<void>('masterKey', 'reset', recoveryKey);
+            await this.post('/api/master-key/reset', { recoveryKey });
         },
         recover: async (recoveryKey: string) => {
-            return this.call<boolean>('masterKey', 'recover', recoveryKey);
+            return this.post<boolean>('/api/master-key/recover', { recoveryKey });
         },
     } as const;
 
@@ -136,10 +179,10 @@ class WebHTTPAPI implements IIPCAPI {
 
     globalStorage = {
         get: async (storageName: string, keys: string[]) => {
-            return this.call<any>('globalStorage', 'get', storageName, keys);
+            return this.get<any>(`/api/storage/${encodeURIComponent(storageName)}`, { keys: keys.join(',') });
         },
         set: async (storageName: string, data: KeyValueInput) => {
-            return this.call<void>('globalStorage', 'set', storageName, data);
+            await this.put(`/api/storage/${encodeURIComponent(storageName)}`, { data });
         },
     } as const;
 
@@ -147,25 +190,25 @@ class WebHTTPAPI implements IIPCAPI {
 
     profiles = {
         create: async () => {
-            return this.call<string>('profiles', 'create');
+            return this.post<string>('/api/profiles');
         },
         delete: async (id: string) => {
-            return this.call<void>('profiles', 'delete', id);
+            await this.del(`/api/profiles/${encodeURIComponent(id)}`);
         },
         getIds: async () => {
-            return this.call<string[]>('profiles', 'getIds');
+            return this.get<string[]>('/api/profiles');
         },
         getLast: async () => {
-            return this.call<string | null>('profiles', 'getLast');
+            return this.get<string | null>('/api/profiles/last');
         },
         setLast: async (id: string | null) => {
-            return this.call<void>('profiles', 'setLast', id);
+            await this.put('/api/profiles/last', { id });
         },
         getOrphanIds: async () => {
-            return this.call<string[]>('profiles', 'getOrphanIds');
+            return this.get<string[]>('/api/profiles/orphans');
         },
         recoverOrphan: async (profileId: string) => {
-            return this.call<void>('profiles', 'recoverOrphan', profileId);
+            await this.post(`/api/profiles/orphans/${encodeURIComponent(profileId)}/recover`);
         },
     } as const;
 
@@ -173,19 +216,19 @@ class WebHTTPAPI implements IIPCAPI {
 
     profile = {
         getCustomModels: async (profileId: string) => {
-            return this.call<CustomModel[]>('profile', 'getCustomModels', profileId);
+            return this.get<CustomModel[]>(`/api/profiles/${profileId}/models`);
         },
         setCustomModel: async (profileId: string, model: CustomModel) => {
-            return this.call<string>('profile', 'setCustomModel', profileId, model);
+            return this.put<string>(`/api/profiles/${profileId}/models/${encodeURIComponent(model.customId)}`, { model });
         },
         removeCustomModel: async (profileId: string, customId: string) => {
-            return this.call<void>('profile', 'removeCustomModel', profileId, customId);
+            await this.del(`/api/profiles/${profileId}/models/${encodeURIComponent(customId)}`);
         },
         getGlobalModelConfig: async (profileId: string, modelId: string) => {
-            return this.call<GlobalModelConfiguration>('profile', 'getGlobalModelConfig', profileId, modelId);
+            return this.get<GlobalModelConfiguration>(`/api/profiles/${profileId}/models/${encodeURIComponent(modelId)}/config`);
         },
         setGlobalModelConfig: async (profileId: string, modelId: string, config: GlobalModelConfiguration) => {
-            return this.call<void>('profile', 'setGlobalModelConfig', profileId, modelId, config);
+            await this.put(`/api/profiles/${profileId}/models/${encodeURIComponent(modelId)}/config`, { config });
         },
     };
 
@@ -193,31 +236,31 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileStorage = {
         set: async (profileId: string, accessorId: string, data: KeyValueInput) => {
-            return this.call<void>('profileStorage', 'set', profileId, accessorId, data);
+            await this.put(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}`, { data });
         },
         get: async (profileId: string, accessorId: string, keys: string[]) => {
-            return this.call<any>('profileStorage', 'get', profileId, accessorId, keys);
+            return this.get<any>(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}`, { keys: keys.join(',') });
         },
         getAsText: async (profileId: string, accessorId: string): Promise<string> => {
-            return this.call<string>('profileStorage', 'getAsText', profileId, accessorId);
+            return this.get<string>(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}/text`);
         },
         setAsText: async (profileId: string, accessorId: string, contents: string) => {
-            return this.call<void>('profileStorage', 'setAsText', profileId, accessorId, contents);
+            await this.put(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}/text`, { value: contents });
         },
         getAsBinary: async (profileId: string, accessorId: string): Promise<Buffer> => {
-            return this.call<Buffer>('profileStorage', 'getAsBinary', profileId, accessorId);
+            return this.get<Buffer>(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}/binary`);
         },
         setAsBinary: async (profileId: string, accessorId: string, buffer: Buffer) => {
-            return this.call<void>('profileStorage', 'setAsBinary', profileId, accessorId, buffer);
+            await this.put(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}/binary`, { content: buffer });
         },
         verifyAsSecret: async (profileId: string, accessorId: string, keys: string[]) => {
-            return this.call<any>('profileStorage', 'verifyAsSecret', profileId, accessorId, keys);
+            return this.post<any>(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}/verify`, { keys });
         },
         setAsSecret: async (profileId: string, accessorId: string, data: KeyValueInput) => {
-            return this.call<void>('profileStorage', 'setAsSecret', profileId, accessorId, data);
+            await this.put(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}/secret`, { data });
         },
         removeAsSecret: async (profileId: string, accessorId: string, keys: string[]) => {
-            return this.call<void>('profileStorage', 'removeAsSecret', profileId, accessorId, keys);
+            await this.del(`/api/profiles/${profileId}/storage/${encodeURIComponent(accessorId)}/secret`, { keys });
         },
     } as const;
 
@@ -225,19 +268,19 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileSessions = {
         getIds: async (profileId: string): Promise<string[]> => {
-            return this.call<string[]>('profileSessions', 'getIds', profileId);
+            return this.get<string[]>(`/api/profiles/${profileId}/sessions`);
         },
         add: async (profileId: string) => {
-            return this.call<string>('profileSessions', 'add', profileId);
+            return this.post<string>(`/api/profiles/${profileId}/sessions`);
         },
         remove: async (profileId: string, sessionId: string) => {
-            return this.call<void>('profileSessions', 'remove', profileId, sessionId);
+            await this.del(`/api/profiles/${profileId}/sessions/${sessionId}`);
         },
         reorder: async (profileId: string, sessions: string[]): Promise<void> => {
-            return this.call<void>('profileSessions', 'reorder', profileId, sessions);
+            await this.put(`/api/profiles/${profileId}/sessions/order`, { sessions });
         },
         undoRemoved: async (profileId: string) => {
-            return this.call<string>('profileSessions', 'undoRemoved', profileId);
+            return this.post<string>(`/api/profiles/${profileId}/sessions/undo`);
         },
     } as const;
 
@@ -245,10 +288,10 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileSession = {
         getFormValues: async (profileId: string, sessionId: string, rtId: string): Promise<Record<string, any>> => {
-            return this.call<Record<string, any>>('profileSession', 'getFormValues', profileId, sessionId, rtId);
+            return this.get<Record<string, any>>(`/api/profiles/${profileId}/sessions/${sessionId}/form/${encodeURIComponent(rtId)}`);
         },
         setFormValues: async (profileId: string, sessionId: string, rtId: string, data: Record<string, any>) => {
-            return this.call<void>('profileSession', 'setFormValues', profileId, sessionId, rtId, data);
+            await this.put(`/api/profiles/${profileId}/sessions/${sessionId}/form/${encodeURIComponent(rtId)}`, { values: data });
         },
     } as const;
 
@@ -256,19 +299,19 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileSessionStorage = {
         get: async (profileId: string, sessionId: string, accessorId: string, keys: string[]) => {
-            return this.call<any>('profileSessionStorage', 'get', profileId, sessionId, accessorId, keys);
+            return this.get<any>(`/api/profiles/${profileId}/sessions/${sessionId}/storage/${encodeURIComponent(accessorId)}`, { keys: keys.join(',') });
         },
         set: async (profileId: string, sessionId: string, accessorId: string, data: KeyValueInput) => {
-            return this.call<void>('profileSessionStorage', 'set', profileId, sessionId, accessorId, data);
+            await this.put(`/api/profiles/${profileId}/sessions/${sessionId}/storage/${encodeURIComponent(accessorId)}`, { data });
         },
         getInputFilePreviews: async (profileId: string, sessionId: string) => {
-            return this.call<any>('profileSessionStorage', 'getInputFilePreviews', profileId, sessionId);
+            return this.get<any>(`/api/profiles/${profileId}/sessions/${sessionId}/files`);
         },
         addInputFile: async (profileId: string, sessionId: string, filename: string, dataBase64: string) => {
-            return this.call<any>('profileSessionStorage', 'addInputFile', profileId, sessionId, filename, dataBase64);
+            return this.post<any>(`/api/profiles/${profileId}/sessions/${sessionId}/files`, { filename, dataURI: dataBase64 });
         },
         updateInputFiles: async (profileId: string, sessionId: string, fileHashes: InputFileHash[]) => {
-            return this.call<any>('profileSessionStorage', 'updateInputFiles', profileId, sessionId, fileHashes);
+            return this.put<any>(`/api/profiles/${profileId}/sessions/${sessionId}/files`, { fileHashes });
         },
     } as const;
 
@@ -276,22 +319,28 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileSessionHistory = {
         get: async (profileId: string, sessionId: string, offset: number = 0, limit: number = 100, desc: boolean = false) => {
-            return this.call<any>('profileSessionHistory', 'get', profileId, sessionId, offset, limit, desc);
+            return this.get<any>(`/api/profiles/${profileId}/sessions/${sessionId}/history`, {
+                offset: String(offset), limit: String(limit), desc: String(desc),
+            });
         },
         search: async (profileId: string, sessionId: string, offset: number = 0, limit: number = 100, search: HistorySearch) => {
-            return this.call<any>('profileSessionHistory', 'search', profileId, sessionId, offset, limit, search);
+            return this.post<any>(`/api/profiles/${profileId}/sessions/${sessionId}/history/search`, {
+                offset, limit, condition: search,
+            });
         },
         getMessage: async (profileId: string, sessionId: string, historyIds: number[]) => {
-            return this.call<any>('profileSessionHistory', 'getMessage', profileId, sessionId, historyIds);
+            return this.get<any>(`/api/profiles/${profileId}/sessions/${sessionId}/history/messages`, {
+                ids: historyIds.join(','),
+            });
         },
         deleteMessage: async (profileId: string, sessionId: string, historyId: number, origin: 'in' | 'out' | 'both') => {
-            return this.call<void>('profileSessionHistory', 'deleteMessage', profileId, sessionId, historyId, origin);
+            await this.del(`/api/profiles/${profileId}/sessions/${sessionId}/history/${historyId}/message`, { origin });
         },
         delete: async (profileId: string, sessionId: string, historyKey: number) => {
-            return this.call<void>('profileSessionHistory', 'delete', profileId, sessionId, historyKey);
+            await this.del(`/api/profiles/${profileId}/sessions/${sessionId}/history/${historyKey}`);
         },
         deleteAll: async (profileId: string, sessionId: string) => {
-            return this.call<void>('profileSessionHistory', 'deleteAll', profileId, sessionId);
+            await this.del(`/api/profiles/${profileId}/sessions/${sessionId}/history`);
         },
     } as const;
 
@@ -299,38 +348,38 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileRTs = {
         createUsingTemplate: async (profileId: string, metadata: RTMetadata, templateId: string): Promise<string> => {
-            await this.call<void>('profileRTs', 'createUsingTemplate', profileId, metadata, templateId);
+            await this.post(`/api/profiles/${profileId}/rts/from-template`, { metadata, templateId });
             return profileId;
         },
         getTree: async (profileId: string): Promise<RTMetadataTree> => {
-            return this.call<RTMetadataTree>('profileRTs', 'getTree', profileId);
+            return this.get<RTMetadataTree>(`/api/profiles/${profileId}/rts`);
         },
         updateTree: async (profileId: string, tree: RTMetadataTree) => {
-            return this.call<void>('profileRTs', 'updateTree', profileId, tree);
+            await this.put(`/api/profiles/${profileId}/rts`, { tree });
         },
         generateId: async (profileId: string) => {
-            return this.call<string>('profileRTs', 'generateId', profileId);
+            return this.post<string>(`/api/profiles/${profileId}/rts/generate-id`);
         },
         add: async (profileId: string, metadata: RTMetadata) => {
-            return this.call<void>('profileRTs', 'add', profileId, metadata);
+            await this.post(`/api/profiles/${profileId}/rts`, { metadata });
         },
         remove: async (profileId: string, rtId: string) => {
-            return this.call<void>('profileRTs', 'remove', profileId, rtId);
+            await this.del(`/api/profiles/${profileId}/rts/${encodeURIComponent(rtId)}`);
         },
         existsId: async (profileId: string, rtId: string) => {
-            return this.call<boolean>('profileRTs', 'existsId', profileId, rtId);
+            return this.get<boolean>(`/api/profiles/${profileId}/rts/${encodeURIComponent(rtId)}/exists`);
         },
         changeId: async (profileId: string, oldId: string, newId: string) => {
-            return this.call<void>('profileRTs', 'changeId', profileId, oldId, newId);
+            await this.put(`/api/profiles/${profileId}/rts/${encodeURIComponent(oldId)}/id`, { newRTId: newId });
         },
         reflectMetadata: async (profileId: string, rtId: string) => {
-            return this.call<void>('profileRTs', 'reflectMetadata', profileId, rtId);
+            await this.post(`/api/profiles/${profileId}/rts/${encodeURIComponent(rtId)}/metadata/reflect`);
         },
         importFile: async (token: string, profileId: string) => {
-            return this.call<void>('profileRTs', 'importFile', token, profileId);
+            throw new IPCError('Use native.uploadRTFile() for web file import');
         },
         exportFile: async (token: string, profileId: string, rtId: string) => {
-            return this.call<void>('profileRTs', 'exportFile', token, profileId, rtId);
+            throw new IPCError('Use native.downloadRTFile() for web file export');
         },
     } as const;
 
@@ -338,16 +387,16 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileRT = {
         getMetadata: async (profileId: string, rtId: string): Promise<ProfileStorage.RT.Index> => {
-            return this.call<ProfileStorage.RT.Index>('profileRT', 'getMetadata', profileId, rtId);
+            return this.get<ProfileStorage.RT.Index>(`/api/profiles/${profileId}/rts/${rtId}/metadata`);
         },
         setMetadata: async (profileId: string, rtId: string, metadata: KeyValueInput) => {
-            return this.call<void>('profileRT', 'setMetadata', profileId, rtId, metadata);
+            await this.put(`/api/profiles/${profileId}/rts/${rtId}/metadata`, { metadata });
         },
         reflectMetadata: async (profileId: string, rtId: string) => {
-            return this.call<void>('profileRT', 'reflectMetadata', profileId, rtId);
+            await this.post(`/api/profiles/${profileId}/rts/${rtId}/metadata/reflect`);
         },
         getForms: async (profileId: string, rtId: string) => {
-            return this.call<any>('profileRT', 'getForms', profileId, rtId);
+            return this.get<any>(`/api/profiles/${profileId}/rts/${rtId}/forms`);
         },
     } as const;
 
@@ -355,10 +404,10 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileRTStorage = {
         get: async (profileId: string, rtId: string, accessorId: string, keys: string[]) => {
-            return this.call<any>('profileRTStorage', 'get', profileId, rtId, accessorId, keys);
+            return this.get<any>(`/api/profiles/${profileId}/rts/${rtId}/storage/${encodeURIComponent(accessorId)}`, { keys: keys.join(',') });
         },
         set: async (profileId: string, rtId: string, accessorId: string, data: KeyValueInput) => {
-            return this.call<void>('profileRTStorage', 'set', profileId, rtId, accessorId, data);
+            await this.put(`/api/profiles/${profileId}/rts/${rtId}/storage/${encodeURIComponent(accessorId)}`, { data });
         },
     } as const;
 
@@ -366,34 +415,34 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileRTPrompt = {
         getMetadata: async (profileId: string, rtId: string, promptId: string): Promise<RTPromptMetadata> => {
-            return this.call<RTPromptMetadata>('profileRTPrompt', 'getMetadata', profileId, rtId, promptId);
+            return this.get<RTPromptMetadata>(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/metadata`);
         },
         setMetadata: async (profileId: string, rtId: string, promptId: string, metadata: RTPromptDataEditable) => {
-            return this.call<void>('profileRTPrompt', 'setMetadata', profileId, rtId, promptId, metadata);
+            await this.put(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/metadata`, { metadata });
         },
         getName: async (profileId: string, rtId: string, promptId: string): Promise<string> => {
-            return this.call<string>('profileRTPrompt', 'getName', profileId, rtId, promptId);
+            return this.get<string>(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/name`);
         },
         setName: async (profileId: string, rtId: string, promptId: string, name: string) => {
-            return this.call<void>('profileRTPrompt', 'setName', profileId, rtId, promptId, name);
+            await this.put(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/name`, { name });
         },
         getVariableNames: async (profileId: string, rtId: string, promptId: string): Promise<string[]> => {
-            return this.call<string[]>('profileRTPrompt', 'getVariableNames', profileId, rtId, promptId);
+            return this.get<string[]>(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/variables/names`);
         },
         getVariables: async (profileId: string, rtId: string, promptId: string): Promise<RTVar[]> => {
-            return this.call<RTVar[]>('profileRTPrompt', 'getVariables', profileId, rtId, promptId);
+            return this.get<RTVar[]>(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/variables`);
         },
         setVariables: async (profileId: string, rtId: string, promptId: string, vars: (RTVarCreate | RTVarUpdate)[]) => {
-            return this.call<string[]>('profileRTPrompt', 'setVariables', profileId, rtId, promptId, vars);
+            return this.put<string[]>(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/variables`, { vars });
         },
         removeVariables: async (profileId: string, rtId: string, promptId: string, formIds: string[]) => {
-            return this.call<void>('profileRTPrompt', 'removeVariables', profileId, rtId, promptId, formIds);
+            await this.del(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/variables`, { varIds: formIds });
         },
         getContents: async (profileId: string, rtId: string, promptId: string): Promise<string> => {
-            return this.call<string>('profileRTPrompt', 'getContents', profileId, rtId, promptId);
+            return this.get<string>(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/contents`);
         },
         setContents: async (profileId: string, rtId: string, promptId: string, contents: string) => {
-            return this.call<void>('profileRTPrompt', 'setContents', profileId, rtId, promptId, contents);
+            await this.put(`/api/profiles/${profileId}/rts/${rtId}/prompts/${promptId}/contents`, { contents });
         },
     } as const;
 
@@ -401,22 +450,22 @@ class WebHTTPAPI implements IIPCAPI {
 
     profileRTFlow = {
         getFlowData: async (profileId: string, rtId: string): Promise<RTFlowData> => {
-            return this.call<RTFlowData>('profileRTFlow', 'getFlowData', profileId, rtId);
+            return this.get<RTFlowData>(`/api/profiles/${profileId}/rts/${rtId}/flow`);
         },
         setFlowData: async (profileId: string, rtId: string, data: RTFlowData) => {
-            return this.call<void>('profileRTFlow', 'setFlowData', profileId, rtId, data);
+            await this.put(`/api/profiles/${profileId}/rts/${rtId}/flow`, { data });
         },
         getPrompts: async (profileId: string, rtId: string) => {
-            return this.call<any>('profileRTFlow', 'getPrompts', profileId, rtId);
+            return this.get<any>(`/api/profiles/${profileId}/rts/${rtId}/flow/prompts`);
         },
         setPrompts: async (profileId: string, rtId: string, order: ProfileStorage.RT.PromptOrder) => {
-            return this.call<void>('profileRTFlow', 'setPrompts', profileId, rtId, order);
+            await this.put(`/api/profiles/${profileId}/rts/${rtId}/flow/prompts`, { order });
         },
         addPrompt: async (profileId: string, rtId: string, promptId: string, promptName: string) => {
-            return this.call<any>('profileRTFlow', 'addPrompt', profileId, rtId, promptId, promptName);
+            return this.post<any>(`/api/profiles/${profileId}/rts/${rtId}/flow/prompts`, { promptId, promptName });
         },
         removePrompt: async (profileId: string, rtId: string, promptId: string) => {
-            return this.call<any>('profileRTFlow', 'removePrompt', profileId, rtId, promptId);
+            return this.del<any>(`/api/profiles/${profileId}/rts/${rtId}/flow/prompts/${promptId}`);
         },
     } as const;
 
@@ -424,13 +473,13 @@ class WebHTTPAPI implements IIPCAPI {
 
     request = {
         requestRT: async (token: string, profileId: string, sessionId: string) => {
-            return this.call<void>('request', 'requestRT', token, profileId, sessionId);
+            await this.post('/api/request', { token, profileId, sessionId });
         },
         previewPrompt: async (token: string, profileId: string, sessionId: string) => {
-            return this.call<void>('request', 'previewPrompt', token, profileId, sessionId);
+            await this.post('/api/request/preview', { token, profileId, sessionId });
         },
         abort: async (token: string) => {
-            return this.call<void>('request', 'abort', token);
+            await this.post('/api/request/abort', { token });
         },
     } as const;
 

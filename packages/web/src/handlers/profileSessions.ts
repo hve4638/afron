@@ -1,52 +1,42 @@
+import { FastifyInstance } from 'fastify';
 import runtime from '@/runtime';
 import ThrottleAction from '@/features/throttle-action';
-import { IPCInvokers } from '@afron/types';
+import { route } from '@/utils/route';
 
-function profileSessions(): IPCInvokers.ProfileSessions {
+export default async function(app: FastifyInstance) {
     const throttle = ThrottleAction.getInstance();
 
-    return {
-        async add(profileId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const sid = await profile.sessions.create();
+    app.get('/api/profiles/:profileId/sessions', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        return profile.sessions.getIds();
+    }));
 
-            throttle.saveProfile(profile);
-            return [null, sid] as const;
-        },
-        async remove(profileId: string, sessionId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            await profile.sessions.remove(sessionId);
+    app.post('/api/profiles/:profileId/sessions', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const sid = await profile.sessions.create();
+        throttle.saveProfile(profile);
+        return sid;
+    }));
 
-            throttle.saveProfile(profile);
-            return [null] as const;
-        },
-        async undoRemoved(profileId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const sid = await profile.sessions.undoRemove();
+    app.delete('/api/profiles/:profileId/sessions/:sessionId', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        await profile.sessions.remove(params['sessionId']);
+        throttle.saveProfile(profile);
+    }));
 
-            throttle.saveProfile(profile);
+    app.post('/api/profiles/:profileId/sessions/undo', route(async (params) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        const sid = await profile.sessions.undoRemove();
+        throttle.saveProfile(profile);
+        if (sid == null) {
+            throw new Error('No session to undo');
+        }
+        return sid;
+    }));
 
-            if (sid == null) {
-                return [new Error('No session to undo')] as const;
-            }
-            else {
-                return [null, sid] as const;
-            }
-        },
-        async reorder(profileId: string, newTabs: string[]) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            profile.sessions.reorder(newTabs);
-
-            throttle.saveProfile(profile);
-            return [null] as const;
-        },
-        async getIds(profileId: string) {
-            const profile = await runtime.profiles.getProfile(profileId);
-            const sessions = await profile.sessions.getIds();
-
-            return [null, sessions] as const;
-        },
-    }
+    app.put('/api/profiles/:profileId/sessions/order', route(async (params, body) => {
+        const profile = await runtime.profiles.getProfile(params['profileId']);
+        profile.sessions.reorder(body.sessions);
+        throttle.saveProfile(profile);
+    }));
 }
-
-export default profileSessions;
