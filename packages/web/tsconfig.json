@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "isolatedModules": true,
+        "moduleResolution": "node10",
+
+        "target": "es2022",
+        "module": "es2022",
+
+        "forceConsistentCasingInFileNames": true,
+        "esModuleInterop": true,
+
+        "strict": true,
+        "noImplicitAny": false,
+        "exactOptionalPropertyTypes": false,
+        "noImplicitReturns": false,
+        "noFallthroughCasesInSwitch": false,
+        "noUncheckedIndexedAccess": false,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitOverride": true,
+        "allowUnreachableCode": true,
+
+        "importHelpers": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["src/*"],
+            "@utils": ["src/utils/index"],
+            "@utils/*": ["src/utils/*"],
+            "@features/*": ["src/features/*"]
+        },
+        "types": [
+            "@afron/types"
+        ]
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

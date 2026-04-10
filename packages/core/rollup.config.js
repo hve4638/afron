@@ -28,6 +28,8 @@ export default [
         ],
         external: [
             'write-file-atomic',
+            'better-sqlite3',
+            'sharp',
         ]
     },
     {
