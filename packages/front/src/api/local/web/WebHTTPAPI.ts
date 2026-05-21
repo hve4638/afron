@@ -483,6 +483,61 @@ class WebHTTPAPI implements IIPCAPI {
         },
     } as const;
 
+    // ── platform.web (web-specific file operations) ────────
+
+    platform = {
+        web: {
+            /**
+             * 브라우저에서 .afrt 파일을 서버로 multipart 업로드.
+             * 반환되는 token으로 GlobalEventPipe 채널을 열어 import 진행 이벤트를 수신한다.
+             */
+            uploadRTFile: async (profileId: string, file: File): Promise<string> => {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const res = await fetch(
+                    `${this.baseUrl}/api/profiles/${encodeURIComponent(profileId)}/rts/import`,
+                    { method: 'POST', body: formData },
+                );
+                if (!res.ok) {
+                    const json = await res.json().catch(() => null);
+                    throw new IPCError(json?.error?.message ?? `Upload failed (${res.status})`);
+                }
+                const json = await res.json();
+                if (json.error) throw new IPCError(json.error.message);
+                return json.data.token;
+            },
+
+            /**
+             * 서버에서 .afrt 파일을 받아 브라우저 다운로드를 트리거한다.
+             * Electron의 dialog.showSaveDialog() 대체.
+             */
+            downloadRTFile: async (profileId: string, rtId: string): Promise<void> => {
+                const url = `${this.baseUrl}/api/profiles/${encodeURIComponent(profileId)}/rts/${encodeURIComponent(rtId)}/export`;
+                const res = await fetch(url);
+
+                if (!res.ok) {
+                    const json = await res.json().catch(() => null);
+                    throw new IPCError(json?.error?.message ?? 'Export failed');
+                }
+
+                const disposition = res.headers.get('content-disposition');
+                // RFC 5987: filename* (UTF-8) 우선, 미존재 시 ASCII filename으로 fallback
+                const filenameStarMatch = disposition?.match(/filename\*=UTF-8''([^;]+)/i);
+                const filename = filenameStarMatch
+                    ? decodeURIComponent(filenameStarMatch[1])
+                    : disposition?.match(/filename="(.+?)"/)?.[1] ?? 'export.afrt';
+
+                const blob = await res.blob();
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            },
+        },
+    } as const;
+
     // ── events (WebSocket) ─────────────────────────────────
 
     events = {

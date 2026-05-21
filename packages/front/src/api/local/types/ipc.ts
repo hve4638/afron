@@ -12,4 +12,13 @@ export type IIPCAPI = {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
         [KEY2 in keyof IPCListenerInterface[KEY]]: Function
     }
+} & {
+    /** 플랫폼 전용 작업 (해당 플랫폼이 아닌 빌드에서는 undefined) */
+    platform?: {
+        /** 웹 빌드에서만 존재. 브라우저 File API + HTTP 기반 파일 송수신 */
+        web?: {
+            uploadRTFile(profileId: string, file: File): Promise<string>;
+            downloadRTFile(profileId: string, rtId: string): Promise<void>;
+        };
+    };
 }

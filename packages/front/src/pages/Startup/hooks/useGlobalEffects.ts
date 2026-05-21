@@ -46,6 +46,7 @@ export function useGlobalEffects() {
 
         const modalId = uuidv7();
         emitEvent('open_progress_modal', { modalId });
+
         RTImportManager.importFile(api.id, { modalId });
     })
 
@@ -54,6 +55,7 @@ export function useGlobalEffects() {
 
         const modalId = uuidv7();
         emitEvent('open_progress_modal', { modalId });
+
         RTExportManager.exportFile(api.id, rtId, { modalId });
     })
 }

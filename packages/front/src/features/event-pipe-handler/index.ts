@@ -1,4 +1,4 @@
-import RTExportManagerSingleton from './RTExportManagerSigleton';
+import RTExportManagerSingleton from './RTExportManagerSingleton';
 import RTImportManagerSingleton from './RTImportManagerSingleton';
 
 export const RTExportManager = RTExportManagerSingleton.getInstance();

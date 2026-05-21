@@ -38,6 +38,16 @@ abstract class EventPipe<TData> {
         return chId;
     }
 
+    /**
+     * 외부에서 생성된 chId로 채널을 등록한다.
+     * 웹 모드에서 서버가 생성한 token으로 WS 이벤트를 수신하기 위해 사용.
+     * (기존 open()은 자체적으로 chId를 생성하므로 서버 token을 등록할 수 없음)
+     */
+    openWith(chId: string) {
+        if (this.#channels.has(chId)) return;
+        this.#channels.set(chId, new Channel<TData>());
+    }
+
     #getCh(chId: string) {
         const ch = this.#channels.get(chId);
         if (!ch) {

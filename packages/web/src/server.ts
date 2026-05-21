@@ -22,6 +22,15 @@ async function main() {
     // WebSocket 플러그인
     await app.register(fastifyWebsocket);
 
+    // Multipart (RT import 시 .afrt 파일 업로드용)
+    const multipart = (await import('@fastify/multipart')).default;
+    await app.register(multipart, {
+        limits: {
+            fileSize: 50 * 1024 * 1024, // 50MB — .afrt는 ZIP이므로 보통 수 MB 이하
+            files: 1,
+        },
+    });
+
     // WebSocket 엔드포인트
     app.register(async function (fastify) {
         fastify.get('/ws', { websocket: true }, (socket, req) => {
