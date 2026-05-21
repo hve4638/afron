@@ -219,7 +219,7 @@ class WebHTTPAPI implements IIPCAPI {
             return this.get<CustomModel[]>(`/api/profiles/${profileId}/models`);
         },
         setCustomModel: async (profileId: string, model: CustomModel) => {
-            return this.put<string>(`/api/profiles/${profileId}/models/${encodeURIComponent(model.customId)}`, { model });
+            return this.put<string>(`/api/profiles/${profileId}/models/${encodeURIComponent(model.id)}`, { model });
         },
         removeCustomModel: async (profileId: string, customId: string) => {
             await this.del(`/api/profiles/${profileId}/models/${encodeURIComponent(customId)}`);
