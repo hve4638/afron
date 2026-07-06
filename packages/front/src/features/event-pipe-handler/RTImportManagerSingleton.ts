@@ -3,8 +3,8 @@ import LocalAPI from '@/api/local';
 import { type IIPCAPI } from '@/api/local/types';
 import { emitEvent } from '@/hooks/useEvent';
 import { emitProgressModalEvent } from '@/modals/ProgressModal/events';
+import { isWeb } from '@/utils/platform';
 
-const isWeb = import.meta.env['VITE_BACKEND'] === 'web';
 // 빌드별 alias로 LocalAPI는 ElectronIPCAPI 또는 WebHTTPAPI로 해석된다.
 // `platform.web`은 web 빌드에만 존재하므로 IIPCAPI 캐스트로 접근한다.
 const localAPI = LocalAPI as unknown as IIPCAPI;
@@ -48,18 +48,24 @@ class RTImportManagerSingleton {
                 return;
             }
 
+            // 업로드 전에 채널을 열어야 서버가 먼저 보낸 이벤트가 유실되지 않는다
+            const token = GlobalEventPipe.open();
             try {
-                const token = await localAPI.platform!.web!.uploadRTFile(profileId, file);
-                GlobalEventPipe.openWith(token);
+                await localAPI.platform!.web!.uploadRTFile(token, profileId, file);
                 this.#handleResponse(token, config);
             }
             catch (e: any) {
+                GlobalEventPipe.close(token);
                 emitProgressModalEvent('description', {
                     id: config.modalId,
                     value: e.message ?? '파일 업로드에 실패했습니다',
                 });
                 emitProgressModalEvent('show_close_button', { id: config.modalId });
             }
+        };
+        // 파일 선택 취소 시 onchange가 발생하지 않는 브라우저 대응
+        input.oncancel = () => {
+            emitProgressModalEvent('close', { id: config.modalId });
         };
 
         input.click();

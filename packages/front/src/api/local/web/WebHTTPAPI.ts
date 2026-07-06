@@ -489,14 +489,15 @@ class WebHTTPAPI implements IIPCAPI {
         web: {
             /**
              * 브라우저에서 .afrt 파일을 서버로 multipart 업로드.
-             * 반환되는 token으로 GlobalEventPipe 채널을 열어 import 진행 이벤트를 수신한다.
+             * token은 호출 측이 생성해 GlobalEventPipe 채널을 먼저 연 뒤 넘긴다.
+             * (서버 발급 token은 채널 등록 전 이벤트 유실 레이스가 있음)
              */
-            uploadRTFile: async (profileId: string, file: File): Promise<string> => {
+            uploadRTFile: async (token: string, profileId: string, file: File): Promise<void> => {
                 const formData = new FormData();
                 formData.append('file', file);
 
                 const res = await fetch(
-                    `${this.baseUrl}/api/profiles/${encodeURIComponent(profileId)}/rts/import`,
+                    `${this.baseUrl}/api/profiles/${encodeURIComponent(profileId)}/rts/import?token=${encodeURIComponent(token)}`,
                     { method: 'POST', body: formData },
                 );
                 if (!res.ok) {
@@ -505,7 +506,6 @@ class WebHTTPAPI implements IIPCAPI {
                 }
                 const json = await res.json();
                 if (json.error) throw new IPCError(json.error.message);
-                return json.data.token;
             },
 
             /**

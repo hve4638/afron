@@ -38,14 +38,9 @@ abstract class EventPipe<TData> {
         return chId;
     }
 
-    /**
-     * 외부에서 생성된 chId로 채널을 등록한다.
-     * 웹 모드에서 서버가 생성한 token으로 WS 이벤트를 수신하기 위해 사용.
-     * (기존 open()은 자체적으로 chId를 생성하므로 서버 token을 등록할 수 없음)
-     */
-    openWith(chId: string) {
-        if (this.#channels.has(chId)) return;
-        this.#channels.set(chId, new Channel<TData>());
+    /** open() 후 서버 요청이 실패하는 등 수신할 이벤트가 없어진 채널을 정리한다. */
+    close(chId: string) {
+        this.#closeCh(chId);
     }
 
     #getCh(chId: string) {
@@ -58,6 +53,8 @@ abstract class EventPipe<TData> {
     }
 
     #closeCh(chId: string) {
+        // 대기 중인 consume()이 null로 풀리도록 채널 자체도 닫는다
+        this.#channels.get(chId)?.close();
         this.#channels.delete(chId);
     }
 

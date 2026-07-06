@@ -2,8 +2,8 @@ import { GlobalEventPipe } from '@/api/events';
 import LocalAPI from '@/api/local';
 import { type IIPCAPI } from '@/api/local/types';
 import { emitProgressModalEvent } from '@/modals/ProgressModal/events';
+import { isWeb } from '@/utils/platform';
 
-const isWeb = import.meta.env['VITE_BACKEND'] === 'web';
 // 빌드별 alias로 LocalAPI는 ElectronIPCAPI 또는 WebHTTPAPI로 해석된다.
 // `platform.web`은 web 빌드에만 존재하므로 IIPCAPI 캐스트로 접근한다.
 const localAPI = LocalAPI as unknown as IIPCAPI;

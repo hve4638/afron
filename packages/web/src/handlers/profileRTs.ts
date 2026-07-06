@@ -82,9 +82,18 @@ export default async function(app: FastifyInstance) {
     // Electron의 dialog.showOpenDialog() 대체
     // 브라우저에서 multipart로 .afrt 파일을 업로드하면,
     // 임시 파일에 저장 후 RTImportProcess에 경로를 전달한다.
-    // token을 즉시 반환하고, 진행 이벤트는 WebSocket(global 채널)으로 전송된다.
+    // 진행 이벤트는 WebSocket(global 채널)으로 전송된다.
+    // token은 /api/request와 동일하게 클라이언트가 생성해 넘긴다.
+    // (서버가 token을 발급하면 클라이언트가 채널을 등록하기 전에 이벤트가 유실될 수 있음)
     app.post('/api/profiles/:profileId/rts/import', async (req, reply) => {
         const { profileId } = req.params as { profileId: string };
+        const { token } = req.query as { token?: string };
+
+        if (!token) {
+            return reply.status(400).send({
+                error: { name: 'ValidationError', message: 'No token provided' },
+            });
+        }
 
         const file = await req.file();
         if (!file) {
@@ -105,16 +114,17 @@ export default async function(app: FastifyInstance) {
             });
         }
 
-        // token 생성 후 즉시 반환, import는 비동기로 실행
-        const token = uuidv7();
-
+        // 즉시 응답하고 import는 비동기로 실행, 결과는 WS 이벤트로 전달
         runtime.eventProcess.RTImportProcess()
             .process(token, profileId, tmpPath)
+            .catch((error: any) => {
+                runtime.logger.error(`RT import process failed: ${error?.message ?? error}`);
+            })
             .finally(() => {
                 fs.unlink(tmpPath, () => {}); // 임시 파일 정리
             });
 
-        return { data: { token } };
+        return { data: null };
     });
 
     // ── RT Export (file download) ─────────────────────────
@@ -148,8 +158,8 @@ export default async function(app: FastifyInstance) {
                 `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`);
 
             const stream = fs.createReadStream(tmpPath);
-            stream.on('end', () => fs.unlink(tmpPath, () => {}));
-            stream.on('error', () => fs.unlink(tmpPath, () => {}));
+            // 'close'는 end/error 어느 쪽이든 마지막에 한 번만 발생한다
+            stream.on('close', () => fs.unlink(tmpPath, () => {}));
 
             return reply.send(stream);
         }

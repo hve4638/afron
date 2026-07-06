@@ -17,7 +17,7 @@ export type IIPCAPI = {
     platform?: {
         /** 웹 빌드에서만 존재. 브라우저 File API + HTTP 기반 파일 송수신 */
         web?: {
-            uploadRTFile(profileId: string, file: File): Promise<string>;
+            uploadRTFile(token: string, profileId: string, file: File): Promise<void>;
             downloadRTFile(profileId: string, rtId: string): Promise<void>;
         };
     };
