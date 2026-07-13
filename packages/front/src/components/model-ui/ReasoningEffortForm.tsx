@@ -35,6 +35,7 @@ function ReasoningEffortForm({
             {candidates.includes('low') && <Dropdown.Item name='low' value='low' />}
             {candidates.includes('medium') && <Dropdown.Item name='medium' value='medium' />}
             {candidates.includes('high') && <Dropdown.Item name='high' value='high' />}
+            {candidates.includes('xhigh') && <Dropdown.Item name='xhigh' value='xhigh' />}
         </DropdownForm>
     )
 }

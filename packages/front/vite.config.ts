@@ -11,16 +11,19 @@ function alias(find:string, replacement:string) {
 }
 
 const backendMode = process.env.VITE_BACKEND ?? 'electron';
+// @afron/web 서버 포트와 동일한 env로 프록시 대상을 맞춤 (packages/web/.env의 AFRON_PORT 기본값과 동기화)
+const backendPort = process.env.AFRON_PORT ?? '8537';
+const frontPort = Number(process.env.AFRON_FRONT_PORT ?? '8536');
 
 export default defineConfig({
     base: './',
     server: {
-        port: 8536,
+        port: frontPort,
         host: '0.0.0.0',
         ...(backendMode === 'web' && {
             proxy: {
-                '/api': 'http://localhost:8537',
-                '/ws': { target: 'ws://localhost:8537', ws: true },
+                '/api': `http://localhost:${backendPort}`,
+                '/ws': { target: `ws://localhost:${backendPort}`, ws: true },
             },
         }),
     },

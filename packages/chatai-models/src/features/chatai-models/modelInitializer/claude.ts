@@ -7,6 +7,7 @@ const {
     featured,
     deprecated,
     snapshot,
+    highCost,
 } = flags;
 
 // Claude Models 목록
@@ -14,8 +15,28 @@ const {
 function initProvider(builder: CategoryBuilder) {
     const claudeAPI: Partial<ChatAIConfig> = { endpoint: 'anthropic' };
 
+    // Claude 4.7 이후 세대는 temperature/top_p 지정 시 400 에러, thinking budget(budget_tokens) 방식 제거(adaptive 전용).
+    // @hve/chatai가 adaptive thinking을 지원하기 전까지 thinking 비활성화
+    // (thinking 미전송 시에도 Sonnet 5/Fable 5는 서버 측 adaptive thinking이 자동 적용됨)
+    const claude47API: Partial<ChatAIConfig> = {
+        endpoint: 'anthropic',
+        thinking: 'disabled',
+        excludeParameter: ['top_p', 'temperature'],
+    };
+
+    builder.group('Claude 5', claude47API, {})
+        .model('claude-fable-5', 'Claude Fable 5', {}, { latest, featured, highCost })
+        .model('claude-sonnet-5', 'Claude Sonnet 5', {}, { latest, featured })
+
+    builder.group('Claude 4.8', claude47API, {})
+        .model('claude-opus-4-8', 'Claude Opus 4.8', {}, { latest, featured })
+
+    builder.group('Claude 4.7', claude47API, {})
+        .model('claude-opus-4-7', 'Claude Opus 4.7', {}, { latest, featured })
+
     builder.group('Claude 4.6', { endpoint: 'anthropic', thinking: 'optional' }, {})
         .model('claude-opus-4-6', 'Claude Opus 4.6', { excludeParameter: ['top_p'] }, { latest, featured })
+        .model('claude-sonnet-4-6', 'Claude Sonnet 4.6', { excludeParameter: ['top_p'] }, { latest, featured })
 
     builder.group('Claude 4.5', { endpoint: 'anthropic', thinking: 'optional' }, {})
         .model('claude-opus-4-5', 'Claude Opus 4.5', {}, { latest, featured })
