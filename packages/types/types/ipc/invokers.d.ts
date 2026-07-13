@@ -33,6 +33,11 @@ export declare namespace IPCInvokers {
         ignoreLegacyData(): ENoResult;
     }
 
+    interface GlobalConfig {
+        getHardwareAccelerationEnabled(): EResult<boolean>;
+        setHardwareAccelerationEnabled(value: boolean): ENoResult;
+    }
+
     interface GlobalStorage {
         get(storageName: string, keys: string[]): EResult<Record<string, any>>;
         set(storageName: string, data: KeyValueInput): ENoResult;

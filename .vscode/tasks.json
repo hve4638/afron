@@ -4,7 +4,7 @@
         {
             "label": "chatai_models:build",
             "type": "shell",
-            "command": "yarn build",
+            "command": "pnpm run build",
             "options": {
                 "cwd": "${workspaceFolder}/packages/chatai-models"
             },
@@ -13,7 +13,7 @@
         {
             "label": "core:build",
             "type": "shell",
-            "command": "yarn build",
+            "command": "pnpm run build",
             "options": {
                 "cwd": "${workspaceFolder}/packages/core"
             },
@@ -22,7 +22,7 @@
         {
             "label": "electron:build",
             "type": "shell",
-            "command": "yarn build",
+            "command": "pnpm run build",
             "options": {
                 "cwd": "${workspaceFolder}/packages/electron"
             },
@@ -31,7 +31,7 @@
         {
             "label": "front:start",
             "type": "shell",
-            "command": "yarn start",
+            "command": "pnpm run start",
             "options": {
                 "cwd": "${workspaceFolder}/packages/front"
             },

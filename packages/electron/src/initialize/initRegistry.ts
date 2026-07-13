@@ -19,6 +19,9 @@ interface InitRegistryPriorityProps {
     programPath: ProgramPath;
 }
 
+/**
+ * 로거를 우선 레지스트리에 등록
+ */
 export async function initRegistryPriority({ programPath }: InitRegistryPriorityProps) {
     // logger 초기화 및 등록
     const logLevel = (
@@ -46,6 +49,9 @@ interface InitRegistryProps {
     logger: LevelLogger;
 }
 
+/**
+ * 런타임 핵심 구성 요소를 레지스트리에 등록
+ */
 export async function initRegistry({ logger }: InitRegistryProps) {
     const version = app.isPackaged ? app.getVersion() : `dev-${formatDateLocal()}`;
 

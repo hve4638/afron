@@ -18,8 +18,16 @@ function initProvider(builder: CategoryBuilder) {
         supportThinkingBudget: true,
     };
 
+    builder.group('Gemini 3.5', genAPI, {})
+        .model('gemini-3.5-flash', 'Gemini 3.5 Flash', { thinking: 'enabled' }, { latest, featured })
+
+    builder.group('Gemini 3.1', genAPI, {})
+        .model('gemini-3.1-pro-preview', 'Gemini 3.1 Pro (preview)', { thinking: 'enabled' }, { latest, featured })
+        .model('gemini-3.1-flash-lite', 'Gemini 3.1 Flash-Lite', { thinking: 'enabled' }, { latest, featured })
+
     builder.group('Gemini 3.0', genAPI, {})
-        .model('gemini-3-pro-preview', 'Gemini 3.0 Pro (preview)', { thinking: 'enabled' }, { latest, featured })
+        // gemini-3-pro-preview: 2026-03-09 deprecated, alias가 gemini-3.1-pro-preview로 리다이렉트됨
+        .model('gemini-3-pro-preview', 'Gemini 3.0 Pro (preview)', { thinking: 'enabled' }, { deprecated })
         .model('gemini-3-flash-preview', 'Gemini 3.0 Flash (preview)', { thinking: 'enabled' }, { latest, featured })
         // .model('gemini-3-pro-image-preview', 'Gemini 3.0 Pro Image Preview', { thinking: 'enabled' }, { latest, featured })
 

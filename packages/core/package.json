@@ -18,14 +18,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@afron/types": "1.0.0",
+    "@afron/chatai-models": "workspace:*",
+    "@afron/types": "workspace:*",
     "@hve/channel": "^1.0.1",
     "@hve/chatai": "^0.16.0",
     "@hve/mime": "^1.0.0",
-    "ac-storage": "^0.16.5",
+    "ac-storage": "^0.17.0",
     "advanced-prompt-template-lang": "^0.10.5",
     "archiver": "^7.0.1",
-    "better-sqlite3": "^12.2.0",
+    "axios": "^1.13.4",
+    "better-sqlite3": "^12.11.1",
     "file-type": "^21.0.0",
     "istextorbinary": "^9.5.0",
     "js-tiktoken": "^1.0.20",
@@ -35,7 +37,10 @@
     "tslib": "^2.8.1",
     "unzipper": "^0.12.3",
     "uuid": "^11.0.3",
-    "win-known-folders": "^1.0.0"
+    "win-known-folders": "^1.0.0",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "write-file-atomic": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

@@ -2,6 +2,8 @@ import { IPCInvokers } from './invokers';
 import { ENoResult, EResult } from './result';
 
 export type IPCInvokerInterface = {
+    globalConfig: IPCInvokers.GlobalConfig;
+
     general: IPCInvokers.General;
     globalStorage: IPCInvokers.GlobalStorage;
     masterKey: IPCInvokers.MasterKey;

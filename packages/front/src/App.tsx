@@ -1,11 +1,11 @@
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useLayoutEffect, useMemo, useState } from 'react'
 import classNames from 'classnames';
 
 import ProfilesAPI from '@/api/profiles';
 import { useProfileAPIStore } from '@/stores';
 
 import ProfileSelectPage from '@/pages/ProfileSelect';
-import Hub from '@/pages/Hub';
+const Hub = lazy(() => import('@/pages/Hub'));
 
 import useMemoryStore from './stores/useMemoryStore';
 import {
@@ -102,7 +102,9 @@ function App() {
             }
             {
                 phase === LoadPhase.Main &&
-                <Hub />
+                <Suspense fallback={<div></div>}>
+                    <Hub />
+                </Suspense>
             }
         </div>
     )

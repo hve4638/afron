@@ -11,7 +11,7 @@ export const MODEL_SETTINGS = {
     'use_thinking': JSONType.Bool().nullable().default_value(false),
     'thinking_auto_budget': JSONType.Bool().nullable().default_value(false),
     'thinking_tokens': JSONType.Number().nullable().default_value(1024),
-    'thinking_effort': JSONType.Union('minimal', 'low', 'medium', 'high').nullable().default_value('medium'),
+    'thinking_effort': JSONType.Union('minimal', 'low', 'medium', 'high', 'xhigh').nullable().default_value('medium'),
     'verbosity': JSONType.Union('low', 'medium', 'high').nullable().default_value('medium'),
 
     'safety_settings': {

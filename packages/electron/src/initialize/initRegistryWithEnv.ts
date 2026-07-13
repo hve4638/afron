@@ -17,6 +17,9 @@ type InitRegistryProps = {
     env: AfronEnv;
 }
 
+/**
+ * 환경 설정을 반영해 스토리지와 보안 구성 요소를 초기화
+ */
 export async function initRegistryWithEnv({ programPath, logger, env }: InitRegistryProps) {
     let globalStorage: IACStorage;
     let masterKeyManager: MasterKeyManager;
@@ -29,7 +32,7 @@ export async function initRegistryWithEnv({ programPath, logger, env }: InitRegi
     }
     else {
         globalStorage = new ACStorage(programPath.basePath);
-        masterKeyManager = new MasterKeyManager(path.join(programPath.basePath, 'unique'));
+        masterKeyManager = new MasterKeyManager(path.join(programPath.basePath, 'unique'), logger);
     }
 
     // GlobalStorage 스키마 등록

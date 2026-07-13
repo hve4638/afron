@@ -36,7 +36,7 @@
             "name": "front:launch",
             "type": "node-terminal",
             "request": "launch",
-            "command": "yarn start",
+            "command": "pnpm run start",
             "cwd": "${workspaceFolder}/packages/front"
         }
     ]

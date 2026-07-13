@@ -38,6 +38,11 @@ abstract class EventPipe<TData> {
         return chId;
     }
 
+    /** open() 후 서버 요청이 실패하는 등 수신할 이벤트가 없어진 채널을 정리한다. */
+    close(chId: string) {
+        this.#closeCh(chId);
+    }
+
     #getCh(chId: string) {
         const ch = this.#channels.get(chId);
         if (!ch) {
@@ -48,6 +53,8 @@ abstract class EventPipe<TData> {
     }
 
     #closeCh(chId: string) {
+        // 대기 중인 consume()이 null로 풀리도록 채널 자체도 닫는다
+        this.#channels.get(chId)?.close();
         this.#channels.delete(chId);
     }
 

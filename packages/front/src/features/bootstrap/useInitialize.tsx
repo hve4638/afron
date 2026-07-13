@@ -9,8 +9,6 @@ import useMemoryStore from '@/stores/useMemoryStore';
 import { emitEvent, useEvent } from '@/hooks/useEvent';
 import { RTExportManager, RTImportManager } from '@/features/event-pipe-handler';
 
-
-
 function useInitialize() {
     useEffect(() => {
         // Zustand State 의존성 관련 구독
@@ -47,6 +45,7 @@ function useInitialize() {
 
         const modalId = uuidv7();
         emitEvent('open_progress_modal', { modalId });
+
         RTImportManager.importFile(api.id, { modalId });
     })
 
@@ -55,6 +54,7 @@ function useInitialize() {
 
         const modalId = uuidv7();
         emitEvent('open_progress_modal', { modalId });
+
         RTExportManager.exportFile(api.id, rtId, { modalId });
     })
 }

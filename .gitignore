@@ -10,10 +10,15 @@ node_modules/
 package-lock.json
 yarn.lock
 
+# pnpm
+.pnpm-store/
+.pnpm-debug.log
+
 # output
 dist/
 out/
 release/
+packages/web/static/
 
 # test
 coverage/
@@ -24,8 +29,6 @@ coverage/
 .rollup.cache
 .report
 .claude
-GEMINI.md
-CLAUDE.md
 .DS_Store
 .env.local
 .env.development.local
@@ -44,3 +47,6 @@ docs/
 GUIDE.md
 tmpclaude-*
 .github/copilot-instructions.md
+.omc/
+.omx/
+_report/

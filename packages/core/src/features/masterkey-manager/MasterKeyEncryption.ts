@@ -1,12 +1,14 @@
 import { Gen1, IEncryptModel } from './encrypt-model';
+import { LevelLogger } from '@/types';
+import NoLogger from '@/features/nologger';
 
 
 class MasterKeyEncryptUtil {
-    private encryptModel: IEncryptModel = new Gen1();
+    private encryptModel: IEncryptModel;
     private encryptedAsHardwareKey: string | null = null;
     
-    constructor(private masterKey: string) {
-
+    constructor(private masterKey: string, logger: LevelLogger = NoLogger.instance) {
+        this.encryptModel = new Gen1(logger);
     }
 
     async encrypt(key:string): Promise<string> {
@@ -17,5 +19,6 @@ class MasterKeyEncryptUtil {
 
     
 }
+
 
 export default MasterKeyEncryptUtil;

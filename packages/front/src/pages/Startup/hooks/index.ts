@@ -1,3 +1,0 @@
-export { useGlobalEffects } from './useGlobalEffects';
-
-

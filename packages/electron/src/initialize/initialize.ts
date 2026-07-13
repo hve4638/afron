@@ -6,6 +6,7 @@ import { initRegistry, initRegistryPriority } from './initRegistry'
 import { initRegistryWithEnv } from './initRegistryWithEnv';
 import { initDevOptions } from './initDevOptions'
 
+/** 앱 초기화 오케스트레이션 */
 async function initialize() {
     // if (!app.isPackaged) {
     //     try {
@@ -15,11 +16,12 @@ async function initialize() {
     //         console.warn('Failed to copy profiles.json to logs directory:', error);
     //     }
     // }
-
     const { programPath } = initPath();
     const { env } = initAfronEnv();
 
-    const { logger } = await initRegistryPriority({ programPath });
+    const {
+        logger
+    } = await initRegistryPriority({ programPath });
     await initRegistry({ logger });
     await initRegistryWithEnv({ programPath, logger, env });
 

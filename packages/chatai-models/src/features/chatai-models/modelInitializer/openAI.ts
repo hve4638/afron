@@ -22,6 +22,55 @@ function initProvider(builder: CategoryBuilder) {
 
     const gpt5ExcludeParameter: ExcludeParamter[] = ['top_p', 'temperature'];
     const gpt5ParamConfig = { excludeParameter: gpt5ExcludeParameter };
+
+    // GPT-5.6 계열: reasoning effort/verbosity 세부 지원 미확인(2026-07-13 기준)이라 보수적으로 low/medium/high만 노출
+    builder.group('GPT-5.6', {
+        endpoint: 'chat_completions',
+        thinking: 'enabled',
+        supportThinkingEffort,
+        supportVerbosity,
+
+        supportedThinkingEfforts: ['low', 'medium', 'high'],
+        supportedVerbosity: ['low', 'medium', 'high'],
+    }, {})
+        .model('gpt-5.6-sol', 'GPT-5.6 Sol', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5.6-terra', 'GPT-5.6 Terra', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5.6-luna', 'GPT-5.6 Luna', gpt5ParamConfig, { latest, featured })
+
+    builder.group('GPT-5.5', {
+        endpoint: 'chat_completions',
+        thinking: 'enabled',
+        supportThinkingEffort,
+        supportVerbosity,
+
+        supportedThinkingEfforts: ['low', 'medium', 'high', 'xhigh'],
+        supportedVerbosity: ['low', 'medium', 'high'],
+    }, {})
+        .model('gpt-5.5', 'GPT-5.5', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5.5-2026-04-23', 'GPT-5.5 (2026-04-23)', gpt5ParamConfig, { snapshot })
+        // .model('gpt-5.5-pro', 'GPT-5.5 Pro', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
+        // .model('gpt-5.5-pro-2026-04-23', 'GPT-5.5 Pro (2026-04-23)', { ...gpt5ParamConfig, endpoint: 'responses' }, { snapshot })
+
+    builder.group('GPT-5.4', {
+        endpoint: 'chat_completions',
+        thinking: 'enabled',
+        supportThinkingEffort,
+        supportVerbosity,
+
+        supportedThinkingEfforts: ['low', 'medium', 'high', 'xhigh'],
+        supportedVerbosity: ['low', 'medium', 'high'],
+    }, {})
+        .model('gpt-5.4', 'GPT-5.4', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5.4-2026-03-05', 'GPT-5.4 (2026-03-05)', gpt5ParamConfig, { snapshot })
+        .model('gpt-5.4-mini', 'GPT-5.4 mini', gpt5ParamConfig, { latest, featured })
+        .model('gpt-5.4-mini-2026-03-17', 'GPT-5.4 mini (2026-03-17)', gpt5ParamConfig, { snapshot })
+        .model('gpt-5.4-nano', 'GPT-5.4 nano', gpt5ParamConfig, { latest })
+        .model('gpt-5.4-nano-2026-03-17', 'GPT-5.4 nano (2026-03-17)', gpt5ParamConfig, { snapshot })
+        // .model('gpt-5.4-pro', 'GPT-5.4 Pro', { ...gpt5ParamConfig, endpoint: 'responses' }, { latest, featured })
+        // .model('gpt-5.4-pro-2026-03-05', 'GPT-5.4 Pro (2026-03-05)', { ...gpt5ParamConfig, endpoint: 'responses' }, { snapshot })
+
+    // gpt-5.3-codex (2026-02-05): codex 계열은 기존(gpt-5.2-codex 등)과 동일하게 미등록
+
     builder.group('GPT-5.2', {
         endpoint: 'chat_completions',
         thinking: 'enabled',

@@ -1,6 +1,8 @@
-type LogMethod = (...message: unknown[]) => Promise<void>;
+type LogMethod = (...message: unknown[]) => void;
 
 export interface LevelLogger {
+    get instanceId(): string;
+
     error: LogMethod;
     warn: LogMethod;
     info: LogMethod;

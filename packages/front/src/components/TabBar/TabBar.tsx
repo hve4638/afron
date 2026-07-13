@@ -45,6 +45,7 @@ function TabBar<T extends TabRequired, TRequired extends Partial<T> & TabRequire
     const disableNoAnimation = useDebounce(() => setNoAnimation(false), 100);
 
     const [draggingTabX, setDraggingTabX] = useState<number>(0);
+    const draggingTabXRef = useRef<number>(0);
 
     // strict 엄밀한 탭 이동 범위
     const tabXHardRange = useMemo(() => [0, (items.length - 1) * tabSize], [items, tabSize]);
@@ -92,7 +93,9 @@ function TabBar<T extends TabRequired, TRequired extends Partial<T> & TabRequire
 
         updateAdjacentTabs(tab);
         setDraggingTab(tab);
-        setDraggingTabX(tab.index * tabSize);
+        const initialX = tab.index * tabSize;
+        draggingTabXRef.current = initialX;
+        setDraggingTabX(initialX);
         setHardLimit(false);
     }
 
@@ -102,7 +105,8 @@ function TabBar<T extends TabRequired, TRequired extends Partial<T> & TabRequire
         const right = rect?.right ?? 600;
 
         const added = diffPos(clamp(x, left, right));
-        const newX = draggingTabX + added;
+        const newX = draggingTabXRef.current + added;
+        draggingTabXRef.current = newX;
         setDraggingTabX(newX);
 
         if (!hardLimit && (newX <= tabXSoftRange[0] || newX >= tabXSoftRange[1])) {

@@ -1,4 +1,4 @@
-import { GeminiSafetySetting } from '../../chatai';
+import { GeminiSafetySetting, SupportedThinkingEfforts } from '../../chatai';
 
 export type Prompts = {
     id: string;
@@ -17,7 +17,7 @@ export type Prompts = {
         use_thinking: boolean;
         thinking_tokens: number;
         thinking_auto_budget: boolean;
-        thinking_effort: 'minimal' | 'low' | 'medium' | 'high';
+        thinking_effort: SupportedThinkingEfforts;
         verbosity: 'low' | 'medium' | 'high';
 
         safety_settings: Record<GeminiSafetySetting.FilterNames, GeminiSafetySetting.Threshold>;
