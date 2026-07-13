@@ -27,7 +27,7 @@
     "advanced-prompt-template-lang": "^0.10.5",
     "archiver": "^7.0.1",
     "axios": "^1.13.4",
-    "better-sqlite3": "^12.2.0",
+    "better-sqlite3": "^12.11.1",
     "file-type": "^21.0.0",
     "istextorbinary": "^9.5.0",
     "js-tiktoken": "^1.0.20",
