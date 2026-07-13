@@ -46,7 +46,7 @@
     "@types/node": "^25.0.9",
     "better-sqlite3": "^12.11.1",
     "cross-env": "^7.0.3",
-    "electron": "^40.1.0",
+    "electron": "40.2.1",
     "electron-builder": "^26.0.12",
     "rollup": "^4.28.1",
     "rollup-plugin-terser": "^7.0.2",
