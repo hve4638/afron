@@ -10,7 +10,7 @@
         "web:dev": "concurrently \"pnpm --filter @afron/web dev\" \"pnpm --filter @afron/frontend dev:web\"",
         "_front:dev": "pnpm --filter @afron/frontend start",
         "_front:build": "pnpm --filter @afron/frontend build",
-        "_electron:dev": "wait-on http://localhost:8536 && pnpm --filter @afron/electron start",
+        "_electron:dev": "pnpm rebuild:electron && wait-on http://localhost:8536 && pnpm --filter @afron/electron start",
         "_electron:build": "pnpm --filter @afron/electron build",
         "_electron:load_static": "cd packages/electron && powershell -ExecutionPolicy Bypass -File ./import-static.ps1",
         "_electron:dist": "pnpm --filter @afron/electron dist:win",
@@ -18,12 +18,12 @@
         "_core:build": "pnpm --filter @afron/core build",
         "_chatai:build": "pnpm --filter @afron/chatai-models build",
         "build": "pnpm _chatai:build && pnpm _core:build && pnpm _electron:build && pnpm _front:build",
-        "dist": "pnpm build && pnpm _electron:load_static && pnpm _electron:dist",
+        "dist": "pnpm build && pnpm _electron:load_static && pnpm rebuild:electron && pnpm _electron:dist",
+        "rebuild:electron": "pnpm --filter @afron/electron electron-rebuild",
         "clean": "pnpm clean:modules",
         "clean:modules": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-install.ps1",
         "clean:dist": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-dist.ps1",
-        "reinstall": "pnpm clean:modules && pnpm install",
-        "postinstall": "pnpm --filter @afron/electron electron-rebuild"
+        "reinstall": "pnpm clean:modules && pnpm install"
     },
     "devDependencies": {
         "concurrently": "^9.0.1",

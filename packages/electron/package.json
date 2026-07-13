@@ -24,7 +24,7 @@
     "compile": "tsc",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "electron-rebuild": "electron-rebuild --force --module-dir ../.. --only better-sqlite3 --version 40.1.0"
+    "electron-rebuild": "electron-rebuild --force --module-dir . --only better-sqlite3"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
