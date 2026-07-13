@@ -24,7 +24,6 @@ packages/web/static/
 coverage/
 
 # misc
-.npmrc
 .tsbuildinfo*
 .rollup.cache
 .report
