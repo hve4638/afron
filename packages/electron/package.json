@@ -47,7 +47,7 @@
     "better-sqlite3": "^12.11.1",
     "cross-env": "^7.0.3",
     "electron": "40.2.1",
-    "electron-builder": "^26.0.12",
+    "electron-builder": "^26.15.3",
     "rollup": "^4.28.1",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.36.0",
