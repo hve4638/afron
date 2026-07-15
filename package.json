@@ -48,6 +48,9 @@
             "electron-winstaller",
             "esbuild",
             "sharp"
-        ]
+        ],
+        "patchedDependencies": {
+            "lazystream@1.0.1": "patches/lazystream@1.0.1.patch"
+        }
     }
 }
