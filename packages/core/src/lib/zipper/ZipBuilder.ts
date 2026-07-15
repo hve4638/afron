@@ -1,21 +1,15 @@
-import archiver from 'archiver';
+import { zipSync, strToU8, type Zippable } from 'fflate';
 import fs from 'fs';
 import path from 'path';
 import { ZipBuilderError } from './errors';
 
 export class ZipBuilder {
-    private archive: archiver.Archiver;
+    private entries: Zippable = {};
     private outputPath: string;
     private isBuilt: boolean = false;
 
     constructor(outputPath: string) {
         this.outputPath = outputPath;
-        this.archive = archiver('zip', { zlib: { level: 9 } });
-        
-        // 에러 핸들링 설정
-        this.archive.on('error', (err) => {
-            throw new ZipBuilderError(`Archive error: ${err.message}`);
-        });
     }
 
     addText(content: string, filePath: string): this {
@@ -24,7 +18,7 @@ export class ZipBuilder {
         }
 
         try {
-            this.archive.append(content, { name: filePath });
+            this.entries[filePath] = strToU8(content);
             return this;
         } catch (error) {
             throw new ZipBuilderError(`Failed to add text content to ${filePath}: ${(error as Error).message}`);
@@ -38,7 +32,7 @@ export class ZipBuilder {
 
         try {
             const jsonContent = JSON.stringify(obj, null, indent);
-            this.archive.append(jsonContent, { name: filePath });
+            this.entries[filePath] = strToU8(jsonContent);
             return this;
         } catch (error) {
             throw new ZipBuilderError(`Failed to add JSON content to ${filePath}: ${(error as Error).message}`);
@@ -55,7 +49,7 @@ export class ZipBuilder {
                 throw new ZipBuilderError(`File does not exist: ${filePath}`);
             }
 
-            this.archive.file(filePath, { name: zipPath });
+            this.entries[zipPath] = new Uint8Array(fs.readFileSync(filePath));
             return this;
         } catch (error) {
             if (error instanceof ZipBuilderError) {
@@ -70,38 +64,22 @@ export class ZipBuilder {
             throw new ZipBuilderError('build() has already been called');
         }
 
-        return new Promise<void>((resolve, reject) => {
-            try {
-                // 출력 디렉토리가 존재하지 않으면 생성
-                const outputDir = path.dirname(this.outputPath);
-                if (!fs.existsSync(outputDir)) {
-                    fs.mkdirSync(outputDir, { recursive: true });
-                }
-
-                const output = fs.createWriteStream(this.outputPath);
-
-                output.on('close', () => {
-                    this.isBuilt = true;
-                    resolve();
-                });
-
-                output.on('error', (err) => {
-                    reject(new ZipBuilderError(`Output stream error: ${err.message}`));
-                });
-
-                this.archive.on('error', (err) => {
-                    reject(new ZipBuilderError(`Archive error: ${err.message}`));
-                });
-
-                // 아카이브를 출력 스트림에 연결
-                this.archive.pipe(output);
-
-                // 아카이브 종료
-                this.archive.finalize();
-            } catch (error) {
-                reject(new ZipBuilderError(`Build failed: ${(error as Error).message}`));
+        try {
+            // 출력 디렉토리가 존재하지 않으면 생성
+            const outputDir = path.dirname(this.outputPath);
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
             }
-        });
+
+            const zipped = zipSync(this.entries, { level: 9 });
+            fs.writeFileSync(this.outputPath, zipped);
+            this.isBuilt = true;
+        } catch (error) {
+            if (error instanceof ZipBuilderError) {
+                throw error;
+            }
+            throw new ZipBuilderError(`Build failed: ${(error as Error).message}`);
+        }
     }
 
     /**
