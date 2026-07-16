@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { emitNavigate } from '@/events/navigate';
+import { navigateBus } from '@/events/navigate';
 import useShortcutStore from '@/stores/useShortcutStore';
 
 import { emitEvent, EventNames } from '@/hooks/useEvent';
@@ -33,7 +33,7 @@ function useShortcutEmitter() {
     useShortcut(shortcuts.tab9, 'change_tab9');
 
     useKeyBind({
-        'C-A-F12': (e) => emitNavigate('goto_test'),
+        'C-A-F12': (e) => navigateBus.emit.goto_test(),
     }, [], import.meta.env['VITE_DEV'] === 'TRUE');
 }
 

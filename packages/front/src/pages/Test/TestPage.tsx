@@ -3,7 +3,7 @@ import { Grid, Row } from '@/components/layout';
 import { Dropdown, GIconButton } from '@/components/atoms';
 import MarkdownTest from './MarkdownTest';
 import FlowTest from './FlowTest';
-import { emitNavigate } from '@/events/navigate';
+import { navigateBus } from '@/events/navigate';
 import { ReactCompilerTestPage } from './pages/ReactCompilerTestPage';
 import { StylePage } from './pages/StylePage';
 
@@ -11,7 +11,7 @@ function TestPage() {
     const [option, setOption] = useState<string>('');
 
     const handleExit = () => {
-        emitNavigate('back');
+        navigateBus.emit.back();
     };
 
     const renderMainContent = () => {

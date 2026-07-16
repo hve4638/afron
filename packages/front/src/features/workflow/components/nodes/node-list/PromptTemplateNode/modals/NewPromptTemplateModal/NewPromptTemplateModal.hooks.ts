@@ -1,11 +1,11 @@
 import { RTWorkflowModel } from '@/features/workflow/models/RTWorkflowModel';
-import { Emit } from '@/lib/zustbus';
+import { EmitObj } from '@/lib/zustbus';
 import { useEffect, useMemo, useState } from 'react';
 import { PromptTemplateEvent } from '../../PromptTemplateNodeOption.hooks';
 
 interface UseNewPromptTemplateModalProps {
     rtId: string;
-    emitPromptTemplate: Emit<PromptTemplateEvent>;
+    emitPromptTemplate: EmitObj<PromptTemplateEvent>;
 }
 
 export function useNewPromptTemplateModal({
@@ -21,7 +21,7 @@ export function useNewPromptTemplateModal({
         console.log('Create prompt template with name:', name, promptId);
 
         await workflowModel.createPrompt(promptId!, name);
-        emitPromptTemplate('select_and_open_prompt_editor', { promptId });
+        emitPromptTemplate.select_and_open_prompt_editor({ promptId });
     }
 
     useEffect(() => {

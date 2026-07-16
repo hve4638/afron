@@ -11,7 +11,7 @@ import Button from '@/components/atoms/Button';
 import type { PromptData } from '@/types';
 import { EditableText } from '@/components/atoms/EditableText';
 import { PromptEditorDataAction } from './hooks';
-import { Emit, UseOn } from '@/lib/zustbus';
+import { Bus, useOn } from '@/lib/zustbus';
 import { PromptEditorEvent } from './types';
 import { useEffect, useState } from 'react';
 import { useModal } from '@/features/modal';
@@ -21,25 +21,23 @@ type SidePanelProps = {
     value: Readonly<PromptData>;
     action: Readonly<PromptEditorDataAction>;
 
-    emitPromptEditorEvent: Emit<PromptEditorEvent>;
-    usePromptEditorEvent: UseOn<PromptEditorEvent>;
+    promptEditorBus: Bus<PromptEditorEvent>;
 }
 
 function SidePanel({
     value,
     action,
-    emitPromptEditorEvent,
-    usePromptEditorEvent,
+    promptEditorBus,
 }: SidePanelProps) {
     const { t } = useTranslation();
     const modal = useModal();
     const [saved, setSaved] = useState(false);
 
     useKeyBind({
-        'C-s': (e) => emitPromptEditorEvent('save'),
+        'C-s': (e) => promptEditorBus.emit.save(),
     }, [], modal.count === 0);
 
-    usePromptEditorEvent('on_save', () => setSaved(true), []);
+    useOn(promptEditorBus, 'on_save', () => setSaved(true), []);
 
     useEffect(() => {
         if (!saved) return;
@@ -90,7 +88,7 @@ function SidePanel({
                     margin: '4px'
                 }}
                 value='settings'
-                onClick={() => emitPromptEditorEvent('open_prompt_only_config_modal')}
+                onClick={() => promptEditorBus.emit.open_prompt_only_config_modal()}
                 hoverEffect='circle'
             />
             <GIconButton
@@ -101,7 +99,7 @@ function SidePanel({
                     margin: '4px'
                 }}
                 value='close'
-                onClick={() => emitPromptEditorEvent('back')}
+                onClick={() => promptEditorBus.emit.back()}
                 hoverEffect='square'
             />
         </Row>
@@ -153,7 +151,7 @@ function SidePanel({
                         }}
                         onClick={() => {
                             console.log('item.', item);
-                            emitPromptEditorEvent('open_varedit_modal', { varId: item.id });
+                            promptEditorBus.emit.open_varedit_modal({ varId: item.id });
                         }}
                     >
                         <span>{item.name}</span>
@@ -188,7 +186,7 @@ function SidePanel({
                 const varId = action.addVar();
 
                 if (!varId) return;
-                emitPromptEditorEvent('open_varedit_modal', { varId });
+                promptEditorBus.emit.open_varedit_modal({ varId });
             }}
         >
             <GoogleFontIcon
@@ -223,7 +221,7 @@ function SidePanel({
                     width: '100%',
                     height: '100%',
                 }}
-                onClick={() => emitPromptEditorEvent('save')}
+                onClick={() => promptEditorBus.emit.save()}
             >
                 {
                     saved

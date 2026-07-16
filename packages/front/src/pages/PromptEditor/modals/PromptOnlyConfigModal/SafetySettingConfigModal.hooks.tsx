@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { GeminiSafetySetting } from '@afron/types';
 import { useTranslation } from 'react-i18next';
 
+import { useOn } from '@/lib/zustbus';
 import { PromptEditorData } from '../../hooks';
 
 type UseSafetySettingConfigModalProps = {
@@ -13,7 +14,7 @@ export function useSafetySettingConfigModal({
 }: UseSafetySettingConfigModalProps) {
     const { t } = useTranslation();
 
-    const { usePromptDataUpdateOn } = promptEditorData.event;
+    const { promptDataUpdateBus } = promptEditorData.event;
 
     const buildSafetySetting = () => {
         const data = promptEditorData.get();
@@ -37,7 +38,7 @@ export function useSafetySettingConfigModal({
         }))
     }
 
-    usePromptDataUpdateOn('updated', () => {
+    useOn(promptDataUpdateBus, 'updated', () => {
         setSafetySetting(buildSafetySetting());
     }, []);
 

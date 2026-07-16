@@ -1,9 +1,10 @@
-export { useBus } from './useBus';
 export { createBus } from './createBus';
+export { useBus } from './useBus';
+export { useOn, useEventVersion } from './hooks';
 
 export type {
     Ping,
-    Emit,
-    UseOn,
-    UseValue,
+    Bus,
+    EmitObj,
+    EventMap,
 } from './types';

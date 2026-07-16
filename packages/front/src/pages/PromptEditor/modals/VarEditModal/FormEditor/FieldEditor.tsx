@@ -8,7 +8,7 @@ import { DropdownForm, StringForm } from '@/components/FormFields';
 import { FIELD_DROPDOWN_ITEMS } from '../constants';
 import Dropdown from '@/components/atoms/Dropdown';
 import { Additions } from './additions';
-import { Emit } from '@/lib/zustbus';
+import { EmitObj } from '@/lib/zustbus';
 import { VarEditModalControlEvent } from '../types';
 
 type VarFormEditModalProps = {
@@ -17,7 +17,7 @@ type VarFormEditModalProps = {
     target: PromptVarForm;
     varAction: PromptEditorDataVarAction;
 
-    emitVarFormEditModalControl: Emit<VarEditModalControlEvent>;
+    emitVarFormEditModalControl: EmitObj<VarEditModalControlEvent>;
 }
 
 export function FieldEditor({
@@ -44,7 +44,7 @@ export function FieldEditor({
         >
             <ModalHeader
                 onClose={() => {
-                    emitVarFormEditModalControl('close_2rd_editor');
+                    emitVarFormEditModalControl.close_2rd_editor();
                 }}
             >필드 편집</ModalHeader>
             <DropdownForm

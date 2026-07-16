@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useBus } from '@/lib/zustbus';
+import { useBus, useOn } from '@/lib/zustbus';
 import { PromptEditorData } from '../../hooks';
 import { VarEditModalControlEvent } from './types';
 import { useModalInstance } from '@/features/modal';
@@ -21,7 +21,7 @@ export function useVarEditModal({
     varId,
     promptEditorData: {
         get,
-        event: { usePromptDataUpdateOn: usePromptDataUpdateEvent },
+        event: { promptDataUpdateBus },
     },
 }: useVarEditModalProps) {
     const { closeModal, useCloseKeyBind } = useModalInstance();
@@ -30,25 +30,25 @@ export function useVarEditModal({
 
     const [secondEditorData, setSecondEditorData] = useState<SecondEditorData | null>(null);
 
-    const [emitVarEditModalControl, useVarEditModalControlOn] = useBus<VarEditModalControlEvent>();
+    const varEditModalControlBus = useBus<VarEditModalControlEvent>();
 
-    useVarEditModalControlOn('open_struct_field_editor', ({ fieldName }) => {
+    useOn(varEditModalControlBus, 'open_struct_field_editor', ({ fieldName }) => {
         setSecondEditorData({ type: 'struct', fieldName });
     }, []);
 
-    useVarEditModalControlOn('open_array_element_editor', () => {
+    useOn(varEditModalControlBus, 'open_array_element_editor', () => {
         setSecondEditorData({ type: 'array' });
     }, []);
 
-    useVarEditModalControlOn('close_2rd_editor', () => {
+    useOn(varEditModalControlBus, 'close_2rd_editor', () => {
         setSecondEditorData(null);
     }, []);
 
-    useVarEditModalControlOn('close_modal', () => {
+    useOn(varEditModalControlBus, 'close_modal', () => {
         closeModal();
     }, [closeModal]);
 
-    usePromptDataUpdateEvent('updated', () => {
+    useOn(promptDataUpdateBus, 'updated', () => {
         setPromptData(get());
     }, [get]);
 
@@ -56,7 +56,7 @@ export function useVarEditModal({
 
     return {
         promptVar,
-        emitVarEditModalControl,
+        emitVarEditModalControl: varEditModalControlBus.emit,
 
         secondEditorData,
     }

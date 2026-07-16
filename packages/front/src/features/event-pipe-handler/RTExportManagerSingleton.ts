@@ -1,7 +1,7 @@
 import { GlobalEventPipe } from '@/api/events';
 import LocalAPI from '@/api/local';
 import { type IIPCAPI } from '@/api/local/types';
-import { emitProgressModalEvent } from '@/modals/ProgressModal/events';
+import { progressModalBus } from '@/modals/ProgressModal/events';
 import { isWeb } from '@/utils/platform';
 
 // 빌드별 alias로 LocalAPI는 ElectronIPCAPI 또는 WebHTTPAPI로 해석된다.
@@ -37,20 +37,20 @@ class RTExportManagerSingleton {
 
     async #exportFileWeb(profileId: string, rtId: string, config: { modalId: string; }) {
         try {
-            emitProgressModalEvent('description', {
+            progressModalBus.emit.description({
                 id: config.modalId, value: 'Exporting...',
             });
 
             await localAPI.platform!.web!.downloadRTFile(profileId, rtId);
 
-            emitProgressModalEvent('close', { id: config.modalId });
+            progressModalBus.emit.close({ id: config.modalId });
         }
         catch (e: any) {
-            emitProgressModalEvent('description', {
+            progressModalBus.emit.description({
                 id: config.modalId,
                 value: e.message ?? '내보내기에 실패했습니다',
             });
-            emitProgressModalEvent('show_close_button', { id: config.modalId });
+            progressModalBus.emit.show_close_button({ id: config.modalId });
         }
     }
 
@@ -59,13 +59,13 @@ class RTExportManagerSingleton {
             const data = await GlobalEventPipe.receive(chId);
 
             if (data == null || data.type === 'close') {
-                emitProgressModalEvent('close', { id: config.modalId });
+                progressModalBus.emit.close({ id: config.modalId });
                 break;
             }
             else if (data.type === 'rt_export') {
                 switch (data.state) {
                     case 'ready':
-                        emitProgressModalEvent('description', { id: config.modalId, value: 'Exporting...' });
+                        progressModalBus.emit.description({ id: config.modalId, value: 'Exporting...' });
                         break;
                     case 'done':
                         break;

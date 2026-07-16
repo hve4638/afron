@@ -4,7 +4,7 @@ import { useHistoryStore } from '@/stores/useHistoryStore';
 import { HistoryData } from '@/features/session-history';
 import { useEvent } from '@/hooks/useEvent';
 import useCache from '@/hooks/useCache';
-import { Ping, useBus } from '@/lib/zustbus';
+import { Ping, useBus, useOn } from '@/lib/zustbus';
 
 interface useChatIOProps {
     refreshTrigger: () => void;
@@ -14,7 +14,7 @@ interface ChatIOEvent {
     load_more_history: Ping;
 }
 function useChatIO({ refreshTrigger }: useChatIOProps) {
-    const [emitChatIO, useChatIOOn] = useBus<ChatIOEvent>();
+    const chatIOBus = useBus<ChatIOEvent>();
     const { font_size } = useConfigStore();
     const lastSessionId = useSessionStore(state => state.deps.last_session_id);
 
@@ -34,7 +34,7 @@ function useChatIO({ refreshTrigger }: useChatIOProps) {
         }
     }, [lastSessionId]);
 
-    useChatIOOn('load_more_history', async () => {
+    useOn(chatIOBus, 'load_more_history', async () => {
         if (!hasMore) return;
 
         await loadHistory();
@@ -102,7 +102,7 @@ function useChatIO({ refreshTrigger }: useChatIOProps) {
             chats,
             hasMore,
         },
-        emit: emitChatIO,
+        emit: chatIOBus.emit,
     }
 }
 

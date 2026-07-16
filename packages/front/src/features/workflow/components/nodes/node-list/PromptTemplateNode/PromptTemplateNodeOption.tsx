@@ -93,7 +93,7 @@ export function PromptTemplateNodeOption({
                     <Button
                         className='transparent row'
                         onClick={() => {
-                            emitPromptTemplate('open_prompt_editor', { promptId: option.prompt_id! });
+                            emitPromptTemplate.open_prompt_editor({ promptId: option.prompt_id! });
                         }}
                     >
                         <GIcon value='edit' />

@@ -14,10 +14,10 @@ export function usePromptEditorData() {
     const [promptData, setPromptData] = useState<PromptData | null>(null);
     const promptDataRef = useRef<PromptData | null>(null);
 
-    const [emitPromptDataUpdateEvent, usePromptDataUpdateOn] = useBus<PromptDataUpdateEvent>();
+    const promptDataUpdateBus = useBus<PromptDataUpdateEvent>();
 
     const refresh = () => {
-        emitPromptDataUpdateEvent('updated');
+        promptDataUpdateBus.emit.updated();
         setPromptData({ ...promptDataRef.current as any });
     }
 
@@ -415,7 +415,7 @@ export function usePromptEditorData() {
             setFieldConfig: setVarFieldConfig,
         },
         event: {
-            usePromptDataUpdateOn: usePromptDataUpdateOn,
+            promptDataUpdateBus,
         },
         reset
     }

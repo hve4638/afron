@@ -1,5 +1,6 @@
 import { Modal } from '@/features/modal';
-import { useProgressModalEvent } from './events';
+import { progressModalBus } from './events';
+import { useOn } from '@/lib/zustbus';
 import { Align, Gap, Row } from '@/components/layout';
 import Button from '@/components/atoms/Button';
 import { useState } from 'react';
@@ -25,25 +26,25 @@ function ProgressModal({
     const [currentDescription, setCurrentDescription] = useState(description ?? null);
     const [closeInteractionEnabled, setCloseInteractionEnabled] = useState(false);
 
-    useProgressModalEvent('title', ({ id, value }) => {
+    useOn(progressModalBus, 'title', ({ id, value }) => {
         if (id !== modalId) return;
 
         setCurrentTitle(value);
     }, [modalId]);
 
-    useProgressModalEvent('description', ({ id, value }) => {
+    useOn(progressModalBus, 'description', ({ id, value }) => {
         if (id !== modalId) return;
 
         setCurrentDescription(value);
     }, [modalId]);
 
-    useProgressModalEvent('close', ({ id }) => {
+    useOn(progressModalBus, 'close', ({ id }) => {
         if (id !== modalId) return;
 
         closeModal();
     }, [modalId]);
 
-    useProgressModalEvent('show_close_button', ({ id }) => {
+    useOn(progressModalBus, 'show_close_button', ({ id }) => {
         if (id !== modalId) return;
 
         setCloseInteractionEnabled(true);
