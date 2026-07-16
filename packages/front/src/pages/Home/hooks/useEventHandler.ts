@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import Channel from '@hve/channel';
-
 import { emitEvent, EventNames, useEvent } from '@/hooks/useEvent';
 import { useCacheStore, useProfileAPIStore, useSessionStore } from '@/stores';
 import RequestManager from '@/features/request-manager';
