@@ -1,31 +1,38 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { app } from 'electron';
 
 import UniqueStore from '@/features/unique-store';
 import ProgramPath from '@/features/program-path';
 import { GlobalStore } from '@/features/global-store';
+import { pathDebug, pathDebugError } from '@/utils/pathDebug';
 
 /**
  * 저장 경로를 확보하고 ProgramPath를 준비
  */
 export function initPath() {
+    pathDebug('initPath: start, isPackaged =', app.isPackaged, 'version =', app.getVersion());
     const config = GlobalStore.config();
 
     const savePath = config.get('save_path');
+    pathDebug('initPath: save_path =', savePath ?? '(null)');
     let programPath: ProgramPath;
     if (savePath == null) {
         // 0.11 이하는 저장 경로를 UniqueStore(afron.config.json)에 두었으므로 값을 이관
         const legacySavePath = UniqueStore.instance().getSavePath();
+        pathDebug('initPath: migrate branch, legacySavePath =', legacySavePath ?? '(null)');
 
         programPath = legacySavePath != null
             ? ProgramPath.From(legacySavePath)
             : ProgramPath.FromDefaultPath();
+        pathDebug('initPath: migrate branch, chosen basePath =', programPath.basePath);
 
         config.set('save_path', programPath.basePath);
         config.save();
     }
     else {
         const rescuedPath = rescueLegacySavePath(savePath);
+        pathDebug('initPath: rescue branch, rescuedPath =', rescuedPath ?? '(null)');
         if (rescuedPath != null) {
             programPath = ProgramPath.From(rescuedPath);
 
@@ -36,6 +43,7 @@ export function initPath() {
             programPath = ProgramPath.From(savePath);
         }
     }
+    pathDebug('initPath: final basePath =', programPath.basePath);
     programPath.makeRequiredDirectory();
 
     return {
@@ -51,11 +59,18 @@ export function initPath() {
  * 현재 save_path에 프로필 데이터가 없고 구버전 설정의 경로에는 있는 경우에만 그쪽을 채택
  */
 function rescueLegacySavePath(savePath: string): string | null {
-    if (hasProfileData(savePath)) return null;
+    if (hasProfileData(savePath)) {
+        pathDebug('rescue: abort, current save_path already has profile data:', savePath);
+        return null;
+    }
 
     const legacySavePath = UniqueStore.instance().getSavePath();
+    pathDebug('rescue: legacySavePath =', legacySavePath ?? '(null)');
     if (legacySavePath == null || legacySavePath === savePath) return null;
-    if (!hasProfileData(legacySavePath)) return null;
+    if (!hasProfileData(legacySavePath)) {
+        pathDebug('rescue: abort, legacy path has no profile data:', legacySavePath);
+        return null;
+    }
 
     return legacySavePath;
 }
@@ -70,9 +85,12 @@ function hasProfileData(basePath: string): boolean {
     try {
         const parsed = JSON.parse(fs.readFileSync(metadataPath, 'utf-8'));
 
-        return Array.isArray(parsed.profiles) && parsed.profiles.length > 0;
+        const result = Array.isArray(parsed.profiles) && parsed.profiles.length > 0;
+        pathDebug('hasProfileData:', metadataPath, 'exists=true profiles=', Array.isArray(parsed.profiles) ? parsed.profiles.length : '(not array)', 'result=', result);
+        return result;
     }
-    catch {
+    catch (error) {
+        pathDebugError(`hasProfileData: ${metadataPath} read/parse failed:`, error);
         return false;
     }
 }

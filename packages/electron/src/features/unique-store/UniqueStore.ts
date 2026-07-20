@@ -5,6 +5,7 @@ import { app } from 'electron';
 import { personal } from 'win-known-folders';
 
 import { UniqueStoreSchema } from './types';
+import { pathDebug, pathDebugError } from '@/utils/pathDebug';
 
 class UniqueStore {
     static readonly AppName = 'afron';
@@ -20,6 +21,7 @@ class UniqueStore {
 
     private constructor() {
         this.#path = this.#getConfigPath();
+        pathDebug('UniqueStore: config path =', this.#path, 'exists =', fs.existsSync(this.#path));
     }
 
     #getConfigPath(): string {
@@ -40,15 +42,17 @@ class UniqueStore {
 
     getSavePath(): string | null {
         const config = this.#readConfig();
+        pathDebug('UniqueStore.getSavePath: raw savePath =', config.savePath ?? '(missing)');
 
         if (config.savePath) {
             try {
                 this.#validatePath(config.savePath);
 
+                pathDebug('UniqueStore.getSavePath: validated OK');
                 return config.savePath;
             }
             catch (error) {
-
+                pathDebugError('UniqueStore.getSavePath: validatePath failed:', error);
             }
         }
 
@@ -104,9 +108,10 @@ class UniqueStore {
                 const content = fs.readFileSync(this.#path, 'utf-8');
                 return JSON.parse(content);
             }
+            pathDebug('UniqueStore.#readConfig: file not found:', this.#path);
         }
         catch (error) {
-
+            pathDebugError('UniqueStore.#readConfig: read/parse failed:', error);
         }
 
         return {};
