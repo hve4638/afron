@@ -1,4 +1,5 @@
 import { initIPC } from '@/ipc'
+import { pathDebug } from '@/utils/pathDebug'
 
 import { initPath } from './initPath'
 import { initAfronEnv } from './initAfronEnv'
@@ -18,15 +19,21 @@ async function initialize() {
     // }
     const { programPath } = initPath();
     const { env } = initAfronEnv();
+    pathDebug('initialize: initAfronEnv done');
 
     const {
         logger
     } = await initRegistryPriority({ programPath });
+    pathDebug('initialize: initRegistryPriority done (logger created at', programPath.logPath, ')');
     await initRegistry({ logger });
+    pathDebug('initialize: initRegistry done');
     await initRegistryWithEnv({ programPath, logger, env });
+    pathDebug('initialize: initRegistryWithEnv done');
 
     initIPC();
+    pathDebug('initialize: initIPC done');
     await initDevOptions();
+    pathDebug('initialize: initDevOptions done');
 }
 
 export default initialize;

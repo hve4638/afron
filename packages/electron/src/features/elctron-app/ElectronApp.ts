@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu, globalShortcut } from 'electron';
 import * as electronLocalshortcut from 'electron-localshortcut';
 import { throttle } from '@/utils';
+import { pathDebug } from '@/utils/pathDebug';
 import runtime from '@/runtime';
 
 import * as staticPath from '@/static-path';
@@ -13,9 +14,11 @@ const DEFAULT_WINDOW_SIZE = [1280, 900];
 class ElectronApp {
     async run() {
         await app.whenReady();
+        pathDebug('ElectronApp.run: app ready');
         runtime.logger.info('Afron is starting...');
 
         const win = await this.#openNewWindow();
+        pathDebug('ElectronApp.run: window opened');
 
         this.#setupApplicationMenu();
         await this.#setupAppHandler(app);

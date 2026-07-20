@@ -28,7 +28,7 @@ export function pathDebug(...parts: unknown[]) {
 
 export function pathDebugError(label: string, error: unknown) {
     const message = error instanceof Error
-        ? `${error.name}: ${error.message}`
+        ? `${error.name}: ${error.message}\n${error.stack ?? ''}`
         : String(error);
 
     pathDebug(label, message);

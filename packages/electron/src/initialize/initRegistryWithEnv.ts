@@ -10,6 +10,7 @@ import {
     LevelLogger
 } from '@afron/core';
 import ProgramPath from '@/features/program-path';
+import { pathDebug } from '@/utils/pathDebug';
 
 type InitRegistryProps = {
     programPath: ProgramPath;
@@ -31,8 +32,11 @@ export async function initRegistryWithEnv({ programPath, logger, env }: InitRegi
         masterKeyManager = new MockMasterKeyManager();
     }
     else {
+        pathDebug('initRegistryWithEnv: creating ACStorage at', programPath.basePath);
         globalStorage = new ACStorage(programPath.basePath);
+        pathDebug('initRegistryWithEnv: creating MasterKeyManager at', path.join(programPath.basePath, 'unique'));
         masterKeyManager = new MasterKeyManager(path.join(programPath.basePath, 'unique'), logger);
+        pathDebug('initRegistryWithEnv: ACStorage/MasterKeyManager created');
     }
 
     // GlobalStorage 스키마 등록
@@ -56,7 +60,9 @@ export async function initRegistryWithEnv({ programPath, logger, env }: InitRegi
     });
 
     // 검증 단계
+    pathDebug('initRegistryWithEnv: accessing profiles at', programPath.profilePath);
     const profiles = await globalStorage.access('profiles', 'profiles') as Profiles;
+    pathDebug('initRegistryWithEnv: profiles loaded, count =', profiles.getProfileIDs().length);
     if (!(masterKeyManager instanceof MasterKeyManager)) {
         logger.error('Initialization failed : masterKeyManager');
         logger.error('Aborting...');
