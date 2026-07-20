@@ -5,7 +5,6 @@ import Latch from '@/lib/Latch';
 import { LogEntry } from '@/stores/useErrorLogStore';
 import { Toast } from '@/types/toast';
 import { RTEventPreviewData } from '@afron/types';
-import Channel from '@hve/channel';
 import { useEffect } from 'react';
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'

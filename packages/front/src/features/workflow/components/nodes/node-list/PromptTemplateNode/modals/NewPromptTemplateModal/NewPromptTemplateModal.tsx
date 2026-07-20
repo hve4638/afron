@@ -1,6 +1,6 @@
 import { Modal } from '@/features/modal';
 
-import { Emit } from '@/lib/zustbus';
+import { EmitObj } from '@/lib/zustbus';
 import { Field } from '@/components/FormFields';
 import { Flex, Gap, Row } from '@/components/layout';
 import { Button } from '@/components/atoms';
@@ -9,7 +9,7 @@ import { useNewPromptTemplateModal } from './NewPromptTemplateModal.hooks';
 
 interface NewPromptTemplateModalProps {
     rtId: string;
-    emitPromptTemplate: Emit<PromptTemplateEvent>;
+    emitPromptTemplate: EmitObj<PromptTemplateEvent>;
 }
 
 export function NewPromptTemplateModal({

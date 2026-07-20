@@ -9,7 +9,7 @@ export function globalConfig(): IPCInvokers.GlobalConfig {
         async getHardwareAccelerationEnabled() {
             const value = config.get('hardware_acceleration_enabled');
 
-            return [null, value ?? false];
+            return [null, value ?? true];
         },
         async setHardwareAccelerationEnabled(value: boolean) {
             config.load();

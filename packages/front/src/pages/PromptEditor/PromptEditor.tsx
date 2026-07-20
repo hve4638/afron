@@ -10,10 +10,7 @@ import { ModalProvider } from '@/features/modal';
 function PromptEditorInner() {
     const {
         promptEditorData,
-        promptEditorEvent: {
-            emitPromptEditorEvent,
-            usePromptEditorEvent,
-        }
+        promptEditorBus,
     } = usePromptEditor();
 
     if (promptEditorData.value == null) {
@@ -31,8 +28,7 @@ function PromptEditorInner() {
             <SidePanel
                 value={promptEditorData.value}
                 action={promptEditorData.action}
-                emitPromptEditorEvent={emitPromptEditorEvent}
-                usePromptEditorEvent={usePromptEditorEvent}
+                promptEditorBus={promptEditorBus}
             />
         </div>
     );

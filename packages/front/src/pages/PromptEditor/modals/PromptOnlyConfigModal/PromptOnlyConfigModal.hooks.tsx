@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ModelConfiguration } from '@afron/types';
 
+import { useOn } from '@/lib/zustbus';
 import { PromptDataPO } from './types';
 import { PromptEditorData } from '../../hooks';
 
@@ -11,7 +12,7 @@ type usePromptOnlyConfigModalProps = {
 export function usePromptOnlyConfigModal({
     promptEditorData,
 }: usePromptOnlyConfigModalProps) {
-    const { usePromptDataUpdateOn } = promptEditorData.event;
+    const { promptDataUpdateBus } = promptEditorData.event;
 
     const buildPromptData = () => {
         const data = promptEditorData.get();
@@ -36,7 +37,7 @@ export function usePromptOnlyConfigModal({
         }));
     }
 
-    usePromptDataUpdateOn('updated', () => {
+    useOn(promptDataUpdateBus, 'updated', () => {
         setPromptData(buildPromptData());
     }, []);
 

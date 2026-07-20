@@ -8,7 +8,7 @@ import { DropdownForm, Field } from '@/components/FormFields';
 import { VAR_DROPDOWN_ITEMS } from '../constants';
 import Dropdown from '@/components/atoms/Dropdown';
 import { Additions } from './additions';
-import { Emit } from '@/lib/zustbus';
+import { EmitObj } from '@/lib/zustbus';
 import { VarEditModalControlEvent } from '../types';
 import styles from './styles.module.scss';
 
@@ -17,7 +17,7 @@ type VarFormEditModalProps = {
     target: PromptVarForm;
     varAction: PromptEditorDataVarAction;
 
-    emitVarFormEditModalControl: Emit<VarEditModalControlEvent>;
+    emitVarFormEditModalControl: EmitObj<VarEditModalControlEvent>;
 }
 
 export function FormEditor({
@@ -45,7 +45,7 @@ export function FormEditor({
             }}
         >
             <ModalHeader onClose={() => {
-                emitVarFormEditModalControl('close_modal');
+                emitVarFormEditModalControl.close_modal();
             }}>{t('form_editor.title')}</ModalHeader>
             <DropdownForm
                 label={t('form_editor.type_label')}
@@ -54,7 +54,7 @@ export function FormEditor({
                     varAction.setDataType(varId, next);
 
                     if (next !== 'struct') {
-                        emitVarFormEditModalControl('close_2rd_editor');
+                        emitVarFormEditModalControl.close_2rd_editor();
                     }
                 }}
             >

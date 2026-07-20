@@ -8,14 +8,14 @@ import { EditableText } from '@/components/atoms/EditableText';
 
 import styles from './SelectPromptTemplateModal.module.scss';
 import Button from '@/components/atoms/Button';
-import { Emit } from '@/lib/zustbus';
+import { EmitObj } from '@/lib/zustbus';
 import { useSelectPromptTemplateModal } from './SelectPromptTemplateModal.hooks';
-import type { PromptTemplateEvent } from '../../types';
+import type { PromptTemplateEvent } from '../../PromptTemplateNodeOption.hooks';
 
 interface SelectPromptTemplateModalProps {
     rtId: string;
     initPromptId: string | null;
-    emitPromptTemplate: Emit<PromptTemplateEvent>;
+    emitPromptTemplate: EmitObj<PromptTemplateEvent>;
 }
 
 export function SelectPromptTemplateModal({

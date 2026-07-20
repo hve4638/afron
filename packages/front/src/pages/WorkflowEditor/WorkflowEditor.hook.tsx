@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { convertFlowDataToWorkflow, applyWorkflowData } from './utils';
 import { RTFlowData } from '@afron/types';
 import { useRTStore } from '@/context/RTContext';
-import { emitNavigate } from '@/events/navigate';
+import { navigateBus } from '@/events/navigate';
 
 export function useWorkflowEditor() {
     const { api } = useProfileAPIStore();
@@ -40,7 +40,7 @@ export function useWorkflowEditor() {
     const closeModal = async () => {
         await save();
 
-        emitNavigate('back');
+        navigateBus.emit.back();
     }
 
     return {

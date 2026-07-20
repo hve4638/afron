@@ -1,17 +1,10 @@
-import { createBus, Ping } from '@/lib/zustbus';
+import { createBus } from '@/lib/zustbus';
 
-const [
-    emitProgressModalEvent,
-    useProgressModalEvent,
-    _
-] = createBus<{
+interface ProgressModalEvent {
     title: { id: string; value: string | null; };
     description: { id: string; value: string | null; };
     close: { id: string; };
     show_close_button: { id: string; };
-}>();
+}
 
-export {
-    useProgressModalEvent,
-    emitProgressModalEvent
-};
+export const progressModalBus = createBus<ProgressModalEvent>();

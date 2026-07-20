@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
-import { useBus } from '@/lib/zustbus';
+import { useBus, useOn } from '@/lib/zustbus';
 
 import { useRTStore } from '@/context/RTContext';
 import { RTFlowNodeOptions } from '@afron/types';
-import { emitNavigate } from '@/events/navigate';
+import { navigateBus } from '@/events/navigate';
 import { RTWorkflowModel } from '@/features/workflow/models/RTWorkflowModel';
 
 export interface PromptTemplateEvent {
@@ -23,27 +23,27 @@ export function usePromptTemplateNodeOption({
     setOption,
 }: usePromptTemplateOptionProps) {
     const rt = useRTStore();
-    const [emitPromptTemplate, usePromptTemplateOn] = useBus<PromptTemplateEvent>();
+    const promptTemplateBus = useBus<PromptTemplateEvent>();
     const workflowModel = useMemo(() => RTWorkflowModel.From(rt.id), [rt.id]);
 
-    usePromptTemplateOn('select_prompt', ({ promptId }) => {
+    useOn(promptTemplateBus, 'select_prompt', ({ promptId }) => {
         setOption((prev) => ({
             ...prev,
             prompt_id: promptId,
         }));
     });
 
-    usePromptTemplateOn('select_and_open_prompt_editor', async ({ promptId }) => {
+    useOn(promptTemplateBus, 'select_and_open_prompt_editor', async ({ promptId }) => {
         setOption((prev) => ({
             ...prev,
             prompt_id: promptId,
         }));
-        
-        emitNavigate('goto_prompt_editor', { rtId: rt.id, promptId });
+
+        navigateBus.emit.goto_prompt_editor({ rtId: rt.id, promptId });
     });
 
-    usePromptTemplateOn('open_prompt_editor', async ({ promptId }) => {
-        emitNavigate('goto_prompt_editor', { rtId: rt.id, promptId });
+    useOn(promptTemplateBus, 'open_prompt_editor', async ({ promptId }) => {
+        navigateBus.emit.goto_prompt_editor({ rtId: rt.id, promptId });
     });
 
     useEffect(() => {
@@ -54,6 +54,6 @@ export function usePromptTemplateNodeOption({
     }, [workflowModel]);
 
     return {
-        emitPromptTemplate,
+        emitPromptTemplate: promptTemplateBus.emit,
     }
 }

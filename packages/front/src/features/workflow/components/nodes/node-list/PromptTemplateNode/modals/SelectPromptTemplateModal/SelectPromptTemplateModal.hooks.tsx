@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { Tree } from '@/components/TreeView';
-import { Emit } from '@/lib/zustbus';
+import { EmitObj } from '@/lib/zustbus';
 import { NewPromptTemplateModal } from '../NewPromptTemplateModal/NewPromptTemplateModal';
 import { RTWorkflowModel } from '@/features/workflow/models/RTWorkflowModel';
 import { PromptTemplateEvent } from '../../PromptTemplateNodeOption.hooks';
@@ -10,7 +10,7 @@ import { useModal, useModalInstance } from '@/features/modal';
 interface SelectPromptTemplateModalProps {
     initPromptId: string | null;
     rtId: string;
-    emitPromptTemplate: Emit<PromptTemplateEvent>;
+    emitPromptTemplate: EmitObj<PromptTemplateEvent>;
 }
 
 export function useSelectPromptTemplateModal({
@@ -47,7 +47,7 @@ export function useSelectPromptTemplateModal({
 
     const selectPrompt = async (promptId: string) => {
         setSelected(promptId);
-        emitPromptTemplate('select_prompt', { promptId });
+        emitPromptTemplate.select_prompt({ promptId });
     }
 
     const openNewPromptTemplateModal = async () => {

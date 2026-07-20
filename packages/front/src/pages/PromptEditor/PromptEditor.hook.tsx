@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useBus } from '@/lib/zustbus';
+import { useBus, useOn } from '@/lib/zustbus';
 
-import { emitNavigate } from '@/events/navigate';
+import { navigateBus } from '@/events/navigate';
 import { useRTStore } from '@/context/RTContext';
 import { ChoiceDialog } from '@/modals/Dialog';
 import { convertPromptVarToRTVar, convertRTVarToPromptVar } from './utils';
@@ -23,7 +23,7 @@ function usePromptEditor() {
     const promptEditorData = usePromptEditorData();
     const rtState = useRTStore();
 
-    const [emitPromptEditorEvent, usePromptEditorEvent] = useBus<PromptEditorEvent>();
+    const promptEditorBus = useBus<PromptEditorEvent>();
 
     const isChanged = () => {
         const data = promptEditorData.value;
@@ -38,7 +38,7 @@ function usePromptEditor() {
     }
 
     const save = async () => {
-        emitPromptEditorEvent('on_save');
+        promptEditorBus.emit.on_save();
 
         if (!rtId || !promptId) {
             console.info('RT ID or Prompt ID is missing');
@@ -116,11 +116,11 @@ function usePromptEditor() {
                 onSelect={async (choice: string, index: number) => {
                     if (index === 0) { // 저장
                         await save();
-                        emitPromptEditorEvent('save');
-                        emitNavigate('back');
+                        promptEditorBus.emit.save();
+                        navigateBus.emit.back();
                     }
                     else if (index === 1) { // 저장하지 않음
-                        emitNavigate('back');
+                        navigateBus.emit.back();
                     }
                     else if (index === 2) { // 취소
                         return true;
@@ -129,7 +129,7 @@ function usePromptEditor() {
                 }}
                 onEnter={async () => {
                     await save();
-                    emitNavigate('back');
+                    navigateBus.emit.back();
                     return true;
                 }}
                 onEscape={async () => true}
@@ -137,24 +137,24 @@ function usePromptEditor() {
             />);
         }
         else {
-            emitNavigate('back');
+            navigateBus.emit.back();
         }
     }
 
-    usePromptEditorEvent('save', async () => {
+    useOn(promptEditorBus, 'save', async () => {
         save();
     }, [rtId, promptId]);
 
-    usePromptEditorEvent('back', async () => {
+    useOn(promptEditorBus, 'back', async () => {
         back();
     }, []);
-    usePromptEditorEvent('open_varedit_modal', async ({ varId }) => {
+    useOn(promptEditorBus, 'open_varedit_modal', async ({ varId }) => {
         modal.open(<VarEditModal 
             varId={varId}
             promptEditorData={promptEditorData}
         />);
     }, []);
-    usePromptEditorEvent('open_prompt_only_config_modal', async () => {
+    useOn(promptEditorBus, 'open_prompt_only_config_modal', async () => {
         modal.open(<PromptOnlyConfigModal 
             promptEditorData={promptEditorData}
         />);
@@ -204,14 +204,7 @@ function usePromptEditor() {
 
     return {
         promptEditorData,
-        promptEditorEvent: {
-            emitPromptEditorEvent,
-            usePromptEditorEvent
-        },
-        promptEditorUpdateEvent: {
-            emitPromptEditorEvent,
-            usePromptEditorEvent,
-        }
+        promptEditorBus,
     }
 }
 
