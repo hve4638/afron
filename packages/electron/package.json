@@ -1,7 +1,7 @@
 {
   "name": "@afron/electron",
   "private": true,
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "ChatAI Frontend",
   "repository": "https://github.com/hve4638/ai-front.git",
   "author": "Hve",
@@ -13,7 +13,7 @@
     "start:dev": "pnpm build && cross-env ELECTRON_DEV=TRUE electron .",
     "start:dev:mem": "pnpm build && cross-env ELECTRON_DEV=TRUE ELECTRON_IN_MEMORY=TRUE electron .",
     "start:release": "pnpm build && cross-env ELECTRON_DEV=FALSE electron .",
-    "build": "rollup -c",
+    "build": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\" && rollup -c",
     "dist": "pnpm dist:win",
     "dist:win": "electron-builder -c.extraMetadata.main=./dist/main.js",
     "dist:mac": "electron-builder -c.extraMetadata.main=./dist/main.js --mac",
