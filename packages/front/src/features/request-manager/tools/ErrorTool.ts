@@ -1,5 +1,5 @@
 import { SessionAPI } from '@/api/profiles';
-import { emitEvent } from '@/hooks/useEvent';
+import { appBus } from '@/events/app';
 import useErrorLogStore, { LogData } from '@/stores/useErrorLogStore';
 import { getHttpStatusMessage } from '@/utils/status_code';
 import { RTEventData } from '@afron/types';
@@ -42,7 +42,7 @@ export class ErrorTool {
                 sessionId: this.#sessionId,
             },
         });
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             clickAction: {
                 action: 'open_error_log',
                 error_id: errorId,
@@ -54,7 +54,7 @@ export class ErrorTool {
     }
 
     aborted(data: RTEventErrorData) {
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '요청을 중단했습니다',
             description: '',
             type: 'info',
@@ -73,7 +73,7 @@ export class ErrorTool {
                 sessionId: this.#sessionId,
             },
         });
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '요청이 실패했습니다',
             description: '',
             type: 'error',
@@ -96,7 +96,7 @@ export class ErrorTool {
                 sessionId: this.#sessionId,
             },
         });
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '요청이 실패했습니다',
             description: `${code} ${message}`,
             type: 'error',
@@ -116,7 +116,7 @@ export class ErrorTool {
                 sessionId: this.#sessionId,
             },
         });
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '유효하지 않은 모델입니다',
             description: data.detail[0],
             type: 'error',
@@ -128,7 +128,7 @@ export class ErrorTool {
     }
 
     other(data: RTEventErrorData) {
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '오류가 발생했습니다',
             description: data.detail[0],
             type: 'error',
@@ -147,7 +147,7 @@ export class ErrorTool {
                 sessionId: this.#sessionId,
             },
         });
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '프롬프트 빌드에 실패했습니다',
             description: data.detail[0],
             type: 'error',
@@ -167,7 +167,7 @@ export class ErrorTool {
                 sessionId: this.#sessionId,
             },
         });
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '프롬프트 평가에 실패했습니다',
             description: data.detail[0],
             type: 'error',
@@ -187,7 +187,7 @@ export class ErrorTool {
                 sessionId: this.#sessionId,
             },
         });
-        emitEvent('show_toast_message', {
+        appBus.emit.show_toast_message({
             title: '환경 오류가 발생했습니다',
             description: data.title,
             type: 'fatal',

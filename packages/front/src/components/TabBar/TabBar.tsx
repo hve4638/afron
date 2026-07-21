@@ -8,7 +8,8 @@ import useDebounce from 'hooks/useDebounce';
 import TabContainer from './TabContainer';
 import type { TabRequired, TabBarProps } from './types';
 import { useShortcutSignalStore } from '@/stores';
-import { useEvent } from '@/hooks/useEvent';
+import { tabBus } from '@/events/tab';
+import { useOn } from '@/lib/zustbus';
 
 interface TabItem<T extends TabRequired> {
     index: number;
@@ -185,23 +186,23 @@ function TabBar<T extends TabRequired, TRequired extends Partial<T> & TabRequire
     }
 
     const deps: React.DependencyList = [enableHotkey, tabs, focus];
-    useEvent('create_tab', () => onAdd(), deps);
-    useEvent('remove_tab',
+    useOn(tabBus.on.create_tab, () => onAdd(), deps);
+    useOn(tabBus.on.remove_tab,
         () => onRemove(focus as unknown as T, tabs.findIndex(tab => tab.item.key === focus.key)),
         deps
     );
-    useEvent('undo_remove_tab', () => onUndoRemove(), deps);
-    useEvent('next_tab', () => shiftTab(1), deps);
-    useEvent('prev_tab', () => shiftTab(-1), deps);
-    useEvent('change_tab1', () => changeFocusIndex(0), deps);
-    useEvent('change_tab2', () => changeFocusIndex(1), deps);
-    useEvent('change_tab3', () => changeFocusIndex(2), deps);
-    useEvent('change_tab4', () => changeFocusIndex(3), deps);
-    useEvent('change_tab5', () => changeFocusIndex(4), deps);
-    useEvent('change_tab6', () => changeFocusIndex(5), deps);
-    useEvent('change_tab7', () => changeFocusIndex(6), deps);
-    useEvent('change_tab8', () => changeFocusIndex(7), deps);
-    useEvent('change_tab9', () => changeFocusIndex(8), deps);
+    useOn(tabBus.on.undo_remove_tab, () => onUndoRemove(), deps);
+    useOn(tabBus.on.next_tab, () => shiftTab(1), deps);
+    useOn(tabBus.on.prev_tab, () => shiftTab(-1), deps);
+    useOn(tabBus.on.change_tab1, () => changeFocusIndex(0), deps);
+    useOn(tabBus.on.change_tab2, () => changeFocusIndex(1), deps);
+    useOn(tabBus.on.change_tab3, () => changeFocusIndex(2), deps);
+    useOn(tabBus.on.change_tab4, () => changeFocusIndex(3), deps);
+    useOn(tabBus.on.change_tab5, () => changeFocusIndex(4), deps);
+    useOn(tabBus.on.change_tab6, () => changeFocusIndex(5), deps);
+    useOn(tabBus.on.change_tab7, () => changeFocusIndex(6), deps);
+    useOn(tabBus.on.change_tab8, () => changeFocusIndex(7), deps);
+    useOn(tabBus.on.change_tab9, () => changeFocusIndex(8), deps);
 
     return (
         <Row

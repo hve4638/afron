@@ -4,7 +4,7 @@ import { Z_INDEX } from '@/constants';
 
 import { ToastMessage } from './ToastMessage';
 import useToastRenderer from './ToastRenderer.hook';
-import { emitEvent } from '@/hooks/useEvent';
+import { modalBus } from '@/events/modal';
 import InfoModal from '@/modals/InfoModal/InfoModal';
 import { useModal } from '@/features/modal';
 
@@ -46,7 +46,7 @@ function ToastRenderer({
 
                         onClick={() => {
                             if (toast.clickAction.action === 'open_error_log') {
-                                emitEvent('open_error_log', toast.clickAction.error_id);
+                                modalBus.emit.open_error_log(toast.clickAction.error_id);
                             }
                             else if (toast.clickAction.action === 'open_info') {
                                 modal.open(<InfoModal item={toast.clickAction.item} />);

@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router';
 
-import { emitEvent, useEvent } from '@/hooks/useEvent';
+import { modalBus } from '@/events/modal';
+import { navigateBus } from '@/events/navigate';
+import { useOn } from '@/lib/zustbus';
 
 import ErrorLogModal from '@/modals/ErrorLogModal';
 import { NewRTModal } from '@/modals/NewRTModal';
@@ -11,22 +13,22 @@ import { useModal } from '@/features/modal';
 
 function ModalHandler() {
     const modal = useModal();
-    useEvent('open_rt_preview_modal', (previewData) => {
+    useOn(modalBus.on.open_rt_preview_modal, (previewData) => {
         modal.open(<RequestPreviewModal previewData={previewData} />)
     }, []);
 
-    useEvent('open_error_log', (errorId: string | null) => {
+    useOn(modalBus.on.open_error_log, (errorId: string | null) => {
         modal.open(<ErrorLogModal errorId={errorId} />);
     });
 
-    useEvent('open_progress_modal', (data: { modalId: string; description?: string; progress?: number; }) => {
+    useOn(modalBus.on.open_progress_modal, (data: { modalId: string; description?: string; progress?: number; }) => {
         modal.open(<ProgressModal modalId={data.modalId} description={data.description} progress={data.progress} />);
     });
 
-    useEvent('open_new_rt_modal', () => {
+    useOn(modalBus.on.open_new_rt_modal, () => {
         modal.open(
             <NewRTModal
-                onAddRT={(rtId, rtMode) => emitEvent('goto_rt_editor', { rtId })}
+                onAddRT={(rtId, rtMode) => navigateBus.emit.goto_rt_editor({ rtId })}
             />
         );
     }, []);

@@ -4,7 +4,7 @@ import { GIcon, GoogleFontIcon } from '@/components/atoms/GoogleFontIcon';
 import DivButton from '@/components/atoms/DivButton';
 import Dropdown from '@/components/atoms/Dropdown';
 import useRTDropdown from './RTDropdown.hook';
-import { emitEvent } from '@/hooks/useEvent';
+import { modalBus } from '@/events/modal';
 
 const CREATE_NEW_PROMPT = 'CREATE_NEW_PROMPT';
 function RTDropdown() {
@@ -23,7 +23,7 @@ function RTDropdown() {
     return (
         tree.length === 0
             ? <DivButton
-                onClick={() => emitEvent('open_new_rt_modal')}
+                onClick={() => modalBus.emit.open_new_rt_modal()}
             >
                 <GoogleFontIcon value='add' style={{ marginRight: '4px' }} />
                 <span>새 요청 템플릿</span>
@@ -61,7 +61,7 @@ function RTDropdown() {
                 }}
                 onChange={(next) => {
                     if (next === CREATE_NEW_PROMPT) {
-                        emitEvent('open_new_rt_modal')
+                        modalBus.emit.open_new_rt_modal()
                     }
                     else {
                         changeRT(next);

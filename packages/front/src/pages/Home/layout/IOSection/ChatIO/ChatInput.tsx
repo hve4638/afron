@@ -13,7 +13,7 @@ import { TokenCount, RequestButton, PreviewButton, AttachFileButton } from '../u
 import styles from './ChatIO.module.scss';
 import { readImageFromClipboard } from '@/utils/clipboard';
 import Latch from '@/lib/Latch';
-import { emitEvent } from '@/hooks/useEvent';
+import { ioBus } from '@/events/io';
 
 type ChatInputProps = {
     value?: string;
@@ -69,7 +69,7 @@ function ChatInput({
                         const data = readImageFromClipboard(e);
                         if (!data.isImage) return;
 
-                        emitEvent('input_file_upload', {
+                        ioBus.emit.input_file_upload({
                             file: data.file,
                             latch: new Latch(),
                         });

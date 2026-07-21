@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import { emitEvent, EventNames, useEvent } from '@/hooks/useEvent';
 import { useCacheStore, useProfileAPIStore, useSessionStore } from '@/stores';
 import RequestManager from '@/features/request-manager';
 import { navigateBus } from '@/events/navigate';
+import { requestBus } from '@/events/request';
+import { useOn } from '@/lib/zustbus';
 import Latch from '@/lib/Latch';
 function useEventHandler() {
     const navigate = useNavigate();
@@ -18,38 +19,38 @@ function useEventHandler() {
         return true;
     }, [api]);
 
-    useEvent('send_preview_request', async () => {
+    useOn(requestBus.on.send_preview_request, async () => {
         if (!checkAPI()) return;
         if (last_session_id == null) return;
 
         const latch = new Latch();
-        emitEvent('request_ready', latch);
+        requestBus.emit.request_ready(latch);
         await latch.wait();
 
         RequestManager.preview(api.id, last_session_id);
     }, [last_session_id, api]);
 
-    useEvent('send_request', async () => {
+    useOn(requestBus.on.send_request, async () => {
         if (!checkAPI()) return;
         if (last_session_id == null) return;
 
         const latch = new Latch();
-        emitEvent('request_ready', latch);
+        requestBus.emit.request_ready(latch);
         await latch.wait();
 
         RequestManager.request(api.id, last_session_id);
     }, [last_session_id, api]);
 
-    useEvent('abort_request', async () => {
+    useOn(requestBus.on.abort_request, async () => {
         await RequestManager.abortAll();
     }, []);
 
-    useEvent('copy_response', () => {
+    useOn(requestBus.on.copy_response, () => {
         const { output } = useSessionStore.getState();
         if (output) {
             try {
                 navigator.clipboard.writeText(output);
-                emitEvent('after_copy_response');
+                requestBus.emit.after_copy_response();
             }
             catch (error) {
                 console.error('Failed to copy response:', error);
@@ -57,7 +58,7 @@ function useEventHandler() {
         }
     }, []);
 
-    useEvent('goto_rt_editor', async ({ rtId }) => {
+    useOn(navigateBus.on.goto_rt_editor, async ({ rtId }) => {
         const metadata = await api.rt(rtId).getMetadata();
         console.log(metadata);
         const { mode } = metadata;

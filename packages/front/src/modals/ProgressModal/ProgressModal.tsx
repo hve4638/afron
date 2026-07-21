@@ -26,25 +26,25 @@ function ProgressModal({
     const [currentDescription, setCurrentDescription] = useState(description ?? null);
     const [closeInteractionEnabled, setCloseInteractionEnabled] = useState(false);
 
-    useOn(progressModalBus, 'title', ({ id, value }) => {
+    useOn(progressModalBus.on.title, ({ id, value }) => {
         if (id !== modalId) return;
 
         setCurrentTitle(value);
     }, [modalId]);
 
-    useOn(progressModalBus, 'description', ({ id, value }) => {
+    useOn(progressModalBus.on.description, ({ id, value }) => {
         if (id !== modalId) return;
 
         setCurrentDescription(value);
     }, [modalId]);
 
-    useOn(progressModalBus, 'close', ({ id }) => {
+    useOn(progressModalBus.on.close, ({ id }) => {
         if (id !== modalId) return;
 
         closeModal();
     }, [modalId]);
 
-    useOn(progressModalBus, 'show_close_button', ({ id }) => {
+    useOn(progressModalBus.on.show_close_button, ({ id }) => {
         if (id !== modalId) return;
 
         setCloseInteractionEnabled(true);

@@ -7,30 +7,30 @@ export function HubEventHandler() {
     const navigate = useNavigate();
     const [navigateStack, setNavigateStack] = useState<string[]>([]);
 
-    useOn(navigateBus, 'goto_workflow_editor', ({ rtId }) => {
+    useOn(navigateBus.on.goto_workflow_editor, ({ rtId }) => {
         const navigateTo = `/workflow/${rtId}`;
 
         setNavigateStack((prev) => [...prev, navigateTo]);
         navigate(navigateTo);
     }, []);
-    useOn(navigateBus, 'goto_prompt_editor', ({ rtId, promptId }) => {
+    useOn(navigateBus.on.goto_prompt_editor, ({ rtId, promptId }) => {
         const navigateTo = `/workflow/${rtId}/prompt/${promptId}`;
 
         setNavigateStack((prev) => [...prev, navigateTo]);
         navigate(navigateTo);
     }, []);
-    useOn(navigateBus, 'goto_test', () => {
+    useOn(navigateBus.on.goto_test, () => {
         const navigateTo = `/test`;
 
         setNavigateStack((prev) => [...prev, navigateTo]);
         navigate(navigateTo);
     }, []);
 
-    useOn(navigateBus, 'goto_home', () => {
+    useOn(navigateBus.on.goto_home, () => {
         setNavigateStack([]);
         navigate('/');
     });
-    useOn(navigateBus, 'back', () => {
+    useOn(navigateBus.on.back, () => {
         const navigateTo = navigateStack.at(-2) ?? '/';
         setNavigateStack(prev => prev.slice(0, -1));
 

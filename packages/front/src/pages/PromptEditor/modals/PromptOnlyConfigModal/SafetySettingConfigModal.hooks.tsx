@@ -38,7 +38,7 @@ export function useSafetySettingConfigModal({
         }))
     }
 
-    useOn(promptDataUpdateBus, 'updated', () => {
+    useOn(promptDataUpdateBus.on.updated, () => {
         setSafetySetting(buildSafetySetting());
     }, []);
 

@@ -15,8 +15,17 @@ export type BusStore<E extends EventMap> = UseBoundStore<
     Mutate<StoreApi<StoreShape<E>>, [['zustand/subscribeWithSelector', never]]>
 >;
 
-/** 버스 핸들. 구독은 모듈 export 훅 `useOn(bus, key, cb)`로 수행 */
+/** 구독 핸들. `bus.on.<key>`로 얻어 `useOn(handle, cb)` 훅에 전달 */
+export type OnHandle<E extends EventMap, K extends keyof E> = { store: BusStore<E>; key: K };
+
+/** 이벤트 키별 구독 핸들 집합. `useOn(bus.on.save, cb)` 형태로 사용 */
+export type OnObj<E extends EventMap> = {
+    [K in keyof E]: OnHandle<E, K>;
+};
+
+/** 버스 핸들. 구독은 모듈 export 훅 `useOn(bus.on.key, cb)`로 수행 */
 export interface Bus<E extends EventMap> {
     emit: EmitObj<E>;
+    on: OnObj<E>;
     store: BusStore<E>;
 }

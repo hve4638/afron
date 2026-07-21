@@ -2,7 +2,8 @@ import { SessionAPI } from '@/api/profiles';
 import { RequestEventPipe } from '@/api/events';
 
 import { useSessionStore } from '@/stores';
-import { emitEvent } from '@/hooks/useEvent';
+import { modalBus } from '@/events/modal';
+import { refreshBus } from '@/events/refresh';
 import { ErrorTool, SessionTool } from './tools';
 
 export async function responseReceiver(chId: string, sessionAPI: SessionAPI) {
@@ -11,7 +12,7 @@ export async function responseReceiver(chId: string, sessionAPI: SessionAPI) {
 
     await sessionUtils.changeState('loading');
     sessionUtils.refetchIfCurrent();
-    emitEvent('refresh_session_metadata');
+    refreshBus.emit.refresh_session_metadata();
 
     while (true) {
         const data = await RequestEventPipe.receive(chId);
@@ -20,13 +21,13 @@ export async function responseReceiver(chId: string, sessionAPI: SessionAPI) {
             console.warn('Request closed:', data);
 
             await sessionUtils.changeState('done');
-            emitEvent('refresh_session_metadata');
+            refreshBus.emit.refresh_session_metadata();
 
             await sessionUtils.refetchIfCurrent();
             break;
         }
         else if (data.type === 'send_raw_request_preview') {
-            emitEvent('open_rt_preview_modal', data.preview);
+            modalBus.emit.open_rt_preview_modal(data.preview);
         }
         else if (data.type === 'update') {
             for (const typeName of data.update_types) {
@@ -35,12 +36,12 @@ export async function responseReceiver(chId: string, sessionAPI: SessionAPI) {
                 }
                 else if (typeName === 'output') {
                     sessionUtils.refetchOutputIfCurrent();
-                    emitEvent('refresh_session_metadata');
+                    refreshBus.emit.refresh_session_metadata();
                 }
                 else if (typeName === 'history') {
                     const sessionState = useSessionStore.getState();
                     if (sessionState.deps.last_session_id === sessionAPI.id) {
-                        emitEvent('refresh_chat');
+                        refreshBus.emit.refresh_chat();
                     }
                 }
                 else {
@@ -55,7 +56,7 @@ export async function responseReceiver(chId: string, sessionAPI: SessionAPI) {
                     console.warn('No result received from request:', data);
 
                     sessionUtils.refetchIfCurrent();
-                    emitEvent('refresh_session_metadata');
+                    refreshBus.emit.refresh_session_metadata();
 
                     errorTool.noResult(data);
                     break;
@@ -92,13 +93,13 @@ export async function responseReceiver(chId: string, sessionAPI: SessionAPI) {
             await sessionUtils.setOutput(data.text);
             await sessionUtils.refetchOutputIfCurrent();
 
-            emitEvent('refresh_session_metadata');
+            refreshBus.emit.refresh_session_metadata();
         }
         else if (data.type === 'stream_output') {
             // nothing to do
         }
         else if (data.type === 'send_info') {
-            // emitEvent('show_toast_message', {
+            // appBus.emit.show_toast_message({
             //     title: data.title,
             //     description: data.description,
             //     type: 'info',

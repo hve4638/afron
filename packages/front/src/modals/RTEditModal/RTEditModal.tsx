@@ -8,7 +8,8 @@ import TreeView from '@/components/TreeView';
 import { LeafNode } from './nodes';
 import useRTEditModal from './RTEditModal.hook';
 import { t } from 'i18next';
-import { emitEvent } from '@/hooks/useEvent';
+import { modalBus } from '@/events/modal';
+import { rtBus } from '@/events/rt';
 import { useModalInstance } from '@/features/modal';
 
 function RTEditModal() {
@@ -116,7 +117,7 @@ function RTEditModal() {
                 >
                     <Button
                         onClick={() => {
-                            emitEvent('import_rt_from_file');
+                            rtBus.emit.import_rt_from_file();
                             closeModal();
                         }}
                         style={{
@@ -131,7 +132,7 @@ function RTEditModal() {
                     </Button>
                     <Button
                         onClick={() => {
-                            emitEvent('open_new_rt_modal');
+                            modalBus.emit.open_new_rt_modal();
                             closeModal();
                         }}
                         style={{

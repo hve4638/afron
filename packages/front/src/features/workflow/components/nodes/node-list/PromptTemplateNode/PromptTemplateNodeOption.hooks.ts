@@ -26,14 +26,14 @@ export function usePromptTemplateNodeOption({
     const promptTemplateBus = useBus<PromptTemplateEvent>();
     const workflowModel = useMemo(() => RTWorkflowModel.From(rt.id), [rt.id]);
 
-    useOn(promptTemplateBus, 'select_prompt', ({ promptId }) => {
+    useOn(promptTemplateBus.on.select_prompt, ({ promptId }) => {
         setOption((prev) => ({
             ...prev,
             prompt_id: promptId,
         }));
     });
 
-    useOn(promptTemplateBus, 'select_and_open_prompt_editor', async ({ promptId }) => {
+    useOn(promptTemplateBus.on.select_and_open_prompt_editor, async ({ promptId }) => {
         setOption((prev) => ({
             ...prev,
             prompt_id: promptId,
@@ -42,7 +42,7 @@ export function usePromptTemplateNodeOption({
         navigateBus.emit.goto_prompt_editor({ rtId: rt.id, promptId });
     });
 
-    useOn(promptTemplateBus, 'open_prompt_editor', async ({ promptId }) => {
+    useOn(promptTemplateBus.on.open_prompt_editor, async ({ promptId }) => {
         navigateBus.emit.goto_prompt_editor({ rtId: rt.id, promptId });
     });
 

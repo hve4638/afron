@@ -37,7 +37,7 @@ function SidePanel({
         'C-s': (e) => promptEditorBus.emit.save(),
     }, [], modal.count === 0);
 
-    useOn(promptEditorBus, 'on_save', () => setSaved(true), []);
+    useOn(promptEditorBus.on.on_save, () => setSaved(true), []);
 
     useEffect(() => {
         if (!saved) return;

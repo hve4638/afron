@@ -8,7 +8,7 @@ import SessionMenuPopover from './SessionMenuPopover';
 import SessionName from './SessionName';
 import { useProfileAPIStore } from '@/stores';
 import ColorMenuPopover from './ColorMenuPopover';
-import { emitEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
 
 interface TabCoreProps {
     item: ProfileSessionMetadata;
@@ -77,7 +77,7 @@ function SessionTab({
                     onEnableRename={() => setRenameMode(true)}
                     onChange={async (value) => {
                         await sessionAPI.set('config.json', { name: value });
-                        emitEvent('refresh_session_metadata');
+                        refreshBus.emit.refresh_session_metadata();
                         setRenameMode(false);
                     }}
                     onCancelRename={() => setRenameMode(false)}

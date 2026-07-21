@@ -1,4 +1,5 @@
-import { useEvent } from '@/hooks/useEvent';
+import { ioBus } from '@/events/io';
+import { useOn } from '@/lib/zustbus';
 import { useProfileAPIStore, useSessionStore } from '@/stores';
 import { encodingForModel } from 'js-tiktoken';
 import { useMemo } from 'react';
@@ -14,7 +15,7 @@ function useTokenCounter({ inputRef }: useTokenCounterProps) {
         return encodingForModel('chatgpt-4o-latest');
     }, []);
 
-    useEvent('update_input_token_count', () => {
+    useOn(ioBus.on.update_input_token_count, () => {
         const count = tokenizer.encode(inputRef.current ?? '').length
         updateSession.input_token_count(count);
     }, [tokenizer, inputRef]);

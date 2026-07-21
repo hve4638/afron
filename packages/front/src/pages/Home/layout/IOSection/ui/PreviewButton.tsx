@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
-import { emitEvent } from '@/hooks/useEvent';
+import { requestBus } from '@/events/request';
 
 import styles from './ui.module.scss';
 
@@ -17,7 +17,7 @@ function PreviewButton() {
                 height: '40px',
             }}
             onClick={() => {
-                emitEvent('send_preview_request');
+                requestBus.emit.send_preview_request();
             }}
         />
     )

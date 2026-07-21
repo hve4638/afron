@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
-import { emitEvent, useEvent } from '@/hooks/useEvent';
+import { requestBus } from '@/events/request';
+import { useOn } from '@/lib/zustbus';
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 function CopyButton() {
     const [copySuccessed, setCopySuccessed] = useState(false);
 
-    useEvent('after_copy_response', () => {
+    useOn(requestBus.on.after_copy_response, () => {
         setCopySuccessed(true);
         setTimeout(() => setCopySuccessed(false), 500);
     }, []);
@@ -20,7 +21,7 @@ function CopyButton() {
         }
         hoverEffect='square'
         onClick={() => {
-            emitEvent('copy_response');
+            requestBus.emit.copy_response();
         }}
     />
 }

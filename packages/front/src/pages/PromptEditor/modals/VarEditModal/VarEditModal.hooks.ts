@@ -32,23 +32,23 @@ export function useVarEditModal({
 
     const varEditModalControlBus = useBus<VarEditModalControlEvent>();
 
-    useOn(varEditModalControlBus, 'open_struct_field_editor', ({ fieldName }) => {
+    useOn(varEditModalControlBus.on.open_struct_field_editor, ({ fieldName }) => {
         setSecondEditorData({ type: 'struct', fieldName });
     }, []);
 
-    useOn(varEditModalControlBus, 'open_array_element_editor', () => {
+    useOn(varEditModalControlBus.on.open_array_element_editor, () => {
         setSecondEditorData({ type: 'array' });
     }, []);
 
-    useOn(varEditModalControlBus, 'close_2rd_editor', () => {
+    useOn(varEditModalControlBus.on.close_2rd_editor, () => {
         setSecondEditorData(null);
     }, []);
 
-    useOn(varEditModalControlBus, 'close_modal', () => {
+    useOn(varEditModalControlBus.on.close_modal, () => {
         closeModal();
     }, [closeModal]);
 
-    useOn(promptDataUpdateBus, 'updated', () => {
+    useOn(promptDataUpdateBus.on.updated, () => {
         setPromptData(get());
     }, [get]);
 

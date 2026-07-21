@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Popover from '@/components/atoms/Popover';
 import { useProfileAPIStore, useSessionStore } from '@/stores';
 import styles from './styles.module.scss';
-import { emitEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
 
 const SessionColors = [
     'red',
@@ -81,7 +81,7 @@ function ColorMenuPopover(props:SessionMenuPopoverProps) {
                                 onClick={async ()=>{
                                     const sessionAPI = api.session(item.id);
                                     await sessionAPI.set('config.json', { color });
-                                    emitEvent('refresh_session_metadata');
+                                    refreshBus.emit.refresh_session_metadata();
                                     refetchSessionState.color();
                                 }}
                             />

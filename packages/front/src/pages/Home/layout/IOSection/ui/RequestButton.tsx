@@ -2,7 +2,7 @@ import classNames from 'classnames';
 
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 import { useSessionState } from '@/features/profile-event/hooks/useSessionState';
-import { emitEvent } from '@/hooks/useEvent';
+import { requestBus } from '@/events/request';
 
 import styles from './ui.module.scss';
 
@@ -22,10 +22,10 @@ function RequestButton() {
             }}
             onClick={() => {
                 if (isIdle) {
-                    emitEvent('send_request');
+                    requestBus.emit.send_request();
                 }
                 else {
-                    emitEvent('abort_request');
+                    requestBus.emit.abort_request();
                 }
             }}
         />

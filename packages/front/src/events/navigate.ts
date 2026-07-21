@@ -3,6 +3,7 @@ import { createBus, Ping } from '@/lib/zustbus';
 interface NavigateEvent {
     goto_workflow_editor: { rtId: string; };
     goto_prompt_editor: { rtId: string; promptId: string; };
+    goto_rt_editor: { rtId: string; };
 
     goto_test: Ping;
 

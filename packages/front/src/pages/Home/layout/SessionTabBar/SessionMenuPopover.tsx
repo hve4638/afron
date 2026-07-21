@@ -8,7 +8,7 @@ import { useMemo, useRef, useState } from 'react';
 import Popover from '@/components/atoms/Popover';
 import DivButton from '@/components/atoms/DivButton';
 import { useProfileAPIStore } from '@/stores';
-import { emitEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
 
 type SessionMenuPopoverProps = {
     item : ProfileSessionMetadata;
@@ -66,7 +66,7 @@ function SessionMenuPopover(props:SessionMenuPopoverProps) {
                     <MenuItem icon='lock_open'
                         onClick={async ()=>{
                             await sessionAPI.set('config.json', { delete_lock: false });
-                            emitEvent('refresh_session_metadata');
+                            refreshBus.emit.refresh_session_metadata();
                             onClose();
                         }}
                     >삭제 잠금 해제</MenuItem>
@@ -76,7 +76,7 @@ function SessionMenuPopover(props:SessionMenuPopoverProps) {
                     <MenuItem icon='lock'
                         onClick={async ()=>{
                             await sessionAPI.set('config.json', { delete_lock: true });
-                            emitEvent('refresh_session_metadata');
+                            refreshBus.emit.refresh_session_metadata();
                             onClose();
                         }}
                     >삭제 잠금</MenuItem>

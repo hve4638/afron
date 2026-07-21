@@ -14,7 +14,9 @@ import { remapDecimal } from '@/utils/math';
 import FilesFormLayout from '../FilesUpload/FileList';
 import { FileDropper } from '../FilesUpload';
 import ProfileEvent from '@/features/profile-event';
-import { emitEvent, useEvent } from '@/hooks/useEvent';
+import { ioBus } from '@/events/io';
+import { refreshBus } from '@/events/refresh';
+import { useOn } from '@/lib/zustbus';
 import {
     TokenCount,
     MarkdownButton,
@@ -125,7 +127,7 @@ function SingleIO({
         return `${m[0]}px ${m[1]}px ${m[2]}px ${m[3]}px`;
     }, [configState.layout_mode, textareaPadding]);
 
-    useEvent('refresh_chat', async () => {
+    useOn(refreshBus.on.refresh_chat, async () => {
         if (!sessionHistory) return;
 
         const prev = await sessionHistory.select(0, 1, true);
@@ -186,7 +188,7 @@ function SingleIO({
                         const data = readImageFromClipboard(e);
                         if (!data.isImage) return;
 
-                        emitEvent('input_file_upload', {
+                        ioBus.emit.input_file_upload({
                             file: data.file,
                             latch: new Latch(),
                         });

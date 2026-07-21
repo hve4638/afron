@@ -11,7 +11,7 @@ import SettingModal from '@/modals/SettingModal';
 import styles from './styles.module.scss';
 import LocalAPI from '@/api/local';
 import useMemoryStore from '@/stores/useMemoryStore';
-import { emitEvent } from '@/hooks/useEvent';
+import { appBus } from '@/events/app';
 import { useModal } from '@/features/modal';
 
 type AvatarPopoverProps = {
@@ -35,7 +35,7 @@ function AvatarPopover({
     }
 
     const clickChangeProfileButton = () => {
-        emitEvent('change_profile');
+        appBus.emit.change_profile();
     }
     
     return (
