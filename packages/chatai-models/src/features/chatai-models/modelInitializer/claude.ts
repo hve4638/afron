@@ -26,6 +26,7 @@ function initProvider(builder: CategoryBuilder) {
 
     builder.group('Claude 5', claude47API, {})
         .model('claude-fable-5', 'Claude Fable 5', {}, { latest, featured, highCost })
+        .model('claude-opus-5', 'Claude Opus 5', {}, { latest, featured })
         .model('claude-sonnet-5', 'Claude Sonnet 5', {}, { latest, featured })
 
     builder.group('Claude 4.8', claude47API, {})
@@ -46,31 +47,36 @@ function initProvider(builder: CategoryBuilder) {
         .model('claude-haiku-4-5', 'Claude Haiku 4.5', {}, { latest, featured })
         .model('claude-haiku-4-5-20251001', 'Claude Haiku 4.5 (2025-10-01)', {}, { snapshot })
 
+    // Claude 4.1: 2026-08-05 은퇴 예정
     builder.group('Claude 4.1', { endpoint: 'anthropic', thinking: 'optional' }, {})
-        .model('claude-opus-4-1-20250805', 'Claude Opus 4.1', {}, { latest, featured })
+        .model('claude-opus-4-1-20250805', 'Claude Opus 4.1', {}, { deprecated })
 
+    // Claude 4: 2026-06-15 은퇴
     builder.group('Claude 4', { endpoint: 'anthropic', thinking: 'optional' }, {})
-        .model('claude-opus-4-0', 'Claude Opus 4', {}, { latest, featured })
-        .model('claude-opus-4-20250514', 'Claude Opus 4 (2025-05-14)', {}, { snapshot })
-        .model('claude-sonnet-4-0', 'Claude Sonnet 4', {}, { latest, featured })
-        .model('claude-sonnet-4-20250514', 'Claude Sonnet 4 (2025-05-14)', {}, { snapshot });
-    
+        .model('claude-opus-4-0', 'Claude Opus 4', {}, { deprecated })
+        .model('claude-opus-4-20250514', 'Claude Opus 4 (2025-05-14)', {}, { snapshot, deprecated })
+        .model('claude-sonnet-4-0', 'Claude Sonnet 4', {}, { deprecated })
+        .model('claude-sonnet-4-20250514', 'Claude Sonnet 4 (2025-05-14)', {}, { snapshot, deprecated });
+
+    // Claude 3.7: 2026-02-19 은퇴
     builder.group('Claude 3.7', { endpoint: 'anthropic', thinking: 'optional' }, {})
-        .model('claude-3-7-sonnet-latest', 'Claude Sonnet 3.7', {}, { latest, featured })
-        .model('claude-3-7-sonnet-20250219', 'Claude Sonnet 3.7 (2025-02-19)', {}, { snapshot });
+        .model('claude-3-7-sonnet-latest', 'Claude Sonnet 3.7', {}, { deprecated })
+        .model('claude-3-7-sonnet-20250219', 'Claude Sonnet 3.7 (2025-02-19)', {}, { snapshot, deprecated });
 
+    // Claude 3.5: Sonnet 2025-10-28, Haiku 2026-02-19 은퇴
     builder.group('Claude 3.5', { endpoint: 'anthropic', }, {})
-        .model('claude-3-5-sonnet-latest', 'Claude Sonnet 3.5', {}, { latest, featured })
-        .model('claude-3-5-sonnet-20241022', 'Claude Sonnet 3.5 (2024-10-22)', {}, { snapshot })
-        .model('claude-3-5-sonnet-20240620', 'Claude Sonnet 3.5 (2024-06-20)', {}, { snapshot })
-        .model('claude-3-5-haiku-latest', 'Claude Haiku 3.5', {}, { featured, latest })
-        .model('claude-3-5-haiku-20241022', 'Claude Haiku 3.5 (2024-10-22)', {}, { snapshot });
+        .model('claude-3-5-sonnet-latest', 'Claude Sonnet 3.5', {}, { deprecated })
+        .model('claude-3-5-sonnet-20241022', 'Claude Sonnet 3.5 (2024-10-22)', {}, { snapshot, deprecated })
+        .model('claude-3-5-sonnet-20240620', 'Claude Sonnet 3.5 (2024-06-20)', {}, { snapshot, deprecated })
+        .model('claude-3-5-haiku-latest', 'Claude Haiku 3.5', {}, { deprecated })
+        .model('claude-3-5-haiku-20241022', 'Claude Haiku 3.5 (2024-10-22)', {}, { snapshot, deprecated });
 
+    // Claude 3: Opus 2026-01-05, Sonnet 2025-07-21 은퇴, Haiku 2026-04-19 은퇴
     builder.group('Claude 3', claudeAPI, {})
-        .model('claude-3-opus-latest', 'Claude Opus 3', {}, { latest, featured })
-        .model('claude-3-opus-20240229', 'Claude Opus 3 (2024-02-29)', {}, { snapshot })
-        .model('claude-3-sonnet-20240229', 'Claude Sonnet 3 (2024-02-29)', {}, { latest, snapshot })
-        .model('claude-3-haiku-20240307', 'Claude Haiku 3 (2024-03-07)', {}, { latest, snapshot });
+        .model('claude-3-opus-latest', 'Claude Opus 3', {}, { deprecated })
+        .model('claude-3-opus-20240229', 'Claude Opus 3 (2024-02-29)', {}, { snapshot, deprecated })
+        .model('claude-3-sonnet-20240229', 'Claude Sonnet 3 (2024-02-29)', {}, { snapshot, deprecated })
+        .model('claude-3-haiku-20240307', 'Claude Haiku 3 (2024-03-07)', {}, { snapshot, deprecated });
 }
 
 export default initProvider;
