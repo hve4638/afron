@@ -6,7 +6,10 @@ import { GlobalEventPipe, RequestEventPipe } from '@/api/events';
 
 import { subscribeStates, useProfileAPIStore } from '@/stores';
 import useMemoryStore from '@/stores/useMemoryStore';
-import { emitEvent, useEvent } from '@/hooks/useEvent';
+import { appBus } from '@/events/app';
+import { modalBus } from '@/events/modal';
+import { rtBus } from '@/events/rt';
+import { useOn } from '@/lib/zustbus';
 import { RTExportManager, RTImportManager } from '@/features/event-pipe-handler';
 
 function useInitialize() {
@@ -36,24 +39,24 @@ function useInitialize() {
         };
     }, []);
 
-    useEvent('change_profile', () => {
+    useOn(appBus.on.change_profile, () => {
         useMemoryStore.setState({ profileId: null });
     }, []);
 
-    useEvent('import_rt_from_file', () => {
+    useOn(rtBus.on.import_rt_from_file, () => {
         const { api } = useProfileAPIStore.getState();
 
         const modalId = uuidv7();
-        emitEvent('open_progress_modal', { modalId });
+        modalBus.emit.open_progress_modal({ modalId });
 
         RTImportManager.importFile(api.id, { modalId });
     })
 
-    useEvent('export_rt_to_file', ({ rtId }) => {
+    useOn(rtBus.on.export_rt_to_file, ({ rtId }) => {
         const { api } = useProfileAPIStore.getState();
 
         const modalId = uuidv7();
-        emitEvent('open_progress_modal', { modalId });
+        modalBus.emit.open_progress_modal({ modalId });
 
         RTExportManager.exportFile(api.id, rtId, { modalId });
     })

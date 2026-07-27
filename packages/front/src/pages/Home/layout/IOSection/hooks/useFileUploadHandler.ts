@@ -1,4 +1,5 @@
-import { useEvent } from '@/hooks/useEvent';
+import { ioBus } from '@/events/io';
+import { useOn } from '@/lib/zustbus';
 import useSessionStore from '@/stores/useSessionStore';
 
 import { readFileAsDataURI } from '@/utils/file';
@@ -10,7 +11,7 @@ function useFileUploadHandler() {
     const input_files = useSessionStore(state => state.input_files);
     const cached_thumbnails = useSessionStore(state => state.cached_thumbnails);
 
-    useEvent('input_file_upload', async ({ file, latch }) => {
+    useOn(ioBus.on.input_file_upload, async ({ file, latch }) => {
         const data = await readFileAsDataURI(file);
 
         const metadata = await api.session(last_session_id!).inputFiles.add(file.name, data);

@@ -3,7 +3,7 @@ import { TextForm } from '@/components/FormFields';
 import { Align, Gap, Row } from '@/components/layout';
 import { Modal } from '@/features/modal';
 import { useModalInstance } from '@/features/modal';
-import { emitEvent } from '@/hooks/useEvent';
+import { rtBus } from '@/events/rt';
 import { useKeyBind } from '@/hooks/useKeyBind';
 import { useProfileAPIStore } from '@/stores';
 import { ProfileStorage } from '@afron/types';
@@ -67,7 +67,7 @@ function RTExportModal({
             >
                 <Button
                     onClick={() => {
-                        emitEvent('export_rt_to_file', { rtId });
+                        rtBus.emit.export_rt_to_file({ rtId });
                         closeModal();
                     }}
                     style={{

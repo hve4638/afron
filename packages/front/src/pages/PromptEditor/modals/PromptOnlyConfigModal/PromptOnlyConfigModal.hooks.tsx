@@ -37,7 +37,7 @@ export function usePromptOnlyConfigModal({
         }));
     }
 
-    useOn(promptDataUpdateBus, 'updated', () => {
+    useOn(promptDataUpdateBus.on.updated, () => {
         setPromptData(buildPromptData());
     }, []);
 

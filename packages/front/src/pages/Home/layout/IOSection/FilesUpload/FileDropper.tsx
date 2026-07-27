@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import Latch from '@/lib/Latch';
 
-import { emitEvent } from '@/hooks/useEvent';
+import { ioBus } from '@/events/io';
 import type { CommonProps } from '@/types';
 
 import styles from './styles.module.scss';
@@ -35,7 +35,7 @@ function FileDropper({
 
             for (const file of files) {
                 const latch = new Latch();
-                emitEvent('input_file_upload', {
+                ioBus.emit.input_file_upload({
                     file: file,
                     latch
                 });

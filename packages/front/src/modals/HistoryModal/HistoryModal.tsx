@@ -7,7 +7,7 @@ import { useCacheStore, useSessionStore } from '@/stores';
 import { useHistoryStore } from '@/stores/useHistoryStore';
 
 import useLazyThrottle from '@/hooks/useLazyThrottle';
-import { emitEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
 import useTrigger from '@/hooks/useTrigger';
 
 import { Modal, ModalHeader } from '@/features/modal';
@@ -139,7 +139,7 @@ function HistoryModal() {
                                     }
                                     await Promise.all(promises);
 
-                                    emitEvent('refresh_input');
+                                    refreshBus.emit.refresh_input();
                                     closeModal();
                                 }}
                                 onDelete={async ()=>{

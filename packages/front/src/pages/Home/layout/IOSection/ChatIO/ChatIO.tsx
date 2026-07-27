@@ -12,7 +12,6 @@ import { useHistoryStore } from '@/stores/useHistoryStore';
 import InfiniteScroll from '@/components/container/InfiniteScroll';
 import { HistoryData } from '@/features/session-history';
 import useCache from '@/hooks/useCache';
-import { useEvent } from '@/hooks/useEvent';
 
 import { CommonProps } from '@/types';
 import ChatInput from './ChatInput';

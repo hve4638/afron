@@ -1,5 +1,5 @@
 import { SessionAPI } from '@/api/profiles';
-import { emitEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
 import { useSessionStore } from '@/stores';
 import { SessionState } from '@/stores/useSessionStore';
 
@@ -83,7 +83,7 @@ export class SessionTool {
         if (this.#isCurrent(sessionState)) {
             await sessionState.refetch.input();
             await sessionState.actions.refetchInputFiles();
-            emitEvent('refresh_input');
+            refreshBus.emit.refresh_input();
         }
     }
 
@@ -105,7 +105,7 @@ export class SessionTool {
     async refreshChat() {
         const sessionState = useSessionStore.getState();
         if (this.#isCurrent(sessionState)) {
-            emitEvent('refresh_chat');
+            refreshBus.emit.refresh_chat();
         }
     }
 }

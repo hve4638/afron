@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useConfigStore, useSessionStore } from '@/stores';
 import { useHistoryStore } from '@/stores/useHistoryStore';
 import { HistoryData } from '@/features/session-history';
-import { useEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
 import useCache from '@/hooks/useCache';
 import { Ping, useBus, useOn } from '@/lib/zustbus';
 
@@ -34,7 +34,7 @@ function useChatIO({ refreshTrigger }: useChatIOProps) {
         }
     }, [lastSessionId]);
 
-    useOn(chatIOBus, 'load_more_history', async () => {
+    useOn(chatIOBus.on.load_more_history, async () => {
         if (!hasMore) return;
 
         await loadHistory();
@@ -66,7 +66,7 @@ function useChatIO({ refreshTrigger }: useChatIOProps) {
         )
     }, [lastSessionId, scrollAnchorRef.current]);
 
-    useEvent('refresh_chat', async () => {
+    useOn(refreshBus.on.refresh_chat, async () => {
         if (!sessionHistoryManager) return;
 
         await loadHistory();
@@ -74,7 +74,7 @@ function useChatIO({ refreshTrigger }: useChatIOProps) {
             () => scrollAnchorRef.current?.scrollIntoView(), 1
         );
     }, [lastSessionId, sessionHistoryManager]);
-    useEvent('refresh_chat_without_scroll', async () => {
+    useOn(refreshBus.on.refresh_chat_without_scroll, async () => {
         if (!sessionHistoryManager) return;
 
         await loadHistory();

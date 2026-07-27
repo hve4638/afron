@@ -141,20 +141,20 @@ function usePromptEditor() {
         }
     }
 
-    useOn(promptEditorBus, 'save', async () => {
+    useOn(promptEditorBus.on.save, async () => {
         save();
     }, [rtId, promptId]);
 
-    useOn(promptEditorBus, 'back', async () => {
+    useOn(promptEditorBus.on.back, async () => {
         back();
     }, []);
-    useOn(promptEditorBus, 'open_varedit_modal', async ({ varId }) => {
+    useOn(promptEditorBus.on.open_varedit_modal, async ({ varId }) => {
         modal.open(<VarEditModal 
             varId={varId}
             promptEditorData={promptEditorData}
         />);
     }, []);
-    useOn(promptEditorBus, 'open_prompt_only_config_modal', async () => {
+    useOn(promptEditorBus.on.open_prompt_only_config_modal, async () => {
         modal.open(<PromptOnlyConfigModal 
             promptEditorData={promptEditorData}
         />);

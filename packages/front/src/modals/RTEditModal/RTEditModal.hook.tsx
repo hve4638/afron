@@ -4,7 +4,7 @@ import { t } from 'i18next';
 import { ITreeNode } from '@/components/TreeView/types';
 
 
-import { emitEvent } from '@/hooks/useEvent';
+import { navigateBus } from '@/events/navigate';
 
 import { DeleteConfirmDialog } from '@/modals/Dialog';
 import { RTExportPreviewModal } from '../RTExportModal';
@@ -93,7 +93,7 @@ function useRTEditModal() {
         },
         action: {
             navigatePromptEditor: (rtId: string) => {
-                emitEvent('goto_rt_editor', { rtId });
+                navigateBus.emit.goto_rt_editor({ rtId });
             },
 
             tree: {

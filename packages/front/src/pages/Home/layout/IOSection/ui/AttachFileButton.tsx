@@ -5,7 +5,7 @@ import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
 import styles from './ui.module.scss';
 import Latch from '@/lib/Latch';
-import { emitEvent } from '@/hooks/useEvent';
+import { ioBus } from '@/events/io';
 
 function AttachFileButton() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -16,7 +16,7 @@ function AttachFileButton() {
 
         for (const file of files) {
             const latch = new Latch();
-            emitEvent('input_file_upload', {
+            ioBus.emit.input_file_upload({
                 file: file,
                 latch
             });

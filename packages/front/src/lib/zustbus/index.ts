@@ -6,5 +6,7 @@ export type {
     Ping,
     Bus,
     EmitObj,
+    OnHandle,
+    OnObj,
     EventMap,
 } from './types';

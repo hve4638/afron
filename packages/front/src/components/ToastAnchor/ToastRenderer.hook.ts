@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useEvent } from '@/hooks/useEvent';
+import { appBus } from '@/events/app';
+import { useOn } from '@/lib/zustbus';
 import { Toast } from '@/types/toast';
 
 type ToastWithId = Toast & { id: number };
@@ -35,7 +36,7 @@ function useToastRenderer() {
         timeoutRef.current.push(timeout);
     }
 
-    useEvent('show_toast_message', (toast) => {
+    useOn(appBus.on.show_toast_message, (toast) => {
         if (!toast) return;
         addToast(toast);
     }, []);

@@ -1,7 +1,7 @@
 import { GlobalEventPipe } from '@/api/events';
 import LocalAPI from '@/api/local';
 import { type IIPCAPI } from '@/api/local/types';
-import { emitEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
 import { progressModalBus } from '@/modals/ProgressModal/events';
 import { isWeb } from '@/utils/platform';
 
@@ -97,7 +97,7 @@ class RTImportManagerSingleton {
                     case 'done':
                         progressModalBus.emit.description({ id: config.modalId, value: '성공적으로 불러왔습니다' });
                         progressModalBus.emit.show_close_button({ id: config.modalId, });
-                        emitEvent('refresh_rt_tree');
+                        refreshBus.emit.refresh_rt_tree();
                         normalExit = true;
                         break;
                 }

@@ -1,6 +1,6 @@
 import { GIconButton } from '@/components/atoms/GoogleFontIcon';
 
-import { emitEvent } from '@/hooks/useEvent';
+import { modalBus } from '@/events/modal';
 
 import useErrorLogStore from '@/stores/useErrorLogStore';
 
@@ -24,7 +24,7 @@ function ErrorLogButton() {
                 }}
                 hoverEffect='circle'
                 onClick={() => {
-                    emitEvent('open_error_log', null);
+                    modalBus.emit.open_error_log(null);
                 }}
             >
                 {

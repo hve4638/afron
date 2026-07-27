@@ -5,7 +5,10 @@ import useLazyThrottle from '@/hooks/useLazyThrottle';
 import useTrigger from '@/hooks/useTrigger';
 
 import { useSessionStore, useProfileAPIStore } from '@/stores';
-import { emitEvent, useEvent, useEventState } from '@/hooks/useEvent';
+import { ioBus } from '@/events/io';
+import { refreshBus } from '@/events/refresh';
+import { requestBus } from '@/events/request';
+import { useEventVersion, useOn } from '@/lib/zustbus';
 import useFileUploadHandler from './hooks/useFileUploadHandler';
 import useTokenCounter from './hooks/useTokenCounter';
 
@@ -22,7 +25,7 @@ function useIOSection() {
     useFileUploadHandler();
     useTokenCounter({ inputRef: inputTextRef });
     
-    const refreshInputState = useEventState('refresh_input');
+    const refreshInputState = useEventVersion(refreshBus.on.refresh_input);
 
     // @TODO : 도중 세션 변경시 마지막 변경이 반영되지 않는 문제
     // 문제가 해결된다면 throttle을 debounce로 변경하는 것이 성능 상 좋음
@@ -32,13 +35,13 @@ function useIOSection() {
     
     const updateInputText = (text: string) => {
         inputTextRef.current = text;
-        emitEvent('update_input_token_count');
+        ioBus.emit.update_input_token_count();
         updateInputTextThrottle();
         refresh();
     }
 
     useEffect(() => {
-        emitEvent('update_input_token_count');
+        ioBus.emit.update_input_token_count();
         updateInputTextThrottle();
         refresh();
     }, [sessionState.deps.last_session_id]);
@@ -53,7 +56,7 @@ function useIOSection() {
     useEffect(() => {
         if (sessionState.state === 'done') {
             sessionState.update.state('idle');
-            emitEvent('refresh_session_metadata');
+            refreshBus.emit.refresh_session_metadata();
         }
     }, [sessionState.deps.last_session_id, sessionState.state]);
 
@@ -63,7 +66,7 @@ function useIOSection() {
     }, [sessionState.deps.last_session_id, refreshInputState]);
 
     // 요청 시 입력값을 즉시 업데이트
-    useEvent('request_ready', async (latch) => {
+    useOn(requestBus.on.request_ready, async (latch) => {
         await sessionState.update.input(inputTextRef.current);
         latch.release(); // 완료 신호
     }, []);

@@ -7,7 +7,8 @@ import SessionTab from './SessionTab';
 import { useTranslation } from 'react-i18next';
 import ProfileEvent from '@/features/profile-event';
 import useTrigger from '@/hooks/useTrigger';
-import { useEvent } from '@/hooks/useEvent';
+import { refreshBus } from '@/events/refresh';
+import { useOn } from '@/lib/zustbus';
 
 function SessionTabBar() {
     const { t } = useTranslation();
@@ -16,7 +17,7 @@ function SessionTabBar() {
     const last_session_id = useCacheStore(state => state.last_session_id);
     const [rerenderCount, rerender] = useTrigger();
 
-    useEvent('refresh_session_metadata', ()=>rerender(), [rerender]);
+    useOn(refreshBus.on.refresh_session_metadata, ()=>rerender(), [rerender]);
 
     const [sessionMetadataList, setSessionMetadataList] = useState<ProfileSessionMetadata[]>([]);
     const tabItems = useMemo(() => {

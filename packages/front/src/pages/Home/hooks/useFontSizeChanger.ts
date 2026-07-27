@@ -1,4 +1,5 @@
-import { useEvent } from '@/hooks/useEvent';
+import { appBus } from '@/events/app';
+import { useOn } from '@/lib/zustbus';
 import { useConfigStore } from '@/stores';
 
 function useFontSizeChanger() {
@@ -29,8 +30,8 @@ function useFontSizeChanger() {
         })
     }
 
-    useEvent('font_size_up', () => changeFontSize(1), []);
-    useEvent('font_size_down', () => changeFontSize(-1), []);
+    useOn(appBus.on.font_size_up, () => changeFontSize(1), []);
+    useOn(appBus.on.font_size_down, () => changeFontSize(-1), []);
 }
 
 export default useFontSizeChanger;
